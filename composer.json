@@ -1,0 +1,38 @@
+{
+    "name": "sowl/laravel-doctrine-jsonapi",
+    "description": "Laravel Doctrine JSON:API",
+    "prefer-stable": true,
+    "minimum-stability": "dev",
+    "type": "library",
+    "license": "MIT",
+    "scripts": {
+        "test": "./vendor/bin/phpunit --config phpunit.xml",
+        "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --config phpunit.xml --coverage-html ./tests/coverage"
+    },
+    "autoload": {
+        "psr-4": {
+            "Sowl\\JsonApi\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\App\\": "tests/laravel/app",
+            "Tests\\": "tests/unit",
+            "Database\\Migrations\\": "tests/database/migrations",
+            "Database\\Seeders\\": "tests/database/seeders"
+        }
+    },
+    "require-dev": {
+        "laravel-doctrine/orm": "^1.8",
+        "laravel-doctrine/acl": "^1.6",
+        "laravel-doctrine/migrations": "^3.0",
+        "doctrine/annotations": "^1.13",
+        "phpunit/phpunit": "^9.5",
+        "mockery/mockery": "^1.5"
+    },
+    "require": {
+        "league/fractal": "^0.20.1",
+        "laravel/framework": "^9.0",
+        "doctrine/orm": "^2.14"
+    }
+}
