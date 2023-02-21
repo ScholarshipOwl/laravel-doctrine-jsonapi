@@ -5,7 +5,7 @@ namespace Tests\Action\Relationships\ToMany;
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationships;
 use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationships;
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\AbstractRequest;
 use Sowl\JsonApi\JsonApiResponse;
 use Tests\App\Actions\User\Relationships\CreateUserRolesRequest;
 use Tests\App\Actions\User\Relationships\UpdateUserRolesRequest;
@@ -20,33 +20,25 @@ class UpdateRelationshipsTest extends TestCase
         parent::setUp();
 
         Route::patch('/users/{id}/relationships/roles', function (UpdateUserRolesRequest $request) {
-            return (
-                new UpdateRelationships(
-                    $this->usersRepo(),
-                    new RoleTransformer(),
-                    $this->rolesRepo(),
-                    'roles',
-                    'users'
-                )
-            )
+            return (new UpdateRelationships($this->rolesRepo(), 'roles', 'users'))
                 ->dispatch($request);
         });
     }
 
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
-        $this->patch('/users/1/relationships/roles')->assertStatus(422);
-        $this->patch('/users/2/relationships/roles')->assertStatus(422);
-        $this->patch('/users/3/relationships/roles')->assertStatus(422);
+        $this->patch('/users/1/relationships/roles')->assertStatus(403);
+        $this->patch('/users/2/relationships/roles')->assertStatus(403);
+        $this->patch('/users/3/relationships/roles')->assertStatus(403);
     }
 
     public function testAuthorizationPermissionsForUserRole()
     {
         $this->actingAsUser();
 
-        $this->patch('/users/1/relationships/roles')->assertStatus(422);
-        $this->patch('/users/2/relationships/roles')->assertStatus(422);
-        $this->patch('/users/3/relationships/roles')->assertStatus(422);
+        $this->patch('/users/1/relationships/roles')->assertStatus(403);
+        $this->patch('/users/2/relationships/roles')->assertStatus(403);
+        $this->patch('/users/3/relationships/roles')->assertStatus(403);
     }
 
     public function testAuthorizationPermissionsForRootRole()

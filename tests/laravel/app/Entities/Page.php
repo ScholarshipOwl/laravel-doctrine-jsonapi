@@ -5,7 +5,9 @@ namespace Tests\App\Entities;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\Collection;
+use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\ResourceInterface;
+use Tests\App\Transformers\PagesTransformer;
 
 /**
  * @ORM\Entity(repositoryClass="Tests\App\Repositories\PagesRepository")
@@ -49,6 +51,11 @@ class Page implements ResourceInterface
     public static function getResourceKey(): string
     {
         return 'pages';
+    }
+
+    public static function transformer(): AbstractTransformer
+    {
+        return new PagesTransformer();
     }
 
     public function getId(): ?int

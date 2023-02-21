@@ -4,14 +4,17 @@ namespace Tests\App\Actions\User;
 
 use Doctrine\ORM\EntityManager;
 use Illuminate\Support\Facades\Gate;
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\AbstractRequest;
+use Sowl\JsonApi\Request\Resource\AbstractUpdateRequest;
 use Sowl\JsonApi\Rules\PrimaryDataRule;
 use Tests\App\Actions\User\Rules\UserRoleAssignRule;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 
-class UpdateUserRequest extends JsonApiRequest
+class UpdateUserRequest extends AbstractUpdateRequest
 {
+    use HasUsersRepositoryTrait;
+
     public function rules(): array
     {
         return array_merge(parent::rules(), [

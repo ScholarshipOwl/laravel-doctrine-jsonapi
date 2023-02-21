@@ -3,16 +3,16 @@
 namespace Sowl\JsonApi\Fractal;
 
 use Sowl\JsonApi\RelationshipsTransformer;
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\AbstractRequest;
 
 class JsonApiSerializer extends \League\Fractal\Serializer\JsonApiSerializer
 {
-    public function __construct(protected JsonApiRequest $request)
+    public function __construct(protected AbstractRequest $request)
     {
         parent::__construct($request->getBaseUrl());
     }
 
-    public function request(): JsonApiRequest
+    public function request(): AbstractRequest
     {
         return $this->request;
     }

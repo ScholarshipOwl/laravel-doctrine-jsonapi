@@ -17,6 +17,7 @@ use UnexpectedValueException;
 class ResourceRepository extends EntityRepository
 {
     const RESOURCE_TYPE_METHOD = 'getResourceKey';
+    const RESOURCE_TRANSFORMER_METHOD = 'transformer';
 
     protected ?string $alias = null;
 
@@ -26,15 +27,20 @@ class ResourceRepository extends EntityRepository
         static::verifyClassResource($this->getClassName());
     }
 
-    public static function create(EntityManager $em, string $class): self
+    public static function create(string $class): self
     {
-        return new static($em, $em->getClassMetadata($class));
+        return new static(app('em'), app('em')->getClassMetadata($class));
     }
 
     public static function classResourceKey(string $class): string
     {
         static::verifyClassResource($class);
         return call_user_func(sprintf('%s::%s', $class, static::RESOURCE_TYPE_METHOD));
+    }
+
+    public function transformer(): AbstractTransformer
+    {
+        return call_user_func(sprintf('%s::%s', $this->getClassName(), static::RESOURCE_TRANSFORMER_METHOD));
     }
 
     public function em(): EntityManager
@@ -79,7 +85,7 @@ class ResourceRepository extends EntityRepository
         return $this->em()->getReference($this->getClassName(), $id);
     }
 
-    public function findByPrimaryData(array $data, string $scope = "/data"): ResourceInterface
+    public function findByObjectIdentifier(array $data, string $scope = "/data"): ResourceInterface
     {
         if (!isset($data['id']) || !isset($data['type'])) {
             throw BadRequestException::create('Relation item without identifiers.')

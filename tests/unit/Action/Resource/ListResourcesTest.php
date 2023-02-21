@@ -4,8 +4,10 @@ namespace Tests\Action\Resource;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Resource\ListResources;
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\AbstractRequest;
 use Sowl\JsonApi\JsonApiResponse;
+use Tests\App\Actions\Role\ListRolesRequest;
+use Tests\App\Actions\User\ListUsersRequest;
 use Tests\App\Transformers\RoleTransformer;
 use Tests\App\Transformers\UserTransformer;
 use Tests\TestCase;
@@ -16,25 +18,15 @@ class ListResourcesTest extends TestCase
     {
         parent::setUp();
 
-        Route::get('/roles', function (JsonApiRequest $request) {
-            return (
-                new ListResources(
-                    $this->rolesRepo(),
-                    new RoleTransformer()
-                )
-            )
+        Route::get('/roles', function (ListRolesRequest $request) {
+            return (new ListResources())
                 ->setSearchProperty('name')
                 ->setFilterable(['id', 'name'])
                 ->dispatch($request);
         });
 
-        Route::get('/users', function (JsonApiRequest $request) {
-            return (
-                new ListResources(
-                    $this->usersRepo(),
-                    new UserTransformer()
-                )
-            )
+        Route::get('/users', function (ListUsersRequest $request) {
+            return (new ListResources())
                 ->setSearchProperty('email')
                 ->setFilterable(['id', 'email', 'name'])
                 ->dispatch($request);

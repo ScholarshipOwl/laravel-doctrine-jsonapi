@@ -4,13 +4,13 @@ namespace Sowl\JsonApi\Fractal;
 
 use League\Fractal\Manager;
 use League\Fractal\Resource\ResourceInterface;
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\AbstractRequest;
 
 class ScopeFactory extends \League\Fractal\ScopeFactory
 {
-    public function __construct(protected JsonApiRequest $request) {}
+    public function __construct(protected AbstractRequest $request) {}
 
-    public function request(): JsonApiRequest
+    public function request(): AbstractRequest
     {
         return $this->request;
     }

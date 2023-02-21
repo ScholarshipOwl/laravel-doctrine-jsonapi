@@ -2,16 +2,11 @@
 
 namespace Tests\Action\Relationships\ToOne;
 
-use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Relationships\ToOne\ShowRelated;
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\Action\Relationships\ToOne\ShowRelationship;
 use Sowl\JsonApi\JsonApiResponse;
-use Tests\App\Actions\PageComment\ShowRelatedPage;
-use Tests\App\Actions\PageComment\ShowRelatedPageRelationship;
-use Tests\App\Actions\PageComment\ShowRelatedUser;
-use Tests\App\Actions\PageComment\ShowRelatedUserRelationship;
-use Tests\App\Transformers\PagesTransformer;
-use Tests\App\Transformers\UserTransformer;
+use Illuminate\Support\Facades\Route;
+use Tests\App\Actions\PageComment\ShowPageRelationshipRequest;
+use Tests\App\Actions\PageComment\ShowUserRelationshipRequest;
 use Tests\TestCase;
 
 class ShowRelationshipTest extends TestCase
@@ -20,25 +15,13 @@ class ShowRelationshipTest extends TestCase
     {
         parent::setUp();
 
-        Route::get('/pageComments/{id}/relationships/user', function (JsonApiRequest $request) {
-            return (
-                new ShowRelatedUserRelationship(
-                    $this->pageCommentsRepo(),
-                    new UserTransformer(),
-                    'user'
-                )
-            )
+        Route::get('/pageComments/{id}/relationships/user', function (ShowUserRelationshipRequest $request) {
+            return (new ShowRelationship('user'))
                 ->dispatch($request);
         });
 
-        Route::get('/pageComments/{id}/relationships/page', function (JsonApiRequest $request) {
-            return (
-                new ShowRelatedPageRelationship(
-                    $this->pageCommentsRepo(),
-                    new PagesTransformer(),
-                    'page'
-                )
-            )
+        Route::get('/pageComments/{id}/relationships/page', function (ShowPageRelationshipRequest $request) {
+            return (new ShowRelationship('page'))
                 ->dispatch($request);
         });
     }

@@ -2,6 +2,8 @@
 
 namespace Sowl\JsonApi;
 
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Routing\Redirector;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 
 use Doctrine\ORM\QueryBuilder;
@@ -16,9 +18,17 @@ use Sowl\JsonApi\Fractal\ScopeFactory;
 
 class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 {
-    public function request(): JsonApiRequest
+    public function __construct(
+        ViewFactory $view,
+        Redirector $redirector,
+        protected AbstractRequest $request
+    ) {
+        parent::__construct($view, $redirector);
+    }
+
+    public function request(): AbstractRequest
     {
-        return app(JsonApiRequest::class);
+        return $this->request;
     }
 
     public function jsonapi(?array $body, int $status = JsonApiResponse::HTTP_OK, array $header = []): JsonApiResponse
@@ -28,12 +38,18 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
     public function item(
         ResourceInterface   $resource,
-        AbstractTransformer $transformer,
         int                 $status = JsonApiResponse::HTTP_OK,
         array               $headers = [],
-        array               $meta = []
+        array               $meta = [],
+        bool                $relationship = false,
     ): JsonApiResponse
     {
+        $transformer = $resource->transformer();
+
+        if ($relationship) {
+            $transformer = new RelationshipsTransformer($transformer);
+        }
+
         $item = (new Item($resource, $transformer, $resource->getResourceKey()))->setMeta($meta);
         $body = $this->fractal()->createData($item)->toArray();
         return $this->jsonapi($body, $status, $headers);
@@ -41,14 +57,12 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
     public function created(
         ResourceInterface   $resource,
-        AbstractTransformer $transformer,
         array               $headers = [],
         array               $meta = []
     ): JsonApiResponse
     {
         return $this->item(
             resource: $resource,
-            transformer: $transformer,
             status: JsonApiResponse::HTTP_CREATED,
             headers: array_merge($headers, [
                 'Location' => $this->linkToResource($resource),
@@ -63,8 +77,13 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
         AbstractTransformer $transformer,
         int                 $status = JsonApiResponse::HTTP_OK,
         array               $headers = [],
+        bool                $relationship = false,
     ): JsonApiResponse
     {
+        if ($relationship) {
+            $transformer = new RelationshipsTransformer($transformer);
+        }
+
         $collection = (new Collection($collection, $transformer, $resourceKey));
         $body = $this->fractal()->createData($collection)->toArray();
         return $this->jsonapi($body, $status, $headers);
@@ -72,14 +91,21 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
     public function query(
         QueryBuilder        $qb,
-        string              $resourceKey,
-        AbstractTransformer $transformer,
+        ResourceRepository  $repository,
         int                 $status = JsonApiResponse::HTTP_OK,
         array               $headers = [],
-        array               $meta = []
+        array               $meta = [],
+        bool                $relationship = false,
     ): JsonApiResponse
     {
         $data = new Paginator($qb, false);
+        $resourceKey = $repository->getResourceKey();
+        $transformer = $repository->transformer();
+
+        if ($relationship) {
+            $transformer = new RelationshipsTransformer($transformer);
+        }
+
         $collection = (new Collection($data, $transformer, $resourceKey))->setMeta($meta);
 
         if ($qb->getMaxResults()) {

@@ -17,33 +17,25 @@ class CreateRelationshipsTest extends TestCase
         parent::setUp();
 
         Route::post('/users/{id}/relationships/roles', function (CreateUserRolesRequest $request) {
-            return (
-                new CreateRelationships(
-                    $this->usersRepo(),
-                    new RoleTransformer(),
-                    $this->rolesRepo(),
-                    'roles',
-                    'users'
-                )
-            )
+            return (new CreateRelationships($this->rolesRepo(), 'roles', 'users'))
                 ->dispatch($request);
         });
     }
 
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
-        $this->post('/users/1/relationships/roles')->assertStatus(422);
-        $this->post('/users/2/relationships/roles')->assertStatus(422);
-        $this->post('/users/3/relationships/roles')->assertStatus(422);
+        $this->post('/users/1/relationships/roles')->assertStatus(403);
+        $this->post('/users/2/relationships/roles')->assertStatus(403);
+        $this->post('/users/3/relationships/roles')->assertStatus(403);
     }
 
     public function testAuthorizationPermissionsForUserRole()
     {
         $this->actingAsUser();
 
-        $this->post('/users/1/relationships/roles')->assertStatus(422);
-        $this->post('/users/2/relationships/roles')->assertStatus(422);
-        $this->post('/users/3/relationships/roles')->assertStatus(422);
+        $this->post('/users/1/relationships/roles')->assertStatus(403);
+        $this->post('/users/2/relationships/roles')->assertStatus(403);
+        $this->post('/users/3/relationships/roles')->assertStatus(403);
     }
 
     public function testAuthorizationPermissionsForRootRole()

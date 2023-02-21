@@ -4,8 +4,7 @@ namespace Tests\Action\Relationships\ToOne;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationship;
-use Tests\App\Actions\Page\Relationships\UpdateUserRelationshipRequest;
-use Tests\App\Transformers\UserTransformer;
+use Tests\App\Actions\Page\UpdateUserRelationshipsRequest;
 use Tests\TestCase;
 
 class UpdateRelationshipTest extends TestCase
@@ -14,15 +13,8 @@ class UpdateRelationshipTest extends TestCase
     {
         parent::setUp();
 
-        Route::patch('/pages/{id}/relationships/user', function (UpdateUserRelationshipRequest $request) {
-            return (
-                new UpdateRelationship(
-                    $this->pageRepo(),
-                    new UserTransformer(),
-                    $this->usersRepo(),
-                    'user'
-                )
-            )
+        Route::patch('/pages/{id}/relationships/user', function (UpdateUserRelationshipsRequest $request) {
+            return (new UpdateRelationship($this->usersRepo(), 'user'))
                 ->dispatch($request);
         });
     }

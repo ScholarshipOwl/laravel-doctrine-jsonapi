@@ -4,15 +4,13 @@ namespace Tests\Action\Resource;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Resource\ShowResource;
-use Sowl\JsonApi\JsonApiRequest;
 use Sowl\JsonApi\JsonApiResponse;
-use Tests\App\Actions\Page\ShowPageResource;
+use Tests\App\Actions\Page\ShowPageRequest;
 use Tests\App\Actions\Page\ShowRelatedComments;
+use Tests\App\Actions\PageComment\ShowPageCommentRequest;
+use Tests\App\Actions\Role\ShowRoleRequest;
+use Tests\App\Actions\User\ShowUserRequest;
 use Tests\App\Entities\Role;
-use Tests\App\Transformers\PageCommentTransformer;
-use Tests\App\Transformers\PagesTransformer;
-use Tests\App\Transformers\RoleTransformer;
-use Tests\App\Transformers\UserTransformer;
 use Tests\TestCase;
 
 class ShowResourceTest extends TestCase
@@ -21,43 +19,23 @@ class ShowResourceTest extends TestCase
     {
         parent::setUp();
 
-        Route::get('/users/{id}', function (JsonApiRequest $request) {
-            return (
-                new ShowResource(
-                    $this->usersRepo(),
-                    new UserTransformer()
-                )
-            )
+        Route::get('/users/{id}', function (ShowUserRequest $request) {
+            return (new ShowResource())
                 ->dispatch($request);
         });
 
-        Route::get('/roles/{id}', function (JsonApiRequest $request) {
-            return (
-                new ShowResource(
-                    $this->rolesRepo(),
-                    new RoleTransformer()
-                )
-            )
+        Route::get('/roles/{id}', function (ShowRoleRequest $request) {
+            return (new ShowResource())
                 ->dispatch($request);
         });
 
-        Route::get('/pages/{id}', function (JsonApiRequest $request) {
-            return (
-                new ShowPageResource(
-                    $this->pageRepo(),
-                    new PagesTransformer()
-                )
-            )
+        Route::get('/pages/{id}', function (ShowPageRequest $request) {
+            return (new ShowResource())
                 ->dispatch($request);
         });
 
-        Route::get('/pageComments/{id}', function (JsonApiRequest $request) {
-            return (
-                new ShowRelatedComments(
-                    $this->pageCommentsRepo(),
-                    new PageCommentTransformer()
-                )
-            )
+        Route::get('/pageComments/{id}', function (ShowPageCommentRequest $request) {
+            return (new ShowRelatedComments())
                 ->dispatch($request);
         });
     }

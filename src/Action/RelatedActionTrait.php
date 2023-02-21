@@ -1,26 +1,25 @@
 <?php namespace Sowl\JsonApi\Action;
 
 use Sowl\JsonApi\Exceptions\BadRequestException;
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\AbstractRequest;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceRepository;
 
 trait RelatedActionTrait
 {
-    protected ResourceRepository $relatedResourceRepository;
+    protected ResourceRepository $relationRepository;
     protected string $relatedFieldName;
     protected string $resourceMappedBy;
 
-    abstract public function repository(): ResourceRepository;
-    abstract public function request(): JsonApiRequest;
+    abstract public function request(): AbstractRequest;
 
     /**
      * Repository of the related resource.
      * Can be used for fetching related resources.
      */
-    public function relatedResourceRepository(): ResourceRepository
+    public function relationRepository(): ResourceRepository
     {
-        return $this->relatedResourceRepository;
+        return $this->relationRepository;
     }
 
     /**
@@ -52,7 +51,7 @@ trait RelatedActionTrait
             $this->request()->getBaseUrl(),
             $resource->getResourceKey(),
             $resource->getId(),
-            $this->relatedResourceRepository()->getResourceKey()
+            $this->relationRepository()->getResourceKey()
         );
     }
 
@@ -62,7 +61,7 @@ trait RelatedActionTrait
             $this->request()->getBaseUrl(),
             $resource->getResourceKey(),
             $resource->getId(),
-            $this->relatedResourceRepository()->getResourceKey()
+            $this->relationRepository()->getResourceKey()
         );
     }
 }

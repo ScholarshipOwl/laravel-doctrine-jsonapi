@@ -2,7 +2,7 @@
 
 use League\Fractal\Resource\Collection;
 use Sowl\JsonApi\AbstractTransformer;
-use Sowl\JsonApi\AbilitiesInterface;
+use Sowl\JsonApi\AuthenticationAbilitiesInterface;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 
@@ -23,7 +23,7 @@ class UserTransformer extends AbstractTransformer
 
     public function includeRoles(User $user): Collection
     {
-        $this->gate()->authorize(AbilitiesInterface::LIST_RELATIONSHIPS, [$user, Role::class]);
+        $this->gate()->authorize(AuthenticationAbilitiesInterface::LIST_RELATIONSHIPS, [$user, Role::class]);
 
         return $this->collection($user->getRoles(), new RoleTransformer(), Role::getResourceKey());
     }

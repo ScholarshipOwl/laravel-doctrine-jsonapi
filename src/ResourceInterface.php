@@ -8,6 +8,8 @@ interface ResourceInterface
      */
     public static function getResourceKey(): string;
 
+    public static function transformer(): AbstractTransformer;
+
     /**
      * JSON API `id`
      */

@@ -8,7 +8,6 @@ use Tests\App\Entities\PageComment;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 use Tests\App\Repositories\PageCommentsRepository;
-use Tests\App\Repositories\PagesRepository;
 use Tests\App\Repositories\RolesRepository;
 use Tests\App\Repositories\TagsRepository;
 use Tests\App\Repositories\UsersRepository;
@@ -32,7 +31,7 @@ trait WithEntityManagerTrait
         return $this->em()->getRepository(Role::class);
     }
 
-    public function pageRepo(): PagesRepository
+    public function pageRepo(): RolesRepository
     {
         return $this->em()->getRepository(Page::class);
     }

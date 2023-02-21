@@ -4,12 +4,9 @@ namespace Tests\Action\Relationships\ToOne;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Relationships\ToOne\ShowRelated;
-use Sowl\JsonApi\JsonApiRequest;
 use Sowl\JsonApi\JsonApiResponse;
-use Tests\App\Actions\PageComment\ShowRelatedPage;
-use Tests\App\Actions\PageComment\ShowRelatedUser;
-use Tests\App\Transformers\PagesTransformer;
-use Tests\App\Transformers\UserTransformer;
+use Tests\App\Actions\PageComment\ShowRelatedPageRequest;
+use Tests\App\Actions\PageComment\ShowRelatedUserRequest;
 use Tests\TestCase;
 
 class ShowRelatedTest extends TestCase
@@ -18,25 +15,13 @@ class ShowRelatedTest extends TestCase
     {
         parent::setUp();
 
-        Route::get('/pageComments/{id}/user', function (JsonApiRequest $request) {
-            return (
-                new ShowRelatedUser(
-                    $this->pageCommentsRepo(),
-                    new UserTransformer(),
-                    'user'
-                )
-            )
+        Route::get('/pageComments/{id}/user', function (ShowRelatedUserRequest $request) {
+            return (new ShowRelated('user'))
                 ->dispatch($request);
         });
 
-        Route::get('/pageComments/{id}/page', function (JsonApiRequest $request) {
-            return (
-                new ShowRelatedPage(
-                    $this->pageCommentsRepo(),
-                    new PagesTransformer(),
-                    'page'
-                )
-            )
+        Route::get('/pageComments/{id}/page', function (ShowRelatedPageRequest $request) {
+            return (new ShowRelated('page'))
                 ->dispatch($request);
         });
     }

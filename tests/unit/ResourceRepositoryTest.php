@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mockery\MockInterface;
 use Sowl\JsonApi\Exceptions\JsonApiException;
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\AbstractRequest;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceRepository;
 use Symfony\Component\HttpFoundation\Request;

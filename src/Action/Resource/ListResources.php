@@ -3,7 +3,8 @@
 namespace Sowl\JsonApi\Action\Resource;
 
 use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\Action\ListsResourcesTrait;
+use Sowl\JsonApi\Action\FiltersResourceTrait;
+use Sowl\JsonApi\Action\PaginatesResourceTrait;
 use Sowl\JsonApi\JsonApiResponse;
 
 /**
@@ -11,16 +12,15 @@ use Sowl\JsonApi\JsonApiResponse;
  */
 class ListResources extends AbstractAction
 {
-    use ListsResourcesTrait;
+    use FiltersResourceTrait;
+    use PaginatesResourceTrait;
 
     public function handle(): JsonApiResponse
     {
-        $this->authorize();
-
-        $qb = $this->resourceQueryBuilder();
+        $qb = $this->repository()->resourceQueryBuilder();
         $this->applyFilter($qb);
         $this->applyPagination($qb);
 
-        return response()->query($qb, $this->repository()->getResourceKey(), $this->transformer());
+        return response()->query($qb, $this->repository());
     }
 }

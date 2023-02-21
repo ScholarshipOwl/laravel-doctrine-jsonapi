@@ -1,6 +1,9 @@
 <?php namespace Sowl\JsonApi\Exceptions;
 
-class JsonApiException extends \Exception implements RestExceptionInterface
+use Illuminate\Contracts\Support\Responsable;
+use Sowl\JsonApi\JsonApiResponse;
+
+class JsonApiException extends \Exception implements RestExceptionInterface, Responsable
 {
     public function __construct(
         $message = '',
@@ -14,6 +17,11 @@ class JsonApiException extends \Exception implements RestExceptionInterface
     public static function create(...$args): static
     {
         return new static(...$args);
+    }
+
+    public function toResponse($request): JsonApiResponse
+    {
+        return new JsonApiResponse(['errors' => $this->errors()], $this->getCode());
     }
 
     public function httpStatus(): int

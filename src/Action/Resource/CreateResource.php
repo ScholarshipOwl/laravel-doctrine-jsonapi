@@ -1,19 +1,19 @@
 <?php namespace Sowl\JsonApi\Action\Resource;
 
 use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\Action\CreatesResourceTrait;
 use Sowl\JsonApi\JsonApiResponse;
 
 class CreateResource extends AbstractAction
 {
-    use CreatesResourceTrait;
-
     public function handle(): JsonApiResponse
     {
-        $this->authorize();
+        $data = $this->request()->getData();
+        $class = $this->repository()->getClassName();
+        $resource = $this->manipulator()->hydrateResource(new $class, $data);
 
-        $resource = $this->createResource();
+        $this->em()->persist($resource);
+        $this->em()->flush();
 
-        return response()->created($resource, $this->transformer());
+        return response()->created($resource);
     }
 }

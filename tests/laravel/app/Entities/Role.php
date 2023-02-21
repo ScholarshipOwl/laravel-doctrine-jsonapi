@@ -7,7 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 use LaravelDoctrine\ACL\Contracts\Role as RoleContract;
 use LaravelDoctrine\ACL\Permissions\HasPermissions;
 use LaravelDoctrine\ORM\Facades\EntityManager;
+use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\ResourceInterface;
+use Tests\App\Transformers\RoleTransformer;
 
 /**
  * @ORM\Entity(repositoryClass="Tests\App\Repositories\RolesRepository")
@@ -51,6 +53,11 @@ class Role implements ResourceInterface, RoleContract
     public static function getResourceKey(): string
     {
         return 'roles';
+    }
+
+    public static function transformer(): AbstractTransformer
+    {
+        return new RoleTransformer();
     }
 
     public static function root(): static

@@ -2,10 +2,13 @@
 
 namespace Tests\App\Actions\User;
 
-use Sowl\JsonApi\JsonApiRequest;
+use Illuminate\Contracts\Auth\Access\Gate;
+use Sowl\JsonApi\Request\Resource\AbstractCreateRequest;
 
-class CreateUserRequest extends JsonApiRequest
+class CreateUserRequest extends AbstractCreateRequest
 {
+    use HasUsersRepositoryTrait;
+
     public function rules(): array
     {
         return array_merge(parent::rules(), [
@@ -13,5 +16,10 @@ class CreateUserRequest extends JsonApiRequest
             'data.attributes.password' => 'required',
             'data.attributes.email' => 'required|email',
         ]);
+    }
+
+    public function authorize(Gate $gate): bool
+    {
+        return true;
     }
 }

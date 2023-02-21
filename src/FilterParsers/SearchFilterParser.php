@@ -1,16 +1,16 @@
 <?php namespace Sowl\JsonApi\FilterParsers;
 
 use Doctrine\Common\Collections\Criteria;
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\AbstractRequest;
 
 class SearchFilterParser extends AbstractFilterParser
 {
     const SEARCH_KEY = 'search';
 
     public function __construct(
-        JsonApiRequest $request,
+        AbstractRequest   $request,
         protected ?string $property,
-        protected string $searchKey = self::SEARCH_KEY
+        protected string  $searchKey = self::SEARCH_KEY
     ) {
         parent::__construct($request);
     }

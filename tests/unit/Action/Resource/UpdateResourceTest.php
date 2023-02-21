@@ -18,12 +18,7 @@ class UpdateResourceTest extends TestCase
         parent::setUp();
 
         Route::patch('/users/{id}', function (UpdateUserRequest $request) {
-            return (
-                new UpdateResource(
-                    $this->usersRepo(),
-                    new UserTransformer()
-                )
-            )
+            return (new UpdateResource())
                 ->dispatch($request);
         });
     }
@@ -229,6 +224,8 @@ class UpdateResourceTest extends TestCase
 
     public function testUpdateUserValidation()
     {
+        $this->actingAsUser();
+
         $response = $this->patch('/users/1', [
             'data' => [
                 'attributes' => [

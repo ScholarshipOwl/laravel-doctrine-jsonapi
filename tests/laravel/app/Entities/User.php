@@ -4,6 +4,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use LaravelDoctrine\ORM\Facades\EntityManager;
+use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Exceptions\ValidationException;
 use Sowl\JsonApi\ResourceInterface;
 
@@ -14,6 +15,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use LaravelDoctrine\ORM\Auth\Authenticatable;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use Illuminate\Auth\Passwords\CanResetPassword;
+use Tests\App\Transformers\UserTransformer;
 
 /**
  * @ORM\Entity(repositoryClass="Tests\App\Repositories\UsersRepository")
@@ -26,6 +28,11 @@ class User implements AuthenticatableContract, AuthorizableContract, CanResetPas
     public static function getResourceKey(): string
     {
         return 'users';
+    }
+
+    public static function transformer(): AbstractTransformer
+    {
+        return new UserTransformer();
     }
 
     /**

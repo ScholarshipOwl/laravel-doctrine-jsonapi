@@ -4,8 +4,9 @@ namespace Tests\Action\Relationships\ToMany;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Relationships\ToMany\ListRelationships;
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\AbstractRequest;
 use Sowl\JsonApi\JsonApiResponse;
+use Tests\App\Actions\User\Relationships\ListUserRelationshipsRequest;
 use Tests\App\Entities\Role;
 use Tests\App\Transformers\RoleTransformer;
 use Tests\TestCase;
@@ -16,15 +17,8 @@ class ListRelationshipsTest extends TestCase
     {
         parent::setUp();
 
-        Route::get('/users/{id}/relationships/roles', function (JsonApiRequest $request) {
-            return (
-                new ListRelationships(
-                    $this->usersRepo(),
-                    $this->rolesRepo(),
-                    RoleTransformer::create(),
-                    'users',
-                )
-            )
+        Route::get('/users/{id}/relationships/roles', function (ListUserRelationshipsRequest $request) {
+            return (new ListRelationships($this->rolesRepo(), 'users'))
                 ->setSearchProperty('name')
                 ->setFilterable(['id', 'name'])
                 ->dispatch($request);

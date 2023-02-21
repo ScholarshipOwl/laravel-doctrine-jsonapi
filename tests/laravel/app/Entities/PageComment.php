@@ -3,7 +3,9 @@
 namespace Tests\App\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
+use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\ResourceInterface;
+use Tests\App\Transformers\PageCommentTransformer;
 
 /**
  * @ORM\Entity(repositoryClass="Tests\App\Repositories\PageCommentsRepository")
@@ -38,6 +40,11 @@ class PageComment implements ResourceInterface
     public static function getResourceKey(): string
     {
         return 'pageComments';
+    }
+
+    public static function transformer(): AbstractTransformer
+    {
+        return new PageCommentTransformer();
     }
 
     public function getId(): ?int

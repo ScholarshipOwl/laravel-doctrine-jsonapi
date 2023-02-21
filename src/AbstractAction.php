@@ -20,17 +20,10 @@ use Sowl\JsonApi\Exceptions\JsonApiException;
  */
 abstract class AbstractAction
 {
-    protected JsonApiRequest $request;
+    protected AbstractRequest $request;
+    protected ResourceManipulator $manipulator;
 
-    public function __construct(
-        protected ResourceRepository $repository,
-        protected AbstractTransformer $transformer,
-        protected ?ResourceManipulator $manipulator = null
-    ) {
-        $this->manipulator = $this->manipulator ?? new ResourceManipulator($this->repository->em());
-    }
-
-    public function dispatch(JsonApiRequest $request): JsonApiResponse
+    public function dispatch(AbstractRequest $request): JsonApiResponse
     {
         $this->request = $request;
 
@@ -47,21 +40,20 @@ abstract class AbstractAction
 
     protected function repository(): ResourceRepository
     {
-        return $this->repository;
+        return $this->request->repository();
     }
 
-    protected function transformer(): AbstractTransformer
-    {
-        return $this->transformer;
-    }
-
-    protected function request(): JsonApiRequest
+    protected function request(): AbstractRequest
     {
         return $this->request;
     }
 
     protected function manipulator(): ResourceManipulator
     {
+        if (!isset($this->manipulator)) {
+            $this->manipulator = new ResourceManipulator($this->em());
+        }
+
         return $this->manipulator;
     }
 

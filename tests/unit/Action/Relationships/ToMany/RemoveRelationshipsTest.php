@@ -16,14 +16,7 @@ class RemoveRelationshipsTest extends TestCase
         parent::setUp();
 
         Route::delete('/users/{id}/relationships/roles', function (RemoveUserRolesRequest $request) {
-            return (
-                new RemoveRelationships(
-                    $this->usersRepo(),
-                    new RoleTransformer(),
-                    $this->rolesRepo(),
-                    'roles',
-                )
-            )
+            return (new RemoveRelationships($this->rolesRepo(), 'roles'))
                 ->dispatch($request);
         });
     }

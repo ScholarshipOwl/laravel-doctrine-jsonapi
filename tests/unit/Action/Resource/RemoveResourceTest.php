@@ -4,8 +4,9 @@ namespace Tests\Action\Resource;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Resource\RemoveResource;
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\AbstractRequest;
 use Sowl\JsonApi\JsonApiResponse;
+use Tests\App\Actions\User\RemoveUserRequest;
 use Tests\App\Entities\User;
 use Tests\App\Transformers\UserTransformer;
 use Tests\TestCase;
@@ -16,11 +17,8 @@ class RemoveResourceTest extends TestCase
     {
         parent::setUp();
 
-        Route::delete('/users/{id}', function (JsonApiRequest $request) {
-            return (new RemoveResource(
-                $this->usersRepo(),
-                new UserTransformer()
-            ))
+        Route::delete('/users/{id}', function (RemoveUserRequest $request) {
+            return (new RemoveResource())
                 ->dispatch($request);
         });
     }

@@ -5,7 +5,7 @@ namespace Sowl\JsonApi;
 use Illuminate\Contracts\Auth\Access\Gate;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\TransformerAbstract;
-use Sowl\JsonApi\AbilitiesInterface;
+use Sowl\JsonApi\AuthenticationAbilitiesInterface;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
 
 abstract class AbstractTransformer extends TransformerAbstract

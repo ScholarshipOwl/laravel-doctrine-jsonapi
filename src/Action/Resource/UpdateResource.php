@@ -1,20 +1,17 @@
 <?php namespace Sowl\JsonApi\Action\Resource;
 
 use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\Action\UpdatesResourceTrait;
 use Sowl\JsonApi\JsonApiResponse;
 
 class UpdateResource extends AbstractAction
 {
-    use UpdatesResourceTrait;
-
     public function handle(): JsonApiResponse
     {
-        $resource = $this->repository()->findById($this->request()->getId());
+        $resource = $this->request()->resource();
+        $resource = $this->manipulator()->hydrateResource($resource, $this->request()->getData());
 
-        $this->authorize($resource);
-        $this->updateResource($resource);
+        $this->repository()->em()->flush();
 
-        return response()->item($resource, $this->transformer());
+        return response()->item($resource);
     }
 }

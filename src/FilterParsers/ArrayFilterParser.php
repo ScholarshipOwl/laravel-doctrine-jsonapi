@@ -1,12 +1,12 @@
 <?php namespace Sowl\JsonApi\FilterParsers;
 
-use Sowl\JsonApi\JsonApiRequest;
+use Sowl\JsonApi\AbstractRequest;
 use Sowl\JsonApi\Exceptions\BadRequestException;
 use Doctrine\Common\Collections\Criteria;
 
 class ArrayFilterParser extends AbstractFilterParser
 {
-    public function __construct(JsonApiRequest $request, protected array $filterable)
+    public function __construct(AbstractRequest $request, protected array $filterable)
     {
         parent::__construct($request);
     }
