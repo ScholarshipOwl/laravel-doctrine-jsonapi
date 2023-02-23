@@ -10,6 +10,7 @@ trait WithFieldsParamsTrait
     {
         return [
             'fields' => 'sometimes|required|array',
+            'meta'   => 'sometimes|required|array',
         ];
     }
 
@@ -19,6 +20,17 @@ trait WithFieldsParamsTrait
 
         if (is_array($fields)) {
             return $fields;
+        }
+
+        return [];
+    }
+
+    public function getMeta(): array
+    {
+        $meta = $this->get('meta');
+
+        if (is_array($meta)) {
+            return $meta;
         }
 
         return [];

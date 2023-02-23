@@ -2,21 +2,34 @@
 
 namespace Sowl\JsonApi\Fractal;
 
+use League\Fractal\Scope;
 use League\Fractal\Manager;
+use League\Fractal\ScopeFactoryInterface;
 use League\Fractal\Resource\ResourceInterface;
-use Sowl\JsonApi\AbstractRequest;
 
-class ScopeFactory extends \League\Fractal\ScopeFactory
+class ScopeFactory implements ScopeFactoryInterface
 {
-    public function __construct(protected AbstractRequest $request) {}
-
-    public function request(): AbstractRequest
-    {
-        return $this->request;
+    public function createScopeFor(
+        Manager $manager,
+        ResourceInterface $resource,
+        ?string $scopeIdentifier = null
+    ): Scope {
+        return new \Sowl\JsonApi\Fractal\Scope($manager, $resource, $scopeIdentifier);
     }
 
-    public function createScopeFor(Manager $manager, ResourceInterface $resource, $scopeIdentifier = null): Scope
-    {
-        return new Scope($this->request, $manager, $resource, $scopeIdentifier);
+    public function createChildScopeFor(
+        Manager $manager,
+        Scope $parentScope,
+        ResourceInterface $resource,
+        ?string $scopeIdentifier = null
+    ): Scope {
+        $scopeInstance = $this->createScopeFor($manager, $resource, $scopeIdentifier);
+
+        $scopeArray = $parentScope->getParentScopes();
+        $scopeArray[] = $parentScope->getScopeIdentifier();
+
+        $scopeInstance->setParentScopes($scopeArray);
+
+        return $scopeInstance;
     }
 }

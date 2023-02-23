@@ -9,24 +9,22 @@ use Sowl\JsonApi\Exceptions\JsonApiException;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
-use League\Fractal\Manager as Fractal;
 use League\Fractal\Pagination\DoctrinePaginatorAdapter;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use Sowl\JsonApi\Fractal\JsonApiSerializer;
-use Sowl\JsonApi\Fractal\ScopeFactory;
+use Sowl\JsonApi\Fractal\Fractal;
 
 class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 {
     public function __construct(
         ViewFactory $view,
         Redirector $redirector,
-        protected AbstractRequest $request
+        protected ?AbstractRequest $request
     ) {
         parent::__construct($view, $redirector);
     }
 
-    public function request(): AbstractRequest
+    public function request(): ?AbstractRequest
     {
         return $this->request;
     }
@@ -50,7 +48,12 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
             $transformer = new RelationshipsTransformer($transformer);
         }
 
-        $item = (new Item($resource, $transformer, $resource->getResourceKey()))->setMeta($meta);
+        $item = (new Item($resource, $transformer, $resource->getResourceKey()));
+
+        if (!empty($meta)) {
+            $item->setMeta($meta);
+        }
+
         $body = $this->fractal()->createData($item)->toArray();
         return $this->jsonapi($body, $status, $headers);
     }
@@ -77,6 +80,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
         AbstractTransformer $transformer,
         int                 $status = JsonApiResponse::HTTP_OK,
         array               $headers = [],
+        array               $meta = [],
         bool                $relationship = false,
     ): JsonApiResponse
     {
@@ -85,13 +89,19 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
         }
 
         $collection = (new Collection($collection, $transformer, $resourceKey));
+
+        if (!empty($meta)) {
+            $collection->setMeta($meta);
+        }
+
         $body = $this->fractal()->createData($collection)->toArray();
         return $this->jsonapi($body, $status, $headers);
     }
 
     public function query(
         QueryBuilder        $qb,
-        ResourceRepository  $repository,
+        string              $resourceKey,
+        AbstractTransformer $transformer,
         int                 $status = JsonApiResponse::HTTP_OK,
         array               $headers = [],
         array               $meta = [],
@@ -99,30 +109,24 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
     ): JsonApiResponse
     {
         $data = new Paginator($qb, false);
-        $resourceKey = $repository->getResourceKey();
-        $transformer = $repository->transformer();
 
         if ($relationship) {
             $transformer = new RelationshipsTransformer($transformer);
         }
 
-        $collection = (new Collection($data, $transformer, $resourceKey))->setMeta($meta);
+        $collection = (new Collection($data, $transformer, $resourceKey));
+
+        if (!empty($meta)) {
+            $collection->setMeta($meta);
+        }
 
         if ($qb->getMaxResults()) {
-            $collection->setPaginator(
-                new DoctrinePaginatorAdapter(
-                    $data,
-                    function(int $page) {
-                        // return !$resourceKey ? null : "{$request->getBaseUrl()}/$resourceKey?".http_build_query([
-                        return $this->request()->getBasePath().'?'.http_build_query([
-                                'page' => [
-                                    'number'    => $page,
-                                    'size'      => $this->request()->getMaxResults()
-                                ]
-                            ]);
-                    }
-                )
-            );
+            $size = $qb->getMaxResults();
+            $basePath = $this->request()->getBasePath();
+
+            $collection->setPaginator(new DoctrinePaginatorAdapter($data,
+                fn (int $page) => $basePath.'?'.http_build_query(['page' => ['number' => $page, 'size' => $size]]),
+            ));
         }
 
         $body = $this->fractal()->createData($collection)->toArray();
@@ -151,25 +155,6 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
     protected function fractal(): Fractal
     {
-        $request = $this->request();
-        $serializer = new JsonApiSerializer($request);
-        $scopeFactory = new ScopeFactory($request);
-
-        $fractal = new Fractal($scopeFactory);
-        $fractal->setSerializer($serializer);
-
-        if ($includes = $request->getInclude()) {
-            $fractal->parseIncludes($includes);
-        }
-
-        if ($excludes = $request->getExclude()) {
-            $fractal->parseExcludes($excludes);
-        }
-
-        if ($fields = $request->getFields()) {
-            $fractal->parseFieldsets($fields);
-        }
-
-        return $fractal;
+        return new Fractal($this->request);
     }
 }

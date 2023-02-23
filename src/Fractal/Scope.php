@@ -2,23 +2,41 @@
 
 namespace Sowl\JsonApi\Fractal;
 
+use League\Fractal\ParamBag;
+use Sowl\JsonApi\AbstractTransformer;
 use League\Fractal\Manager;
-use League\Fractal\Resource\ResourceInterface;
-use Sowl\JsonApi\AbstractRequest;
 
 class Scope extends \League\Fractal\Scope
 {
-    public function __construct(
-        protected AbstractRequest $request,
-        Manager                   $manager,
-        ResourceInterface         $resource,
-                                  $scopeIdentifier = null
-    ) {
-        parent::__construct($manager, $resource, $scopeIdentifier);
+    protected Manager $manager;
+
+    public function getRequestedMetasets(): ?array
+    {
+        return $this->getManager()->getMetaset($this->getResourceType());
     }
 
-    public function request(): AbstractRequest
+    /**
+     * @param AbstractTransformer $transformer
+     * @param mixed $data
+     * @return array
+     */
+    protected function fireTransformer($transformer, $data): array
     {
-        return $this->request;
+        list($transformedData, $includedData) = parent::fireTransformer($transformer, $data);
+
+        if (!empty($transformer->getAvailableMetas())) {
+            if (null !== ($meta = $transformer->processMetasets($this, $data))) {
+                $transformedData['meta'] = (object) array_merge(
+                    $transformedData['meta'] ?? [], $meta
+                );
+            }
+        }
+
+        return [$transformedData, $includedData];
+    }
+
+    public function getManager(): Fractal
+    {
+        return $this->manager;
     }
 }

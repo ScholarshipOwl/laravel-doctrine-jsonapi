@@ -30,7 +30,9 @@ class ListRelationships extends AbstractAction
         $this->applyFilter($qb);
         $this->applyPagination($qb);
 
-        return response()->query($qb, $this->relationRepository(), relationship: true);
+        $resourceKey = $this->relationRepository()->getResourceKey();
+        $transformer = $this->relationRepository()->transformer();
+        return response()->query($qb, $resourceKey, $transformer, relationship: true);
     }
 
     /**

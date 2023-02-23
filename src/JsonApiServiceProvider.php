@@ -3,6 +3,7 @@
 namespace Sowl\JsonApi;
 
 
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -22,7 +23,7 @@ class JsonApiServiceProvider extends ServiceProvider
             return new ResponseFactory(
                 $app[ViewFactoryContract::class],
                 $app['redirect'],
-                $app['request.jsonapi']
+                $app->resolved('request.jsonapi') ? $app['request.jsonapi'] : null
             );
         });
     }

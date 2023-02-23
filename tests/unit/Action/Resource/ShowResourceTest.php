@@ -481,4 +481,18 @@ class ShowResourceTest extends TestCase
                 ]
             ]);
     }
+
+    public function testMetafieldInclude(): void
+    {
+        $this->actingAsUser();
+
+        $this->get("/users/1?meta[users]=random")
+            ->assertJsonStructure([
+                'data' => [
+                    'meta' => [
+                        'random'
+                    ]
+                ]
+            ]);
+    }
 }
