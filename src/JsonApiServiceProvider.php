@@ -2,8 +2,6 @@
 
 namespace Sowl\JsonApi;
 
-
-use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
@@ -14,9 +12,17 @@ class JsonApiServiceProvider extends ServiceProvider
 
     public function boot()
     {
+        $this->publishes([
+            __DIR__.'/../config/jsonapi.php' => config_path('jsonapi.php'),
+        ]);
+
         // We will assign to the alias "request.jsonapi" all the resolved request
         $this->app->afterResolving(AbstractRequest::class, function (AbstractRequest $request) {
             $this->app->instance('request.jsonapi', $request);
+        });
+
+        $this->app->bind(ResourceRepository::class, function (Application $app) {
+            dd($app);
         });
 
         $this->app->singleton(ResponseFactoryContract::class, function (Application $app) {
