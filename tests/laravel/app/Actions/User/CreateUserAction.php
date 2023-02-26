@@ -12,7 +12,6 @@ class CreateUserAction extends AbstractAction
 {
     public function handle(): JsonApiResponse
     {
-        app(UsersRepository::class);
         /** @var User $user */
         $user = $this->manipulator()->hydrateResource(new User(), $this->request()->getData());
         $user->addRoles(Role::user());

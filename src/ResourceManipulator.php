@@ -18,6 +18,7 @@ class ResourceManipulator
 {
     public function __construct(
         protected EntityManager $em,
+        protected ResourceManager $rm,
     ) {}
 
     public function hydrateResource(
@@ -73,7 +74,7 @@ class ResourceManipulator
             // To-One relation update
             if (in_array($mapping['type'], [ClassMetadataInfo::ONE_TO_ONE, ClassMetadataInfo::MANY_TO_ONE])) {
                 $this->setProperty($resource, $name,
-                    $this->primaryDataToResource($mapping['targetEntity'], $data['data'], "$scope/$name")
+                    $this->objectIdentifierToResource($mapping['targetEntity'], $data['data'], "$scope/$name")
                 );
             }
 
@@ -91,7 +92,7 @@ class ResourceManipulator
         }
 
         $collection = new ArrayCollection(array_map(
-            fn ($item, $index) => $this->primaryDataToResource($targetEntity, $item, "$scope/$index"),
+            fn ($item, $index) => $this->objectIdentifierToResource($targetEntity, $item, "$scope/$index"),
             $data,
             array_keys($data)
         ));
@@ -119,7 +120,7 @@ class ResourceManipulator
         }
     }
 
-    public function primaryDataToResource(string $class, mixed $data, string $scope): ?ResourceInterface
+    public function objectIdentifierToResource(string $class, mixed $data, string $scope): ?ResourceInterface
     {
         if (is_null($data)) {
             return null;
@@ -129,24 +130,13 @@ class ResourceManipulator
             return $data;
         }
 
-        if (is_array($data) && isset($data['id']) && isset($data['type']) && is_string($data['type'])) {
-            if (ResourceRepository::classResourceKey($class) !== $data['type']) {
-                throw BadRequestException::create()
-                    ->error(400, ['pointer' => $scope], sprintf(
-                        'Provider relationships type "%s" is not matched with resource class.',
-                        $data['type']
-                    ));
+        try {
+            if (is_array($data)) {
+                return $this->rm->objectIdentifierToResource($data, $class);
             }
-
-            if (null === ($resource = $this->em->find($class, $data['id']))) {
-                throw JsonApiException::create('Resource is not found', 404)
-                    ->error(404, ['pointer' => $scope], sprintf(
-                        'Resource not found by primary data %s(%s)',
-                        $data['type'], $data['id']
-                    ));
-            }
-
-            return $resource;
+        } catch (\InvalidArgumentException $e) {
+            throw BadRequestException::create()
+                ->error(400, ['pointer' => $scope], $e->getMessage());
         }
 
         throw JsonApiException::create('Wrong primary data provided.', 400)

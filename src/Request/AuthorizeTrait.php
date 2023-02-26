@@ -2,7 +2,7 @@
 
 use Illuminate\Contracts\Auth\Access\Gate;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
-use Sowl\JsonApi\Exceptions\NotFoundException;
+use Sowl\JsonApi\Exceptions\ResourceNotFoundException;
 use Sowl\JsonApi\ResourceRepository;
 
 /**
@@ -21,7 +21,7 @@ trait AuthorizeTrait
 
     /**
      * @throws ForbiddenException
-     * @throws NotFoundException
+     * @throws ResourceNotFoundException
      */
     public function authorize(Gate $gate): bool
     {
@@ -30,14 +30,14 @@ trait AuthorizeTrait
         if (!$gate->allows($ability, $arguments)) {
             $resourceKey = $this->repository()->getResourceKey();
             $message = sprintf('No "%s" ability on "%s" resource.', $ability, $resourceKey);
-            throw (new ForbiddenException($message))->errorAtPointer('/', $message);
+            throw (new ForbiddenException($message))->forbiddenError($message);
         }
 
         return true;
     }
 
     /**
-     * @throws NotFoundException
+     * @throws ResourceNotFoundException
      */
     protected function authArguments(): mixed
     {

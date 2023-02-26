@@ -3,7 +3,7 @@
 namespace Sowl\JsonApi\Request;
 
 use Sowl\JsonApi\Exceptions\ForbiddenException;
-use Sowl\JsonApi\Exceptions\NotFoundException;
+use Sowl\JsonApi\Exceptions\ResourceNotFoundException;
 use Sowl\JsonApi\ResourceRepository;
 
 /**

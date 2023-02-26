@@ -3,6 +3,7 @@
 namespace Tests\App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
+use Sowl\JsonApi\Middleware\Authorize;
 
 class Kernel extends HttpKernel
 {
@@ -57,7 +58,8 @@ class Kernel extends HttpKernel
         'auth.basic' => \Illuminate\Auth\Middleware\AuthenticateWithBasicAuth::class,
         'auth.session' => \Illuminate\Session\Middleware\AuthenticateSession::class,
         'cache.headers' => \Illuminate\Http\Middleware\SetCacheHeaders::class,
-        'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        // 'can' => \Illuminate\Auth\Middleware\Authorize::class,
+        'can' => Authorize::class,
         // 'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'password.confirm' => \Illuminate\Auth\Middleware\RequirePassword::class,
         // 'signed' => \App\Http\Middleware\ValidateSignature::class,

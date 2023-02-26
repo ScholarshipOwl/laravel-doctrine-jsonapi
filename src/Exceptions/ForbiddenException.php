@@ -13,7 +13,7 @@ class ForbiddenException extends JsonApiException
         parent::__construct($message, $httpStatus, $previous);
     }
 
-    public function errorAtPointer(string $pointer, string $detail): static
+    public function forbiddenError(string $detail, string $pointer = '/'): static
     {
         $this->error(static::HTTP_FORBIDDEN, ['pointer' => $pointer], $detail);
 

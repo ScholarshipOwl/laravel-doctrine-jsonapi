@@ -4,6 +4,7 @@ namespace Tests\App\Actions\Page;
 
 use Sowl\JsonApi\Request\Relationships\ToOne\AbstractUpdateRelationshipRequest;
 use Sowl\JsonApi\ResourceRepository;
+use Sowl\JsonApi\Rules\ObjectIdentifierRule;
 use Sowl\JsonApi\Rules\PrimaryDataRule;
 use Tests\App\Entities\Page;
 use Tests\App\Entities\User;
@@ -23,7 +24,7 @@ class UpdateUserRelationshipsRequest extends AbstractUpdateRelationshipRequest
     public function dataRules(): array
     {
         return [
-            'data' => [new PrimaryDataRule(User::class)]
+            'data' => [new ObjectIdentifierRule(User::class)]
         ];
     }
 }

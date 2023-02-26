@@ -5,11 +5,11 @@ namespace Tests\App\Actions\User\Rules;
 use Illuminate\Support\Facades\Gate;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
 use Sowl\JsonApi\AbstractRequest;
-use Sowl\JsonApi\Rules\PrimaryDataRule;
+use Sowl\JsonApi\Rules\ObjectIdentifierRule;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 
-class UserRoleRemoveRule extends PrimaryDataRule
+class UserRoleRemoveRule extends ObjectIdentifierRule
 {
     public function __construct(protected AbstractRequest $request)
     {

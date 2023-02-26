@@ -1,6 +1,6 @@
 {
     "name": "sowl/laravel-doctrine-jsonapi",
-    "description": "Laravel Doctrine JSON:API",
+    "description": "Package for the Laravel that allows developers to create JSON:API endpoints using the Doctrine ORM for data persistence.",
     "prefer-stable": true,
     "minimum-stability": "dev",
     "type": "library",

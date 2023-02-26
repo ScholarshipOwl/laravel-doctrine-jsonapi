@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Illuminate\Support\Facades\Gate;
 use Sowl\JsonApi\AbstractRequest;
 use Sowl\JsonApi\Request\Resource\AbstractUpdateRequest;
-use Sowl\JsonApi\Rules\PrimaryDataRule;
+use Sowl\JsonApi\Rules\ObjectIdentifierRule;
 use Tests\App\Actions\User\Rules\UserRoleAssignRule;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;

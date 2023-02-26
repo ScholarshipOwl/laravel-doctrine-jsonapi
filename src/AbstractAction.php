@@ -21,7 +21,6 @@ use Sowl\JsonApi\Exceptions\JsonApiException;
 abstract class AbstractAction
 {
     protected AbstractRequest $request;
-    protected ResourceManipulator $manipulator;
 
     public function dispatch(AbstractRequest $request): JsonApiResponse
     {
@@ -50,11 +49,7 @@ abstract class AbstractAction
 
     protected function manipulator(): ResourceManipulator
     {
-        if (!isset($this->manipulator)) {
-            $this->manipulator = new ResourceManipulator($this->em());
-        }
-
-        return $this->manipulator;
+        return app(ResourceManipulator::class);
     }
 
     protected function em(): EntityManager

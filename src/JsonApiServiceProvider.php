@@ -33,4 +33,15 @@ class JsonApiServiceProvider extends ServiceProvider
             );
         });
     }
+
+    public function register()
+    {
+        $this->app->singleton(ResourceManager::class, function (Application $app) {
+            return new ResourceManager($app['em'], config('jsonapi.resources'));
+        });
+
+        $this->app->singleton(ResourceManipulator::class, function (Application $app) {
+            return new ResourceManipulator($app['em'], $app[ResourceManager::class]);
+        });
+    }
 }

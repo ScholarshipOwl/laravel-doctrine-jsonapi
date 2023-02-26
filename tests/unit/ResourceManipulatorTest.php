@@ -90,6 +90,6 @@ class ResourceManipulatorTest extends TestCase
 
     protected function manipulator(): ResourceManipulator
     {
-        return new ResourceManipulator($this->em);
+        return app(ResourceManipulator::class);
     }
 }

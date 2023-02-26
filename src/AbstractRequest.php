@@ -7,6 +7,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
+use Sowl\JsonApi\Exceptions\ResourceNotFoundException;
 use Sowl\JsonApi\Request\WithDataTrait;
 use Sowl\JsonApi\Request\WithFieldsParamsTrait;
 use Sowl\JsonApi\Request\WithFilterParamsTrait;

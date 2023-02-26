@@ -11,6 +11,7 @@ use Tests\App\Actions\PageComment\ShowPageCommentRequest;
 use Tests\App\Actions\Role\ShowRoleRequest;
 use Tests\App\Actions\User\ShowUserRequest;
 use Tests\App\Entities\Role;
+use Tests\App\Http\Controller\UserController;
 use Tests\TestCase;
 
 class ShowResourceTest extends TestCase
@@ -19,10 +20,12 @@ class ShowResourceTest extends TestCase
     {
         parent::setUp();
 
-        Route::get('/users/{id}', function (ShowUserRequest $request) {
-            return (new ShowResource())
-                ->dispatch($request);
-        });
+        Route::get('/users/{id}', [UserController::class, 'show']);
+
+//        Route::get('/users/{id}', function (ShowUserRequest $request) {
+//            return (new ShowResource())
+//                ->dispatch($request);
+//        });
 
         Route::get('/roles/{id}', function (ShowRoleRequest $request) {
             return (new ShowResource())
@@ -165,6 +168,19 @@ class ShowResourceTest extends TestCase
                     'links' => [
                         'self' => '/users/3'
                     ]
+                ]
+            ]);
+    }
+
+    public function testShowUserSelf()
+    {
+        $user = $this->actingAsUser();
+
+        $this->get('/users/'.$user->getId())
+            ->assertJson([
+                'data' => [
+                    'id' => ''.$user->getId(),
+                    'type' => 'users',
                 ]
             ]);
     }

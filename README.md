@@ -1,13 +1,18 @@
 # Laravel Doctrine JSON:API
-Set of tools for implementation JSON:API in Laravel framework using Doctrine ORM.
+Package for the [Laravel](https://laravel.com/) that allows developers to create [JSON:API](https://jsonapi.org/)
+endpoints using the [Doctrine ORM](https://www.doctrine-project.org/) for data persistence.
 
-### Installation
+It provides an easy-to-use API for building JSON API responses and supports various features such as resource filtering,
+sorting, pagination, and relationships. With this library, Laravel developers can quickly implement a JSON API compliant
+backend for their web or mobile applications.
+
+## Usage
 Install using composer
 ```shell
 composer require sowl/laravel-doctrine-jsonapi
 ```
 
-### Development
+## Development
 Use `docker compose` for running PHPUnit tests even if your local PHP runtime version doesn't match library one.
 
 To install dependencies and run the tests

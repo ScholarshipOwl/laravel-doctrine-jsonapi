@@ -8,7 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 use Sowl\JsonApi\Exceptions\BadRequestException;
-use Sowl\JsonApi\Exceptions\NotFoundException;
+use Sowl\JsonApi\Exceptions\ResourceNotFoundException;
 
 use InvalidArgumentException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
@@ -74,7 +74,7 @@ class ResourceRepository extends EntityRepository
     public function findById(string|int $id): ResourceInterface
     {
         if (null === ($entity = $this->find($id))) {
-            throw new NotFoundException($id, $this->getResourceKey());
+            throw new ResourceNotFoundException($id, $this->getResourceKey());
         }
 
         return $entity;
