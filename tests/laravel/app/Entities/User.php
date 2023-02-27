@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Exceptions\ValidationException;
+use Sowl\JsonApi\Relationships\RelationshipsCollection;
+use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\ResourceInterface;
 
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -33,6 +35,13 @@ class User implements AuthenticatableContract, AuthorizableContract, CanResetPas
     public static function transformer(): AbstractTransformer
     {
         return new UserTransformer();
+    }
+
+    public static function relationships(): RelationshipsCollection
+    {
+        return new RelationshipsCollection([
+            ToManyRelationship::create('roles', Role::class, 'users')
+        ]);
     }
 
     /**

@@ -3,10 +3,8 @@
 namespace Tests\Action\Relationships\ToOne;
 
 use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Relationships\ToOne\ShowRelated;
-use Sowl\JsonApi\JsonApiResponse;
-use Tests\App\Actions\PageComment\ShowRelatedPageRequest;
-use Tests\App\Actions\PageComment\ShowRelatedUserRequest;
+use Sowl\JsonApi\Controller;
+use Sowl\JsonApi\Response;
 use Tests\TestCase;
 
 class ShowRelatedTest extends TestCase
@@ -15,29 +13,23 @@ class ShowRelatedTest extends TestCase
     {
         parent::setUp();
 
-        Route::get('/pageComments/{id}/user', function (ShowRelatedUserRequest $request) {
-            return (new ShowRelated('user'))
-                ->dispatch($request);
-        });
-
-        Route::get('/pageComments/{id}/page', function (ShowRelatedPageRequest $request) {
-            return (new ShowRelated('page'))
-                ->dispatch($request);
-        });
+        Route::get('/{resourceKey}/{id}/{relationship}', [Controller::class, 'related']);
     }
 
     public function testAuthorizationPermissionsAnyOneCanAccess()
     {
-        $this->get('/pageComments/1/user')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/pageComments/1/page')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/pageComments/2/user')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/pageComments/2/page')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/pageComments/3/user')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/pageComments/3/page')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->actingAsUser();
+        $this->get('/pageComments/1/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/pageComments/1/page')->assertStatus(Response::HTTP_OK);
+        $this->get('/pageComments/2/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/pageComments/2/page')->assertStatus(Response::HTTP_OK);
+        $this->get('/pageComments/3/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/pageComments/3/page')->assertStatus(Response::HTTP_OK);
     }
 
     public function testShowPageCommentsRelatedUserResponse()
     {
+        $this->actingAsUser();
         $this->get('/pageComments/1/user')
             ->assertStatus(200)
             ->assertExactJson([
@@ -113,6 +105,7 @@ class ShowRelatedTest extends TestCase
 
     public function testShowPageCommentsRelatedPage()
     {
+        $this->actingAsUser();
         $page1response = [
             'data' => [
                 'id' => '1',

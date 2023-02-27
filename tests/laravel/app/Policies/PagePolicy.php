@@ -13,18 +13,18 @@ class PagePolicy
         return true;
     }
 
-    public function updateRelationships(User $user, Page $page, string $relationshipClass): bool
+    public function updateRelationships(User $user, Page $page, string $relationship): bool
     {
-        return match ($relationshipClass) {
-            User::class => $user->getRoles()->contains(Role::moderator()),
+        return match ($relationship) {
+            'user' => $user->getRoles()->contains(Role::moderator()),
             default => false,
         };
     }
 
-    public function showRelationships(User $user, Page $page, string $relatedResourceClass): bool
+    public function showRelationships(User $user, Page $page, string $relationship): bool
     {
-        return match ($relatedResourceClass) {
-            User::class => true,
+        return match ($relationship) {
+            'user' => true,
             default => false
         };
     }

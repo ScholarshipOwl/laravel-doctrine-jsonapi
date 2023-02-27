@@ -19,28 +19,28 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
     public function __construct(
         ViewFactory $view,
         Redirector $redirector,
-        protected ?AbstractRequest $request
+        protected ?Request $request
     ) {
         parent::__construct($view, $redirector);
     }
 
-    public function request(): ?AbstractRequest
+    public function request(): ?Request
     {
         return $this->request;
     }
 
-    public function jsonapi(?array $body, int $status = JsonApiResponse::HTTP_OK, array $header = []): JsonApiResponse
+    public function jsonapi(?array $body, int $status = Response::HTTP_OK, array $header = []): Response
     {
-        return new JsonApiResponse($body, $status, $header);
+        return new Response($body, $status, $header);
     }
 
     public function item(
         ResourceInterface   $resource,
-        int                 $status = JsonApiResponse::HTTP_OK,
+        int                 $status = Response::HTTP_OK,
         array               $headers = [],
         array               $meta = [],
         bool                $relationship = false,
-    ): JsonApiResponse
+    ): Response
     {
         $transformer = $resource->transformer();
 
@@ -62,11 +62,11 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
         ResourceInterface   $resource,
         array               $headers = [],
         array               $meta = []
-    ): JsonApiResponse
+    ): Response
     {
         return $this->item(
             resource: $resource,
-            status: JsonApiResponse::HTTP_CREATED,
+            status: Response::HTTP_CREATED,
             headers: array_merge($headers, [
                 'Location' => $this->linkToResource($resource),
             ]),
@@ -78,11 +78,11 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
         array|DoctrineCollection $collection,
         string $resourceKey,
         AbstractTransformer $transformer,
-        int                 $status = JsonApiResponse::HTTP_OK,
+        int                 $status = Response::HTTP_OK,
         array               $headers = [],
         array               $meta = [],
         bool                $relationship = false,
-    ): JsonApiResponse
+    ): Response
     {
         if ($relationship) {
             $transformer = new RelationshipsTransformer($transformer);
@@ -102,11 +102,11 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
         QueryBuilder        $qb,
         string              $resourceKey,
         AbstractTransformer $transformer,
-        int                 $status = JsonApiResponse::HTTP_OK,
+        int                 $status = Response::HTTP_OK,
         array               $headers = [],
         array               $meta = [],
         bool                $relationship = false,
-    ): JsonApiResponse
+    ): Response
     {
         $data = new Paginator($qb, false);
 
@@ -133,17 +133,22 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
         return $this->jsonapi($body, $status, $headers);
     }
 
-    public function null(int $status = JsonApiResponse::HTTP_OK, array $headers = []): JsonApiResponse
+    public function null(int $status = Response::HTTP_OK, array $headers = []): Response
     {
         return $this->jsonapi(['data' => null], $status, $headers);
     }
 
-    public function exception(JsonApiException $e): JsonApiResponse
+    public function exception(JsonApiException $e): Response
     {
         return $this->jsonapi(['errors' => $e->errors()], $e->getCode());
     }
 
-    public function noContent($status = JsonApiResponse::HTTP_NO_CONTENT, array $headers = []): JsonApiResponse
+    public function noContent($status = Response::HTTP_NO_CONTENT, array $headers = []): Response
+    {
+        return $this->jsonapi(null, $status, $headers);
+    }
+
+    public function notFound($status = Response::HTTP_NOT_FOUND, array $headers = []): Response
     {
         return $this->jsonapi(null, $status, $headers);
     }

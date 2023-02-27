@@ -3,12 +3,9 @@
 namespace Tests\Action\Resource;
 
 use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Resource\RemoveResource;
-use Sowl\JsonApi\AbstractRequest;
-use Sowl\JsonApi\JsonApiResponse;
-use Tests\App\Actions\User\RemoveUserRequest;
+use Sowl\JsonApi\Controller;
+use Sowl\JsonApi\Response;
 use Tests\App\Entities\User;
-use Tests\App\Transformers\UserTransformer;
 use Tests\TestCase;
 
 class RemoveResourceTest extends TestCase
@@ -17,17 +14,14 @@ class RemoveResourceTest extends TestCase
     {
         parent::setUp();
 
-        Route::delete('/users/{id}', function (RemoveUserRequest $request) {
-            return (new RemoveResource())
-                ->dispatch($request);
-        });
+        Route::delete('/{resourceKey}/{id}', [Controller::class, 'remove']);
     }
 
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
-        $this->delete('/users/1')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->delete('/users/2')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->delete('/users/2')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
+        $this->delete('/users/1')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->delete('/users/2')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->delete('/users/2')->assertStatus(Response::HTTP_FORBIDDEN);
 
         $this->em()->clear();
         $this->assertNotNull($this->em()->find(User::class, 1));
@@ -39,9 +33,9 @@ class RemoveResourceTest extends TestCase
     {
         $this->actingAsUser();
 
-        $this->delete('/users/1')->assertStatus(JsonApiResponse::HTTP_NO_CONTENT);
-        $this->delete('/users/2')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->delete('/users/2')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
+        $this->delete('/users/1')->assertStatus(Response::HTTP_NO_CONTENT);
+        $this->delete('/users/2')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->delete('/users/2')->assertStatus(Response::HTTP_FORBIDDEN);
 
         $this->em()->clear();
         $this->assertNull($this->em()->find(User::class, 1));
@@ -53,9 +47,9 @@ class RemoveResourceTest extends TestCase
     {
         $this->actingAsModerator();
 
-        $this->delete('/users/1')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->delete('/users/2')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->delete('/users/3')->assertStatus(JsonApiResponse::HTTP_NO_CONTENT);
+        $this->delete('/users/1')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->delete('/users/2')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->delete('/users/3')->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->em()->clear();
         $this->assertNotNull($this->em()->find(User::class, 1));
@@ -67,9 +61,9 @@ class RemoveResourceTest extends TestCase
     {
         $this->actingAsRoot();
 
-        $this->delete('/users/1')->assertStatus(JsonApiResponse::HTTP_NO_CONTENT);
-        $this->delete('/users/2')->assertStatus(JsonApiResponse::HTTP_NO_CONTENT);
-        $this->delete('/users/3')->assertStatus(JsonApiResponse::HTTP_NO_CONTENT);
+        $this->delete('/users/1')->assertStatus(Response::HTTP_NO_CONTENT);
+        $this->delete('/users/2')->assertStatus(Response::HTTP_NO_CONTENT);
+        $this->delete('/users/3')->assertStatus(Response::HTTP_NO_CONTENT);
 
         $this->em()->clear();
         $this->assertNull($this->em()->find(User::class, 1));

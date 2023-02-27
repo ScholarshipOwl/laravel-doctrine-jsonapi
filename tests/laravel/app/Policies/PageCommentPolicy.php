@@ -14,8 +14,11 @@ class PageCommentPolicy
         return true;
     }
 
-    public function showRelationships(User $user, PageComment $comment, string $relatedResourceClass): bool
+    public function showRelationships(User $user, PageComment $comment, string $relationship): bool
     {
-        return false;
+        return match ($relationship) {
+            'user' => true,
+            'page' => true,
+        };
     }
 }

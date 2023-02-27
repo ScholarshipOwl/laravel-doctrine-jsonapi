@@ -3,22 +3,19 @@
 namespace Sowl\JsonApi\Action\Relationships\ToOne;
 
 use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\Action\RelatedActionTrait;
-use Sowl\JsonApi\JsonApiResponse;
+use Sowl\JsonApi\Relationships\ToOneRelationship;
+use Sowl\JsonApi\Response;
 
 class ShowRelationship extends AbstractAction
 {
-    use RelatedActionTrait;
+    public function __construct(protected ToOneRelationship $relationship) {}
 
-    public function __construct(
-        protected string $relatedFieldName,
-    ) {}
-
-    public function handle(): JsonApiResponse
+    public function handle(): Response
 	{
         $resource = $this->request()->resource();
+        $field = $this->relationship->name();
 
-        if ($relation = $this->manipulator()->getProperty($resource, $this->relatedFieldName())) {
+        if ($relation = $this->manipulator()->getProperty($resource, $field)) {
             return response()->item($relation, relationship: true);
         }
 

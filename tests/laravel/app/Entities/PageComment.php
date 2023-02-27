@@ -2,8 +2,12 @@
 
 namespace Tests\App\Entities;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Sowl\JsonApi\AbstractTransformer;
+use Sowl\JsonApi\Relationships\RelationshipsCollection;
+use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\ResourceInterface;
 use Tests\App\Transformers\PageCommentTransformer;
 
@@ -45,6 +49,14 @@ class PageComment implements ResourceInterface
     public static function transformer(): AbstractTransformer
     {
         return new PageCommentTransformer();
+    }
+
+    public static function relationships(): RelationshipsCollection
+    {
+        return new RelationshipsCollection([
+            ToOneRelationship::create('user', User::class),
+            ToOneRelationship::create('page', Page::class),
+        ]);
     }
 
     public function getId(): ?int

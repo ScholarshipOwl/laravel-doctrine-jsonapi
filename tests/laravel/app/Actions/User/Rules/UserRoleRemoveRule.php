@@ -4,14 +4,14 @@ namespace Tests\App\Actions\User\Rules;
 
 use Illuminate\Support\Facades\Gate;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
-use Sowl\JsonApi\AbstractRequest;
+use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Rules\ObjectIdentifierRule;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 
 class UserRoleRemoveRule extends ObjectIdentifierRule
 {
-    public function __construct(protected AbstractRequest $request)
+    public function __construct(protected Request $request)
     {
         parent::__construct(Role::class, [
             \Closure::fromCallable([$this, 'roleAssignedOnUser']),

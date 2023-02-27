@@ -3,13 +3,9 @@
 namespace Tests\Action\Resource;
 
 use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Resource\ListResources;
-use Sowl\JsonApi\AbstractRequest;
-use Sowl\JsonApi\JsonApiResponse;
-use Tests\App\Actions\Role\ListRolesRequest;
-use Tests\App\Actions\User\ListUsersRequest;
-use Tests\App\Transformers\RoleTransformer;
-use Tests\App\Transformers\UserTransformer;
+use Sowl\JsonApi\Response;
+use Tests\App\Http\Controller\RolesController;
+use Tests\App\Http\Controller\UsersController;
 use Tests\TestCase;
 
 class ListResourcesTest extends TestCase
@@ -18,42 +14,30 @@ class ListResourcesTest extends TestCase
     {
         parent::setUp();
 
-        Route::get('/roles', function (ListRolesRequest $request) {
-            return (new ListResources())
-                ->setSearchProperty('name')
-                ->setFilterable(['id', 'name'])
-                ->dispatch($request);
-        });
-
-        Route::get('/users', function (ListUsersRequest $request) {
-            return (new ListResources())
-                ->setSearchProperty('email')
-                ->setFilterable(['id', 'email', 'name'])
-                ->dispatch($request);
-        });
-
+        Route::get('/users', [UsersController::class, 'list']);
+        Route::get('/roles', [RolesController::class, 'list']);
     }
 
     public function testAuthorizationPermissionsForNoLogedIn()
     {
-        $this->get('/roles')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->get('/users')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
+        $this->get('/roles')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/users')->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     public function testAuthorizationPermissionsForUserRole()
     {
         $this->actingAsUser();
 
-        $this->get('/roles')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->get('/users')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
+        $this->get('/roles')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/users')->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     public function testAuthorizationPermissionsForRootRole()
     {
         $this->actingAsRoot();
 
-        $this->get('/roles')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/users')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/roles')->assertStatus(Response::HTTP_OK);
+        $this->get('/users')->assertStatus(Response::HTTP_OK);
     }
 
     public function testListRoleResponse()

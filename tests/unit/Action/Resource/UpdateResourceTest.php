@@ -4,10 +4,11 @@ namespace Tests\Action\Resource;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Resource\UpdateResource;
-use Sowl\JsonApi\JsonApiResponse;
+use Sowl\JsonApi\Response;
 use Tests\App\Actions\User\UpdateUserRequest;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
+use Tests\App\Http\Controller\UsersController;
 use Tests\App\Transformers\UserTransformer;
 use Tests\TestCase;
 
@@ -17,17 +18,14 @@ class UpdateResourceTest extends TestCase
     {
         parent::setUp();
 
-        Route::patch('/users/{id}', function (UpdateUserRequest $request) {
-            return (new UpdateResource())
-                ->dispatch($request);
-        });
+        Route::patch('/users/{id}', [UsersController::class, 'update']);
     }
 
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
-        $this->patch('/users/1')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->patch('/users/2')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->patch('/users/3')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
+        $this->patch('/users/1')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->patch('/users/2')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->patch('/users/3')->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     public function testAuthorizationPermissionsForUserRole()
@@ -39,9 +37,9 @@ class UpdateResourceTest extends TestCase
             ],
         ];
 
-        $this->patch('/users/1', ['data' => $data])->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->patch('/users/2', ['data' => $data])->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->patch('/users/3', ['data' => $data])->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
+        $this->patch('/users/1', ['data' => $data])->assertStatus(Response::HTTP_OK);
+        $this->patch('/users/2', ['data' => $data])->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->patch('/users/3', ['data' => $data])->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     public function testAuthorizationPermissionsForRootRole()
@@ -54,9 +52,9 @@ class UpdateResourceTest extends TestCase
         ];
 
 
-        $this->patch('/users/1', ['data' => $data])->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->patch('/users/2', ['data' => $data])->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->patch('/users/3', ['data' => $data])->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->patch('/users/1', ['data' => $data])->assertStatus(Response::HTTP_OK);
+        $this->patch('/users/2', ['data' => $data])->assertStatus(Response::HTTP_OK);
+        $this->patch('/users/3', ['data' => $data])->assertStatus(Response::HTTP_OK);
     }
 
     public function testUpdateUser()

@@ -2,15 +2,14 @@
 
 namespace Sowl\JsonApi\Middleware;
 
-use Illuminate\Http\Request;
-use Sowl\JsonApi\AbstractRequest;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
-use Sowl\JsonApi\JsonApiResponse;
+use Sowl\JsonApi\Request;
+use Sowl\JsonApi\ResourceManager;
 
+use Illuminate\Http\Request as HttpRequest;
 use Illuminate\Contracts\Auth\Access\Gate;
 use Closure;
-use Sowl\JsonApi\ResourceManager;
 
 class Authorize
 {
@@ -23,12 +22,12 @@ class Authorize
      * @throws ForbiddenException
      * @throws JsonApiException
      */
-    public function handle(Request $request, Closure $next, $ability, ...$args): JsonApiResponse
+    public function handle(HttpRequest $request, Closure $next, $ability, ...$args)
     {
-        $arguments = $this->getGateArguments($request, $args);
+        $arguments = $this->getGateArguments($args);
 
         if (!$this->gate->allows($ability, $arguments)) {
-            $resourceKey = $this->resourceKey($request);
+            $resourceKey = $this->request()->resourceKey();
             $message = sprintf('No "%s" ability on "%s" resource.', $ability, $resourceKey);
             throw (new ForbiddenException($message))->forbiddenError($message);
         }
@@ -39,34 +38,32 @@ class Authorize
     /**
      * @throws JsonApiException
      */
-    protected function getGateArguments(Request $request, array $arguments): array
+    protected function getGateArguments(array $arguments): array
     {
-        $resourceKey = $this->resourceKey($request);
+        $resourceKey = $this->request()->resourceKey();
+        $resourceClass = $this->rm()->classByResourceKey($resourceKey);
+        $baseArguments = [$resourceClass];
 
-        if ($id = $request->route('id')) {
-            $repo = $this->resourceManager->repositoryByResourceKey($resourceKey);
+        if ($id = $this->request()->getId()) {
+            $repo = $this->rm()->repositoryByClass($resourceClass);
             $resource = $repo->findById($id);
-
-            return [$resource];
+            $baseArguments = [$resource];
         }
 
-        return [$this->resourceManager->classByResourceKey($resourceKey)];
+        if ($relationshipName = $this->request()->relationshipName()) {
+            $baseArguments[] = $relationshipName;
+        }
+
+        return array_merge($baseArguments, $arguments);
     }
 
-    /**
-     * @throws JsonApiException
-     */
-    public function resourceKey(Request $request): string
+    protected function request(): Request
     {
-        if (null !== ($resourceKey = $request->route('resourceKey'))) {
-            return $resourceKey;
-        }
+        return app(Request::class);
+    }
 
-        $matches = [];
-        if (preg_match('/^([^\/.]*)\/?.*$/', $request->path(), $matches)) {
-            return $matches[1];
-        }
-
-        throw JsonApiException::create('No resource key found for the request', 404);
+    protected function rm(): ResourceManager
+    {
+        return $this->resourceManager;
     }
 }

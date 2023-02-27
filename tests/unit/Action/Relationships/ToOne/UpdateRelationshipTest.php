@@ -3,8 +3,7 @@
 namespace Tests\Action\Relationships\ToOne;
 
 use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationship;
-use Tests\App\Actions\Page\UpdateUserRelationshipsRequest;
+use Tests\App\Http\Controller\PageController;
 use Tests\TestCase;
 
 class UpdateRelationshipTest extends TestCase
@@ -13,10 +12,8 @@ class UpdateRelationshipTest extends TestCase
     {
         parent::setUp();
 
-        Route::patch('/pages/{id}/relationships/user', function (UpdateUserRelationshipsRequest $request) {
-            return (new UpdateRelationship($this->usersRepo(), 'user'))
-                ->dispatch($request);
-        });
+        Route::patch('/pages/{id}/relationships/user', [PageController::class, 'updateUserRelationship'])
+            ->middleware('can:updateRelationships,user');
     }
 
     public function testAuthorizationPermissionsForNoLoggedIn()

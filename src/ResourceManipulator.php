@@ -143,9 +143,16 @@ class ResourceManipulator
             ->error(400, ['pointer' => $scope], 'Wrong primary data provided.');
     }
 
+    public function hasProperty(ResourceInterface $resource, string $property): bool
+    {
+        $getter = $this->buildGetter($property);
+
+        return method_exists($resource, $getter);
+    }
+
     public function getProperty(ResourceInterface $resource, string $property): mixed
     {
-        $getter = 'get' . ucfirst($property);
+        $getter = $this->buildGetter($property);
 
         if (!method_exists($resource, $getter)) {
             throw (new BadRequestException())->error(
@@ -201,5 +208,10 @@ class ResourceManipulator
         }
 
         return $resource->$remover($item);
+    }
+
+    protected function buildGetter(string $property): string
+    {
+        return 'get' . ucfirst($property);
     }
 }

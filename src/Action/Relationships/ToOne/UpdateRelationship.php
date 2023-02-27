@@ -1,32 +1,27 @@
 <?php namespace Sowl\JsonApi\Action\Relationships\ToOne;
 
-use Sowl\JsonApi\JsonApiResponse;
-use Sowl\JsonApi\ResourceRepository;
+use Sowl\JsonApi\Relationships\ToOneRelationship;
+use Sowl\JsonApi\Response;
 use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\Action\RelatedActionTrait;
 
 class UpdateRelationship extends AbstractAction
 {
-     use RelatedActionTrait;
+    public function __construct(protected ToOneRelationship $relationship) {}
 
-    public function __construct(
-        protected ResourceRepository $relationRepository,
-        protected string $relatedFieldName,
-    ) {}
-
-    public function handle(): JsonApiResponse
+    public function handle(): Response
     {
         $resource = $this->request()->resource();
+        $field = $this->relationship->field();
 
         if (null !== ($objectIdentifier = $this->request()->getData())) {
-            $relationshipResource = $this->relationRepository()->findByObjectIdentifier($objectIdentifier);
-            $this->manipulator()->setProperty($resource, $this->relatedFieldName(), $relationshipResource);
+            $relationshipResource = $this->relationship->repository()->findByObjectIdentifier($objectIdentifier);
+            $this->manipulator()->setProperty($resource, $field, $relationshipResource);
             $this->repository()->em()->flush();
 
             return response()->item($relationshipResource, relationship: true);
         }
 
-        $this->manipulator()->setProperty($resource, $this->relatedFieldName(), null);
+        $this->manipulator()->setProperty($resource, $field, null);
         $this->repository()->em()->flush();
 
         return response()->null();

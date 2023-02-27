@@ -4,8 +4,10 @@ namespace Tests\Action\Relationships\ToMany;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationships;
+use Sowl\JsonApi\Controller;
 use Tests\App\Actions\User\Relationships\RemoveUserRolesRequest;
 use Tests\App\Entities\Role;
+use Tests\App\Http\Controller\UsersController;
 use Tests\App\Transformers\RoleTransformer;
 use Tests\TestCase;
 
@@ -15,10 +17,9 @@ class RemoveRelationshipsTest extends TestCase
     {
         parent::setUp();
 
-        Route::delete('/users/{id}/relationships/roles', function (RemoveUserRolesRequest $request) {
-            return (new RemoveRelationships($this->rolesRepo(), 'roles'))
-                ->dispatch($request);
-        });
+        Route::delete('/users/{id}/relationships/roles', [UsersController::class, 'removeUserRoles']);
+
+        Route::delete('/{resourceKey}/{id}/relationships/{relationship}', [Controller::class, 'removeRelationships']);
     }
 
     public function testAuthorizationPermissionsForNoLoggedIn()

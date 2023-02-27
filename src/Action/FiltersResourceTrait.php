@@ -20,7 +20,7 @@ trait FiltersResourceTrait
      */
     protected array $filterable = [];
 
-    public function setSearchProperty(string $property): static
+    public function setSearchProperty(?string $property): static
     {
         $this->searchProperty = $property;
         return $this;

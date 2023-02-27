@@ -1,43 +1,39 @@
 <?php namespace Sowl\JsonApi\Action\Relationships\ToMany;
 
 use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\JsonApiResponse;
-use Sowl\JsonApi\ResourceRepository;
-use Sowl\JsonApi\Action\RelatedActionTrait;
+use Sowl\JsonApi\Relationships\ToManyRelationship;
+use Sowl\JsonApi\Response;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
 class UpdateRelationships extends AbstractAction
 {
-    use RelatedActionTrait;
-
     public function __construct(
-        protected ResourceRepository $relationRepository,
-        protected string $relatedFieldName,
-        protected string $resourceMappedBy,
+        protected ToManyRelationship $relationship,
     ) {}
 
-    public function handle(): JsonApiResponse
+    public function handle(): Response
     {
         $resource = $this->request()->resource();
+        $field = $this->relationship->field();
+        $relationshipRepository = $this->relationship->repository();
 
         $replaceRelationships = new ArrayCollection(array_map(
-            function (array $relatedPrimaryData, $index) {
-                return $this
-                    ->relationRepository()
+            function (array $relatedPrimaryData, $index) use ($relationshipRepository) {
+                return $relationshipRepository
                     ->findByObjectIdentifier($relatedPrimaryData, "/data/$index");
             },
             $this->request()->getData(),
             array_keys($this->request()->getData()),
         ));
 
-        $this->manipulator()->replaceResourceCollection($resource, $this->relatedFieldName(), $replaceRelationships);
+        $this->manipulator()->replaceResourceCollection($resource, $field, $replaceRelationships);
         $this->repository()->em()->flush();
 
         return response()->collection(
-            $this->manipulator()->getProperty($resource, $this->relatedFieldName()),
-            $this->relationRepository()->getResourceKey(),
-            $this->relationRepository()->transformer(),
+            $this->manipulator()->getProperty($resource, $field),
+            $relationshipRepository->getResourceKey(),
+            $relationshipRepository->transformer(),
             relationship: true,
         );
     }

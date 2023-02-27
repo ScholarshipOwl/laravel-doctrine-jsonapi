@@ -5,12 +5,8 @@ namespace Tests;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Mockery\MockInterface;
-use Sowl\JsonApi\Exceptions\JsonApiException;
-use Sowl\JsonApi\AbstractRequest;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceRepository;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Mockery as m;
 
 class ResourceRepositoryTest extends TestCase

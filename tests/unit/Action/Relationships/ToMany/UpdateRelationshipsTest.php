@@ -5,11 +5,13 @@ namespace Tests\Action\Relationships\ToMany;
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationships;
 use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationships;
-use Sowl\JsonApi\AbstractRequest;
-use Sowl\JsonApi\JsonApiResponse;
+use Sowl\JsonApi\Controller;
+use Sowl\JsonApi\Request;
+use Sowl\JsonApi\Response;
 use Tests\App\Actions\User\Relationships\CreateUserRolesRequest;
 use Tests\App\Actions\User\Relationships\UpdateUserRolesRequest;
 use Tests\App\Entities\Role;
+use Tests\App\Http\Controller\UsersController;
 use Tests\App\Transformers\RoleTransformer;
 use Tests\TestCase;
 
@@ -19,10 +21,9 @@ class UpdateRelationshipsTest extends TestCase
     {
         parent::setUp();
 
-        Route::patch('/users/{id}/relationships/roles', function (UpdateUserRolesRequest $request) {
-            return (new UpdateRelationships($this->rolesRepo(), 'roles', 'users'))
-                ->dispatch($request);
-        });
+        Route::patch('/users/{id}/relationships/roles', [UsersController::class, 'updateUserRoles']);
+
+        Route::patch('/{resourceKey}/{id}/relationships/{relationship}', [Controller::class, 'updateRelationships']);
     }
 
     public function testAuthorizationPermissionsForNoLoggedIn()

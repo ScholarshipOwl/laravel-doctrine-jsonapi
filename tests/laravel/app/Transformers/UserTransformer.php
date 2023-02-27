@@ -28,7 +28,7 @@ class UserTransformer extends AbstractTransformer
 
     public function includeRoles(User $user): Collection
     {
-        $this->gate()->authorize(AuthenticationAbilitiesInterface::LIST_RELATIONSHIPS, [$user, Role::class]);
+        $this->gate()->authorize(AuthenticationAbilitiesInterface::SHOW_RELATIONSHIPS, [$user, 'roles']);
 
         return $this->collection($user->getRoles(), new RoleTransformer(), Role::getResourceKey());
     }

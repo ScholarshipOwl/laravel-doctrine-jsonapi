@@ -2,26 +2,14 @@
 
 namespace Tests\App\Actions\User\Relationships;
 
-use Sowl\JsonApi\Request\Relationships\ToMany\AbstractRemoveRelationshipsRequest;
-use Sowl\JsonApi\ResourceRepository;
-use Tests\App\Actions\User\HasUsersRepositoryTrait;
+use Sowl\JsonApi\Request\Relationships\ToMany\RemoveRelationshipsRequest;
+use Sowl\JsonApi\Rules\ObjectIdentifierRule;
 use Tests\App\Actions\User\Rules\UserRoleRemoveRule;
-use Tests\App\Entities\Role;
 
-class RemoveUserRolesRequest extends AbstractRemoveRelationshipsRequest
+class RemoveUserRolesRequest extends RemoveRelationshipsRequest
 {
-    use HasUsersRepositoryTrait;
-
-    public function relationRepository(): ResourceRepository
+    protected function dataValidationRule(): ObjectIdentifierRule
     {
-        return app('em')->getRepository(Role::class);
-    }
-
-    public function dataRules(): array
-    {
-        return [
-            'data' => 'array|required',
-            'data.*' => [new UserRoleRemoveRule($this)],
-        ];
+        return new UserRoleRemoveRule($this);
     }
 }

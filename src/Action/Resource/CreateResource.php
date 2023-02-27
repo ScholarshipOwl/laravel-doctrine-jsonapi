@@ -1,11 +1,11 @@
 <?php namespace Sowl\JsonApi\Action\Resource;
 
 use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\JsonApiResponse;
+use Sowl\JsonApi\Response;
 
 class CreateResource extends AbstractAction
 {
-    public function handle(): JsonApiResponse
+    public function handle(): Response
     {
         $data = $this->request()->getData();
         $class = $this->repository()->getClassName();

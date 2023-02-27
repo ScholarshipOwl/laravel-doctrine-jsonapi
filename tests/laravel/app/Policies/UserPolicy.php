@@ -42,10 +42,10 @@ class UserPolicy
         };
     }
 
-    public function listRelationships(User $user, User $resource, string $relatedResourceClass): bool
+    public function showRelationships(User $user, User $resource, string $relationshipName): bool
     {
-        return match ($relatedResourceClass) {
-            Role::class => $user === $resource,
+        return match ($relationshipName) {
+            'roles' => $user === $resource,
             default => false,
         };
     }

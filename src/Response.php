@@ -2,7 +2,7 @@
 
 use Illuminate\Http\JsonResponse;
 
-class JsonApiResponse extends JsonResponse
+class Response extends JsonResponse
 {
     const JSON_API_CONTENT_TYPE = 'application/vnd.api+json';
 

@@ -59,15 +59,26 @@ class ResourceManager
         return $this;
     }
 
+    public function hasResourceKey(string $resourceKey): bool
+    {
+        return isset($this->resources[$resourceKey]);
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     */
     public function classByResourceKey(string $resourceKey): string
     {
-        if (!isset($this->resources[$resourceKey])) {
+        if (!$this->hasResourceKey($resourceKey)) {
             throw new InvalidArgumentException(sprintf('%s - is not registered resource key', $resourceKey));
         }
 
         return $this->resources[$resourceKey];
     }
 
+    /**
+     * @throws InvalidArgumentException
+     */
     public function repositoryByResourceKey(string $resourceKey): ResourceRepository
     {
         $class = $this->classByResourceKey($resourceKey);

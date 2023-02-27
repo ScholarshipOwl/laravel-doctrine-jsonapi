@@ -3,29 +3,26 @@
 namespace Sowl\JsonApi\Action\Relationships\ToMany;
 
 use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\JsonApiResponse;
-use Sowl\JsonApi\ResourceRepository;
-use Sowl\JsonApi\Action\RelatedActionTrait;
+use Sowl\JsonApi\Relationships\ToManyRelationship;
+use Sowl\JsonApi\Response;
 
 class RemoveRelationships extends AbstractAction
 {
-    use RelatedActionTrait;
-
     public function __construct(
-        protected ResourceRepository $relationRepository,
-        protected string $relatedFieldName,
+        protected ToManyRelationship $relationship,
     ) {}
 
-    public function handle(): JsonApiResponse
+    public function handle(): Response
     {
         $resource = $this->request()->resource();
+        $field = $this->relationship->field();
+        $relationshipRepository = $this->relationship->repository();
 
         foreach ($this->request()->getData() as $index => $objectIdentifier) {
-            $relatedResource = $this
-                ->relationRepository()
+            $relatedResource = $relationshipRepository
                 ->findByObjectIdentifier($objectIdentifier, "/data/$index");
 
-            $this->manipulator()->removeRelationItem($resource, $this->relatedFieldName(), $relatedResource);
+            $this->manipulator()->removeRelationItem($resource, $field, $relatedResource);
         }
 
         $this->repository()->em()->flush();

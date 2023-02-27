@@ -4,9 +4,11 @@ namespace Tests\Action\Relationships\ToMany;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationships;
-use Sowl\JsonApi\JsonApiResponse;
+use Sowl\JsonApi\Controller;
+use Sowl\JsonApi\Response;
 use Tests\App\Actions\User\Relationships\CreateUserRolesRequest;
 use Tests\App\Entities\Role;
+use Tests\App\Http\Controller\UsersController;
 use Tests\App\Transformers\RoleTransformer;
 use Tests\TestCase;
 
@@ -16,10 +18,10 @@ class CreateRelationshipsTest extends TestCase
     {
         parent::setUp();
 
-        Route::post('/users/{id}/relationships/roles', function (CreateUserRolesRequest $request) {
-            return (new CreateRelationships($this->rolesRepo(), 'roles', 'users'))
-                ->dispatch($request);
-        });
+        Route::post('/users/{id}/relationships/roles', [UsersController::class, 'createUserRoles'])
+            ->can('can:createRelationships,roles');
+
+        Route::post('/{resourceKey}/{id}/relationships/{relationship}', [Controller::class, 'createRelationships']);
     }
 
     public function testAuthorizationPermissionsForNoLoggedIn()

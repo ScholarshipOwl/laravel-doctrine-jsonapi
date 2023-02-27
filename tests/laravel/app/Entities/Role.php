@@ -8,6 +8,7 @@ use LaravelDoctrine\ACL\Contracts\Role as RoleContract;
 use LaravelDoctrine\ACL\Permissions\HasPermissions;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Sowl\JsonApi\AbstractTransformer;
+use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\ResourceInterface;
 use Tests\App\Transformers\RoleTransformer;
 
@@ -58,6 +59,11 @@ class Role implements ResourceInterface, RoleContract
     public static function transformer(): AbstractTransformer
     {
         return new RoleTransformer();
+    }
+
+    public static function relationships(): RelationshipsCollection
+    {
+        return new RelationshipsCollection([]);
     }
 
     public static function root(): static

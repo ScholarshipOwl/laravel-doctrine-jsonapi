@@ -14,15 +14,20 @@ use Sowl\JsonApi\Exceptions\JsonApiException;
  * The dispatch method must be called with provided request.
  * Dispatch method will call the handle method injecting its dependencies and will return JsonApiResponse.
  *
- * @method JsonApiResponse handle(...$args) The handle method must be implemented, but we do not define it as abstract
+ * @method Response handle(...$args) The handle method must be implemented, but we do not define it as abstract
  *                                          because we PHP do not allow arguments override , and we want to use laravel
  *                                          dependency injection container to get dependencies.
  */
 abstract class AbstractAction
 {
-    protected AbstractRequest $request;
+    protected Request $request;
 
-    public function dispatch(AbstractRequest $request): JsonApiResponse
+    public static function create(...$args): static
+    {
+        return new static(...$args);
+    }
+
+    public function dispatch(Request $request): Response
     {
         $this->request = $request;
 
@@ -42,9 +47,14 @@ abstract class AbstractAction
         return $this->request->repository();
     }
 
-    protected function request(): AbstractRequest
+    protected function request(): Request
     {
         return $this->request;
+    }
+
+    protected function rm(): ResourceManager
+    {
+        return app(ResourceManager::class);
     }
 
     protected function manipulator(): ResourceManipulator

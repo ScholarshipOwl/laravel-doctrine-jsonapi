@@ -9,9 +9,8 @@ use PHPUnit\Framework\TestCase;
 
 use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\FilterParsers\ArrayFilterParser;
-use Sowl\JsonApi\AbstractRequest;
+use Sowl\JsonApi\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Tests\App\Actions\User\ListUsersRequest;
 
 class ArrayParserTest extends TestCase
 {
@@ -19,7 +18,7 @@ class ArrayParserTest extends TestCase
     public function test_filterable_query_parser_operator_filter_exception()
     {
         try {
-            $request = new ListUsersRequest(['filter' => [
+            $request = new Request(['filter' => [
                 'field1' => ['operator' => 'not', 'value' => false],
                 'field2' => ['operator' => 'eq', 'value' => 'test2'],
             ]]);
@@ -40,7 +39,7 @@ class ArrayParserTest extends TestCase
 
     public function test_filterable_query_parser_operator_filter()
     {
-        $request = new ListUsersRequest(['filter' => [
+        $request = new Request(['filter' => [
             'field1' => ['operator' => 'neq', 'value' => false],
             'field2' => ['operator' => 'eq', 'value' => 'test2'],
         ]]);
@@ -66,7 +65,7 @@ class ArrayParserTest extends TestCase
 
     public function test_filterable_query_parser_between_filter()
     {
-        $request = new ListUsersRequest(['filter' => ['field1' => ['start' => 1, 'end' => 10]]]);
+        $request = new Request(['filter' => ['field1' => ['start' => 1, 'end' => 10]]]);
         $parser = new ArrayFilterParser($request, ['field1', 'field2']);
 
         /** @var Criteria $criteria */
@@ -89,7 +88,7 @@ class ArrayParserTest extends TestCase
 
     public function test_filterable_query_parser_equal_filter()
     {
-        $request = new ListUsersRequest(['filter' => ['field1' => 'test1', 'field2' => 'test2', 'field3' => 'test3']]);
+        $request = new Request(['filter' => ['field1' => 'test1', 'field2' => 'test2', 'field3' => 'test3']]);
         $parser = new ArrayFilterParser($request, ['field1', 'field2']);
 
         /** @var Criteria $criteria */

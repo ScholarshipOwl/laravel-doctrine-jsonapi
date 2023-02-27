@@ -7,14 +7,13 @@ use Doctrine\Common\Collections\Expr\Comparison;
 use PHPUnit\Framework\TestCase;
 
 use Sowl\JsonApi\FilterParsers\SearchFilterParser;
-use Sowl\JsonApi\AbstractRequest;
-use Tests\App\Actions\User\ListUsersRequest;
+use Sowl\JsonApi\Request;
 
 class FilterStringParserTest extends TestCase
 {
     public function testArrayKeySearch()
     {
-        $request = new ListUsersRequest(['filter' => ['search' => 'queryString']]);
+        $request = new Request(['filter' => ['search' => 'queryString']]);
         $parser = new SearchFilterParser($request, 'testField');
 
         /** @var Criteria $criteria */
@@ -30,7 +29,7 @@ class FilterStringParserTest extends TestCase
 
     public function testPropertyQueryParser()
     {
-        $request = new ListUsersRequest(['filter' => ['search' => 'queryString']]);
+        $request = new Request(['filter' => ['search' => 'queryString']]);
         $parser = new SearchFilterParser($request, 'testField');
 
         /** @var Criteria $criteria */

@@ -3,14 +3,14 @@
 namespace Sowl\JsonApi\Fractal;
 
 use League\Fractal\ParamBag;
-use Sowl\JsonApi\AbstractRequest;
+use Sowl\JsonApi\Request;
 use League\Fractal\Manager;
 
 class Fractal extends Manager
 {
     protected array $requestedMetasets = [];
 
-    public function __construct(protected AbstractRequest $request)
+    public function __construct(protected Request $request)
     {
         parent::__construct(new ScopeFactory());
 

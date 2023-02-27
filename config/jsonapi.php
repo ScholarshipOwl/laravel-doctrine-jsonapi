@@ -1,7 +1,8 @@
 <?php
 
 return [
-    'repositories' => [
+    // TODO: Add documentation and usage
+    'resources' => [
 
     ]
 ];

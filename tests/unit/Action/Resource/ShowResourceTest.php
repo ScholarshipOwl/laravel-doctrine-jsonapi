@@ -3,15 +3,12 @@
 namespace Tests\Action\Resource;
 
 use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Resource\ShowResource;
-use Sowl\JsonApi\JsonApiResponse;
-use Tests\App\Actions\Page\ShowPageRequest;
-use Tests\App\Actions\Page\ShowRelatedComments;
-use Tests\App\Actions\PageComment\ShowPageCommentRequest;
-use Tests\App\Actions\Role\ShowRoleRequest;
-use Tests\App\Actions\User\ShowUserRequest;
+use Sowl\JsonApi\Controller;
+use Sowl\JsonApi\Response;
 use Tests\App\Entities\Role;
-use Tests\App\Http\Controller\UserController;
+use Tests\App\Http\Controller\PageCommentController;
+use Tests\App\Http\Controller\PageController;
+use Tests\App\Http\Controller\UsersController;
 use Tests\TestCase;
 
 class ShowResourceTest extends TestCase
@@ -20,77 +17,61 @@ class ShowResourceTest extends TestCase
     {
         parent::setUp();
 
-        Route::get('/users/{id}', [UserController::class, 'show']);
+        Route::get('/users/{id}', [UsersController::class, 'show']);
+        Route::get('/pages/{id}', [PageController::class, 'show']);
+        Route::get('/pageComments/{id}', [PageCommentController::class, 'show']);
 
-//        Route::get('/users/{id}', function (ShowUserRequest $request) {
-//            return (new ShowResource())
-//                ->dispatch($request);
-//        });
-
-        Route::get('/roles/{id}', function (ShowRoleRequest $request) {
-            return (new ShowResource())
-                ->dispatch($request);
-        });
-
-        Route::get('/pages/{id}', function (ShowPageRequest $request) {
-            return (new ShowResource())
-                ->dispatch($request);
-        });
-
-        Route::get('/pageComments/{id}', function (ShowPageCommentRequest $request) {
-            return (new ShowRelatedComments())
-                ->dispatch($request);
-        });
+        Route::get('/{resourceKey}/{id}', [Controller::class, 'show']);
     }
 
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
-        $this->get('/users/1')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->get('/users/2')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->get('/users/3')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
+        $this->get('/users/1')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/users/2')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/users/3')->assertStatus(Response::HTTP_FORBIDDEN);
 
-        $this->get('/roles/1')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->get('/roles/2')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
+        $this->get('/roles/1')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/roles/2')->assertStatus(Response::HTTP_FORBIDDEN);
 
-        $this->get('/pages/1')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/pages/1')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pageComments/1')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/pageComments/2')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/pageComments/3')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/pageComments/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/pageComments/2')->assertStatus(Response::HTTP_OK);
+        $this->get('/pageComments/3')->assertStatus(Response::HTTP_OK);
     }
 
     public function testAuthorizationPermissionsForUserRole()
     {
         $this->actingAsUser();
-        $this->get('/users/1')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/users/2')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/users/3')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/users/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/users/2')->assertStatus(Response::HTTP_OK);
+        $this->get('/users/3')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/roles/1')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->get('/roles/2')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/roles/1')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/roles/2')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pages/1')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/pages/1')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pageComments/1')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/pageComments/2')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/pageComments/3')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/pageComments/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/pageComments/2')->assertStatus(Response::HTTP_OK);
+        $this->get('/pageComments/3')->assertStatus(Response::HTTP_OK);
     }
 
     public function testAuthorizationPermissionsForRootRole()
     {
         $this->actingAsRoot();
-        $this->get('/users/1')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/users/2')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/users/3')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/users/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/users/2')->assertStatus(Response::HTTP_OK);
+        $this->get('/users/3')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/roles/1')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/roles/2')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/roles/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/roles/2')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pages/1')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/pages/1')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pageComments/1')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/pageComments/2')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/pageComments/3')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/pageComments/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/pageComments/2')->assertStatus(Response::HTTP_OK);
+        $this->get('/pageComments/3')->assertStatus(Response::HTTP_OK);
     }
 
     public function testShowUserResponse()

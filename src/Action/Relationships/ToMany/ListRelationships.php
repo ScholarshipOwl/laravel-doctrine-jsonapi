@@ -6,32 +6,33 @@ use Doctrine\ORM\QueryBuilder;
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Action\FiltersResourceTrait;
 use Sowl\JsonApi\Action\PaginatesResourceTrait;
-use Sowl\JsonApi\Action\RelatedActionTrait;
-use Sowl\JsonApi\JsonApiResponse;
+use Sowl\JsonApi\Relationships\ToManyRelationship;
+use Sowl\JsonApi\Response;
 use Sowl\JsonApi\ResourceInterface;
-use Sowl\JsonApi\ResourceRepository;
 
 class ListRelationships extends AbstractAction
 {
-    use RelatedActionTrait;
     use FiltersResourceTrait;
     use PaginatesResourceTrait;
 
     public function __construct(
-        protected ResourceRepository $relationRepository,
-        protected string             $resourceMappedBy,
-    ) {}
+        protected ToManyRelationship $relationship,
+    ) {
+        $this->setSearchProperty($this->relationship->getSearchProperty());
+        $this->setFilterable($this->relationship->getFilterable());
+    }
 
-    public function handle(): JsonApiResponse
+    public function handle(): Response
     {
         $resource = $this->request()->resource();
+        $relationshipRepository = $this->relationship->repository();
 
         $qb = $this->relatedQueryBuilder($resource);
         $this->applyFilter($qb);
         $this->applyPagination($qb);
 
-        $resourceKey = $this->relationRepository()->getResourceKey();
-        $transformer = $this->relationRepository()->transformer();
+        $resourceKey = $relationshipRepository->getResourceKey();
+        $transformer = $relationshipRepository->transformer();
         return response()->query($qb, $resourceKey, $transformer, relationship: true);
     }
 
@@ -40,9 +41,9 @@ class ListRelationships extends AbstractAction
      */
     protected function relatedQueryBuilder(ResourceInterface $resource): QueryBuilder
     {
-        $mappedBy = $this->resourceMappedBy();
+        $mappedBy = $this->relationship->mappedBy();
+        $relatedRepo = $this->relationship->repository();
         $mappedByAlias = $mappedBy.'relation';
-        $relatedRepo = $this->relationRepository();
 
         return $relatedRepo->resourceQueryBuilder()
             ->innerJoin(sprintf('%s.%s', $relatedRepo->alias(), $mappedBy), $mappedByAlias)

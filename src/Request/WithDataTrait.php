@@ -19,7 +19,7 @@ trait WithDataTrait
 
         if (!isset($validated['data'])) {
             throw JsonApiException::create('Not valid data', 400)
-                ->error(400, ['pointer' => '/data'], 'Not found any validated data.');
+                ->error(400, ['pointer' => '/data'], 'Not found validated data.');
         }
 
         return $validated['data'];

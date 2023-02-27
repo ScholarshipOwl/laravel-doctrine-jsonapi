@@ -1,32 +1,28 @@
 <?php namespace Sowl\JsonApi\Action\Relationships\ToMany;
 
 use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\Action\RelatedActionTrait;
-use Sowl\JsonApi\JsonApiResponse;
-use Sowl\JsonApi\ResourceRepository;
+use Sowl\JsonApi\Relationships\ToManyRelationship;
+use Sowl\JsonApi\Response;
 
 class CreateRelationships extends AbstractAction
 {
-    use RelatedActionTrait;
-
     public function __construct(
-        protected ResourceRepository $relationRepository,
-        protected string $relatedFieldName,
-        protected string $resourceMappedBy,
+        protected ToManyRelationship $relationship,
     ) {}
 
-    public function handle(): JsonApiResponse
+    public function handle(): Response
     {
         $resource = $this->request()->resource();
+        $relationshipRepository = $this->relationship->repository();
+        $field = $this->relationship->field();
 
         foreach ($this->request()->getData() as $index => $objectIdentifier) {
-            $relatedResource = $this
-                ->relationRepository()
+            $relatedResource = $relationshipRepository
                 ->findByObjectIdentifier($objectIdentifier, "/data/$index");
 
             $this->manipulator()->addRelationItem(
                 $resource,
-                $this->relatedFieldName(),
+                $this->relationship->field(),
                 $relatedResource,
             );
         }
@@ -34,9 +30,9 @@ class CreateRelationships extends AbstractAction
         $this->repository()->em()->flush();
 
         return response()->collection(
-            $this->manipulator()->getProperty($resource, $this->relatedFieldName()),
-            $this->relationRepository()->getResourceKey(),
-            $this->relationRepository()->transformer(),
+            $this->manipulator()->getProperty($resource, $field),
+            $relationshipRepository->getResourceKey(),
+            $relationshipRepository->transformer(),
             relationship: true,
         );
     }

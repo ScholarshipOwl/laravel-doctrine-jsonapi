@@ -5,7 +5,7 @@ namespace Sowl\JsonApi\Action\Resource;
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Action\FiltersResourceTrait;
 use Sowl\JsonApi\Action\PaginatesResourceTrait;
-use Sowl\JsonApi\JsonApiResponse;
+use Sowl\JsonApi\Response;
 
 /**
  * Action for providing collection (list or array) of data with API.
@@ -15,7 +15,7 @@ class ListResources extends AbstractAction
     use FiltersResourceTrait;
     use PaginatesResourceTrait;
 
-    public function handle(): JsonApiResponse
+    public function handle(): Response
     {
         $qb = $this->repository()->resourceQueryBuilder();
         $this->applyFilter($qb);

@@ -2,26 +2,14 @@
 
 namespace Tests\App\Actions\User\Relationships;
 
-use Sowl\JsonApi\Request\Relationships\ToMany\AbstractUpdateRelationshipsRequest;
-use Sowl\JsonApi\ResourceRepository;
-use Tests\App\Actions\User\HasUsersRepositoryTrait;
+use Sowl\JsonApi\Request\Relationships\ToMany\UpdateRelationshipsRequest;
+use Sowl\JsonApi\Rules\ObjectIdentifierRule;
 use Tests\App\Actions\User\Rules\UserRoleAssignRule;
-use Tests\App\Entities\Role;
 
-class UpdateUserRolesRequest extends AbstractUpdateRelationshipsRequest
+class UpdateUserRolesRequest extends UpdateRelationshipsRequest
 {
-    use HasUsersRepositoryTrait;
-
-    public function relationRepository(): ResourceRepository
+    protected function dataValidationRule(): ObjectIdentifierRule
     {
-        return app('em')->getRepository(Role::class);
-    }
-
-    public function dataRules(): array
-    {
-        return [
-            'data' => 'array|required',
-            'data.*' => [new UserRoleAssignRule($this)]
-        ];
+        return new UserRoleAssignRule($this);
     }
 }

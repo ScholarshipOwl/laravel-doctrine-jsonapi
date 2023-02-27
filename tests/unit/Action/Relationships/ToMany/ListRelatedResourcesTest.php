@@ -4,8 +4,9 @@ namespace Tests\Action\Relationships\ToMany;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Relationships\ToMany\ListRelated;
-use Sowl\JsonApi\AbstractRequest;
-use Sowl\JsonApi\JsonApiResponse;
+use Sowl\JsonApi\Controller;
+use Sowl\JsonApi\Request;
+use Sowl\JsonApi\Response;
 use Tests\App\Actions\User\Relationships\ListRelatedRolesRequest;
 use Tests\App\Entities\Role;
 use Tests\App\Transformers\RoleTransformer;
@@ -17,37 +18,32 @@ class ListRelatedResourcesTest extends TestCase
     {
         parent::setUp();
 
-        Route::get('/users/{id}/roles', function (ListRelatedRolesRequest $request) {
-            return (new ListRelated($this->rolesRepo(), 'users'))
-                ->setSearchProperty('name')
-                ->setFilterable(['id', 'name'])
-                ->dispatch($request);
-        });
+        Route::get('/{resourceKey}/{id}/{relationship}', [Controller::class, 'related']);
     }
 
     public function testAuthorizationPermissionsForNoLogedIn()
     {
-        $this->get('/users/1/roles')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->get('/users/2/roles')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->get('/users/3/roles')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
+        $this->get('/users/1/roles')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/users/2/roles')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/users/3/roles')->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     public function testAuthorizationPermissionsForUserRole()
     {
         $this->actingAsUser();
 
-        $this->get('/users/1/roles')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/users/2/roles')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
-        $this->get('/users/3/roles')->assertStatus(JsonApiResponse::HTTP_FORBIDDEN);
+        $this->get('/users/1/roles')->assertStatus(Response::HTTP_OK);
+        $this->get('/users/2/roles')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/users/3/roles')->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     public function testAuthorizationPermissionsForRootRole()
     {
         $this->actingAsRoot();
 
-        $this->get('/users/1/roles')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/users/2/roles')->assertStatus(JsonApiResponse::HTTP_OK);
-        $this->get('/users/3/roles')->assertStatus(JsonApiResponse::HTTP_OK);
+        $this->get('/users/1/roles')->assertStatus(Response::HTTP_OK);
+        $this->get('/users/2/roles')->assertStatus(Response::HTTP_OK);
+        $this->get('/users/3/roles')->assertStatus(Response::HTTP_OK);
     }
 
     public function testListRelatedUserRolesResponse()

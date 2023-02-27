@@ -7,6 +7,7 @@ use Tests\App\Actions\User\CreateUserAction;
 use Tests\App\Actions\User\CreateUserRequest;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
+use Tests\App\Http\Controller\UsersController;
 use Tests\App\Transformers\UserTransformer;
 use Tests\TestCase;
 
@@ -16,13 +17,7 @@ class CreateResourceTest extends TestCase
     {
         parent::setUp();
 
-        Route::post('/users', function (CreateUserRequest $request) {
-            return (new CreateUserAction(
-                $this->usersRepo(),
-                new UserTransformer()
-            ))
-                ->dispatch($request);
-        });
+        Route::post('/users', [UsersController::class, 'create']);
     }
 
     public function testCreateNewUser()
