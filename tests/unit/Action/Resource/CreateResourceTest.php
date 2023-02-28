@@ -13,13 +13,6 @@ use Tests\TestCase;
 
 class CreateResourceTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        Route::post('/users', [UsersController::class, 'create']);
-    }
-
     public function testCreateNewUser()
     {
         $response = $this->post('/users', [

@@ -2,7 +2,7 @@
 
 namespace Sowl\JsonApi;
 
-interface AuthenticationAbilitiesInterface
+interface AbilitiesInterface
 {
     const SHOW_RESOURCE = 'show';
     const CREATE_RESOURCE = 'create';

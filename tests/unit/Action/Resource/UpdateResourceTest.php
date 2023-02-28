@@ -14,13 +14,6 @@ use Tests\TestCase;
 
 class UpdateResourceTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        Route::patch('/users/{id}', [UsersController::class, 'update']);
-    }
-
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
         $this->patch('/users/1')->assertStatus(Response::HTTP_FORBIDDEN);

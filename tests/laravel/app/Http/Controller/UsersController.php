@@ -6,7 +6,7 @@ use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationships;
 use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationships;
 use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationships;
 use Sowl\JsonApi\Action\Resource\UpdateResource;
-use Sowl\JsonApi\AuthenticationAbilitiesInterface;
+use Sowl\JsonApi\AbilitiesInterface;
 use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
@@ -64,9 +64,9 @@ class UsersController extends Controller
     {
         $custom = [
             'create' => null,
-            'createUserRoles' => AuthenticationAbilitiesInterface::CREATE_RELATIONSHIPS,
-            'updateUserRoles' => AuthenticationAbilitiesInterface::UPDATE_RELATIONSHIPS,
-            'removeUserRoles' => AuthenticationAbilitiesInterface::REMOVE_RELATIONSHIPS,
+            'createUserRoles' => [AbilitiesInterface::CREATE_RELATIONSHIPS, 'roles'],
+            'updateUserRoles' => [AbilitiesInterface::UPDATE_RELATIONSHIPS, 'roles'],
+            'removeUserRoles' => [AbilitiesInterface::REMOVE_RELATIONSHIPS, 'roles'],
         ];
 
         return $custom + parent::methodToAbilityMap();

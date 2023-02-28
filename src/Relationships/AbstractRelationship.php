@@ -4,6 +4,7 @@ namespace Sowl\JsonApi\Relationships;
 
 use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\ResourceRepository;
+use Sowl\JsonApi\Rules\ObjectIdentifierRule;
 
 class AbstractRelationship
 {
@@ -34,5 +35,10 @@ class AbstractRelationship
     public function rm(): ResourceManager
     {
         return app(ResourceManager::class);
+    }
+
+    public function objectIdentifierRule(): ObjectIdentifierRule
+    {
+        return new ObjectIdentifierRule($this->class());
     }
 }

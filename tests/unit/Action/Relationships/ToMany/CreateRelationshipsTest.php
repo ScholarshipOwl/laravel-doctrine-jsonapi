@@ -14,16 +14,6 @@ use Tests\TestCase;
 
 class CreateRelationshipsTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        Route::post('/users/{id}/relationships/roles', [UsersController::class, 'createUserRoles'])
-            ->can('can:createRelationships,roles');
-
-        Route::post('/{resourceKey}/{id}/relationships/{relationship}', [Controller::class, 'createRelationships']);
-    }
-
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
         $this->post('/users/1/relationships/roles')->assertStatus(403);

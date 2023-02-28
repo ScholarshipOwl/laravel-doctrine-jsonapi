@@ -21,7 +21,6 @@ class UpdateRelationshipsTest extends TestCase
     {
         parent::setUp();
 
-        Route::patch('/users/{id}/relationships/roles', [UsersController::class, 'updateUserRoles']);
 
         Route::patch('/{resourceKey}/{id}/relationships/{relationship}', [Controller::class, 'updateRelationships']);
     }

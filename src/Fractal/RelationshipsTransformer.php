@@ -1,6 +1,6 @@
 <?php
 
-namespace Sowl\JsonApi;
+namespace Sowl\JsonApi\Fractal;
 
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;

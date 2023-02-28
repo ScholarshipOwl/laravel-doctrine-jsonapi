@@ -2,15 +2,15 @@
 
 namespace Sowl\JsonApi\Request\Relationships\ToMany;
 
-use Sowl\JsonApi\Request\Relationships\RelationshipRequest;
+use Sowl\JsonApi\Request;
 
-class RemoveRelationshipsRequest extends RelationshipRequest
+final class RemoveRelationshipsRequest extends Request
 {
     public function dataRules(): array
     {
         return [
             'data' => 'required|array',
-            'data.*' => [$this->dataValidationRule()]
+            'data.*' => [$this->relationship()->objectIdentifierRule()]
         ];
     }
 }

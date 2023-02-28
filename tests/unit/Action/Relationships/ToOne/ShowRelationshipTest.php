@@ -9,13 +9,6 @@ use Tests\TestCase;
 
 class ShowRelationshipTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        Route::get('/{resourceKey}/{id}/relationships/{relationship}', [UsersController::class, 'relationship']);
-    }
-
     public function testAuthorizationPermissionsAnyOneCanAccess()
     {
         $this->actingAsUser();

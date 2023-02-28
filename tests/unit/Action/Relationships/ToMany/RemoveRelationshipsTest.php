@@ -13,15 +13,6 @@ use Tests\TestCase;
 
 class RemoveRelationshipsTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Route::delete('/users/{id}/relationships/roles', [UsersController::class, 'removeUserRoles']);
-
-        Route::delete('/{resourceKey}/{id}/relationships/{relationship}', [Controller::class, 'removeRelationships']);
-    }
-
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
         $data = ['data' => [

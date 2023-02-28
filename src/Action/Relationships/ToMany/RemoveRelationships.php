@@ -25,7 +25,7 @@ class RemoveRelationships extends AbstractAction
             $this->manipulator()->removeRelationItem($resource, $field, $relatedResource);
         }
 
-        $this->repository()->em()->flush();
+        $this->em()->flush();
 
         return response()->noContent();
     }

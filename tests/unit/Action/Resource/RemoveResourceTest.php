@@ -10,13 +10,6 @@ use Tests\TestCase;
 
 class RemoveResourceTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        Route::delete('/{resourceKey}/{id}', [Controller::class, 'remove']);
-    }
-
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
         $this->delete('/users/1')->assertStatus(Response::HTTP_FORBIDDEN);

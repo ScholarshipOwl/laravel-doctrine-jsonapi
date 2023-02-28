@@ -8,14 +8,6 @@ use Tests\TestCase;
 
 class UpdateRelationshipTest extends TestCase
 {
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Route::patch('/pages/{id}/relationships/user', [PageController::class, 'updateUserRelationship'])
-            ->middleware('can:updateRelationships,user');
-    }
-
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
         $data = ['data' => ['type' => 'users', 'id' => '2']];

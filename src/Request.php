@@ -7,6 +7,8 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
+use Sowl\JsonApi\Exceptions\NotFoundException;
+use Sowl\JsonApi\Relationships\AbstractRelationship;
 use Sowl\JsonApi\Request\WithDataTrait;
 use Sowl\JsonApi\Request\WithFieldsParamsTrait;
 use Sowl\JsonApi\Request\WithFilterParamsTrait;
@@ -23,6 +25,7 @@ class Request extends FormRequest
 
     protected ResourceInterface $resource;
     protected ResourceRepository $repository;
+    protected AbstractRelationship $relationship;
 
     const JSON_API_CONTENT_TYPE = 'application/vnd.api+json';
 
@@ -98,6 +101,27 @@ class Request extends FormRequest
         }
 
         throw JsonApiException::create('No resource key found for the request', 404);
+    }
+
+
+    public function relationship(): AbstractRelationship
+    {
+        if (!isset($this->relationship)) {
+            $relationshipName = $this->relationshipName();
+
+            $relationship = $this
+                ->resource()
+                ->relationships()
+                ->get($relationshipName);
+
+            if (is_null($relationship)) {
+                throw new NotFoundException();
+            }
+
+            $this->relationship = $relationship;
+        }
+
+        return $this->relationship;
     }
 
     /**

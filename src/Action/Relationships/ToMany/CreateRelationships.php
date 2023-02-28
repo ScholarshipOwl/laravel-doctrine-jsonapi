@@ -27,7 +27,7 @@ class CreateRelationships extends AbstractAction
             );
         }
 
-        $this->repository()->em()->flush();
+        $this->em()->flush();
 
         return response()->collection(
             $this->manipulator()->getProperty($resource, $field),

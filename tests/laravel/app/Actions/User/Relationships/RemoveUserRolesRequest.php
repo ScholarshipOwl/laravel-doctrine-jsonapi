@@ -2,14 +2,16 @@
 
 namespace Tests\App\Actions\User\Relationships;
 
-use Sowl\JsonApi\Request\Relationships\ToMany\RemoveRelationshipsRequest;
-use Sowl\JsonApi\Rules\ObjectIdentifierRule;
+use Sowl\JsonApi\Request;
 use Tests\App\Actions\User\Rules\UserRoleRemoveRule;
 
-class RemoveUserRolesRequest extends RemoveRelationshipsRequest
+class RemoveUserRolesRequest extends Request
 {
-    protected function dataValidationRule(): ObjectIdentifierRule
+    public function dataRules(): array
     {
-        return new UserRoleRemoveRule($this);
+        return [
+            'data' => 'array|required',
+            'data.*' => [new UserRoleRemoveRule($this)]
+        ];
     }
 }

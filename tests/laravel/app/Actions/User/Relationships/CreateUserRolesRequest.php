@@ -2,14 +2,16 @@
 
 namespace Tests\App\Actions\User\Relationships;
 
-use Sowl\JsonApi\Request\Relationships\ToMany\CreateRelationshipsRequest;
-use Sowl\JsonApi\Rules\ObjectIdentifierRule;
+use Sowl\JsonApi\Request;
 use Tests\App\Actions\User\Rules\UserRoleAssignRule;
 
-class CreateUserRolesRequest extends CreateRelationshipsRequest
+class CreateUserRolesRequest extends Request
 {
-    protected function dataValidationRule(): ObjectIdentifierRule
+    public function dataRules(): array
     {
-        return new UserRoleAssignRule($this);
+        return [
+            'data' => 'array|required',
+            'data.*' => [new UserRoleAssignRule($this)]
+        ];
     }
 }

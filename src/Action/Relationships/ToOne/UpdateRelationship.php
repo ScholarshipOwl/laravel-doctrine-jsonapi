@@ -16,13 +16,13 @@ class UpdateRelationship extends AbstractAction
         if (null !== ($objectIdentifier = $this->request()->getData())) {
             $relationshipResource = $this->relationship->repository()->findByObjectIdentifier($objectIdentifier);
             $this->manipulator()->setProperty($resource, $field, $relationshipResource);
-            $this->repository()->em()->flush();
+            $this->em()->flush();
 
             return response()->item($relationshipResource, relationship: true);
         }
 
         $this->manipulator()->setProperty($resource, $field, null);
-        $this->repository()->em()->flush();
+        $this->em()->flush();
 
         return response()->null();
     }

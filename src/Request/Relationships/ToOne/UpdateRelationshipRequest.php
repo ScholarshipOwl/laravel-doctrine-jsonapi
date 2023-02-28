@@ -2,15 +2,14 @@
 
 namespace Sowl\JsonApi\Request\Relationships\ToOne;
 
-use Sowl\JsonApi\Request\Relationships\RelationshipRequest;
-use Sowl\JsonApi\Rules\ObjectIdentifierRule;
+use Sowl\JsonApi\Request;
 
-class UpdateRelationshipRequest extends RelationshipRequest
+final class UpdateRelationshipRequest extends Request
 {
     public function dataRules(): array
     {
         return [
-            'data' => [$this->dataValidationRule()]
+            'data' => [$this->relationship()->objectIdentifierRule()]
         ];
     }
 }

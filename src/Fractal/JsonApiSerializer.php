@@ -2,7 +2,7 @@
 
 namespace Sowl\JsonApi\Fractal;
 
-use Sowl\JsonApi\RelationshipsTransformer;
+use Sowl\JsonApi\Fractal\RelationshipsTransformer;
 use Sowl\JsonApi\Request;
 
 class JsonApiSerializer extends \League\Fractal\Serializer\JsonApiSerializer

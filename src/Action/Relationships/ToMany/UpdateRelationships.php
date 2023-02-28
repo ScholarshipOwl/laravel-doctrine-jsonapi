@@ -28,7 +28,7 @@ class UpdateRelationships extends AbstractAction
         ));
 
         $this->manipulator()->replaceResourceCollection($resource, $field, $replaceRelationships);
-        $this->repository()->em()->flush();
+        $this->em()->flush();
 
         return response()->collection(
             $this->manipulator()->getProperty($resource, $field),

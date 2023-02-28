@@ -2,7 +2,7 @@
 
 namespace Tests\App\Http\Controller;
 
-use Sowl\JsonApi\AuthenticationAbilitiesInterface;
+use Sowl\JsonApi\AbilitiesInterface;
 use Sowl\JsonApi\Controller;
 
 class PageCommentController extends Controller

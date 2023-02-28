@@ -13,6 +13,7 @@ use League\Fractal\Pagination\DoctrinePaginatorAdapter;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use Sowl\JsonApi\Fractal\Fractal;
+use Sowl\JsonApi\Fractal\RelationshipsTransformer;
 
 class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 {

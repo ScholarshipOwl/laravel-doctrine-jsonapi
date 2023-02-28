@@ -177,12 +177,12 @@ return [
         // App\Providers\RouteServiceProvider::class,
 
         \Tests\App\Providers\AppServiceProvider::class,
+        \Tests\App\Providers\RouteServiceProvider::class,
+        \Sowl\JsonApi\JsonApiServiceProvider::class,
 
         \LaravelDoctrine\ORM\DoctrineServiceProvider::class,
         \LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
         \LaravelDoctrine\ACL\AclServiceProvider::class,
-
-        \Sowl\JsonApi\JsonApiServiceProvider::class,
     ],
 
     /*

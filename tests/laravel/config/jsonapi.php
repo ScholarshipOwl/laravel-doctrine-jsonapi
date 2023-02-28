@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'prefix' => '',
     'resources' => [
         \Tests\App\Entities\Page::class,
         \Tests\App\Entities\PageComment::class,

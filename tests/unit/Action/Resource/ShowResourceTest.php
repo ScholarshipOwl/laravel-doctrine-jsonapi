@@ -13,17 +13,6 @@ use Tests\TestCase;
 
 class ShowResourceTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        Route::get('/users/{id}', [UsersController::class, 'show']);
-        Route::get('/pages/{id}', [PageController::class, 'show']);
-        Route::get('/pageComments/{id}', [PageCommentController::class, 'show']);
-
-        Route::get('/{resourceKey}/{id}', [Controller::class, 'show']);
-    }
-
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
         $this->get('/users/1')->assertStatus(Response::HTTP_FORBIDDEN);

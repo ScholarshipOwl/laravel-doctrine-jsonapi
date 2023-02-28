@@ -11,7 +11,7 @@ use Sowl\JsonApi\Response;
 
 trait WithRelationshipTrait
 {
-    public function relationship(Request $request): Response
+    public function showRelationships(Request $request): Response
     {
         $resource = $request->resource();
         $relationshipName = $request->relationshipName();

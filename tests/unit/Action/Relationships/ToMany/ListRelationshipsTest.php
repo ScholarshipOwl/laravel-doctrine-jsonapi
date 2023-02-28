@@ -14,13 +14,6 @@ use Tests\TestCase;
 
 class ListRelationshipsTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        Route::get('/{resourceKey}/{id}/relationships/{relationship}', [Controller::class, 'relationship']);
-    }
-
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
         $this->get('/users/1/relationships/roles')->assertStatus(Response::HTTP_FORBIDDEN);

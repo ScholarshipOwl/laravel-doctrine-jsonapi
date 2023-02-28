@@ -3,12 +3,14 @@
 namespace Sowl\JsonApi;
 
 use Sowl\JsonApi\Controller\AbstractController;
+use Sowl\JsonApi\Controller\WithCreateRelationshipsTrait;
+use Sowl\JsonApi\Controller\WithRemoveTrait;
+use Sowl\JsonApi\Controller\WithShowTrait;
 use Sowl\JsonApi\Controller\WithListTrait;
 use Sowl\JsonApi\Controller\WithRelatedTrait;
 use Sowl\JsonApi\Controller\WithRelationshipTrait;
 use Sowl\JsonApi\Controller\WithRemoveRelationshipsTrait;
-use Sowl\JsonApi\Controller\WithRemoveTrait;
-use Sowl\JsonApi\Controller\WithShowTrait;
+use Sowl\JsonApi\Controller\WithUpdateRelationshipsTrait;
 
 class Controller extends AbstractController
 {
@@ -18,6 +20,8 @@ class Controller extends AbstractController
 
     use WithRelatedTrait;
     use WithRelationshipTrait;
+    use WithUpdateRelationshipsTrait;
+    use WithCreateRelationshipsTrait;
     use WithRemoveRelationshipsTrait;
 
     /**
@@ -26,15 +30,17 @@ class Controller extends AbstractController
     protected function methodToAbilityMap(): array
     {
         return [
-            'show' => AuthenticationAbilitiesInterface::SHOW_RESOURCE,
-            'create' => AuthenticationAbilitiesInterface::CREATE_RESOURCE,
-            'update' => AuthenticationAbilitiesInterface::UPDATE_RESOURCE,
-            'remove' => AuthenticationAbilitiesInterface::REMOVE_RESOURCE,
-            'list' => AuthenticationAbilitiesInterface::LIST_RESOURCES,
+            'show' => AbilitiesInterface::SHOW_RESOURCE,
+            'create' => AbilitiesInterface::CREATE_RESOURCE,
+            'update' => AbilitiesInterface::UPDATE_RESOURCE,
+            'remove' => AbilitiesInterface::REMOVE_RESOURCE,
+            'list' => AbilitiesInterface::LIST_RESOURCES,
 
-            'related' => AuthenticationAbilitiesInterface::SHOW_RELATIONSHIPS,
-            'relationship' => AuthenticationAbilitiesInterface::SHOW_RELATIONSHIPS,
-            'removeRelationships' => AuthenticationAbilitiesInterface::REMOVE_RELATIONSHIPS,
+            'showRelated' => AbilitiesInterface::SHOW_RELATIONSHIPS,
+            'showRelationships' => AbilitiesInterface::SHOW_RELATIONSHIPS,
+            'createRelationships' => AbilitiesInterface::CREATE_RELATIONSHIPS,
+            'updateRelationships' => AbilitiesInterface::UPDATE_RELATIONSHIPS,
+            'removeRelationships' => AbilitiesInterface::REMOVE_RELATIONSHIPS,
         ];
     }
 }

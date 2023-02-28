@@ -2,7 +2,7 @@
 
 namespace Sowl\JsonApi\Controller;
 
-use Sowl\JsonApi\AuthenticationAbilitiesInterface;
+use Illuminate\Support\Arr;
 
 trait AuthorizesRequestsTrait
 {
@@ -11,7 +11,7 @@ trait AuthorizesRequestsTrait
 
     /**
      * Returns map of the method to ability.
-     * @return array<string, string>
+     * @return array<string, string|array<string>>
      */
     abstract protected function methodToAbilityMap(): array;
 
@@ -19,12 +19,12 @@ trait AuthorizesRequestsTrait
     {
         $middleware = [];
 
-        foreach ($this->methodToAbilityMap() as $method => $ability) {
-            if (empty($ability)) {
+        foreach ($this->methodToAbilityMap() as $method => $arguments) {
+            if (empty($arguments)) {
                 continue;
             }
 
-            $middleware["can:${ability}"][] = $method;
+            $middleware[sprintf('can:%s', implode(',', Arr::wrap($arguments)))][] = $method;
         }
 
         foreach ($middleware as $middlewareName => $methods) {

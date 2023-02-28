@@ -10,14 +10,6 @@ use Tests\TestCase;
 
 class ListResourcesTest extends TestCase
 {
-    public function setUp(): void
-    {
-        parent::setUp();
-
-        Route::get('/users', [UsersController::class, 'list']);
-        Route::get('/roles', [RolesController::class, 'list']);
-    }
-
     public function testAuthorizationPermissionsForNoLogedIn()
     {
         $this->get('/roles')->assertStatus(Response::HTTP_FORBIDDEN);

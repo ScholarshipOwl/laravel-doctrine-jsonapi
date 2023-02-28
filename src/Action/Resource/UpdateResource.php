@@ -10,7 +10,7 @@ class UpdateResource extends AbstractAction
         $resource = $this->request()->resource();
         $resource = $this->manipulator()->hydrateResource($resource, $this->request()->getData());
 
-        $this->repository()->em()->flush();
+        $this->em()->flush();
 
         return response()->item($resource);
     }
