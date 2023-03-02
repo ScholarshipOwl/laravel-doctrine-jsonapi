@@ -64,8 +64,7 @@ class JsonApiServiceProvider extends ServiceProvider
         $this->app->singleton(ResponseFactoryContract::class, function (Application $app) {
             return new ResponseFactory(
                 $app[ViewFactoryContract::class],
-                $app['redirect'],
-                $app->resolved('request.jsonapi') ? $app['request.jsonapi'] : null
+                $app['redirect']
             );
         });
     }

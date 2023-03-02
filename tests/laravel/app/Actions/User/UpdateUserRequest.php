@@ -2,11 +2,19 @@
 
 namespace Tests\App\Actions\User;
 
+use Illuminate\Support\Facades\Gate;
+use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Request;
 use Tests\App\Actions\User\Rules\UserRoleAssignRule;
+use Tests\App\Entities\User;
 
 class UpdateUserRequest extends Request
 {
+    public function authorize(): bool
+    {
+        return Gate::allows(AbilitiesInterface::UPDATE_RESOURCE, $this->resource());
+    }
+
     public function dataRules(): array
     {
         return [

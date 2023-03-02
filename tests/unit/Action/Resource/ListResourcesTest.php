@@ -4,7 +4,7 @@ namespace Tests\Action\Resource;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Response;
-use Tests\App\Http\Controller\RolesController;
+use Tests\App\Http\Controller\RolesDefaultController;
 use Tests\App\Http\Controller\UsersController;
 use Tests\TestCase;
 

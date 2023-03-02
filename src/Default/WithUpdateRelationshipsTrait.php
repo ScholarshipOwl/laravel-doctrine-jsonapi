@@ -1,17 +1,17 @@
 <?php
 
-namespace Sowl\JsonApi\Controller;
+namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationships;
 use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationship;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
-use Sowl\JsonApi\Request\Relationships\ToMany\UpdateRelationshipsRequest;
+use Sowl\JsonApi\Default\Request\DefaultUpdateRelationshipsRequest;
 use Sowl\JsonApi\Response;
 
 trait WithUpdateRelationshipsTrait
 {
-    public function updateRelationships(UpdateRelationshipsRequest $request): Response
+    public function updateRelationships(DefaultUpdateRelationshipsRequest $request): Response
     {
         $relationship = $request->relationship();
 

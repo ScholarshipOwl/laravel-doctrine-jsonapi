@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Controller;
+use Sowl\JsonApi\Default\Controller;
 
 Route::get('/{resourceKey}', [Controller::class, 'list'])->name('list');
 Route::get('/{resourceKey}/{id}', [Controller::class, 'show'])->name('show');

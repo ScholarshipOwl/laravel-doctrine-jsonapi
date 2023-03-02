@@ -3,10 +3,10 @@
 namespace Sowl\JsonApi\Controller;
 
 use Illuminate\Support\Arr;
+use Sowl\JsonApi\Middleware\Authorize;
 
 trait AuthorizesRequestsTrait
 {
-
     abstract public function middleware($middleware, array $options = []);
 
     /**
@@ -17,19 +17,18 @@ trait AuthorizesRequestsTrait
 
     public function authorizeResource(): void
     {
-        $middleware = [];
+        $middlewares = [];
 
         foreach ($this->methodToAbilityMap() as $method => $arguments) {
             if (empty($arguments)) {
                 continue;
             }
 
-            $middleware[sprintf('can:%s', implode(',', Arr::wrap($arguments)))][] = $method;
+            $middlewares[Authorize::class.':'.implode(',', Arr::wrap($arguments))][] = $method;
         }
 
-        foreach ($middleware as $middlewareName => $methods) {
+        foreach ($middlewares as $middlewareName => $methods) {
             $this->middleware($middlewareName)->only($methods);
         }
     }
-
 }

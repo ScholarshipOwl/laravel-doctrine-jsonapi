@@ -1,15 +1,15 @@
 <?php
 
-namespace Sowl\JsonApi\Controller;
+namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationships;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
-use Sowl\JsonApi\Request\Relationships\ToMany\RemoveRelationshipsRequest;
+use Sowl\JsonApi\Default\Request\DefaultRemoveRelationshipsRequest;
 use Sowl\JsonApi\Response;
 
 trait WithRemoveRelationshipsTrait
 {
-    public function removeRelationships(RemoveRelationshipsRequest $request): Response
+    public function removeRelationships(DefaultRemoveRelationshipsRequest $request): Response
     {
         $relationship = $request->relationship();
 

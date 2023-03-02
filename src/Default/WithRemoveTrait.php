@@ -1,6 +1,6 @@
 <?php
 
-namespace Sowl\JsonApi\Controller;
+namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Resource\RemoveResource;
 use Sowl\JsonApi\Request;

@@ -24,18 +24,12 @@ class ResourceRepository extends EntityRepository
     public function __construct(EntityManagerInterface $em, ClassMetadata $class)
     {
         parent::__construct($em, $class);
-        static::verifyClassResource($this->getClassName());
+        ResourceManager::verifyResourceInterface($this->getClassName());
     }
 
     public static function create(string $class): self
     {
         return new static(app('em'), app('em')->getClassMetadata($class));
-    }
-
-    public static function classResourceKey(string $class): string
-    {
-        static::verifyClassResource($class);
-        return call_user_func(sprintf('%s::%s', $class, static::RESOURCE_TYPE_METHOD));
     }
 
     public function transformer(): AbstractTransformer
@@ -46,6 +40,11 @@ class ResourceRepository extends EntityRepository
     public function em(): EntityManager
     {
         return parent::getEntityManager();
+    }
+
+    public function metadata(): ClassMetadata
+    {
+        return parent::getClassMetadata();
     }
 
     public function resourceQueryBuilder(): QueryBuilder
@@ -106,21 +105,5 @@ class ResourceRepository extends EntityRepository
         }
 
         return $resource;
-    }
-
-    /**
-     * Make sure class is implements resource interface.
-     */
-    private static function verifyClassResource(string $class): void
-    {
-        if (!class_exists($class)) {
-            throw new InvalidArgumentException(sprintf('%s - is not a class', $class));
-        }
-
-        if (!isset(class_implements($class)[ResourceInterface::class])) {
-            throw new UnexpectedValueException(sprintf(
-                '%s - not implements %s', $class, ResourceInterface::class
-            ));
-        }
     }
 }

@@ -17,17 +17,9 @@ use Sowl\JsonApi\Fractal\RelationshipsTransformer;
 
 class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 {
-    public function __construct(
-        ViewFactory $view,
-        Redirector $redirector,
-        protected ?Request $request
-    ) {
-        parent::__construct($view, $redirector);
-    }
-
     public function request(): ?Request
     {
-        return $this->request;
+        return app('request.jsonapi');
     }
 
     public function jsonapi(?array $body, int $status = Response::HTTP_OK, array $header = []): Response
@@ -161,6 +153,6 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
     protected function fractal(): Fractal
     {
-        return new Fractal($this->request);
+        return new Fractal($this->request());
     }
 }

@@ -2,6 +2,7 @@
 
 use Doctrine\ORM\EntityManager;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Support\Facades\Gate;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 
@@ -21,6 +22,7 @@ use Sowl\JsonApi\Exceptions\JsonApiException;
 abstract class AbstractAction
 {
     protected Request $request;
+    protected array $authorization = [];
 
     public static function create(...$args): static
     {
@@ -32,6 +34,8 @@ abstract class AbstractAction
         $this->request = $request;
 
         try {
+            $this->authorizeAction();
+
             return app()->call([$this, 'handle']);
         } catch (AuthorizationException $e) {
             return response()->exception(new ForbiddenException(
@@ -39,6 +43,28 @@ abstract class AbstractAction
             ));
         } catch (JsonApiException $e) {
             return response()->exception($e);
+        }
+    }
+
+    public function authorize(string $ability, mixed ...$arguments): static
+    {
+        $this->authorization[$ability] = $arguments;
+
+        return $this;
+    }
+
+    protected function authorizeAction(): void
+    {
+        if (empty($this->authorization)) {
+            return;
+        }
+
+        $resourceArgument = ($id = $this->request->getId())
+            ? $this->repository()->findById($id)
+            : $this->repository()->getClassName();
+
+        foreach ($this->authorization as $ability => $arguments) {
+            Gate::authorize($ability, [$resourceArgument, ...((array) $arguments)]);
         }
     }
 

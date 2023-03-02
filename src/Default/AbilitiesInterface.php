@@ -1,6 +1,6 @@
 <?php
 
-namespace Sowl\JsonApi;
+namespace Sowl\JsonApi\Default;
 
 interface AbilitiesInterface
 {

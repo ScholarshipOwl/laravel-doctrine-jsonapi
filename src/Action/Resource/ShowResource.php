@@ -9,6 +9,8 @@ class ShowResource extends AbstractAction
 {
     public function handle(): Response
     {
-        return response()->item($this->request()->resource());
+        $resource = $this->request()->resource();
+
+        return response()->item($resource);
     }
 }

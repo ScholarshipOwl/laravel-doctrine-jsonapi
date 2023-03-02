@@ -2,15 +2,18 @@
 
 namespace Tests\App\Http\Controller;
 
-use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationship;
-use Sowl\JsonApi\AbilitiesInterface;
 use Sowl\JsonApi\Controller;
+use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationship;
+use Sowl\JsonApi\Default\AbilitiesInterface;
+use Sowl\JsonApi\Default\WithShowTrait;
 use Sowl\JsonApi\Response;
 use Tests\App\Actions\Page\UpdateUserRelationshipsRequest;
 use Tests\App\Entities\Page;
 
 class PageController extends Controller
 {
+    use WithShowTrait;
+
     public function updateUserRelationship(UpdateUserRelationshipsRequest $request): Response
     {
         return (new UpdateRelationship(Page::relationships()->toOne()->get('user')))
@@ -19,9 +22,9 @@ class PageController extends Controller
 
     protected function methodToAbilityMap(): array
     {
-        return [
+        return array_merge(parent::methodToAbilityMap(), [
             'show' => null,
             'updateUserRelationship' => [AbilitiesInterface::UPDATE_RELATIONSHIPS, 'user'],
-        ] + parent::methodToAbilityMap();
+        ]);
     }
 }

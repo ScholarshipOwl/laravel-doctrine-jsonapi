@@ -1,6 +1,6 @@
 <?php
 
-namespace Sowl\JsonApi\Controller;
+namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Resource\ListResources;
 use Sowl\JsonApi\Request;

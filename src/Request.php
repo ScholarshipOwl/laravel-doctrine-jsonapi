@@ -5,6 +5,7 @@ namespace Sowl\JsonApi;
 use Doctrine\ORM\EntityManager;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\ValidationException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\Exceptions\NotFoundException;
@@ -17,11 +18,11 @@ use Sowl\JsonApi\Request\WithPaginationParamsTrait;
 
 class Request extends FormRequest
 {
-    use WithIncludeParamsTrait;
-    use WithFieldsParamsTrait;
-    use WithFilterParamsTrait;
-    use WithPaginationParamsTrait;
     use WithDataTrait;
+    use WithIncludeParamsTrait;
+    use WithFilterParamsTrait;
+    use WithFieldsParamsTrait;
+    use WithPaginationParamsTrait;
 
     protected ResourceInterface $resource;
     protected ResourceRepository $repository;
@@ -122,6 +123,15 @@ class Request extends FormRequest
         }
 
         return $this->relationship;
+    }
+
+    protected function allowsResource(string $ability, mixed ...$arguments): bool
+    {
+        $resourceArgument = ($id = $this->request->getId())
+            ? $this->repository()->findById($id)
+            : $this->repository()->getClassName();
+
+        return Gate::allows($ability, [$resourceArgument, ...$arguments]);
     }
 
     /**

@@ -4,7 +4,7 @@ namespace Tests\Action\Relationships\ToMany;
 
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Action\Relationships\ToMany\ListRelationships;
-use Sowl\JsonApi\Controller;
+use Sowl\JsonApi\Default;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
 use Tests\App\Actions\User\Relationships\ListUserRelationshipsRequest;

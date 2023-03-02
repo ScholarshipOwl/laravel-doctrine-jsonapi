@@ -2,13 +2,12 @@
 
 namespace Tests\App\Http\Controller;
 
+use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationships;
 use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationships;
 use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationships;
 use Sowl\JsonApi\Action\Resource\UpdateResource;
-use Sowl\JsonApi\AbilitiesInterface;
-use Sowl\JsonApi\Controller;
-use Sowl\JsonApi\Request;
+use Sowl\JsonApi\Default\WithListTrait;
 use Sowl\JsonApi\Response;
 use Tests\App\Actions\User\CreateUserAction;
 use Tests\App\Actions\User\CreateUserRequest;
@@ -20,6 +19,8 @@ use Tests\App\Entities\User;
 
 class UsersController extends Controller
 {
+    use WithListTrait;
+
     public function searchProperty(): ?string
     {
         return 'email';
@@ -62,13 +63,8 @@ class UsersController extends Controller
 
     protected function methodToAbilityMap(): array
     {
-        $custom = [
-            'create' => null,
-            'createUserRoles' => [AbilitiesInterface::CREATE_RELATIONSHIPS, 'roles'],
-            'updateUserRoles' => [AbilitiesInterface::UPDATE_RELATIONSHIPS, 'roles'],
-            'removeUserRoles' => [AbilitiesInterface::REMOVE_RELATIONSHIPS, 'roles'],
-        ];
-
-        return $custom + parent::methodToAbilityMap();
+        return array_merge(parent::methodToAbilityMap(), [
+            'create' => null
+        ]);
     }
 }

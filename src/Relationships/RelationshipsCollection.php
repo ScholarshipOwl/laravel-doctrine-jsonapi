@@ -6,7 +6,7 @@ use Illuminate\Support\Collection;
 use Sowl\JsonApi\ResourceInterface;
 
 /**
- * @implements Collection<
+ * @implements Collection
  */
 class RelationshipsCollection
 {
@@ -28,6 +28,12 @@ class RelationshipsCollection
     public function get(string $name): ?AbstractRelationship
     {
         return $this->relationships[$name] ?? null;
+    }
+
+    /** @return array<string, AbstractRelationship> */
+    public function all(): array
+    {
+        return $this->relationships->all();
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sowl\JsonApi\Controller;
+namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Relationships\ToMany\ListRelated;
 use Sowl\JsonApi\Action\Relationships\ToOne\ShowRelated;

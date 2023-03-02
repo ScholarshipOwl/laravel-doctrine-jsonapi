@@ -1,10 +1,10 @@
 <?php
 
-namespace Sowl\JsonApi\Request\Relationships\ToOne;
+namespace Sowl\JsonApi\Default\Request;
 
 use Sowl\JsonApi\Request;
 
-final class UpdateRelationshipRequest extends Request
+final class DefaultUpdateRelationshipRequest extends Request
 {
     public function dataRules(): array
     {

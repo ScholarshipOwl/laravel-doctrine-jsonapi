@@ -1,6 +1,6 @@
 <?php
 
-namespace Sowl\JsonApi\Controller;
+namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Resource\ShowResource;
 use Sowl\JsonApi\Response;
@@ -10,6 +10,7 @@ trait WithShowTrait
 {
     public function show(Request $request): Response
     {
-        return (new ShowResource())->dispatch($request);
+        return (new ShowResource())
+            ->dispatch($request);
     }
 }

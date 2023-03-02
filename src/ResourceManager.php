@@ -6,13 +6,11 @@ use Doctrine\ORM\EntityManager;
 
 use Doctrine\ORM\Mapping\ClassMetadata;
 use InvalidArgumentException;
+use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use UnexpectedValueException;
 
 class ResourceManager
 {
-    const RESOURCE_TYPE_METHOD = 'getResourceKey';
-    const RESOURCE_TRANSFORMER_METHOD = 'transformer';
-
     /** @var array<string, ResourceInterface>  */
     protected array $resources;
 
@@ -40,7 +38,7 @@ class ResourceManager
     public static function resourceInterfaceKey(string $class): string
     {
         static::verifyResourceInterface($class);
-        return call_user_func(sprintf('%s::%s', $class, static::RESOURCE_TYPE_METHOD));
+        return call_user_func(sprintf('%s::%s', $class, 'getResourceKey'));
     }
 
     public function registerResource(string $class): static
@@ -131,7 +129,13 @@ class ResourceManager
     public function transformerByResourceKey(string $resourceKey): AbstractTransformer
     {
         $class = $this->classByResourceKey($resourceKey);
-        return call_user_func(sprintf('%s::%s', $class, static::RESOURCE_TRANSFORMER_METHOD));
+        return call_user_func(sprintf('%s::%s', $class, 'transformer'));
+    }
+
+    public function relationshipsByResourceKey(string $resourceKey): RelationshipsCollection
+    {
+        $class = $this->classByResourceKey($resourceKey);
+        return call_user_func(sprintf('%s::%s', $class, 'relationships'));
     }
 
     private function resourceRepositoryClass(ClassMetadata $metadata): string

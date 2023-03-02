@@ -1,15 +1,15 @@
 <?php
 
-namespace Sowl\JsonApi\Controller;
+namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationships;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
-use Sowl\JsonApi\Request\Relationships\ToMany\CreateRelationshipsRequest;
+use Sowl\JsonApi\Default\Request\DefaultCreateRelationshipsRequest;
 use Sowl\JsonApi\Response;
 
 trait WithCreateRelationshipsTrait
 {
-    public function createRelationships(CreateRelationshipsRequest $request): Response
+    public function createRelationships(DefaultCreateRelationshipsRequest $request): Response
     {
         $relationship = $request->relationship();
 

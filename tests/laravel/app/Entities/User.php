@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Exceptions\ValidationException;
+use Sowl\JsonApi\Relationships\MemoizeRelationshipsTrait;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\ResourceInterface;
@@ -26,6 +27,7 @@ use Tests\App\Transformers\UserTransformer;
 class User implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract, ResourceInterface
 {
     use Authenticatable, Authorizable, CanResetPassword;
+    use MemoizeRelationshipsTrait;
 
     public static function getResourceKey(): string
     {
@@ -39,7 +41,7 @@ class User implements AuthenticatableContract, AuthorizableContract, CanResetPas
 
     public static function relationships(): RelationshipsCollection
     {
-        return new RelationshipsCollection([
+        return static::memoizeRelationships(fn () => [
             ToManyRelationship::create('roles', Role::class, 'users')
         ]);
     }

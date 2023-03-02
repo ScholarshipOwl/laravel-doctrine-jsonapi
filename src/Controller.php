@@ -2,31 +2,18 @@
 
 namespace Sowl\JsonApi;
 
-use Sowl\JsonApi\Controller\AbstractController;
-use Sowl\JsonApi\Controller\WithCreateRelationshipsTrait;
-use Sowl\JsonApi\Controller\WithRemoveTrait;
-use Sowl\JsonApi\Controller\WithShowTrait;
-use Sowl\JsonApi\Controller\WithListTrait;
-use Sowl\JsonApi\Controller\WithRelatedTrait;
-use Sowl\JsonApi\Controller\WithRelationshipTrait;
-use Sowl\JsonApi\Controller\WithRemoveRelationshipsTrait;
-use Sowl\JsonApi\Controller\WithUpdateRelationshipsTrait;
+use Sowl\JsonApi\Controller\AuthorizesRequestsTrait;
+use Sowl\JsonApi\Default\AbilitiesInterface;
 
-class Controller extends AbstractController
+class Controller extends \Illuminate\Routing\Controller
 {
-    use WithShowTrait;
-    use WithRemoveTrait;
-    use WithListTrait;
+    use AuthorizesRequestsTrait;
 
-    use WithRelatedTrait;
-    use WithRelationshipTrait;
-    use WithUpdateRelationshipsTrait;
-    use WithCreateRelationshipsTrait;
-    use WithRemoveRelationshipsTrait;
+    public function __construct()
+    {
+        $this->authorizeResource();
+    }
 
-    /**
-     * @inheritdoc
-     */
     protected function methodToAbilityMap(): array
     {
         return [

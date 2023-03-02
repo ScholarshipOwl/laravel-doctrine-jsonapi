@@ -1,11 +1,10 @@
 <?php
 
-namespace Sowl\JsonApi\Request\Relationships\ToMany;
-
+namespace Sowl\JsonApi\Default\Request;
 
 use Sowl\JsonApi\Request;
 
-final class UpdateRelationshipsRequest extends Request
+final class DefaultRemoveRelationshipsRequest extends Request
 {
     public function dataRules(): array
     {
