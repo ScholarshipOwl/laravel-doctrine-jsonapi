@@ -4,7 +4,10 @@ use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Default\Controller;
 
 Route::get('/{resourceKey}', [Controller::class, 'list'])->name('list');
+Route::post('/{resourceKey}', [Controller::class, 'create'])->name('create');
+
 Route::get('/{resourceKey}/{id}', [Controller::class, 'show'])->name('show');
+Route::patch('/{resourceKey}/{id}', [Controller::class, 'update'])->name('update');
 Route::delete('/{resourceKey}/{id}', [Controller::class, 'remove'])->name('remove');
 
 Route::get('/{resourceKey}/{id}/{relationship}', [Controller::class, 'showRelated'])->name('showRelated');
