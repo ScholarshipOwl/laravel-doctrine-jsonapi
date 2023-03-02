@@ -35,18 +35,8 @@ class UserPolicy
         return false;
     }
 
-    public function removeRelationships(User $user, User $resource, string $relationshipClass): bool
+    public function listRoles(User $user, User $resource): bool
     {
-        return match ($relationshipClass) {
-            default => false
-        };
-    }
-
-    public function showRelationships(User $user, User $resource, string $relationshipName): bool
-    {
-        return match ($relationshipName) {
-            'roles' => $user === $resource,
-            default => false,
-        };
+        return $user === $resource;
     }
 }

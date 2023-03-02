@@ -12,7 +12,7 @@ class UpdateUserRequest extends Request
 {
     public function authorize(): bool
     {
-        return Gate::allows(AbilitiesInterface::UPDATE_RESOURCE, $this->resource());
+        return Gate::allows(AbilitiesInterface::UPDATE, $this->resource());
     }
 
     public function dataRules(): array

@@ -10,10 +10,10 @@ class PageCommentController extends Controller
 {
     use WithShowTrait;
 
-    protected function methodToAbilityMap(): array
+    protected function noAuthMethods(): array
     {
         return [
-            'show' => null,
-        ] + parent::methodToAbilityMap();
+            'show'
+        ];
     }
 }

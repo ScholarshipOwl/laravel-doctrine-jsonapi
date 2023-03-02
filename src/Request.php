@@ -52,15 +52,6 @@ class Request extends FormRequest
         return $this->repository;
     }
 
-    public function resource(): ResourceInterface
-    {
-        if (!isset($this->resource)) {
-            $this->resource = $this->repository()->findById($this->getId());
-        }
-
-        return $this->resource;
-    }
-
     public function em(): EntityManager
     {
         return $this->repository()->em();
@@ -79,28 +70,6 @@ class Request extends FormRequest
     public function getId(): ?string
     {
         return $this->route('id');
-    }
-
-    public function relationshipName(): ?string
-    {
-        if (!isset($this->relationshipName)) {
-            $relationshipName = $this->route('relationship');
-
-            if (is_null($relationshipName) && ($id = $this->getId())) {
-                $resourceKey = $this->resourceKey();
-                $path = $this->path();
-
-                $matches = [];
-                $pattern = "/^${resourceKey}\/${id}\/(relationships\/)?([^\/.]*)\/?.*$/";
-                if (preg_match($pattern, $path, $matches)) {
-                    $relationshipName = $matches[2];
-                }
-            }
-
-            $this->relationshipName = $relationshipName;
-        }
-
-        return $this->relationshipName;
     }
 
     /**
@@ -126,6 +95,42 @@ class Request extends FormRequest
         }
 
         return $this->resourceKey;
+    }
+
+    public function resource(): ResourceInterface
+    {
+        if (!isset($this->resource)) {
+            $this->resource = $this->repository()->findById($this->getId());
+        }
+
+        return $this->resource;
+    }
+
+    public function relationshipName(): ?string
+    {
+        if (!isset($this->relationshipName)) {
+            $relationshipName = $this->route('relationship');
+
+            if (is_null($relationshipName) && ($id = $this->getId())) {
+                $resourceKey = $this->resourceKey();
+                $path = $this->path();
+
+                $matches = [];
+                $pattern = "/^${resourceKey}\/${id}\/(relationships\/)?([^\/.]*)\/?.*$/";
+                if (preg_match($pattern, $path, $matches)) {
+                    $relationshipName = $matches[2];
+                }
+            }
+
+            $this->relationshipName = $relationshipName;
+        }
+
+        return $this->relationshipName;
+    }
+
+    public function isRelationship(): bool
+    {
+        return !empty($this->relationshipName());
     }
 
     public function relationship(): AbstractRelationship

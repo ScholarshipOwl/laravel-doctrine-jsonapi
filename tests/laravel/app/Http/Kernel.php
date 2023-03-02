@@ -3,7 +3,7 @@
 namespace Tests\App\Http;
 
 use Illuminate\Foundation\Http\Kernel as HttpKernel;
-use Sowl\JsonApi\Middleware\Authorize;
+use Sowl\JsonApi\Default\Middleware\AuthorizeAction;
 
 class Kernel extends HttpKernel
 {

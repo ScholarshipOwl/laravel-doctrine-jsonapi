@@ -61,10 +61,10 @@ class UsersController extends Controller
             ->dispatch($request);
     }
 
-    protected function methodToAbilityMap(): array
+    protected function noAuthMethods(): array
     {
-        return array_merge(parent::methodToAbilityMap(), [
-            'create' => null
-        ]);
+        return [
+            'create',
+        ];
     }
 }

@@ -27,14 +27,14 @@ class AbstractRelationship
         return $this->field;
     }
 
-    public function repository(): ResourceRepository
-    {
-        return $this->rm()->repositoryByClass($this->class());
-    }
-
     public function rm(): ResourceManager
     {
         return app(ResourceManager::class);
+    }
+
+    public function repository(): ResourceRepository
+    {
+        return $this->rm()->repositoryByClass($this->class());
     }
 
     public function objectIdentifierRule(): ObjectIdentifierRule

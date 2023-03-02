@@ -14,11 +14,13 @@ class PageCommentPolicy
         return true;
     }
 
-    public function showRelationships(User $user, PageComment $comment, string $relationship): bool
+    public function showUser(User $user, PageComment $comment): bool
     {
-        return match ($relationship) {
-            'user' => true,
-            'page' => true,
-        };
+        return true;
+    }
+
+    public function showPage(User $user, PageComment $comment): bool
+    {
+        return true;
     }
 }

@@ -4,13 +4,12 @@ namespace Sowl\JsonApi\Default;
 
 interface AbilitiesInterface
 {
-    const SHOW_RESOURCE = 'show';
-    const CREATE_RESOURCE = 'create';
-    const UPDATE_RESOURCE = 'update';
-    const REMOVE_RESOURCE = 'remove';
-    const LIST_RESOURCES = 'list';
+    const SHOW = 'show';
+    const CREATE = 'create';
+    const UPDATE = 'update';
+    const REMOVE = 'remove';
+    const LIST = 'list';
 
-    const SHOW_RELATIONSHIPS = 'showRelationships';
 
     const CREATE_RELATIONSHIPS = 'createRelationships';
 
