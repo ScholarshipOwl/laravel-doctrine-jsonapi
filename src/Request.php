@@ -28,6 +28,9 @@ class Request extends FormRequest
     protected ResourceRepository $repository;
     protected AbstractRelationship $relationship;
 
+    protected string $resourceKey;
+    protected ?string $relationshipName;
+
     const JSON_API_CONTENT_TYPE = 'application/vnd.api+json';
 
     public function rules(): array
@@ -80,7 +83,24 @@ class Request extends FormRequest
 
     public function relationshipName(): ?string
     {
-        return $this->route('relationship');
+        if (!isset($this->relationshipName)) {
+            $relationshipName = $this->route('relationship');
+
+            if (is_null($relationshipName) && ($id = $this->getId())) {
+                $resourceKey = $this->resourceKey();
+                $path = $this->path();
+
+                $matches = [];
+                $pattern = "/^${resourceKey}\/${id}\/(relationships\/)?([^\/.]*)\/?.*$/";
+                if (preg_match($pattern, $path, $matches)) {
+                    $relationshipName = $matches[2];
+                }
+            }
+
+            $this->relationshipName = $relationshipName;
+        }
+
+        return $this->relationshipName;
     }
 
     /**
@@ -88,22 +108,25 @@ class Request extends FormRequest
      */
     public function resourceKey(): string
     {
-        $resourceKey = $this->route('resourceKey');
+        if (!isset($this->resourceKey)) {
+            $resourceKey = $this->route('resourceKey');
 
-        if (is_null($resourceKey)) {
-            $matches = [];
-            if (preg_match('/^([^\/.]*)\/?.*$/', $this->path(), $matches)) {
-                $resourceKey = $matches[1];
+            if (is_null($resourceKey)) {
+                $matches = [];
+                if (preg_match('/^([^\/.]*)\/?.*$/', $this->path(), $matches)) {
+                    $resourceKey = $matches[1];
+                }
+            }
+
+            if (!is_null($resourceKey) && $this->rm()->hasResourceKey($resourceKey)) {
+                $this->resourceKey = $resourceKey;
+            } else {
+                throw JsonApiException::create('No resource key found for the request', 404);
             }
         }
 
-        if (!is_null($resourceKey) && $this->rm()->hasResourceKey($resourceKey)) {
-            return $resourceKey;
-        }
-
-        throw JsonApiException::create('No resource key found for the request', 404);
+        return $this->resourceKey;
     }
-
 
     public function relationship(): AbstractRelationship
     {
@@ -127,7 +150,7 @@ class Request extends FormRequest
 
     protected function allowsResource(string $ability, mixed ...$arguments): bool
     {
-        $resourceArgument = ($id = $this->request->getId())
+        $resourceArgument = ($id = $this->getId())
             ? $this->repository()->findById($id)
             : $this->repository()->getClassName();
 
