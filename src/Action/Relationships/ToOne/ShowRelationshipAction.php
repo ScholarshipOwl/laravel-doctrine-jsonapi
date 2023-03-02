@@ -6,7 +6,7 @@ use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Response;
 
-class ShowRelationship extends AbstractAction
+class ShowRelationshipAction extends AbstractAction
 {
     public function __construct(protected ToOneRelationship $relationship) {}
 

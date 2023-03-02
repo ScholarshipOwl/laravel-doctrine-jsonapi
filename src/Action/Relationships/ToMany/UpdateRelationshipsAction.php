@@ -6,7 +6,7 @@ use Sowl\JsonApi\Response;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-class UpdateRelationships extends AbstractAction
+class UpdateRelationshipsAction extends AbstractAction
 {
     public function __construct(
         protected ToManyRelationship $relationship,

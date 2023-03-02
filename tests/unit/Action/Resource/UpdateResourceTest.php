@@ -3,7 +3,7 @@
 namespace Tests\Action\Resource;
 
 use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Resource\UpdateResource;
+use Sowl\JsonApi\Action\Resource\UpdateResourceAction;
 use Sowl\JsonApi\Response;
 use Tests\App\Actions\User\UpdateUserRequest;
 use Tests\App\Entities\Role;

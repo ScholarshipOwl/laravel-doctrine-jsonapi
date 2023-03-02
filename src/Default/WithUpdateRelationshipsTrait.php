@@ -2,8 +2,8 @@
 
 namespace Sowl\JsonApi\Default;
 
-use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationships;
-use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationship;
+use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationshipsAction;
+use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationshipAction;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Default\Request\DefaultUpdateRelationshipsRequest;
@@ -16,12 +16,12 @@ trait WithUpdateRelationshipsTrait
         $relationship = $request->relationship();
 
         if ($relationship instanceof ToOneRelationship) {
-            return (new UpdateRelationship($relationship))
+            return (new UpdateRelationshipAction($relationship))
                 ->dispatch($request);
         }
 
         if ($relationship instanceof ToManyRelationship) {
-            return (new UpdateRelationships($relationship))
+            return (new UpdateRelationshipsAction($relationship))
                 ->dispatch($request);
         }
 

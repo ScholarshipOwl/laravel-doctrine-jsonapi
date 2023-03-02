@@ -3,7 +3,7 @@
 namespace Tests\App\Http\Controller;
 
 use Sowl\JsonApi\Controller;
-use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationship;
+use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationshipAction;
 use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Default\WithShowTrait;
 use Sowl\JsonApi\Response;
@@ -16,7 +16,7 @@ class PageController extends Controller
 
     public function updateUserRelationship(UpdateUserRelationshipsRequest $request): Response
     {
-        return (new UpdateRelationship(Page::relationships()->toOne()->get('user')))
+        return (new UpdateRelationshipAction(Page::relationships()->toOne()->get('user')))
             ->dispatch($request);
     }
 

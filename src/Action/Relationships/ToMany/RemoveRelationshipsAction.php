@@ -6,7 +6,7 @@ use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Response;
 
-class RemoveRelationships extends AbstractAction
+class RemoveRelationshipsAction extends AbstractAction
 {
     public function __construct(
         protected ToManyRelationship $relationship,

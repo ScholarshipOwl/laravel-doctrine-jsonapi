@@ -10,7 +10,7 @@ use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Response;
 use Sowl\JsonApi\ResourceInterface;
 
-class ListRelationships extends AbstractAction
+class ListRelationshipsAction extends AbstractAction
 {
     use FiltersResourceTrait;
     use PaginatesResourceTrait;

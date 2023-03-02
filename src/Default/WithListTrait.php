@@ -2,7 +2,7 @@
 
 namespace Sowl\JsonApi\Default;
 
-use Sowl\JsonApi\Action\Resource\ListResources;
+use Sowl\JsonApi\Action\Resource\ListResourcesAction;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
 
@@ -10,7 +10,7 @@ trait WithListTrait
 {
     public function list(Request $request): Response
     {
-        return (new ListResources())
+        return (new ListResourcesAction())
             ->setSearchProperty($this->searchProperty())
             ->setFilterable($this->filterable())
             ->dispatch($request);

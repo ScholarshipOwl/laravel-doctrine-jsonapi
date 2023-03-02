@@ -3,10 +3,10 @@
 namespace Tests\App\Http\Controller;
 
 use Sowl\JsonApi\Controller;
-use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationships;
-use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationships;
-use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationships;
-use Sowl\JsonApi\Action\Resource\UpdateResource;
+use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationshipsAction;
+use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationshipsAction;
+use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationshipsAction;
+use Sowl\JsonApi\Action\Resource\UpdateResourceAction;
 use Sowl\JsonApi\Default\WithListTrait;
 use Sowl\JsonApi\Response;
 use Tests\App\Actions\User\CreateUserAction;
@@ -39,25 +39,25 @@ class UsersController extends Controller
 
     public function update(UpdateUserRequest $request): Response
     {
-        return UpdateResource::create()
+        return UpdateResourceAction::create()
             ->dispatch($request);
     }
 
     public function createUserRoles(CreateUserRolesRequest $request): Response
     {
-        return (new CreateRelationships(User::relationships()->toMany()->get('roles')))
+        return (new CreateRelationshipsAction(User::relationships()->toMany()->get('roles')))
             ->dispatch($request);
     }
 
     public function updateUserRoles(UpdateUserRolesRequest $request): Response
     {
-        return (new UpdateRelationships(User::relationships()->toMany()->get('roles')))
+        return (new UpdateRelationshipsAction(User::relationships()->toMany()->get('roles')))
             ->dispatch($request);
     }
 
     public function removeUserRoles(RemoveUserRolesRequest $request): Response
     {
-        return (new RemoveRelationships(User::relationships()->toMany()->get('roles')))
+        return (new RemoveRelationshipsAction(User::relationships()->toMany()->get('roles')))
             ->dispatch($request);
     }
 

@@ -10,7 +10,7 @@ use Sowl\JsonApi\Response;
 /**
  * Action for providing collection (list or array) of data with API.
  */
-class ListResources extends AbstractAction
+class ListResourcesAction extends AbstractAction
 {
     use FiltersResourceTrait;
     use PaginatesResourceTrait;

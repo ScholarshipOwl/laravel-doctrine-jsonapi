@@ -5,7 +5,7 @@ namespace Sowl\JsonApi\Action\Resource;
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Response;
 
-class ShowResource extends AbstractAction
+class ShowResourceAction extends AbstractAction
 {
     public function handle(): Response
     {

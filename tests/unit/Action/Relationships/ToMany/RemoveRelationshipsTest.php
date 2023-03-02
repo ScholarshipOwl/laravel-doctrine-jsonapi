@@ -3,7 +3,7 @@
 namespace Tests\Action\Relationships\ToMany;
 
 use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationships;
+use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationshipsAction;
 use Sowl\JsonApi\Default;
 use Tests\App\Actions\User\Relationships\RemoveUserRolesRequest;
 use Tests\App\Entities\Role;

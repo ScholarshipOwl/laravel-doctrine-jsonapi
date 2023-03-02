@@ -2,8 +2,8 @@
 
 namespace Sowl\JsonApi\Default;
 
-use Sowl\JsonApi\Action\Relationships\ToMany\ListRelated;
-use Sowl\JsonApi\Action\Relationships\ToOne\ShowRelated;
+use Sowl\JsonApi\Action\Relationships\ToMany\ListRelatedAction;
+use Sowl\JsonApi\Action\Relationships\ToOne\ShowRelatedAction;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Request;
@@ -18,12 +18,12 @@ trait WithRelatedTrait
         $relationship = $resource->relationships()->get($relationshipName);
 
         if ($relationship instanceof ToOneRelationship) {
-            return (new ShowRelated($relationship))
+            return (new ShowRelatedAction($relationship))
                 ->dispatch($request);
         }
 
         if ($relationship instanceof ToManyRelationship) {
-            return (new ListRelated($relationship))
+            return (new ListRelatedAction($relationship))
                 ->dispatch($request);
         }
 

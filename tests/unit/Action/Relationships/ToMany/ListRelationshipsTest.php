@@ -3,7 +3,7 @@
 namespace Tests\Action\Relationships\ToMany;
 
 use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Relationships\ToMany\ListRelationships;
+use Sowl\JsonApi\Action\Relationships\ToMany\ListRelationshipsAction;
 use Sowl\JsonApi\Default;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;

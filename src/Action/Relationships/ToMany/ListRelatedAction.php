@@ -14,7 +14,7 @@ use Sowl\JsonApi\ResourceInterface;
 /**
 * Action for providing collection (list or array) of data with API.
 */
-class ListRelated extends AbstractAction
+class ListRelatedAction extends AbstractAction
 {
     use FiltersResourceTrait;
     use PaginatesResourceTrait;

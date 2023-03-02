@@ -3,7 +3,7 @@
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Response;
 
-class UpdateResource extends AbstractAction
+class UpdateResourceAction extends AbstractAction
 {
     public function handle(): Response
     {

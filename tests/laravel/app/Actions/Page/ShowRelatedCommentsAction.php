@@ -2,10 +2,10 @@
 
 namespace Tests\App\Actions\Page;
 
-use Sowl\JsonApi\Action\Resource\ShowResource;
+use Sowl\JsonApi\Action\Resource\ShowResourceAction;
 use Sowl\JsonApi\ResourceInterface;
 
-class ShowRelatedComments extends ShowResource
+class ShowRelatedCommentsAction extends ShowResourceAction
 {
     /**
      * Anyone can look on the page's comments.

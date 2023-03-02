@@ -3,7 +3,7 @@
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Response;
 
-class RemoveResource extends AbstractAction
+class RemoveResourceAction extends AbstractAction
 {
     public function handle(): Response
     {

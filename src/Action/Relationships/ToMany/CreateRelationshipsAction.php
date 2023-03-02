@@ -4,7 +4,7 @@ use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Response;
 
-class CreateRelationships extends AbstractAction
+class CreateRelationshipsAction extends AbstractAction
 {
     public function __construct(
         protected ToManyRelationship $relationship,

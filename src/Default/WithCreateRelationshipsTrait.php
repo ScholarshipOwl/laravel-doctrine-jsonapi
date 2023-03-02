@@ -2,7 +2,7 @@
 
 namespace Sowl\JsonApi\Default;
 
-use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationships;
+use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationshipsAction;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Default\Request\DefaultCreateRelationshipsRequest;
 use Sowl\JsonApi\Response;
@@ -14,7 +14,7 @@ trait WithCreateRelationshipsTrait
         $relationship = $request->relationship();
 
         if ($relationship instanceof ToManyRelationship) {
-            return (new CreateRelationships($relationship))
+            return (new CreateRelationshipsAction($relationship))
                 ->dispatch($request);
         }
 

@@ -7,7 +7,7 @@ use Sowl\JsonApi\Exceptions\BadRequestException;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Response;
 
-class ShowRelated extends AbstractAction
+class ShowRelatedAction extends AbstractAction
 {
     public function __construct(protected ToOneRelationship $relationship) {}
 
