@@ -24,5 +24,5 @@ Congrats you can run your tests with a new schema.
 You can find seeders in the [./database/seeders](./database/seeders) folder. You can run them in tests by using `seed` method. The initialization seeder is running on each test `setUp` after migrations refresh.
 
 ```php
-$this->seed(\Database\Seeders\SetUpSeeder::class);
+$this->seed(\laravel\database\seeders\SetUpSeeder::class);
 ```

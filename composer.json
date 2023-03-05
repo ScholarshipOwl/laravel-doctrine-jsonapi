@@ -18,8 +18,8 @@
         "psr-4": {
             "Tests\\App\\": "tests/laravel/app",
             "Tests\\": "tests/unit",
-            "Database\\Migrations\\": "tests/database/migrations",
-            "Database\\Seeders\\": "tests/database/seeders"
+            "Database\\Migrations\\": "tests/laravel/database/migrations",
+            "Database\\Seeders\\": "tests/laravel/database/seeders"
         }
     },
     "require-dev": {
@@ -30,7 +30,8 @@
         "phpunit/phpunit": "^9.5",
         "mockery/mockery": "^1.5",
         "laravel-doctrine/extensions": "^1.5",
-        "gedmo/doctrine-extensions": "^3.11"
+        "gedmo/doctrine-extensions": "^3.11",
+        "fzaninotto/faker": "^1.5"
     },
     "require": {
         "league/fractal": "^0.20.1",

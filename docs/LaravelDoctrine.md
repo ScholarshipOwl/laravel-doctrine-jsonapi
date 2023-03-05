@@ -91,8 +91,6 @@ Change the driver and model for the authentication model in the `config/auth.php
 Replace Laravel's PasswordResetServiceProvider in `config/app.php` by `LaravelDoctrine\ORM\Auth\Passwords\PasswordResetServiceProvider`.
 
 ### Setup database
-
-#### connection
 Please review and setup doctrine configuration file `config/doctrine.php` for DB connection.
 
 #### Migrations
@@ -119,6 +117,19 @@ Now you can run Doctrine migrations:
 ```shell
 php artisan doctrine:migrations:migrate
 ```
+
+#### Testing
+Laravel Doctrine ORM provides helpers for entities generation in tests same as Factories in the default Laravel.
+
+The factory depends on next package, install it if you want to use it:
+```shell
+composer require fzaninotto/faker --dev
+```
+
+Delete default factory and seeder from the `database/factories` and `database/seeders`.
+
+Follow this documentation for creating new factories and seeders.
+[http://laraveldoctrine.org/docs/1.8/orm/testing](http://laraveldoctrine.org/docs/1.8/orm/testing)
 
 ### Queue
 Add `FailedJobsServiceProvider` to `config/app.php` providers so that we could set up "failed_jobs" table with doctrine.

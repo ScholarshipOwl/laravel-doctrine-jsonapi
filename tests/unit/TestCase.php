@@ -2,14 +2,12 @@
 
 use Database\Seeders\SetUpSeeder;
 use Doctrine\ORM\EntityManager;
-use Illuminate\Contracts\Auth\Access\Gate;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Console\Kernel;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 use LaravelDoctrine\Migrations\MigrationsServiceProvider;
 use LaravelDoctrine\ORM\DoctrineServiceProvider;
 use Tests\App\Entities\User;
-use Tests\App\Policies\UserPolicy;
 use Tests\Helpers\WithEntityManagerTrait;
 
 class TestCase extends LaravelTestCase
