@@ -6,11 +6,10 @@ It provides an easy-to-use API for building JSON API responses and supports vari
 sorting, pagination, and relationships. With this library, Laravel developers can quickly implement a JSON API compliant
 backend for their web or mobile applications.
 
-## Usage
-Install using composer
-```shell
-composer require sowl/laravel-doctrine-jsonapi
-```
+The package available through composer as [sowl/laravel-doctrine-jsonapi](https://packagist.org/packages/sowl/laravel-doctrine-jsonapi).
+
+## Documentation
+[Please read full documentation at ./docs](./docs/README.md)
 
 ## Development
 Use `docker compose` for running PHPUnit tests even if your local PHP runtime version doesn't match library one.
@@ -32,7 +31,4 @@ You can find all the testing documentation in the [./tests](./tests) folder.
 The list of proposed improvements to the library.
   - [ ] Create default global error handler or write down documentation how to create such one.
         How to handle missing route\endpoint 404 and internal 500 errors.
-  - [X] Move authorization logic to the "FormRequest::authorize" action as this is the way Laravel want's to authorize requests.
-  - [X] Implement dynamic metadata import in the transformer.
   - [ ] Checkout option for adding include params like "include=roles:sort"  (TransformerAbstract.php:173)
-  - [ ] Check the option to integrate the [Laravel Sanctum](https://laravel.com/docs/10.x/sanctum)
