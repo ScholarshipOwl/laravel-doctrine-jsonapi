@@ -3,9 +3,9 @@
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use LaravelDoctrine\Extensions\Timestamps\Timestamps;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Sowl\JsonApi\AbstractTransformer;
-use Sowl\JsonApi\Exceptions\ValidationException;
 use Sowl\JsonApi\Relationships\MemoizeRelationshipsTrait;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
@@ -24,10 +24,16 @@ use Tests\App\Transformers\UserTransformer;
  * @ORM\Entity(repositoryClass="Tests\App\Repositories\UsersRepository")
  * @ORM\Table(name="users")
  */
-class User implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract, ResourceInterface
+class User implements AuthenticatableContract,
+                      AuthorizableContract,
+                      CanResetPasswordContract,
+                      ResourceInterface
 {
-    use Authenticatable, Authorizable, CanResetPassword;
+    use CanResetPassword;
+    use Authenticatable;
+    use Authorizable;
     use MemoizeRelationshipsTrait;
+    use Timestamps;
 
     public static function getResourceKey(): string
     {

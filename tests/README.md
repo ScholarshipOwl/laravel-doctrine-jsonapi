@@ -14,7 +14,7 @@ We are using SQLite in memory database. Each time we start the tests we apply mi
 
 Because we use in memory database for migrations command that generates new migrations looking into entities metadata.
 ```shell
-php tests/artisan doctrine:migrations:diff
+docker compose run php tests/artisan doctrine:migrations:diff
 ```
 Command will generate full schema migration file please create an old one.
 

@@ -31,7 +31,7 @@ return [
             'connection'    => env('DB_CONNECTION', 'sqlite'),
             'namespaces'    => [],
             'paths'         => [
-                base_path('App/Entities')
+                base_path('app/Entities')
             ],
             'repository'    => Doctrine\ORM\EntityRepository::class,
             'proxies'       => [
@@ -93,7 +93,7 @@ return [
     */
     'extensions'                 => [
         //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
-        //LaravelDoctrine\Extensions\Timestamps\TimestampableExtension::class,
+        LaravelDoctrine\Extensions\Timestamps\TimestampableExtension::class,
         //LaravelDoctrine\Extensions\SoftDeletes\SoftDeleteableExtension::class,
         //LaravelDoctrine\Extensions\Sluggable\SluggableExtension::class,
         //LaravelDoctrine\Extensions\Sortable\SortableExtension::class,

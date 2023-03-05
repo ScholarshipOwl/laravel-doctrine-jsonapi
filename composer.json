@@ -28,11 +28,20 @@
         "laravel-doctrine/migrations": "^3.0",
         "doctrine/annotations": "^1.13",
         "phpunit/phpunit": "^9.5",
-        "mockery/mockery": "^1.5"
+        "mockery/mockery": "^1.5",
+        "laravel-doctrine/extensions": "^1.5",
+        "gedmo/doctrine-extensions": "^3.11"
     },
     "require": {
         "league/fractal": "^0.20.1",
         "laravel/framework": "^9.0",
         "doctrine/orm": "^2.14"
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Sowl\\JsonApi\\JsonApiServiceProvider"
+            ]
+        }
     }
 }
