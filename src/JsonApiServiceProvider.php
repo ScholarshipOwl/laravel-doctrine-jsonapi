@@ -14,7 +14,6 @@ class JsonApiServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->bootConfig();
-        $this->bootRoutes();
     }
 
     public function register()
@@ -30,20 +29,11 @@ class JsonApiServiceProvider extends ServiceProvider
     {
         $this->publishes([
             __DIR__.'/../config/jsonapi.php' => config_path('jsonapi.php'),
+        ], 'jsonapi-config');
+
+        $this->publishes([
             __DIR__.'/../routes/jsonapi.php' => base_path('routes/jsonapi.php')
-        ]);
-
-    }
-
-    public function bootRoutes()
-    {
-        Route::group([
-            'as' => 'jsonapi.',
-            'prefix' => config('jsonapi.prefix', 'jsonapi'),
-            'middleware' => config('jsonapi.middleware', []),
-        ], function () {
-            $this->loadRoutesFrom(__DIR__.'/../routes/jsonapi.php');
-        });
+        ], 'jsonapi-routes');
     }
 
     public function registerRequest()

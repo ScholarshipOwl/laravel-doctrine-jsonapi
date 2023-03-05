@@ -10,11 +10,8 @@ class RouteServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->routes(function () {
-            $middleware = config('jsonapi.middleware');
-            $prefix = config('jsonapi.prefix');
-
-            Route::middleware($middleware)
-                ->prefix($prefix)
+            Route::middleware('jsonapi')
+                ->prefix('')
                 ->group(base_path('routes/jsonapi.php'));
         });
     }
