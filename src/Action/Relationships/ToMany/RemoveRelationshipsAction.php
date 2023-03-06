@@ -15,14 +15,14 @@ class RemoveRelationshipsAction extends AbstractAction
     public function handle(): Response
     {
         $resource = $this->request()->resource();
-        $field = $this->relationship->field();
+        $property = $this->relationship->property();
         $relationshipRepository = $this->relationship->repository();
 
         foreach ($this->request()->getData() as $index => $objectIdentifier) {
             $relatedResource = $relationshipRepository
                 ->findByObjectIdentifier($objectIdentifier, "/data/$index");
 
-            $this->manipulator()->removeRelationItem($resource, $field, $relatedResource);
+            $this->manipulator()->removeRelationItem($resource, $property, $relatedResource);
         }
 
         $this->em()->flush();

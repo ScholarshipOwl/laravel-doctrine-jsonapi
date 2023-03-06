@@ -100,22 +100,22 @@ class ResourceManipulator
         $this->replaceResourceCollection($resource, $name, $collection);
     }
 
-    public function replaceResourceCollection(ResourceInterface $resource, string $field, Collection $replace): void
+    public function replaceResourceCollection(ResourceInterface $resource, string $property, Collection $replace): void
     {
         /** @var Collection $current */
-        $current = $this->getProperty($resource, $field);
+        $current = $this->getProperty($resource, $property);
 
         // Remove relationships that not exists anymore
         foreach ($current as $currentResource) {
             if (!$replace->contains($currentResource)) {
-                $this->removeRelationItem($resource, $field, $currentResource);
+                $this->removeRelationItem($resource, $property, $currentResource);
             }
         }
 
         // Add new relationships
         foreach ($replace as $replaceResource) {
             if (!$current->contains($replaceResource)) {
-                $this->addRelationItem($resource, $field, $replaceResource);
+                $this->addRelationItem($resource, $property, $replaceResource);
             }
         }
     }
@@ -180,9 +180,9 @@ class ResourceManipulator
         return $resource->$setter($value);
     }
 
-    public function addRelationItem(object $resource, string $field, mixed $item): object
+    public function addRelationItem(object $resource, string $property, mixed $item): object
     {
-        $adder = 'add' . ucfirst($field);
+        $adder = 'add' . ucfirst($property);
 
         if (!method_exists($resource, $adder)) {
             throw (new BadRequestException())->error(
@@ -195,9 +195,9 @@ class ResourceManipulator
         return $resource->$adder($item);
     }
 
-    public function removeRelationItem(ResourceInterface $resource, string $field, mixed $item): ResourceInterface
+    public function removeRelationItem(ResourceInterface $resource, string $property, mixed $item): ResourceInterface
     {
-        $remover = 'remove' . ucfirst($field);
+        $remover = 'remove' . ucfirst($property);
 
         if (!method_exists($resource, $remover)) {
             throw (new BadRequestException())->error(

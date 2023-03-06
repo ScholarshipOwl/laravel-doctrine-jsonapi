@@ -12,11 +12,11 @@ class ToOneRelationship extends AbstractRelationship
         ?string $field = null,
     ) {
         ResourceManager::verifyResourceInterface($this->class);
-        $this->field = $field ?: $this->name;
+        $this->property = $field ?: $this->name;
     }
 
-    public static function create(string $name, string $class, ?string $field = null): static
+    public static function create(string $name, string $class, ?string $property = null): static
     {
-        return new static($name, $class, $field);
+        return new static($name, $class, $property);
     }
 }

@@ -14,7 +14,7 @@ class CreateRelationshipsAction extends AbstractAction
     {
         $resource = $this->request()->resource();
         $relationshipRepository = $this->relationship->repository();
-        $field = $this->relationship->field();
+        $property = $this->relationship->property();
 
         foreach ($this->request()->getData() as $index => $objectIdentifier) {
             $relatedResource = $relationshipRepository
@@ -22,7 +22,7 @@ class CreateRelationshipsAction extends AbstractAction
 
             $this->manipulator()->addRelationItem(
                 $resource,
-                $this->relationship->field(),
+                $this->relationship->property(),
                 $relatedResource,
             );
         }
@@ -30,7 +30,7 @@ class CreateRelationshipsAction extends AbstractAction
         $this->em()->flush();
 
         return response()->collection(
-            $this->manipulator()->getProperty($resource, $field),
+            $this->manipulator()->getProperty($resource, $property),
             $relationshipRepository->getResourceKey(),
             $relationshipRepository->transformer(),
             relationship: true,

@@ -17,9 +17,9 @@ class ShowRelatedAction extends AbstractAction
     public function handle(): Response
 	{
         $resource = $this->request()->resource();
-        $field = $this->relationship->field();
+        $property = $this->relationship->property();
 
-        if ($relation = $this->manipulator()->getProperty($resource, $field)) {
+        if ($relation = $this->manipulator()->getProperty($resource, $property)) {
             return response()->item($relation);
         }
 

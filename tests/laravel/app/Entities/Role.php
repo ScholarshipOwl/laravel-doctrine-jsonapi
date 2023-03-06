@@ -63,7 +63,7 @@ class Role implements ResourceInterface, RoleContract
 
     public static function relationships(): RelationshipsCollection
     {
-        return new RelationshipsCollection([]);
+        return new RelationshipsCollection();
     }
 
     public static function root(): static

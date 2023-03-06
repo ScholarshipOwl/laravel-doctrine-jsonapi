@@ -13,15 +13,15 @@ interface ResourceInterface
     public static function getResourceKey(): string;
 
     /**
-     * Provide map of to one relationship name to its resource class.
-     * @return RelationshipsCollection<string, ToOneRelationship|ToManyRelationship>
+     * JSON API `id`
      */
-    public static function relationships(): RelationshipsCollection;
+    public function getId(): null|string|int;
 
     public static function transformer(): AbstractTransformer;
 
     /**
-     * JSON API `id`
+     * Provide map of to one relationship name to its resource class.
+     * @return RelationshipsCollection<string, ToOneRelationship|ToManyRelationship>
      */
-    public function getId(): null|string|int;
+    public static function relationships(): RelationshipsCollection;
 }

@@ -15,7 +15,7 @@ class UpdateRelationshipsAction extends AbstractAction
     public function handle(): Response
     {
         $resource = $this->request()->resource();
-        $field = $this->relationship->field();
+        $property = $this->relationship->property();
         $relationshipRepository = $this->relationship->repository();
 
         $replaceRelationships = new ArrayCollection(array_map(
@@ -27,11 +27,11 @@ class UpdateRelationshipsAction extends AbstractAction
             array_keys($this->request()->getData()),
         ));
 
-        $this->manipulator()->replaceResourceCollection($resource, $field, $replaceRelationships);
+        $this->manipulator()->replaceResourceCollection($resource, $property, $replaceRelationships);
         $this->em()->flush();
 
         return response()->collection(
-            $this->manipulator()->getProperty($resource, $field),
+            $this->manipulator()->getProperty($resource, $property),
             $relationshipRepository->getResourceKey(),
             $relationshipRepository->transformer(),
             relationship: true,

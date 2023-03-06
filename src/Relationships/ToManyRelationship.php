@@ -13,10 +13,10 @@ class ToManyRelationship extends AbstractRelationship
         protected string $name,
         protected string $class,
         protected string $mappedBy,
-        ?string $field = null,
+        ?string          $property = null,
     ) {
         ResourceManager::verifyResourceInterface($this->class);
-        $this->field = $field ?: $this->name;
+        $this->property = $property ?: $this->name;
     }
 
     public static function create(string $name, string $class, string $mappedBy, ?string $field = null): static

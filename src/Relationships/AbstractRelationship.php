@@ -10,7 +10,7 @@ class AbstractRelationship
 {
     protected string $name;
     protected string $class;
-    protected string $field;
+    protected string $property;
 
     public function name(): string
     {
@@ -22,9 +22,9 @@ class AbstractRelationship
         return $this->class;
     }
 
-    public function field(): string
+    public function property(): string
     {
-        return $this->field;
+        return $this->property;
     }
 
     public function rm(): ResourceManager
