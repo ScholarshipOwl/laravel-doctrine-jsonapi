@@ -1,68 +1,66 @@
 # Installation
-Follow this guide if you want to install this package in new\existing laravel installation.
+Follow this guide to install this package in a new or existing laravel project.
 
-Follow next steps one after another:
 1. [Laravel](#laravel)
 2. [Doctrine Setup](#doctrine-setup)
-3. [Package config](#package-config)
-4. [Verify installation](#verify-installation)
+3. [Package Installation](#package-install)
+4. [Package Config](#package-config)
+5. [Verify installation](#verify-installation)
 
 ## Laravel
-You must have Laravel new or existing installation.
+This package requires Laravel `>=9.0.0 <10.0.0`.
 
-If you want to start a new installation you can use next command:
+Install Laravel:
 ```shell
 composer create-project laravel/laravel:^9.0 laravel-jsonapi
 ```
 
 ## Doctrine Setup
-This package using Doctrine ORM as its basic requirement.
-You can use any library for integration of Doctrine into Laravel.
+This package uses Doctrine ORM as its basic requirement.
 
-We suggest [laravel-doctrine/orm](https://packagist.org/packages/laravel-doctrine/orm#1.8.x-dev) package for integration
-of Doctrine ORM into your laravel installation.
+We recommend to use the
+[laravel-doctrine/orm](https://packagist.org/packages/laravel-doctrine/orm#1.8.x-dev)
+package for the Doctrine ORM integration.
 
-Follow guide if proposed installation:
+[Laravel Doctrine Installation Guide](./LaravelDoctrine.md)
 
-[Laravel Doctrine Guide](./LaravelDoctrine.md)
-
-## Package config
-Install the package using composer
+## Package Installation
+Install the package:
 ```shell
 composer require sowl/laravel-doctrine-jsonapi
 ```
 
-Publish package config into current Laravel installation.
+## Package Config
+Publish the config files:
 ```shell
 php artisan vendor:publish --provider="Sowl\JsonApi\JsonApiServiceProvider"
 ```
 
-Set up base `jsonapi` middleware and add routes loading into `RouteServiceProvider`.
-
-Create or replace the default `api` middleware group with `jsonapi` in the `App\Http\Kernel`:
+### Middleware
+Add a new application middleware group in the `app/Http/Kernel.php` file:
 ```php
-    protected $middlewareGroups = [
-        ...,
-        'jsonapi' => [
-            'throttle',
-        ],
-    ];
+protected $middlewareGroups = [
+    'jsonapi' => [
+        'throttle',
+    ],
+];
 ```
 
-Open `App\Providers\RoutesServiceProvider` and append or replace the `api` route loading in the `boot` method.
+### Route
+Add a route configuration in the `app/Providers/RouteServiceProvider.php` file:
 ```php
-    public function boot()
-    {
-        $this->routes(function () {
-            Route::middleware('jsonapi')
-                ->prefix('jsonapi')
-                ->group(base_path('routes/jsonapi.php'));
+public function boot()
+{
+    $this->routes(function () {
+        Route::middleware('jsonapi')
+            ->prefix('jsonapi')
+            ->group(base_path('routes/jsonapi.php'));
 
-            Route::middleware('web')
-                ->group(base_path('routes/web.php'));
-        });
-    }
+        Route::middleware('web')
+            ->group(base_path('routes/web.php'));
+    });
+}
 ```
 
-## Verify installation
-Run `php artisan route:list` to get list of available routes, it must have the JSON:API routes.
+Run `php artisan route:list` to get the list of available routes.
+JSON:API routes must be included.
