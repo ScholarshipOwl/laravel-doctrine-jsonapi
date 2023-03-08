@@ -8,7 +8,7 @@ use Tests\App\Entities\User;
 
 class PagePolicy
 {
-    public function show(User $user, Page $page): bool
+    public function view(User $user, Page $page): bool
     {
         return true;
     }
@@ -18,7 +18,7 @@ class PagePolicy
         return $user->getRoles()->contains(Role::moderator());
     }
 
-    public function showUser(User $user, Page $page): bool
+    public function viewUser(User $user, Page $page): bool
     {
         return true;
     }

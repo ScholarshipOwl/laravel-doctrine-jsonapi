@@ -5,12 +5,12 @@ use Tests\App\Entities\User;
 
 class UserPolicy
 {
-    public function show(User $user, User $resource): bool
+    public function view(User $user, User $resource): bool
     {
         return true;
     }
 
-    public function list(): bool
+    public function viewAny(): bool
     {
         return false;
     }
@@ -25,7 +25,7 @@ class UserPolicy
         return $user === $resource;
     }
 
-    public function remove(User $user, User $resource): bool
+    public function delete(User $user, User $resource): bool
     {
         return $user === $resource;
     }
@@ -35,7 +35,7 @@ class UserPolicy
         return false;
     }
 
-    public function listRoles(User $user, User $resource): bool
+    public function viewAnyRoles(User $user, User $resource): bool
     {
         return $user === $resource;
     }

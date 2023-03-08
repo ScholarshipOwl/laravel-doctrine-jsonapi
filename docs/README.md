@@ -16,6 +16,31 @@ Each resource class must be added into the `resources` list in the [config/jsonp
 Follow [resource interface](./ResourceInterface.md) guide on how properly implement the interface.
 
 ### Policies
-We must set up entity policies so that API client will be authorized to access the resource.
+We must set up entity [policies](https://laravel.com/docs/10.x/authorization#creating-policies) so that API client will be authorized to access the resource.
 
 Follow the [guide](./Policies.md) on how to set up the policies.
+
+## API Testing
+You can test the API with help of [Laravel HTTP Tests](https://laravel.com/docs/10.x/http-tests).
+
+Create a new test `Tests\Feature\UserControllerTest` and append next test:
+```php
+public function test_view_user()
+{
+    /** @var User $user */
+    $user = entity(User::class)->create();
+
+    $this->json('get', '/jsonapi/users/'.$user->getId())->assertStatus(403);
+
+    $this->actingAs($user);
+
+    $this->json('get', '/jsonapi/users/'.$user->getId())
+        ->assertStatus(200)
+        ->assertJson([
+            'data' => [
+                'id' => (string) $user->getId(),
+                'type' => 'users'
+            ]
+        ]);
+}
+```

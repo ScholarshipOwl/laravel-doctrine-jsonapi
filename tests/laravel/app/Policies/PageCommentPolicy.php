@@ -9,17 +9,17 @@ use Tests\App\Entities\User;
 
 class PageCommentPolicy
 {
-    public function show(User $user, PageComment $comment): bool
+    public function view(User $user, PageComment $comment): bool
     {
         return true;
     }
 
-    public function showUser(User $user, PageComment $comment): bool
+    public function viewUser(User $user, PageComment $comment): bool
     {
         return true;
     }
 
-    public function showPage(User $user, PageComment $comment): bool
+    public function viewPage(User $user, PageComment $comment): bool
     {
         return true;
     }

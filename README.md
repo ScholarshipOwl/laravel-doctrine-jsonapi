@@ -31,4 +31,5 @@ You can find all the testing documentation in the [./tests](./tests) folder.
 The list of proposed improvements to the library.
   - [ ] Create default global error handler or write down documentation how to create such one.
         How to handle missing route\endpoint 404 and internal 500 errors.
+  - [ ] Create console command for resource policy generation: "jsonapi:make:policy".
   - [ ] Checkout option for adding include params like "include=roles:sort"  (TransformerAbstract.php:173)
