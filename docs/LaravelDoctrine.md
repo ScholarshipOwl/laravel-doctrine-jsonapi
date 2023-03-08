@@ -1,5 +1,5 @@
 # Laravel Doctrine
-Setup guide and prerequisites.
+Installation guide, config and prerequisites.
 
 [http://laraveldoctrine.org/](http://laraveldoctrine.org/)
 
@@ -104,7 +104,7 @@ Add the `FailedJobsServiceProvider` in `config/app.php`:
 ```
 
 ### Database
-Review and update the doctrine database configuration file `config/doctrine.php`.
+Review and update the doctrine database configuration `config/doctrine.php` file.
 
 ### Migrations
 Migrations config options are available at `config/migrations.php`.
@@ -114,7 +114,7 @@ Delete the default Laravel migrations files:
 rm -rf database/migrations/*.php
 ```
 
-#### Generate
+#### Generate Migrations
 Doctrine provides a command to generate a migration by comparing project current database to mapping information.
 It generates migration classes by changing entity mappings instead of manually adding modifications to migration class.
 
@@ -125,7 +125,7 @@ php artisan doctrine:migrations:diff
 
 A new migration file is generated in `database/migrations`.
 
-#### Migrate
+#### Migrate Migrations
 Run the migration(s):
 ```shell
 php artisan doctrine:migrations:migrate
