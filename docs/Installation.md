@@ -3,9 +3,8 @@ Follow this guide to install this package in a new or existing laravel project.
 
 1. [Laravel](#laravel)
 2. [Doctrine Setup](#doctrine-setup)
-3. [Package Installation](#package-install)
+3. [Package Installation](#package-installation)
 4. [Package Config](#package-config)
-5. [Verify installation](#verify-installation)
 
 ## Laravel
 This package requires Laravel `>=9.0.0 <10.0.0`.
