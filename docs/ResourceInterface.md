@@ -1,11 +1,12 @@
-# ResourceInterface
-Entity must implement [Sowl\JsonApi\ResourceInterface](../src/ResourceInterface.php) to become resource. 
-Resource can be used for generation of JSON:API responses.
+# Resource Interface
+To be used as JSON:API resources, Doctrine entities must implement the
+[`Sowl\JsonApi\ResourceInterface`](/src/ResourceInterface.php).
 
-We must implement 4 methods to match the interface, lets review all of them.
+The interface requires to implement the 4 following methods:
 
-## getResourceKey()
-This static method is needed to define the `type` as part of JSON:API [Resource Object](https://jsonapi.org/format/#document-resource-objects).
+### getResourceKey()
+Defines the resource `type` as part of the JSON:API
+[Resource Object](https://jsonapi.org/format/#document-resource-objects) standard.
 
 ```php
 public static function getResourceKey(): string
@@ -14,8 +15,9 @@ public static function getResourceKey(): string
 }
 ```
 
-## getId()
-This method must return the resource `id` as part of JSON:API [Resource Object](https://jsonapi.org/format/#document-resource-objects)
+### getId()
+Returns the resource `id` as part of the JSON:API
+[Resource Object](https://jsonapi.org/format/#document-resource-objects) stadard.
 
 ```php
 public function getId(): int
@@ -24,13 +26,8 @@ public function getId(): int
 }
 ```
 
-## transformer()
-Package using [Fractal](https://fractal.thephpleague.com/) for serialization of entities\resources into the JSON:API responses.
-Please read [official documentation](https://fractal.thephpleague.com/transformers/) to be familiar with proper implementation of the transformer.
-
-The `transformer` method must return new transformer object that must inherit from [Sowl\JsonApi\AbstractTransformer](../src/AbstractTransformer.php).
-
-
+### transformer()
+Returns a new transformer instance.
 ```php
 public static function transformer(): AbstractTransformer
 {
@@ -38,28 +35,19 @@ public static function transformer(): AbstractTransformer
 }
 ```
 
-Example of simple transformer implementation:
-```php
-class UserTransformer extends AbstractTransformer
-{
-    public function transform(User $user): array
-    {
-        return [
-            'id' => $user->getId(),
-            'name' => $user->getName(),
-            'email' => $user->getEmail(),
-        ];
-    }
-}
-```
+This Package uses [Fractal](https://fractal.thephpleague.com/) for serialization
+of entities/resources as JSON:API responses.
 
-## relationships()
-Method must return the resource relationships definitions.
-We need this method so that we can automatically serve all the relationships endpoints.
+[Fractal Transformers Documentation](https://fractal.thephpleague.com/transformers/)
 
-Method must return [Sowl\JsonApi\Relationships\RelationshipsCollection](../src/Relationships/RelationshipsCollection.php).
+Transformer classes should extend the
+[`Sowl\JsonApi\AbstractTransformer`](/src/AbstractTransformer.php) class.
 
-Example of resource without relationships:
+[User Transformer Example](./examples/UserTransformer.php)
+
+### relationships()
+Returns the resource relationships.
+
 ```php
 public static function relationships(): RelationshipsCollection
 {
@@ -67,62 +55,47 @@ public static function relationships(): RelationshipsCollection
 }
 ```
 
-There are 2 types of relationships `To-One` and `To-Many` relationships.
+This method must return an instance of
+[`Sowl\JsonApi\Relationships\RelationshipsCollection`](src/Relationships/RelationshipsCollection.php).
 
-### To-One
-To define new "To-One" relationship we must add new [Sowl\JsonApi\Relationships\ToOneRelationship](../src/Relationships/ToOneRelationship.php).
+Two types of relationships exist, `To-One` and `To-Many`.
 
-To-One relationship returns single resource in the responses.
-
-2 required parameters must be provider and 1 optional.
-
-#### name
-First parameter must be the name of relationships that will be used for generating building endpoints.
-For example `GET /user/1/{name}` or `GET /user/1/relationships/{name}`
-
-#### class
-The resource class of the relation that also must implement `ResourceInterface`.
-
-#### property
-Optional parameter that is defining the entity property name, by default the `name` param value will be used.
+#### To-One Relationship
+Returns a single resource in the responses.
 
 ```php
+// User Entity
 public static function relationships(): RelationshipsCollection
 {
     return new RelationshipsCollection([
-        ToOneRelationship::create('user', User::class)
+        ToOneRelationship::create('country', Country::class)
     ]);
 }
 ```
 
-### To-Many
-To define new "To-Many" relationship we must add new [Sowl\JsonApi\Relationships\ToManyRelationship](../src/Relationships/ToManyRelationship.php).
+The `ToOneRelationship::create()` method accepts 3 parameters:
 
-To-Many relationship returns list of resources in the responses.
+- `name` (required):
 
-3 required parameters must be provider and 1 optional.
+Name of the relationship that will be used in the endpoint:
 
-#### name
-First parameter must be the name of relationships that will be used for generating building endpoints.
-For example `GET /user/1/{name}` or `GET /user/1/relationships/{name}`
+i.e: `GET /user/1/{name}` or `GET /user/1/relationships/{name}`
 
-#### class
-Resource class of the relation that also must implement `ResourceInterface`.
+i.e: `GET /user/1/country` or `GET /user/1/relationships/country`
 
-#### mappedBy
-Property on the resource class of the relationship that represents invert relation to the parent resource.
+- `class` (required):
 
-This param can be used for generating queries for fetching list of resources.
+The entity (resource) class being the relation.
 
-```php
-->innerJoin("user.$mappedBy", 'relation')
-->where("relation.users = ${resource->getId()}")
-```
+- `property` (optional):
 
-#### property
-Optional parameter that is defining the entity property name, by default the `name` param value will be used.
+Override the default value of `{name}` for custom endpoints.
+
+#### To-Many Relationship
+Returns a list of resources in the responses.
 
 ```php
+// User Entity
 public static function relationships(): RelationshipsCollection
 {
     return new RelationshipsCollection([
@@ -131,14 +104,30 @@ public static function relationships(): RelationshipsCollection
 }
 ```
 
-### memoizeRelationships
-In previous example we generate new objects on each `relationships` method call.
-We can use memoize pattern so that we will build the relationships list once and save them in memory and return on request.
+The `ToManyRelationship::create()` method accepts 4 parameters:
 
-For that `ResourceInterface` must use [Sowl\JsonApi\Relationships\MemoizeRelationshipsTrait](../src/Relationships/MemoizeRelationshipsTrait.php).
+- `name` (required):
 
-The Trait provides static method `memoizeRelationships(callback $cb): RelationshipsCollection`.
-Method must receive callback that will return relationships' collection.
+Name of the relationship that will be used in the endpoint:
+
+i.e: `GET /user/1/{name}` or `GET /user/1/relationships/{name}`
+
+i.e: `GET /user/1/roles` or `GET /user/1/relationships/roles`
+
+- `class` (required):
+
+The entity (resource) class being the relation.
+
+- `mappedBy` (required):
+
+Name of the association-field on the owning side of the relation.
+
+- `property` (optional):
+
+Override the default value of `{name}` for custom endpoints.
+
+#### Memoize Relationships
+The memoize pattern allows to build the relationships list once and to save it in memory.
 
 ```php
 public static function relationships(): RelationshipsCollection
@@ -150,4 +139,5 @@ public static function relationships(): RelationshipsCollection
 }
 ```
 
-
+To use this pattern, Doctrine entities must implement the
+[`Sowl\JsonApi\Relationships\MemoizeRelationshipsTrait`](/src/Relationships/MemoizeRelationshipsTrait.php) trait.

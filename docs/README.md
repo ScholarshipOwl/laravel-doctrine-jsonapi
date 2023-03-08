@@ -1,33 +1,56 @@
 # Laravel Doctrine JSON:API
-Package for the [Laravel](https://laravel.com/) that allows developers to create [JSON:API](https://jsonapi.org/)
-endpoints using the [Doctrine ORM](https://www.doctrine-project.org/) for data persistence.
+Implement feature-rich [JSON:API](https://jsonapi.org/) compliant APIs
+in your [Laravel](https://laravel.com/) applications using [Doctrine ORM](https://www.doctrine-project.org/).
 
-It provides an easy-to-use API for building JSON:API responses and supports various features such as resource filtering,
-sorting, pagination, and relationships. With this library, Laravel developers can quickly implement a JSON:API compliant
-backend for their web or mobile applications.
+## Features
+- Built for Doctrine ORM
+- Battle-tested
+- Standardised, consistent APIs
+- Fetch resources
+- Fetch relationships
+- Inclusion of related resources (compound documents)
+- Sparse field sets
+- Sorting
+- Pagination
+- Filtering
+- Create resources
+- Update resources
+- Update relationships
+- Delete resources
 
-### Setup
-Please follow the [instructions](./Installation.md) and set up the package in your Laravel installation.
+## Installation & Config
+1. [Laravel](./Installation.md#laravel)
+2. [Doctrine Setup](./Installation.md#doctrine-setup)
+3. [Package Installation](./Installation.md#package-installation)
+4. [Package Config](./Installation.md#package-config)
 
 ## Usage
-Doctrine entities must implement [ResourceInterface](../src/ResourceInterface.php) to be used as JSON:API resource in endpoints and responses.
-Each resource class must be added into the `resources` list in the [config/jsonpai.php](../config/jsonapi.php).
 
-Follow [resource interface](./ResourceInterface.md) guide on how properly implement the interface.
+### Entities/Resources
+To be used as JSON:API resources, Doctrine entities must implement the [`Sowl\JsonApi\ResourceInterface`](/src/ResourceInterface.php).
+
+[Interface Implementation Guide](./ResourceInterface.md)
+
+List entities in the `resources` array in the `config/jsonapi.php` file.
+
+```PHP
+'resources' => [
+    App\Entities\User::class,
+]
+```
 
 ### Policies
-We must set up entity [policies](https://laravel.com/docs/10.x/authorization#creating-policies) so that API client will be authorized to access the resource.
+Entity policies are required to enforce API resources access through autorization.
 
-Follow the [guide](./Policies.md) on how to set up the policies.
+[Policies Implementation Guide](./Policies.md)
 
-## API Testing
-You can test the API with help of [Laravel HTTP Tests](https://laravel.com/docs/10.x/http-tests).
+### API Testing
+Test your API with help of [Laravel HTTP Tests](https://laravel.com/docs/9.x/http-tests).
 
-Create a new test `Tests\Feature\UserControllerTest` and append next test:
+Feature test `Tests\Feature\UserControllerTest` example:
 ```php
 public function test_view_user()
 {
-    /** @var User $user */
     $user = entity(User::class)->create();
 
     $this->json('get', '/jsonapi/users/'.$user->getId())->assertStatus(403);

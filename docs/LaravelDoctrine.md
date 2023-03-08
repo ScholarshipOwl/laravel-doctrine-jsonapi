@@ -1,15 +1,18 @@
 # Laravel Doctrine
-Installation guide, config and prerequisites.
-
-[http://laraveldoctrine.org/](http://laraveldoctrine.org/)
-
-## Installation
 [Documentation](http://laraveldoctrine.org/docs/1.8/orm/installation)
 
+Installation guide, config and prerequisites.
 
+## Installation
 Install the package:
 ```shell
 composer require -W laravel-doctrine/orm:^1.8
+```
+
+After updating composer, add the ServiceProvider to the providers array in `config/app.php`.
+
+```PHP
+LaravelDoctrine\ORM\DoctrineServiceProvider::class,
 ```
 
 Publish the config files:
@@ -29,6 +32,12 @@ Install the package:
 composer require -W laravel-doctrine/migrations
 ```
 
+After updating composer, add the ServiceProvider to the providers array in `config/app.php`.
+
+```PHP
+LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
+```
+
 Publish the config files:
 ```shell
 php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\Migrations\MigrationsServiceProvider"
@@ -41,9 +50,17 @@ Install the packages:
 ```shell
 composer require laravel-doctrine/extensions
 composer require "gedmo/doctrine-extensions=^3.0"
+composer require "beberlei/doctrineextensions=^1.0"
 ```
 
-Enable the `TimestampableExtension` extension in `app/doctrine.php`:
+After updating composer, add the two ServiceProvider to the providers array in `config/app.php`.
+
+```PHP
+LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider::class,
+LaravelDoctrine\Extensions\BeberleiExtensionsServiceProvider::class,
+```
+
+Enable the `TimestampableExtension` extension in `config/doctrine.php`:
 ```shell
 'extensions' => [
     //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
@@ -61,6 +78,18 @@ Enable the `TimestampableExtension` extension in `app/doctrine.php`:
 
 ## Default Settings
 
+### Database Connection Server Version
+Update your connection config and add a `serverVersion` key in `config/database.php`:
+```php
+'connections' => [
+    'mysql' => [
+        'serverVersion' => '8.0',
+    ],
+],
+```
+
+Replace the version number by the version you use.
+
 ### User Entity
 Create a default `User` entity to be used for authentication.
 
@@ -71,7 +100,7 @@ Create a default `User` entity to be used for authentication.
 [User Entity Example](./examples/User.php)
 
 ### Authentication
-Update the drivrer and model config in `config/auth.php`:
+Update the driver and model config in `config/auth.php`:
 ```php
 ...
 'providers' => [
@@ -103,8 +132,8 @@ Add the `FailedJobsServiceProvider` in `config/app.php`:
 ...
 ```
 
-### Database
-Review and update the doctrine database configuration `config/doctrine.php` file.
+### Doctrine Configuration
+Review and update to your needs the doctrine configuration `config/doctrine.php` file.
 
 ### Migrations
 Migrations config options are available at `config/migrations.php`.

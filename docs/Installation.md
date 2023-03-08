@@ -1,11 +1,6 @@
 # Installation
 Follow this guide to install this package in a new or existing laravel project.
 
-1. [Laravel](#laravel)
-2. [Doctrine Setup](#doctrine-setup)
-3. [Package Installation](#package-installation)
-4. [Package Config](#package-config)
-
 ## Laravel
 This package requires Laravel `>=9.0.0 <10.0.0`.
 
@@ -14,12 +9,10 @@ Install Laravel:
 composer create-project laravel/laravel:^9.0 laravel-jsonapi
 ```
 
-## Doctrine Setup
-This package uses Doctrine ORM as its basic requirement.
-
-We recommend to use the
-[laravel-doctrine/orm](https://packagist.org/packages/laravel-doctrine/orm#1.8.x-dev)
-package for the Doctrine ORM integration.
+## Laravel Doctrine Setup
+This package uses Doctrine ORM and the
+[laravel-doctrine/orm](https://packagist.org/packages/laravel-doctrine/orm#1.8.x-dev) package
+as default requirements.
 
 [Laravel Doctrine Installation Guide](./LaravelDoctrine.md)
 
@@ -62,4 +55,5 @@ public function boot()
 ```
 
 Run `php artisan route:list` to get the list of available routes.
-JSON:API routes must be included.
+
+JSON:API routes should be included.
