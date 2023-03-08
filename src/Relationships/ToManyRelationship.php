@@ -19,9 +19,9 @@ class ToManyRelationship extends AbstractRelationship
         $this->property = $property ?: $this->name;
     }
 
-    public static function create(string $name, string $class, string $mappedBy, ?string $field = null): static
+    public static function create(string $name, string $class, string $mappedBy, ?string $property = null): static
     {
-        return new static($name, $class, $mappedBy, $field);
+        return new static($name, $class, $mappedBy, $property);
     }
 
     public function mappedBy(): string
