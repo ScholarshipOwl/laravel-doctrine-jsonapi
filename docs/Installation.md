@@ -19,7 +19,7 @@ as default requirements.
 ## Package Installation
 Install the package:
 ```shell
-composer require sowl/laravel-doctrine-jsonapi
+composer require sowl/laravel-doctrine-jsonapi:dev-main
 ```
 
 ## Package Config
