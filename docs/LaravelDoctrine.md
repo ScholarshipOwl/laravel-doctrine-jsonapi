@@ -9,8 +9,7 @@ Install the package:
 composer require -W laravel-doctrine/orm:^1.8
 ```
 
-After updating composer, add the ServiceProvider to the providers array in `config/app.php`.
-
+Add the ServiceProvider to the providers array in `config/app.php`:
 ```PHP
 LaravelDoctrine\ORM\DoctrineServiceProvider::class,
 ```
@@ -32,8 +31,7 @@ Install the package:
 composer require -W laravel-doctrine/migrations
 ```
 
-After updating composer, add the ServiceProvider to the providers array in `config/app.php`.
-
+Add the ServiceProvider to the providers array in `config/app.php`:
 ```PHP
 LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
 ```
@@ -53,8 +51,7 @@ composer require "gedmo/doctrine-extensions=^3.0"
 composer require "beberlei/doctrineextensions=^1.0"
 ```
 
-After updating composer, add the two ServiceProvider to the providers array in `config/app.php`.
-
+Add the two ServiceProvider to the providers array in `config/app.php`:
 ```PHP
 LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider::class,
 LaravelDoctrine\Extensions\BeberleiExtensionsServiceProvider::class,

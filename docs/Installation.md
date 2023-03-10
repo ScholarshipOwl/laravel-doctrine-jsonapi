@@ -22,6 +22,11 @@ Install the package:
 composer require sowl/laravel-doctrine-jsonapi:dev-main
 ```
 
+Add the ServiceProvider to the providers array in `config/app.php`:
+```PHP
+Sowl\JsonApi\JsonApiServiceProvider::class,
+```
+
 ## Package Config
 Publish the config files:
 ```shell
