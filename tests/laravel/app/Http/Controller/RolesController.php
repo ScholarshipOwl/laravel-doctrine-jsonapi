@@ -2,7 +2,6 @@
 
 namespace Tests\App\Http\Controller;
 
-
 use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Default\WithListTrait;
 

@@ -1,7 +1,5 @@
 <?php namespace Tests\App\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
-
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use LaravelDoctrine\ACL\Contracts\Role as RoleContract;

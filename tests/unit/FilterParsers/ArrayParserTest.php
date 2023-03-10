@@ -6,7 +6,6 @@ use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use Doctrine\Common\Collections\Expr\CompositeExpression;
 use PHPUnit\Framework\TestCase;
-
 use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\FilterParsers\ArrayFilterParser;
 use Sowl\JsonApi\Request;

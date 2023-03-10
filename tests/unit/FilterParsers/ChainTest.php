@@ -3,11 +3,10 @@
 namespace Tests\FilterParsers;
 
 use PHPUnit\Framework\TestCase;
+use Mockery as m;
 use Sowl\JsonApi\FilterParsers\BuilderChain\Chain;
 use Sowl\JsonApi\FilterParsers\BuilderChain\MemberInterface;
-
 use stdClass;
-use Mockery as m;
 
 class ChainTest extends TestCase
 {

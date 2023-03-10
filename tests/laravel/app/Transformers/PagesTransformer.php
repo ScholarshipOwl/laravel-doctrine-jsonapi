@@ -2,9 +2,7 @@
 
 use League\Fractal\Resource\Item;
 use Sowl\JsonApi\AbstractTransformer;
-use Sowl\JsonApi\Default\AbilitiesInterface;
 use Tests\App\Entities\Page;
-use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 
 class PagesTransformer extends AbstractTransformer

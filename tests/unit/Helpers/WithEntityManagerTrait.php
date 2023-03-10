@@ -9,7 +9,6 @@ use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 use Tests\App\Repositories\PageCommentsRepository;
 use Tests\App\Repositories\RolesRepository;
-use Tests\App\Repositories\TagsRepository;
 use Tests\App\Repositories\UsersRepository;
 
 trait WithEntityManagerTrait

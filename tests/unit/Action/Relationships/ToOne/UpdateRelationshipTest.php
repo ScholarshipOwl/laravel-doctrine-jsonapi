@@ -2,8 +2,6 @@
 
 namespace Tests\Action\Relationships\ToOne;
 
-use Illuminate\Support\Facades\Route;
-use Tests\App\Http\Controller\PageController;
 use Tests\TestCase;
 
 class UpdateRelationshipTest extends TestCase

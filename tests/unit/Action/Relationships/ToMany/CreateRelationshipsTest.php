@@ -2,14 +2,7 @@
 
 namespace Tests\Action\Relationships\ToMany;
 
-use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationshipsAction;
-use Sowl\JsonApi\Default;
-use Sowl\JsonApi\Response;
-use Tests\App\Actions\User\Relationships\CreateUserRolesRequest;
 use Tests\App\Entities\Role;
-use Tests\App\Http\Controller\UsersController;
-use Tests\App\Transformers\RoleTransformer;
 use Tests\TestCase;
 
 class CreateRelationshipsTest extends TestCase

@@ -2,8 +2,6 @@
 
 namespace Tests\App\Actions\User\Rules;
 
-use Illuminate\Support\Facades\Gate;
-use Sowl\JsonApi\Exceptions\ForbiddenException;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Rules\ObjectIdentifierRule;
 use Tests\App\Entities\Role;

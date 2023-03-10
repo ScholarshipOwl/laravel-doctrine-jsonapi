@@ -3,21 +3,19 @@
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Illuminate\Auth\Passwords\CanResetPassword;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
+use Illuminate\Foundation\Auth\Access\Authorizable;
 use LaravelDoctrine\Extensions\Timestamps\Timestamps;
+use LaravelDoctrine\ORM\Auth\Authenticatable;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\MemoizeRelationshipsTrait;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\ResourceInterface;
-
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
-use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
-use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
-
-use LaravelDoctrine\ORM\Auth\Authenticatable;
-use Illuminate\Foundation\Auth\Access\Authorizable;
-use Illuminate\Auth\Passwords\CanResetPassword;
 use Tests\App\Transformers\UserTransformer;
 
 /**

@@ -2,8 +2,6 @@
 
 namespace Tests\Action\Relationships\ToOne;
 
-use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Default;
 use Sowl\JsonApi\Response;
 use Tests\TestCase;
 

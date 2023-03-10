@@ -2,8 +2,6 @@
 
 namespace Tests\App\Entities;
 
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;

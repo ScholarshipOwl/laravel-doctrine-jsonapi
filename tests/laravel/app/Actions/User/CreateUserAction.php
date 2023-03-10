@@ -6,7 +6,6 @@ use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Response;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
-use Tests\App\Repositories\UsersRepository;
 
 class CreateUserAction extends AbstractAction
 {
