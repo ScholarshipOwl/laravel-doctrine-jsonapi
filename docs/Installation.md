@@ -1,7 +1,7 @@
 # Installation
 Follow this guide to install this package in a new or existing laravel project.
 
-## Laravel
+## Laravel Installation
 This package requires Laravel `>=9.0.0 <10.0.0`.
 
 Install Laravel:
@@ -9,7 +9,7 @@ Install Laravel:
 composer create-project laravel/laravel:^9.0 laravel-jsonapi
 ```
 
-## Laravel Doctrine Setup
+## Laravel Doctrine Installation
 This package uses Doctrine ORM and the
 [laravel-doctrine/orm](https://packagist.org/packages/laravel-doctrine/orm#1.8.x-dev) package
 as default requirements.
