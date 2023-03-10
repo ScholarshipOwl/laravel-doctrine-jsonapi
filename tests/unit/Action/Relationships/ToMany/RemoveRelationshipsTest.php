@@ -2,13 +2,7 @@
 
 namespace Tests\Action\Relationships\ToMany;
 
-use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationshipsAction;
-use Sowl\JsonApi\Default;
-use Tests\App\Actions\User\Relationships\RemoveUserRolesRequest;
 use Tests\App\Entities\Role;
-use Tests\App\Http\Controller\UsersController;
-use Tests\App\Transformers\RoleTransformer;
 use Tests\TestCase;
 
 class RemoveRelationshipsTest extends TestCase

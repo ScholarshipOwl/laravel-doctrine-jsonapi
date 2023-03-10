@@ -2,7 +2,6 @@
 
 namespace Tests\App\Policies;
 
-
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 

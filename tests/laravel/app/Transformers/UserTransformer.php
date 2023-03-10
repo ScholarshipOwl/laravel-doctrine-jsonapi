@@ -3,7 +3,6 @@
 use Illuminate\Support\Str;
 use League\Fractal\Resource\Collection;
 use Sowl\JsonApi\AbstractTransformer;
-use Sowl\JsonApi\Default\AbilitiesInterface;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 

@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\Gate;
 use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Request;
 use Tests\App\Actions\User\Rules\UserRoleAssignRule;
-use Tests\App\Entities\User;
 
 class UpdateUserRequest extends Request
 {

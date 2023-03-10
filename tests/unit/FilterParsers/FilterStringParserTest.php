@@ -5,7 +5,6 @@ namespace Tests\FilterParsers;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\Common\Collections\Expr\Comparison;
 use PHPUnit\Framework\TestCase;
-
 use Sowl\JsonApi\FilterParsers\SearchFilterParser;
 use Sowl\JsonApi\Request;
 

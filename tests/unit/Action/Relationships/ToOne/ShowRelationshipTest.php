@@ -3,8 +3,6 @@
 namespace Tests\Action\Relationships\ToOne;
 
 use Sowl\JsonApi\Response;
-use Illuminate\Support\Facades\Route;
-use Tests\App\Http\Controller\UsersController;
 use Tests\TestCase;
 
 class ShowRelationshipTest extends TestCase
