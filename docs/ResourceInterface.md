@@ -89,7 +89,32 @@ The entity (resource) class being the relation.
 
 - `property` (optional):
 
-Override the default value of `{name}` for custom endpoints.
+Allow to set a custom value for the `{name}` for custom endpoints.
+
+For instance on the `User` entity, if the relationship is set as `protected Country $userCountry`,
+by default the endpoint would be `GET /user/1/userCountry`.
+
+```php
+// User Entity
+public static function relationships(): RelationshipsCollection
+{
+    return new RelationshipsCollection([
+        ToOneRelationship::create('userCountry', Country::class)
+    ]);
+}
+```
+
+Set the 3rd optional parameter `property` to `country` to have a custom endpoint `GET /user/1/country`.
+
+```php
+// User Entity
+public static function relationships(): RelationshipsCollection
+{
+    return new RelationshipsCollection([
+        ToOneRelationship::create('country', Country::class, 'userCountry')
+    ]);
+}
+```
 
 #### To-Many Relationship
 Returns a list of resources in the responses.
@@ -124,7 +149,32 @@ Name of the association-field on the owning side of the relation.
 
 - `property` (optional):
 
-Override the default value of `{name}` for custom endpoints.
+Allow to set a custom value for the `{name}` for custom endpoints.
+
+For instance on the `User` entity, if the relationship is set as `protected Role $userRoles`,
+by default the endpoint would be `GET /user/1/userRoles`.
+
+```php
+// User Entity
+public static function relationships(): RelationshipsCollection
+{
+    return new RelationshipsCollection([
+        ToManyRelationship::create('userRoles', Role::class)
+    ]);
+}
+```
+
+Set the 3rd optional parameter `property` to `roles` to have a custom endpoint `GET /user/1/roles`.
+
+```php
+// User Entity
+public static function relationships(): RelationshipsCollection
+{
+    return new RelationshipsCollection([
+        ToManyRelationship::create('roles', Role::class, 'userRoles')
+    ]);
+}
+```
 
 #### Memoize Relationships
 The memoize pattern allows to build the relationships list once and to save it in memory.
