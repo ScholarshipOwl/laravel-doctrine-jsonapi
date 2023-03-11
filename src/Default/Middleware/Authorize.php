@@ -75,7 +75,7 @@ class Authorize
         }
 
         throw ForbiddenException::create()
-            ->error(403, [], sprintf('can\'t guest the ability for method "%s"', $method));
+            ->error(403, [], sprintf('Can\'t guess the ability for the method "%s"', $method));
     }
 
     /**
