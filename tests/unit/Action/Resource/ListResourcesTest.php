@@ -5,7 +5,7 @@ namespace Tests\Action\Resource;
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Response;
 use Tests\App\Http\Controller\RolesDefaultController;
-use Tests\App\Http\Controller\UsersController;
+use Tests\App\Http\Controller\UserController;
 use Tests\TestCase;
 
 class ListResourcesTest extends TestCase

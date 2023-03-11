@@ -41,7 +41,7 @@ class PageComment implements ResourceInterface
 
     public static function getResourceKey(): string
     {
-        return 'pageComments';
+        return 'page-comments';
     }
 
     public static function transformer(): AbstractTransformer

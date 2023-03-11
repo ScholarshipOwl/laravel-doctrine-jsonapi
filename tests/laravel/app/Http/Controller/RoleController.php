@@ -5,7 +5,7 @@ namespace Tests\App\Http\Controller;
 use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Default\WithListTrait;
 
-class RolesController extends Controller
+class RoleController extends Controller
 {
     use WithListTrait;
 

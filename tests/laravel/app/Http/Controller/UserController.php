@@ -17,7 +17,7 @@ use Tests\App\Actions\User\Relationships\UpdateUserRolesRequest;
 use Tests\App\Actions\User\UpdateUserRequest;
 use Tests\App\Entities\User;
 
-class UsersController extends Controller
+class UserController extends Controller
 {
     use WithListTrait;
 

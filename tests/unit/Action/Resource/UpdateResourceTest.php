@@ -8,7 +8,7 @@ use Sowl\JsonApi\Response;
 use Tests\App\Actions\User\UpdateUserRequest;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
-use Tests\App\Http\Controller\UsersController;
+use Tests\App\Http\Controller\UserController;
 use Tests\App\Transformers\UserTransformer;
 use Tests\TestCase;
 
