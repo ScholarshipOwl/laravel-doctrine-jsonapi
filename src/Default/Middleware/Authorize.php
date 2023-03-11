@@ -2,19 +2,17 @@
 
 namespace Sowl\JsonApi\Default\Middleware;
 
+use Illuminate\Http\Request as HttpRequest;
+use Illuminate\Contracts\Auth\Access\Gate;
+use Closure;
 use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
-use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\ResourceManager;
 
-use Illuminate\Http\Request as HttpRequest;
-use Illuminate\Contracts\Auth\Access\Gate;
-use Closure;
-
-class AuthorizeAction
+class Authorize
 {
     public function __construct(
         protected Gate            $gate,
