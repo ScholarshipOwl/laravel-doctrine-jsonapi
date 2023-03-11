@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Tests\App\Http\Controller\PageCommentController;
-use Tests\App\Http\Controller\PageController;
-use Tests\App\Http\Controller\RoleController;
-use Tests\App\Http\Controller\UserController;
+use Tests\App\Http\Controllers\PageCommentController;
+use Tests\App\Http\Controllers\PageController;
+use Tests\App\Http\Controllers\RoleController;
+use Tests\App\Http\Controllers\UserController;
 
 use Sowl\JsonApi\Default\Controller as DefaultController;
 

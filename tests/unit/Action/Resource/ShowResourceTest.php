@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Default;
 use Sowl\JsonApi\Response;
 use Tests\App\Entities\Role;
-use Tests\App\Http\Controller\PageCommentController;
-use Tests\App\Http\Controller\PageController;
-use Tests\App\Http\Controller\UserController;
+use Tests\App\Http\Controllers\PageCommentController;
+use Tests\App\Http\Controllers\PageController;
+use Tests\App\Http\Controllers\UserController;
 use Tests\TestCase;
 
 class ShowResourceTest extends TestCase
