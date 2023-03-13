@@ -1,5 +1,5 @@
 # Laravel Doctrine
-[Documentation](http://laraveldoctrine.org/docs/1.8/orm/installation)
+[Official Documentation](http://laraveldoctrine.org/docs/1.8/orm/installation)
 
 Installation guide, config and prerequisites.
 
@@ -24,7 +24,7 @@ php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\ORM\Doctri
 We recommend to install the following packages:
 
 ### Doctrine Migrations
-[Documentation](http://laraveldoctrine.org/docs/1.8/migrations)
+[Official Documentation](http://laraveldoctrine.org/docs/1.8/migrations)
 
 Install the package:
 ```shell
@@ -42,7 +42,7 @@ php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\Migrations
 ```
 
 ### Doctrine Extensions
-[Documentation](http://www.laraveldoctrine.org/docs/1.8/extensions)
+[Official Documentation](http://www.laraveldoctrine.org/docs/1.8/extensions)
 
 Install the packages:
 ```shell
@@ -164,7 +164,7 @@ When testing or demonstrating your application you may need to insert some dummy
 To help with this Laravel Doctrine provides Entity Factories, which are similar to Laravel's Model Factories.
 These allow you to define values for each property of your Entities and quickly generate many of them.
 
-[Documentation](http://laraveldoctrine.org/docs/1.8/orm/testing)
+[Official Documentation](http://laraveldoctrine.org/docs/1.8/orm/testing)
 
 Install the package:
 ```shell
