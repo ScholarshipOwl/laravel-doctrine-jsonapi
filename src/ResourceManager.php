@@ -3,12 +3,18 @@
 namespace Sowl\JsonApi;
 
 use Doctrine\ORM\EntityManager;
-
 use Doctrine\ORM\Mapping\ClassMetadata;
 use InvalidArgumentException;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use UnexpectedValueException;
 
+/**
+ * ResourceManager is responsible for managing and accessing resources in a JSON:API.
+ * It provides various methods for registering and accessing resources, repositories, transformers, and relationships.
+ *
+ * The class depends on EntityManager object and an optional array of resource classes.
+ * If resource classes are provided, it registers them using the "registerResource" method.
+ */
 class ResourceManager
 {
     /** @var array<string, ResourceInterface>  */
@@ -16,11 +22,14 @@ class ResourceManager
 
     public function __construct(protected EntityManager $em, array $resources = [])
     {
-        $this->registerResources($resources);
+        foreach ($resources as $resource) {
+            $this->registerResource($resource);
+        }
     }
 
     /**
-     * Make sure class is implements resource interface.
+     * Method takes a string that represents the name of a class and verifies if it implements the ResourceInterface.
+     * It throws an exception if the class is not found or does not implement the interface.
      */
     public static function verifyResourceInterface(string $class): void
     {
@@ -35,34 +44,38 @@ class ResourceManager
         }
     }
 
-    public static function resourceInterfaceKey(string $class): string
-    {
-        static::verifyResourceInterface($class);
-        return call_user_func("$class::getResourceType");
-    }
-
+    /**
+     * Register new resource class in the manager.
+     * Method takes a string that represents the name of a resource class and registers it with the resource type.
+     */
     public function registerResource(string $class): static
     {
-        $resourceType = static::resourceInterfaceKey($class);
-
+        $resourceType = static::resourceType($class);
         $this->resources[$resourceType] = $class;
 
         return $this;
     }
 
-    public function registerResources(array $resources): static
+    /**
+     * method takes a string that represents the name of a resource class and returns the resource type
+     * by calling the "getResourceType" static method on the resource class.
+     */
+    public static function resourceType(string $class): string
     {
-        array_map(fn ($resource) => $this->registerResource($resource), $resources);
-
-        return $this;
+        static::verifyResourceInterface($class);
+        return call_user_func("$class::getResourceType");
     }
 
+    /**
+     * Method takes a string that represents a resource type and checks if it is registered with the ResourceManager.
+     */
     public function hasResourceType(string $resourceType): bool
     {
         return isset($this->resources[$resourceType]);
     }
 
     /**
+     * Method takes a string that represents a resource type and returns the name of the corresponding resource class.
      * @throws InvalidArgumentException
      */
     public function classByResourceType(string $resourceType): string
@@ -75,15 +88,10 @@ class ResourceManager
     }
 
     /**
-     * @throws InvalidArgumentException
+     * method takes a string that represents the name of a resource class and returns the
+     * corresponding ResourceRepository. In case for resource class have defined custom repository
+     * that inherits ResourceRepository that repository will be returned.
      */
-    public function repositoryByResourceType(string $resourceType): ResourceRepository
-    {
-        $class = $this->classByresourceType($resourceType);
-
-        return $this->repositoryByClass($class);
-    }
-
     public function repositoryByClass(string $class): ResourceRepository
     {
         $metadata = $this->em->getClassMetadata($class);
@@ -92,6 +100,14 @@ class ResourceManager
         return new $repositoryClass($this->em, $metadata);
     }
 
+    /**
+     * Method takes an array that represents the object identifier and an optional string that represents
+     * the expected class of the resource. It returns the corresponding resource by finding it
+     * in the repository using the object identifier.
+     *
+     * @param array{type: string, id: string} $data Object identifier object
+     * @link https://jsonapi.org/format/#document-resource-object-identification
+     */
     public function objectIdentifierToResource(array $data, string $expectedClass = null): ResourceInterface
     {
         if (!isset($data['id'])) {
@@ -105,7 +121,7 @@ class ResourceManager
         $class = $this->classByResourceType($data['type']);
 
         if (!is_null($expectedClass)) {
-            $expectedType = static::resourceInterfaceKey($expectedClass);
+            $expectedType = static::resourceType($expectedClass);
 
             if ($data['type'] !== $expectedType) {
                 throw new InvalidArgumentException(sprintf(
@@ -126,18 +142,31 @@ class ResourceManager
         return $resource;
     }
 
+    /**
+     * Method takes a string that represents a resource type and returns the corresponding transformer by calling
+     * the "transformer" static method on the resource class.
+     */
     public function transformerByResourceType(string $resourceType): AbstractTransformer
     {
         $class = $this->classByResourceType($resourceType);
         return call_user_func("$class::transformer");
     }
 
+    /**
+     * Method takes a string that represents a resource type and returns the corresponding
+     * RelationshipsCollection by calling the "relationships" static method on the resource class.
+     */
     public function relationshipsByResourceType(string $resourceType): RelationshipsCollection
     {
         $class = $this->classByResourceType($resourceType);
         return call_user_func("$class::relationships");
     }
 
+    /**
+     * Method takes a ClassMetadata object and returns the name of the corresponding ResourceRepository class.
+     * It checks if the custom repository class for the entity extends the ResourceRepository class and
+     * returns it if it does. Otherwise, it returns the ResourceRepository class.
+     */
     private function resourceRepositoryClass(ClassMetadata $metadata): string
     {
         if (is_subclass_of($metadata->customRepositoryClassName, ResourceRepository::class)) {

@@ -30,6 +30,11 @@ class RelationshipsCollection
         return $this->relationships[$name] ?? null;
     }
 
+    public function has(string $name): bool
+    {
+        return $this->relationships->has($name);
+    }
+
     /** @return array<string, AbstractRelationship> */
     public function all(): array
     {

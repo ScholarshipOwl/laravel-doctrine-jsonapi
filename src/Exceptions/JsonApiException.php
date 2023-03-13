@@ -34,9 +34,18 @@ class JsonApiException extends \Exception implements RestExceptionInterface, Res
         return $this->errors;
     }
 
-    public function error(string $code, array $source, string $detail, array $extra = []): self
+    public function error(string $code, array $source, string $detail, array $extra = []): static
     {
         $this->errors[] = array_merge(['code' => $code, 'source' => $source, 'detail' => $detail] + $extra);
+
+        return $this;
+    }
+
+    public function errorsFromException(JsonApiException $exception): static
+    {
+        foreach ($exception->errors as $error) {
+            $this->errors[] = $error;
+        }
 
         return $this;
     }

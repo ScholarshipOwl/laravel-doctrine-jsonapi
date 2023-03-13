@@ -42,6 +42,11 @@ class ResourceManipulatorTest extends TestCase
                     'code' => '400',
                     'source' => ['pointer' => '/data/attributes/not_exists'],
                     'detail' => 'Unknown attribute.',
+                ],
+                [
+                    'code' => '400',
+                    'source' => ['setter' => 'Tests\App\Entities\User::setNot_exists'],
+                    'detail' => 'Missing property setter.'
                 ]
             ], $e->errors());
         }
@@ -82,7 +87,7 @@ class ResourceManipulatorTest extends TestCase
                     'source' => [
                         'setter' => User::class.'::setNot_exists',
                     ],
-                    'detail' => 'Missing field setter.',
+                    'detail' => 'Missing property setter.',
                 ]
             ], $e->errors());
         }

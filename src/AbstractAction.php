@@ -2,40 +2,44 @@
 
 use Doctrine\ORM\EntityManager;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Support\Facades\Gate;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 
 /**
  * Any JSON:API endpoint handler should inherit this class.
  * It has all the dependencies required for any action to be implemented.
+ * Such as EntityManager, ResourceManager, ResourceRepository, ResourceManipulator and JsonApi Request.
  *
- * Such as doctrine repository, transformer, manipulator.
- *
- * The dispatch method must be called with provided request.
- * Dispatch method will call the handle method injecting its dependencies and will return JsonApiResponse.
+ * The "dispatch" method handles the request and generates response.
+ * It's calling the "handle" method that can inject dependencies from Laravel DI.
  *
  * @method Response handle(...$args) The handle method must be implemented, but we do not define it as abstract
- *                                          because we PHP do not allow arguments override , and we want to use laravel
- *                                          dependency injection container to get dependencies.
+ *                                   because we PHP do not allow arguments override , and we want to use laravel
+ *                                   dependency injection container to get dependencies.
  */
 abstract class AbstractAction
 {
     protected Request $request;
     protected array $authorization = [];
 
+    /**
+     * Helper for new action object construction.
+     */
     public static function create(...$args): static
     {
         return new static(...$args);
     }
 
+    /**
+     * The dispatch method must be called with provided request.
+     * Dispatch method will call the handle method injecting its dependencies and will return JsonApiResponse.
+     * JsonApiException and Authentication exceptions handled and error response build from them.
+     */
     public function dispatch(Request $request): Response
     {
         $this->request = $request;
 
         try {
-            $this->authorizeAction();
-
             return app()->call([$this, 'handle']);
         } catch (AuthorizationException $e) {
             return response()->exception(new ForbiddenException(
@@ -46,28 +50,9 @@ abstract class AbstractAction
         }
     }
 
-    public function authorize(string $ability, mixed ...$arguments): static
-    {
-        $this->authorization[$ability] = $arguments;
-
-        return $this;
-    }
-
-    protected function authorizeAction(): void
-    {
-        if (empty($this->authorization)) {
-            return;
-        }
-
-        $resourceArgument = ($id = $this->request->getId())
-            ? $this->repository()->findById($id)
-            : $this->repository()->getClassName();
-
-        foreach ($this->authorization as $ability => $arguments) {
-            Gate::authorize($ability, [$resourceArgument, ...((array) $arguments)]);
-        }
-    }
-
+    /**
+     * Method returns the repository object for the current resource.
+     */
     protected function repository(): ResourceRepository
     {
         return $this->request->repository();
