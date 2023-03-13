@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\Exceptions\NotFoundException;
@@ -82,7 +83,7 @@ class Request extends FormRequest
 
             if (is_null($resourceKey)) {
                 $matches = [];
-                if (preg_match('/^([^\/.]*)\/?.*$/', $this->path(), $matches)) {
+                if (preg_match('/^([^\/.]*)\/?.*$/', $this->getPath(), $matches)) {
                     $resourceKey = $matches[1];
                 }
             }
@@ -113,7 +114,7 @@ class Request extends FormRequest
 
             if (is_null($relationshipName) && ($id = $this->getId())) {
                 $resourceKey = $this->resourceKey();
-                $path = $this->path();
+                $path = $this->getPath();
 
                 $matches = [];
                 $pattern = "/^${resourceKey}\/${id}\/(relationships\/)?([^\/.]*)\/?.*$/";
@@ -180,5 +181,16 @@ class Request extends FormRequest
             $validator,
             new Response(['errors' => $exception->errors()], $exception->getCode())
         );
+    }
+
+    /**
+     * Remove any prefix from the path.
+     */
+    protected function getPath(): string
+    {
+        $prefix = $this->route()->getPrefix();
+        return $prefix
+            ? Str::remove($prefix . '/', $this->path())
+            : $this->path();
     }
 }
