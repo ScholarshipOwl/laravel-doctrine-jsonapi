@@ -1,54 +1,63 @@
 # Laravel Doctrine
-Guide for how to set up Laravel Doctrine to be ready to work with the Doctrine JSON:API package.
+[Official Documentation](http://laraveldoctrine.org/docs/1.8/orm/installation)
 
-[http://laraveldoctrine.org/](http://laraveldoctrine.org/)
+Installation guide, config and prerequisites.
 
 ## Installation
-You can see full documentation on the official Laravel Doctrine package.
-[http://laraveldoctrine.org/docs/1.8/orm/installation](http://laraveldoctrine.org/docs/1.8/orm/installation)
-
-
-For simple installation you need to run:
+Install the package:
 ```shell
 composer require -W laravel-doctrine/orm:^1.8
 ```
 
-Publish the config file
+Add the ServiceProvider to the providers array in `config/app.php`:
+```PHP
+LaravelDoctrine\ORM\DoctrineServiceProvider::class,
+```
+
+Publish the config files:
 ```shell
 php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\ORM\DoctrineServiceProvider"
 ```
 
-### Doctrine Migrations Package
-We suggest to install Laravel Doctrine Migrations package for any migrations you need to run.
+## Recommended Dependencies
 
-[http://laraveldoctrine.org/docs/1.8/migrations](http://laraveldoctrine.org/docs/1.8/migrations)
+We recommend to install the following packages:
 
-Install the package
+### Doctrine Migrations
+[Official Documentation](http://laraveldoctrine.org/docs/1.8/migrations)
+
+Install the package:
 ```shell
 composer require -W laravel-doctrine/migrations
 ```
 
-To publish the migrations config use:
+Add the ServiceProvider to the providers array in `config/app.php`:
+```PHP
+LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
+```
+
+Publish the config files:
 ```shell
 php artisan vendor:publish --tag="config" --provider="LaravelDoctrine\Migrations\MigrationsServiceProvider"
 ```
 
-### Doctrine Extensions package
-Install this package with composer:
+### Doctrine Extensions
+[Official Documentation](http://www.laraveldoctrine.org/docs/1.8/extensions)
 
-[http://www.laraveldoctrine.org/docs/1.8/extensions](http://www.laraveldoctrine.org/docs/1.8/extensions)
-
+Install the packages:
 ```shell
 composer require laravel-doctrine/extensions
-```
-
-To include Gedmo extensions install them:
-
-```shell
 composer require "gedmo/doctrine-extensions=^3.0"
+composer require "beberlei/doctrineextensions=^1.0"
 ```
 
-Enable the `TimestampableExtension` feature in the `app/doctrine.php`.
+Add the two ServiceProvider to the providers array in `config/app.php`:
+```PHP
+LaravelDoctrine\Extensions\GedmoExtensionsServiceProvider::class,
+LaravelDoctrine\Extensions\BeberleiExtensionsServiceProvider::class,
+```
+
+Enable the `TimestampableExtension` extension in `config/doctrine.php`:
 ```shell
 'extensions' => [
     //LaravelDoctrine\ORM\Extensions\TablePrefix\TablePrefixExtension::class,
@@ -63,20 +72,32 @@ Enable the `TimestampableExtension` feature in the `app/doctrine.php`.
     //LaravelDoctrine\Extensions\Translatable\TranslatableExtension::class
 ],
 ```
-## Setup
-Lets setup basic `User` entity that going to be used for the authorization.
 
-Create a new file `App/Entities/User.php` this will be our `User` entity.
-The entity must replace the default `App\Models\User`.
+## Default Settings
 
-See file example: [./examples/User.php](./examples/User.php)
+### Database Connection Server Version
+Update your connection config and add a `serverVersion` key in `config/database.php`:
+```php
+'connections' => [
+    'mysql' => [
+        'serverVersion' => '8.0',
+    ],
+],
+```
 
-Remove the folder `app/Models` you're not going to use it with Doctrine.
-Our entities\models folder will be `app/Entities`.
+Replace the version number by the version you use.
 
-### Setup auth
-Change the driver and model for the authentication model in the `config/auth.php` file.
+### User Entity
+Create a default `User` entity to be used for authentication.
 
+- Delete the `app/Models` directory.
+- Create a new `App/Entities` directory.
+- Create a new `App/Entities/User.php` file.
+
+[User Entity Example](./examples/User.php)
+
+### Authentication
+Update the driver and model config in `config/auth.php`:
 ```php
 ...
 'providers' => [
@@ -88,51 +109,70 @@ Change the driver and model for the authentication model in the `config/auth.php
 ...
 ```
 
-Replace Laravel's PasswordResetServiceProvider in `config/app.php` by `LaravelDoctrine\ORM\Auth\Passwords\PasswordResetServiceProvider`.
-
-### Setup database
-Please review and setup doctrine configuration file `config/doctrine.php` for DB connection.
-
-#### Migrations
-We set up the `laravel-doctrine/migrations` package in previous steps, now we need to set it up.
-
-Please review the `config/migrations.php` configurations file, to be familiar with configuration options.
-
-First lets delete the default Laravel migrations from the `database/migrations` folder.
-```shell
-rm -rf ./database/migrations/*.php
+Replace Laravel default `PasswordResetServiceProvider` in `config/app.php`:
+```php
+...
+'providers' => [
+    //Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
+    LaravelDoctrine\ORM\Auth\Passwords\PasswordResetServiceProvider::class,
+]
+...
 ```
 
-Automatic generation of the migrations by finding out the difference between current DB schema and entities metadata
-will drastically simplify the development processes and DB maintainability.
+### Queue
+Add the `FailedJobsServiceProvider` in `config/app.php`:
+```php
+...
+'providers' => [
+    LaravelDoctrine\ORM\Queue\FailedJobsServiceProvider::class,
+]
+...
+```
 
-You can automatically generate schema migrations by running next command:
+### Doctrine Configuration
+Review and update to your needs the doctrine configuration `config/doctrine.php` file.
+
+### Migrations
+Migrations config options are available at `config/migrations.php`.
+
+Delete the default Laravel migrations files:
+```shell
+rm -rf database/migrations/*.php
+```
+
+#### Generate Migrations
+Doctrine provides a command to generate a migration by comparing project current database to mapping information.
+It generates migration classes by changing entity mappings instead of manually adding modifications to migration class.
+
+Generate the migration:
 ```shell
 php artisan doctrine:migrations:diff
 ```
 
-New migration file in `database/migrations` will be generated.
+A new migration file is generated in `database/migrations`.
 
-Now you can run Doctrine migrations:
+#### Migrate Migrations
+Run the migration(s):
 ```shell
 php artisan doctrine:migrations:migrate
 ```
 
-#### Testing
-Laravel Doctrine ORM provides helpers for entities generation in tests same as Factories in the default Laravel.
+The command executes a migration to a specified version or the latest available version.
 
-The factory depends on next package, install it if you want to use it:
+### Testing
+When testing or demonstrating your application you may need to insert some dummy data into the database.
+To help with this Laravel Doctrine provides Entity Factories, which are similar to Laravel's Model Factories.
+These allow you to define values for each property of your Entities and quickly generate many of them.
+
+[Official Documentation](http://laraveldoctrine.org/docs/1.8/orm/testing)
+
+Install the package:
 ```shell
 composer require fzaninotto/faker --dev
 ```
 
-Delete default factory and seeder from the `database/factories` and `database/seeders`.
-
-Follow this documentation for creating new factories and seeders.
-[http://laraveldoctrine.org/docs/1.8/orm/testing](http://laraveldoctrine.org/docs/1.8/orm/testing)
-
-### Queue
-Add `FailedJobsServiceProvider` to `config/app.php` providers so that we could set up "failed_jobs" table with doctrine.
-```php
-\LaravelDoctrine\ORM\Queue\FailedJobsServiceProvider::class
+Delete the default factory and seeder files:
+```shell
+rm -rf database/factories/*.php
+rm -rf database/seeders/*.php
 ```

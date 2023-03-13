@@ -1,34 +1,45 @@
 # Laravel Doctrine JSON:API
-Package for the [Laravel](https://laravel.com/) that allows developers to create [JSON:API](https://jsonapi.org/)
-endpoints using the [Doctrine ORM](https://www.doctrine-project.org/) for data persistence.
+Implement feature-rich [JSON:API](https://jsonapi.org/) compliant APIs
+in your [Laravel](https://laravel.com/) applications using [Doctrine ORM](https://www.doctrine-project.org/).
 
-It provides an easy-to-use API for building JSON API responses and supports various features such as resource filtering,
-sorting, pagination, and relationships. With this library, Laravel developers can quickly implement a JSON API compliant
-backend for their web or mobile applications.
-
-The package available through composer as [sowl/laravel-doctrine-jsonapi](https://packagist.org/packages/sowl/laravel-doctrine-jsonapi).
+## Features
+- Built for Doctrine ORM
+- Battle-tested
+- Standardised, consistent APIs
+- Fetch resources
+- Fetch relationships
+- Inclusion of related resources (compound documents)
+- Sparse field sets
+- Sorting
+- Pagination
+- Filtering
+- Create resources
+- Update resources
+- Update relationships
+- Delete resources
 
 ## Documentation
-[Please read full documentation at ./docs](./docs/README.md)
+Installation instructions, config guides and tutorials.
+
+[Documentation](./docs/README.md)
 
 ## Development
-Use `docker compose` for running PHPUnit tests even if your local PHP runtime version doesn't match library one.
+Clone the project locally.
 
-To install dependencies and run the tests
+Install the package dependencies and run the tests:
 ```shell
 docker compose run php
 ```
 
-To get shell into Docker environment run
+To enter the docker container:
 ```shell
 docker compose run php sh
 ```
 
 ### Testing
-You can find all the testing documentation in the [./tests](./tests) folder.
+[Testing Documentation](./tests)
 
 ### Roadmap
-The list of proposed improvements to the library.
   - [ ] Create default global error handler or write down documentation how to create such one.
         How to handle missing route\endpoint 404 and internal 500 errors.
   - [ ] Create console command for resource policy generation: "jsonapi:make:policy".

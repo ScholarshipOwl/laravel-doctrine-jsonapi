@@ -1,33 +1,99 @@
 # Laravel Doctrine JSON:API
-Package for the [Laravel](https://laravel.com/) that allows developers to create [JSON:API](https://jsonapi.org/)
-endpoints using the [Doctrine ORM](https://www.doctrine-project.org/) for data persistence.
+Implement feature-rich [JSON:API](https://jsonapi.org/) compliant APIs
+in your [Laravel](https://laravel.com/) applications using [Doctrine ORM](https://www.doctrine-project.org/).
 
-It provides an easy-to-use API for building JSON:API responses and supports various features such as resource filtering,
-sorting, pagination, and relationships. With this library, Laravel developers can quickly implement a JSON:API compliant
-backend for their web or mobile applications.
+## Installation & Config
+Follow this guide to install this package in a new or existing laravel project.
 
-### Setup
-Please follow the [instructions](./Installation.md) and set up the package in your Laravel installation.
+### Laravel Installation
+This package requires Laravel `>=9.0.0 <10.0.0`.
+
+Install Laravel:
+```shell
+composer create-project laravel/laravel:^9.0 laravel-jsonapi
+```
+
+### Laravel Doctrine Installation
+This package uses Doctrine ORM and the
+[laravel-doctrine/orm](https://packagist.org/packages/laravel-doctrine/orm#1.8.x-dev) package
+as default requirements.
+
+[Laravel Doctrine Installation Guide](./LaravelDoctrine.md)
+
+### Package Installation
+Install the package:
+```shell
+composer require sowl/laravel-doctrine-jsonapi:dev-main
+```
+
+Add the ServiceProvider to the providers array in `config/app.php`:
+```PHP
+Sowl\JsonApi\JsonApiServiceProvider::class,
+```
+
+### Package Config
+Publish the config files:
+```shell
+php artisan vendor:publish --provider="Sowl\JsonApi\JsonApiServiceProvider"
+```
+
+#### Middleware
+Add a new application middleware group in the `app/Http/Kernel.php` file:
+```php
+protected $middlewareGroups = [
+    'jsonapi' => [
+        'throttle',
+    ],
+];
+```
+
+#### Route
+Add a route configuration in the `app/Providers/RouteServiceProvider.php` file:
+```php
+public function boot()
+{
+    $this->routes(function () {
+        Route::middleware('jsonapi')
+            ->prefix('jsonapi')
+            ->group(base_path('routes/jsonapi.php'));
+
+        Route::middleware('web')
+            ->group(base_path('routes/web.php'));
+    });
+}
+```
+
+Run `php artisan route:list` to get the list of available routes.
+
+JSON:API routes should be included.
 
 ## Usage
-Doctrine entities must implement [ResourceInterface](../src/ResourceInterface.php) to be used as JSON:API resource in endpoints and responses.
-Each resource class must be added into the `resources` list in the [config/jsonpai.php](../config/jsonapi.php).
 
-Follow [resource interface](./ResourceInterface.md) guide on how properly implement the interface.
+### Entities/Resources
+To be used as JSON:API resources, Doctrine entities must implement the [`Sowl\JsonApi\ResourceInterface`](/src/ResourceInterface.php).
+
+[Interface Implementation Guide](./ResourceInterface.md)
+
+List entities in the `resources` array in the `config/jsonapi.php` file.
+
+```PHP
+'resources' => [
+    App\Entities\User::class,
+]
+```
 
 ### Policies
-We must set up entity [policies](https://laravel.com/docs/10.x/authorization#creating-policies) so that API client will be authorized to access the resource.
+Entity policies are required to enforce API resources access through autorization.
 
-Follow the [guide](./Policies.md) on how to set up the policies.
+[Policies Implementation Guide](./Policies.md)
 
-## API Testing
-You can test the API with help of [Laravel HTTP Tests](https://laravel.com/docs/10.x/http-tests).
+### API Testing
+Test your API with help of [Laravel HTTP Tests](https://laravel.com/docs/9.x/http-tests).
 
-Create a new test `Tests\Feature\UserControllerTest` and append next test:
+Feature test `Tests\Feature\UserControllerTest` example:
 ```php
 public function test_view_user()
 {
-    /** @var User $user */
     $user = entity(User::class)->create();
 
     $this->json('get', '/jsonapi/users/'.$user->getId())->assertStatus(403);
