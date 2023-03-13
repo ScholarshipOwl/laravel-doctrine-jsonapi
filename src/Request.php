@@ -46,8 +46,10 @@ class Request extends FormRequest
     public function repository(): ResourceRepository
     {
         if (!isset($this->repository)) {
-            $resourceType = $this->resourceType();
-            $this->repository = $this->rm()->repositoryByresourceType($resourceType);
+            $class = $this->resourceClass();
+            $repository = $this->rm()->repositoryByClass($class);
+
+            $this->repository = $repository;
         }
 
         return $this->repository;
@@ -88,14 +90,21 @@ class Request extends FormRequest
                 }
             }
 
-            if (!is_null($resourceType) && $this->rm()->hasresourceType($resourceType)) {
-                $this->resourceType = $resourceType;
-            } else {
-                throw JsonApiException::create('No resource key found for the request', 404);
+            if (is_null($resourceType) || !$this->rm()->hasResourceType($resourceType)) {
+                throw NotFoundException::create('No resource type found for the request');
             }
+
+            $this->resourceType = $resourceType;
         }
 
         return $this->resourceType;
+    }
+
+    public function resourceClass(): string
+    {
+        $type = $this->resourceType();
+
+        return $this->rm()->classByResourceType($type);
     }
 
     public function resource(): ResourceInterface

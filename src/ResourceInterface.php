@@ -3,14 +3,16 @@
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 
 /**
- * Interface must be implemented by entity to become JSON:API resource.
+ * Interface must be implemented by entities in order to become a JSON:API resource.
+ * By implementing this interface, an entity can be used in a JSON:API response with minimal additional configuration.
  *
  * @link https://jsonapi.org/format/#document-resource-objects
  */
 interface ResourceInterface
 {
     /**
-     * Method must return resource "type" that entity represents.
+     * Method that must return a string representing the resource type that the entity represents
+     * This is used to identify the type of the resource in the JSON:API response.
      */
     public static function getResourceType(): string;
 
@@ -22,14 +24,15 @@ interface ResourceInterface
 
     /**
      * Return Fractal Transformer implementation for the current resource.
-     * Transformer is used for serialization of entity into JSON:API response.
+     * The transformer is used for serialization of the entity into a JSON:API response.
      *
      * @link https://jsonapi.org/format/#document-resource-objects Transformers documentation.
      */
     public static function transformer(): AbstractTransformer;
 
     /**
-     * Method returns resource "id" identifier value.
+     * Method that must return the "id" identifier value for the resource
+     * This is used to identify the resource in the JSON:API response.
      */
     public function getId(): null|string|int;
 }
