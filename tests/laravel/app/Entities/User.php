@@ -145,17 +145,6 @@ class User implements AuthenticatableContract,
         return $this->name;
     }
 
-    public function setPassword(string $password): static
-    {
-        $this->password = bcrypt($password);
-        return $this;
-    }
-
-    public function getPassword(): string
-    {
-        return $this->password;
-    }
-
     public function getRoles(): Collection
     {
         return $this->roles;

@@ -177,7 +177,9 @@ class ResourceManipulator
             );
         }
 
-        return $resource->$setter($value);
+        $resource->$setter($value);
+
+        return $resource;
     }
 
     public function addRelationItem(object $resource, string $property, mixed $item): object
@@ -192,7 +194,9 @@ class ResourceManipulator
             );
         }
 
-        return $resource->$adder($item);
+        $resource->$adder($item);
+
+        return $resource;
     }
 
     public function removeRelationItem(ResourceInterface $resource, string $property, mixed $item): ResourceInterface
@@ -207,7 +211,9 @@ class ResourceManipulator
             );
         }
 
-        return $resource->$remover($item);
+        $resource->$remover($item);
+
+        return $resource;
     }
 
     protected function buildGetter(string $property): string
