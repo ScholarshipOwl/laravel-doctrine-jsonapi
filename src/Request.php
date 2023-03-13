@@ -83,7 +83,7 @@ class Request extends FormRequest
 
             if (is_null($resourceKey)) {
                 $matches = [];
-                if (preg_match('/^([^\/.]*)\/?.*$/', $this->getPath(), $matches)) {
+                if (preg_match('/^([^\/.]*)\/?.*$/', $this->pathWithoutPrefix(), $matches)) {
                     $resourceKey = $matches[1];
                 }
             }
@@ -114,7 +114,7 @@ class Request extends FormRequest
 
             if (is_null($relationshipName) && ($id = $this->getId())) {
                 $resourceKey = $this->resourceKey();
-                $path = $this->getPath();
+                $path = $this->pathWithoutPrefix();
 
                 $matches = [];
                 $pattern = "/^${resourceKey}\/${id}\/(relationships\/)?([^\/.]*)\/?.*$/";
@@ -186,9 +186,10 @@ class Request extends FormRequest
     /**
      * Remove any prefix from the path.
      */
-    protected function getPath(): string
+    protected function pathWithoutPrefix(): string
     {
         $prefix = $this->route()->getPrefix();
+
         return $prefix
             ? Str::remove($prefix . '/', $this->path())
             : $this->path();
