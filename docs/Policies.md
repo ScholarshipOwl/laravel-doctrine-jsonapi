@@ -1,5 +1,5 @@
 # Policies
-Default controller using [Authentication](../src/Default/Middleware/AuthorizeAction.php) middleware that's authorizes API requests using [Laravel Authorization](https://laravel.com/docs/authorization).
+Default controller using the [Authorize](../src/Default/Middleware/Authorize.php) middleware that's authorizes API requests using [Laravel Authorization](https://laravel.com/docs/authorization).
 
 You can use `make:policy` Artisan command to generate a new policy class.
 
