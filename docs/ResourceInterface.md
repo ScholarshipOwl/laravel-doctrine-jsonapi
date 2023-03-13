@@ -4,12 +4,12 @@ To be used as JSON:API resources, Doctrine entities must implement the
 
 The interface requires to implement the 4 following methods:
 
-### getResourceKey()
+### getResourceType()
 Defines the resource `type` as part of the JSON:API
 [Resource Object](https://jsonapi.org/format/#document-resource-objects) standard.
 
 ```php
-public static function getResourceKey(): string
+public static function getResourceType(): string
 {
     return 'users';
 }

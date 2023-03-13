@@ -29,7 +29,7 @@ class UserTransformer extends AbstractTransformer
     {
         $this->gate()->authorize('viewAnyRoles', $user);
 
-        return $this->collection($user->getRoles(), new RoleTransformer(), Role::getResourceKey());
+        return $this->collection($user->getRoles(), new RoleTransformer(), Role::getResourceType());
     }
 
     public function metaRandom(User $user): string

@@ -1,27 +1,35 @@
 <?php namespace Sowl\JsonApi;
 
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
-use Sowl\JsonApi\Relationships\ToManyRelationship;
-use Sowl\JsonApi\Relationships\ToOneRelationship;
 
+/**
+ * Interface must be implemented by entity to become JSON:API resource.
+ *
+ * @link https://jsonapi.org/format/#document-resource-objects
+ */
 interface ResourceInterface
 {
     /**
-     * Get fractal resource key.
-     * JSON API `type`
+     * Method must return resource "type" that entity represents.
      */
-    public static function getResourceKey(): string;
+    public static function getResourceType(): string;
 
     /**
-     * JSON API `id`
+     * List of resource relationships.
+     * Can be used for handling default relationship endpoints.
      */
-    public function getId(): null|string|int;
+    public static function relationships(): RelationshipsCollection;
 
+    /**
+     * Return Fractal Transformer implementation for the current resource.
+     * Transformer is used for serialization of entity into JSON:API response.
+     *
+     * @link https://jsonapi.org/format/#document-resource-objects Transformers documentation.
+     */
     public static function transformer(): AbstractTransformer;
 
     /**
-     * Provide map of to one relationship name to its resource class.
-     * @return RelationshipsCollection<string, ToOneRelationship|ToManyRelationship>
+     * Method returns resource "id" identifier value.
      */
-    public static function relationships(): RelationshipsCollection;
+    public function getId(): null|string|int;
 }

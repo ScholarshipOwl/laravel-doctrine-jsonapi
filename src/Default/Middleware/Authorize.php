@@ -36,8 +36,8 @@ class Authorize
         $arguments = $this->buildArguments($args);
 
         if (!$this->gate->allows($ability, $arguments)) {
-            $resourceKey = $this->request()->resourceKey();
-            $message = sprintf('No "%s" ability on "%s" resource.', $ability, $resourceKey);
+            $resourceType = $this->request()->resourceType();
+            $message = sprintf('No "%s" ability on "%s" resource.', $ability, $resourceType);
             throw (new ForbiddenException($message))->forbiddenError($message);
         }
 

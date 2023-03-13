@@ -35,9 +35,9 @@ class ListRelatedAction extends AbstractAction
         $this->applyFilter($qb);
         $this->applyPagination($qb);
 
-        $resourceKey = $repository->getResourceKey();
+        $resourceType = $repository->getResourceType();
         $transformer = $repository->transformer();
-        return response()->query($qb, $resourceKey, $transformer);
+        return response()->query($qb, $resourceType, $transformer);
     }
 
     /**

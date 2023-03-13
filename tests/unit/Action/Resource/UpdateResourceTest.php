@@ -150,8 +150,8 @@ class UpdateResourceTest extends TestCase
                 'relationships' => [
                     'roles' => [
                         'data' => [
-                            ['type' => Role::getResourceKey(), 'id' => Role::user()->getId()],
-                            ['type' => Role::getResourceKey(), 'id' => Role::moderator()->getId()],
+                            ['type' => Role::getResourceType(), 'id' => Role::user()->getId()],
+                            ['type' => Role::getResourceType(), 'id' => Role::moderator()->getId()],
                         ]
                     ]
                 ]
@@ -169,8 +169,8 @@ class UpdateResourceTest extends TestCase
                 'relationships' => [
                     'roles' => [
                         'data' => [
-                            ['type' => Role::getResourceKey(), 'id' => (string) Role::user()->getId()],
-                            ['type' => Role::getResourceKey(), 'id' => (string) Role::moderator()->getId()],
+                            ['type' => Role::getResourceType(), 'id' => (string) Role::user()->getId()],
+                            ['type' => Role::getResourceType(), 'id' => (string) Role::moderator()->getId()],
                         ],
                         'links' => [
                             'related' => '/users/1/roles',

@@ -30,7 +30,7 @@ class ResourceRepositoryTest extends TestCase
         $classMetadata->name = \stdClass::class;
 
         $repository = new ResourceRepository($emMock, $classMetadata);
-        $this->assertEquals('', $repository->getResourceKey());
+        $this->assertEquals('', $repository->getResourceType());
         $repository->findById($id);
     }
 }

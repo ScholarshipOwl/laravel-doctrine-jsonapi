@@ -29,7 +29,7 @@ class Request extends FormRequest
     protected ResourceRepository $repository;
     protected AbstractRelationship $relationship;
 
-    protected string $resourceKey;
+    protected string $resourceType;
     protected ?string $relationshipName;
 
     const JSON_API_CONTENT_TYPE = 'application/vnd.api+json';
@@ -46,8 +46,8 @@ class Request extends FormRequest
     public function repository(): ResourceRepository
     {
         if (!isset($this->repository)) {
-            $resourceKey = $this->resourceKey();
-            $this->repository = $this->rm()->repositoryByResourceKey($resourceKey);
+            $resourceType = $this->resourceType();
+            $this->repository = $this->rm()->repositoryByresourceType($resourceType);
         }
 
         return $this->repository;
@@ -76,26 +76,26 @@ class Request extends FormRequest
     /**
      * @throws JsonApiException
      */
-    public function resourceKey(): string
+    public function resourceType(): string
     {
-        if (!isset($this->resourceKey)) {
-            $resourceKey = $this->route('resourceKey');
+        if (!isset($this->resourceType)) {
+            $resourceType = $this->route('resourceType');
 
-            if (is_null($resourceKey)) {
+            if (is_null($resourceType)) {
                 $matches = [];
                 if (preg_match('/^([^\/.]*)\/?.*$/', $this->pathWithoutPrefix(), $matches)) {
-                    $resourceKey = $matches[1];
+                    $resourceType = $matches[1];
                 }
             }
 
-            if (!is_null($resourceKey) && $this->rm()->hasResourceKey($resourceKey)) {
-                $this->resourceKey = $resourceKey;
+            if (!is_null($resourceType) && $this->rm()->hasresourceType($resourceType)) {
+                $this->resourceType = $resourceType;
             } else {
                 throw JsonApiException::create('No resource key found for the request', 404);
             }
         }
 
-        return $this->resourceKey;
+        return $this->resourceType;
     }
 
     public function resource(): ResourceInterface
@@ -113,11 +113,11 @@ class Request extends FormRequest
             $relationshipName = $this->route('relationship');
 
             if (is_null($relationshipName) && ($id = $this->getId())) {
-                $resourceKey = $this->resourceKey();
+                $resourceType = $this->resourceType();
                 $path = $this->pathWithoutPrefix();
 
                 $matches = [];
-                $pattern = "/^${resourceKey}\/${id}\/(relationships\/)?([^\/.]*)\/?.*$/";
+                $pattern = "/^${resourceType}\/${id}\/(relationships\/)?([^\/.]*)\/?.*$/";
                 if (preg_match($pattern, $path, $matches)) {
                     $relationshipName = $matches[2];
                 }

@@ -50,7 +50,7 @@ class Page implements ResourceInterface
         $this->comments = new ArrayCollection();
     }
 
-    public static function getResourceKey(): string
+    public static function getResourceType(): string
     {
         return 'pages';
     }

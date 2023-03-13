@@ -13,7 +13,7 @@ class UpdateRelationshipsTest extends TestCase
         parent::setUp();
 
 
-        Route::patch('/{resourceKey}/{id}/relationships/{relationship}', [Controller::class, 'updateRelationships']);
+        Route::patch('/{resourceType}/{id}/relationships/{relationship}', [Controller::class, 'updateRelationships']);
     }
 
     public function testAuthorizationPermissionsForNoLoggedIn()

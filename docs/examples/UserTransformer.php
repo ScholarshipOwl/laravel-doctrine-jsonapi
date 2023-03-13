@@ -2,10 +2,12 @@
 
 namespace Sowl\JsonApi\AbstractTransformer;
 
-use App\Entities\User;
+use Tests\App\Entities\User;
 use Illuminate\Support\Str;
 use League\Fractal\Resource\Collection;
 use Sowl\JsonApi\AbstractTransformer;
+use Tests\App\Entities\Role;
+use Tests\App\Transformers\RoleTransformer;
 
 class UserTransformer extends AbstractTransformer
 {
@@ -30,7 +32,7 @@ class UserTransformer extends AbstractTransformer
     {
         $this->gate()->authorize('listRoles', $user);
 
-        return $this->collection($user->getRoles(), new RoleTransformer(), Role::getResourceKey());
+        return $this->collection($user->getRoles(), new RoleTransformer(), Role::getResourceType());
     }
 
     public function metaRandom(User $user): string

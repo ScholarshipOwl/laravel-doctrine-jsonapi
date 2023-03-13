@@ -21,8 +21,8 @@ class ListResourcesAction extends AbstractAction
         $this->applyFilter($qb);
         $this->applyPagination($qb);
 
-        $resourceKey = $this->repository()->getResourceKey();
+        $resourceType = $this->repository()->getResourceType();
         $transformer = $this->repository()->transformer();
-        return response()->query($qb, $resourceKey, $transformer);
+        return response()->query($qb, $resourceType, $transformer);
     }
 }

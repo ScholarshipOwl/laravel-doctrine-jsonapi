@@ -38,14 +38,14 @@ class ResourceManager
     public static function resourceInterfaceKey(string $class): string
     {
         static::verifyResourceInterface($class);
-        return call_user_func(sprintf('%s::%s', $class, 'getResourceKey'));
+        return call_user_func("$class::getResourceType");
     }
 
     public function registerResource(string $class): static
     {
-        $resourceKey = static::resourceInterfaceKey($class);
+        $resourceType = static::resourceInterfaceKey($class);
 
-        $this->resources[$resourceKey] = $class;
+        $this->resources[$resourceType] = $class;
 
         return $this;
     }
@@ -57,29 +57,29 @@ class ResourceManager
         return $this;
     }
 
-    public function hasResourceKey(string $resourceKey): bool
+    public function hasResourceType(string $resourceType): bool
     {
-        return isset($this->resources[$resourceKey]);
+        return isset($this->resources[$resourceType]);
     }
 
     /**
      * @throws InvalidArgumentException
      */
-    public function classByResourceKey(string $resourceKey): string
+    public function classByResourceType(string $resourceType): string
     {
-        if (!$this->hasResourceKey($resourceKey)) {
-            throw new InvalidArgumentException(sprintf('%s - is not registered resource key', $resourceKey));
+        if (!$this->hasresourceType($resourceType)) {
+            throw new InvalidArgumentException(sprintf('%s - is not registered resource key', $resourceType));
         }
 
-        return $this->resources[$resourceKey];
+        return $this->resources[$resourceType];
     }
 
     /**
      * @throws InvalidArgumentException
      */
-    public function repositoryByResourceKey(string $resourceKey): ResourceRepository
+    public function repositoryByResourceType(string $resourceType): ResourceRepository
     {
-        $class = $this->classByResourceKey($resourceKey);
+        $class = $this->classByresourceType($resourceType);
 
         return $this->repositoryByClass($class);
     }
@@ -102,7 +102,7 @@ class ResourceManager
             throw new InvalidArgumentException('Object identifier missing "type" field.');
         }
 
-        $class = $this->classByResourceKey($data['type']);
+        $class = $this->classByResourceType($data['type']);
 
         if (!is_null($expectedClass)) {
             $expectedType = static::resourceInterfaceKey($expectedClass);
@@ -126,16 +126,16 @@ class ResourceManager
         return $resource;
     }
 
-    public function transformerByResourceKey(string $resourceKey): AbstractTransformer
+    public function transformerByResourceType(string $resourceType): AbstractTransformer
     {
-        $class = $this->classByResourceKey($resourceKey);
-        return call_user_func(sprintf('%s::%s', $class, 'transformer'));
+        $class = $this->classByResourceType($resourceType);
+        return call_user_func("$class::transformer");
     }
 
-    public function relationshipsByResourceKey(string $resourceKey): RelationshipsCollection
+    public function relationshipsByResourceType(string $resourceType): RelationshipsCollection
     {
-        $class = $this->classByResourceKey($resourceKey);
-        return call_user_func(sprintf('%s::%s', $class, 'relationships'));
+        $class = $this->classByResourceType($resourceType);
+        return call_user_func("$class::relationships");
     }
 
     private function resourceRepositoryClass(ClassMetadata $metadata): string

@@ -33,7 +33,7 @@ class User implements AuthenticatableContract,
     use MemoizeRelationshipsTrait;
     use Timestamps;
 
-    public static function getResourceKey(): string
+    public static function getResourceType(): string
     {
         return 'users';
     }

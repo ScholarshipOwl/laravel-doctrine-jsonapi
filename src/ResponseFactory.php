@@ -41,7 +41,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
             $transformer = new RelationshipsTransformer($transformer);
         }
 
-        $item = (new Item($resource, $transformer, $resource->getResourceKey()));
+        $item = (new Item($resource, $transformer, $resource->getResourceType()));
 
         if (!empty($meta)) {
             $item->setMeta($meta);
@@ -69,7 +69,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
     public function collection(
         array|DoctrineCollection $collection,
-        string $resourceKey,
+        string $resourceType,
         AbstractTransformer $transformer,
         int                 $status = Response::HTTP_OK,
         array               $headers = [],
@@ -81,7 +81,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
             $transformer = new RelationshipsTransformer($transformer);
         }
 
-        $collection = (new Collection($collection, $transformer, $resourceKey));
+        $collection = (new Collection($collection, $transformer, $resourceType));
 
         if (!empty($meta)) {
             $collection->setMeta($meta);
@@ -93,7 +93,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
     public function query(
         QueryBuilder        $qb,
-        string              $resourceKey,
+        string              $resourceType,
         AbstractTransformer $transformer,
         int                 $status = Response::HTTP_OK,
         array               $headers = [],
@@ -107,7 +107,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
             $transformer = new RelationshipsTransformer($transformer);
         }
 
-        $collection = (new Collection($data, $transformer, $resourceKey));
+        $collection = (new Collection($data, $transformer, $resourceType));
 
         if (!empty($meta)) {
             $collection->setMeta($meta);
@@ -148,7 +148,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
     protected function linkToResource(ResourceInterface $resource): string
     {
-        return sprintf('%s/%s/%s', $this->request()->getBaseUrl(), $resource->getResourceKey(), $resource->getId());
+        return sprintf('%s/%s/%s', $this->request()->getBaseUrl(), $resource->getResourceType(), $resource->getId());
     }
 
     protected function fractal(): Fractal

@@ -68,7 +68,7 @@ abstract class AbstractTransformer extends TransformerAbstract
         return $meta;
     }
 
-    protected function primitive($data, $transformer = null, $resourceKey = null): Primitive
+    protected function primitive($data, $transformer = null, $resourceType = null): Primitive
     {
         throw new \RuntimeException('Primitive values is not supported.');
     }

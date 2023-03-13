@@ -39,7 +39,7 @@ class PageComment implements ResourceInterface
      */
     protected ?User $user;
 
-    public static function getResourceKey(): string
+    public static function getResourceType(): string
     {
         return 'pageComments';
     }

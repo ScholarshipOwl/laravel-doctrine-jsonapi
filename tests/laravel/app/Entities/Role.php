@@ -49,7 +49,7 @@ class Role implements ResourceInterface, RoleContract
      */
     protected Collection $users;
 
-    public static function getResourceKey(): string
+    public static function getResourceType(): string
     {
         return 'roles';
     }

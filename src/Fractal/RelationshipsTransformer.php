@@ -50,13 +50,13 @@ class RelationshipsTransformer extends AbstractTransformer
         }
     }
 
-    protected function item($data, $transformer, $resourceKey = null): Item
+    protected function item($data, $transformer, $resourceType = null): Item
     {
-        return new Item($data, new static($transformer), $resourceKey);
+        return new Item($data, new static($transformer), $resourceType);
     }
 
-    protected function collection($data, $transformer, $resourceKey = null): Collection
+    protected function collection($data, $transformer, $resourceType = null): Collection
     {
-        return new Collection($data, new static($transformer), $resourceKey);
+        return new Collection($data, new static($transformer), $resourceType);
     }
 }

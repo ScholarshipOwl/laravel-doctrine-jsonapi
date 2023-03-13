@@ -7,13 +7,13 @@ use Sowl\JsonApi\ResourceManager;
 trait WithRelationshipsRulesTrait
 {
     abstract public function rm(): ResourceManager;
-    abstract public function resourceKey(): string;
+    abstract public function resourceType(): string;
 
     private function relationshipsRules(): array
     {
         $rules = [];
 
-        $relationships = $this->rm()->relationshipsByResourceKey($this->resourceKey())->all();
+        $relationships = $this->rm()->relationshipsByresourceType($this->resourceType())->all();
         foreach ($relationships as $name => $relationship) {
             $rules["data.relationships.$name.data"] = [$relationship->objectIdentifierRule()];
         }

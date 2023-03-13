@@ -16,9 +16,6 @@ use UnexpectedValueException;
 
 class ResourceRepository extends EntityRepository
 {
-    const RESOURCE_TYPE_METHOD = 'getResourceKey';
-    const RESOURCE_TRANSFORMER_METHOD = 'transformer';
-
     protected ?string $alias = null;
 
     public function __construct(EntityManagerInterface $em, ClassMetadata $class)
@@ -34,7 +31,8 @@ class ResourceRepository extends EntityRepository
 
     public function transformer(): AbstractTransformer
     {
-        return call_user_func(sprintf('%s::%s', $this->getClassName(), static::RESOURCE_TRANSFORMER_METHOD));
+        $class = $this->getClassName();
+        return call_user_func("$class::transformer");
     }
 
     public function em(): EntityManager
@@ -52,9 +50,10 @@ class ResourceRepository extends EntityRepository
         return $this->createQueryBuilder($this->alias());
     }
 
-    public function getResourceKey(): string
+    public function getResourceType(): string
     {
-        return call_user_func(sprintf('%s::%s', $this->getClassName(), static::RESOURCE_TYPE_METHOD));
+        $class = $this->getClassName();
+        return call_user_func("$class::getResourceType");
     }
 
     /**
@@ -73,7 +72,7 @@ class ResourceRepository extends EntityRepository
     public function findById(string|int $id): ResourceInterface
     {
         if (null === ($entity = $this->find($id))) {
-            throw new ResourceNotFoundException($id, $this->getResourceKey());
+            throw new ResourceNotFoundException($id, $this->getResourceType());
         }
 
         return $entity;
@@ -91,7 +90,7 @@ class ResourceRepository extends EntityRepository
                 ->error(400, ['pointer' => $scope], 'Relation item without `id` or `type`.');
         }
 
-        if ($this->getResourceKey() !== $data['type']) {
+        if ($this->getResourceType() !== $data['type']) {
             throw BadRequestException::create('Wrong type provided.')
                 ->error(400, ['pointer' => $scope], 'Type is not in sync with relation.');
         }

@@ -31,9 +31,9 @@ class ListRelationshipsAction extends AbstractAction
         $this->applyFilter($qb);
         $this->applyPagination($qb);
 
-        $resourceKey = $relationshipRepository->getResourceKey();
+        $resourceType = $relationshipRepository->getResourceType();
         $transformer = $relationshipRepository->transformer();
-        return response()->query($qb, $resourceKey, $transformer, relationship: true);
+        return response()->query($qb, $resourceType, $transformer, relationship: true);
     }
 
     /**
