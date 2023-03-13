@@ -89,7 +89,7 @@ The entity (resource) class being the relation.
 
 - `property` (optional):
 
-Allow to set a custom value for the `{name}` for custom endpoints.
+Allow to set a custom value for the relation `{name}` used in the endpoints.
 
 For instance on the `User` entity, if the relationship is set as `protected Country $userCountry`,
 by default the endpoint would be `GET /user/1/userCountry`.
@@ -104,7 +104,8 @@ public static function relationships(): RelationshipsCollection
 }
 ```
 
-Set the 3rd optional parameter `property` to `country` to have a custom endpoint `GET /user/1/country`.
+Set the 1st required parameter `name` as `country` and set the
+3rd optional parameter `property` to `userCountry` to have a custom endpoint like `GET /user/1/country`.
 
 ```php
 // User Entity
@@ -149,9 +150,9 @@ Name of the association-field on the owning side of the relation.
 
 - `property` (optional):
 
-Allow to set a custom value for the `{name}` for custom endpoints.
+Allow to set a custom value for the relation `{name}` used in the endpoints.
 
-For instance on the `User` entity, if the relationship is set as `protected Role $userRoles`,
+For instance on the `User` entity, if the relationship is set as `protected Country $userRoles`,
 by default the endpoint would be `GET /user/1/userRoles`.
 
 ```php
@@ -164,7 +165,8 @@ public static function relationships(): RelationshipsCollection
 }
 ```
 
-Set the 3rd optional parameter `property` to `roles` to have a custom endpoint `GET /user/1/roles`.
+Set the 1st required parameter `name` as `roles` and set the
+3rd optional parameter `property` to `userRoles` to have a custom endpoint like `GET /user/1/roles`.
 
 ```php
 // User Entity
