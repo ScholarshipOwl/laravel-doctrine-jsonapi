@@ -10,18 +10,18 @@ class ShowRelationshipTest extends TestCase
     public function testAuthorizationPermissionsAnyOneCanAccess()
     {
         $this->actingAsUser();
-        $this->get('/pageComments/1/relationships/user')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/1/relationships/page')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/2/relationships/user')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/2/relationships/page')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/3/relationships/user')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/3/relationships/page')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/1/relationships/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/1/relationships/page')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/2/relationships/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/2/relationships/page')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/3/relationships/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/3/relationships/page')->assertStatus(Response::HTTP_OK);
     }
 
     public function testShowPageCommentsRelatedUserResponse()
     {
         $this->actingAsUser();
-        $this->get('/pageComments/1/relationships/user')
+        $this->get('/page-comments/1/relationships/user')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -41,7 +41,7 @@ class ShowRelationshipTest extends TestCase
                 ]
             ]);
 
-        $this->get('/pageComments/2/relationships/user')
+        $this->get('/page-comments/2/relationships/user')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -61,7 +61,7 @@ class ShowRelationshipTest extends TestCase
                 ]
             ]);
 
-        $this->get('/pageComments/3/relationships/user')
+        $this->get('/page-comments/3/relationships/user')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -103,15 +103,15 @@ class ShowRelationshipTest extends TestCase
             ]
         ];
 
-        $this->get('/pageComments/1/relationships/page')
+        $this->get('/page-comments/1/relationships/page')
             ->assertStatus(200)
             ->assertExactJson($page1response);
 
-        $this->get('/pageComments/2/relationships/page')
+        $this->get('/page-comments/2/relationships/page')
             ->assertStatus(200)
             ->assertExactJson($page1response);
 
-        $this->get('/pageComments/3/relationships/page')
+        $this->get('/page-comments/3/relationships/page')
             ->assertStatus(200)
             ->assertExactJson($page1response);
     }

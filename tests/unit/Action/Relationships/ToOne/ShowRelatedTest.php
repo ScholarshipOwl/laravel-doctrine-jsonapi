@@ -10,18 +10,18 @@ class ShowRelatedTest extends TestCase
     public function testAuthorizationPermissionsAnyOneCanAccess()
     {
         $this->actingAsUser();
-        $this->get('/pageComments/1/user')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/1/page')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/2/user')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/2/page')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/3/user')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/3/page')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/1/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/1/page')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/2/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/2/page')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/3/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/3/page')->assertStatus(Response::HTTP_OK);
     }
 
     public function testShowPageCommentsRelatedUserResponse()
     {
         $this->actingAsUser();
-        $this->get('/pageComments/1/user')
+        $this->get('/page-comments/1/user')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -45,7 +45,7 @@ class ShowRelatedTest extends TestCase
                 ]
             ]);
 
-        $this->get('/pageComments/2/user')
+        $this->get('/page-comments/2/user')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -69,7 +69,7 @@ class ShowRelatedTest extends TestCase
                 ]
             ]);
 
-        $this->get('/pageComments/3/user')
+        $this->get('/page-comments/3/user')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -119,15 +119,15 @@ class ShowRelatedTest extends TestCase
             ]
         ];
 
-        $this->get('/pageComments/1/page')
+        $this->get('/page-comments/1/page')
             ->assertStatus(200)
             ->assertExactJson($page1response);
 
-        $this->get('/pageComments/2/page')
+        $this->get('/page-comments/2/page')
             ->assertStatus(200)
             ->assertExactJson($page1response);
 
-        $this->get('/pageComments/3/page')
+        $this->get('/page-comments/3/page')
             ->assertStatus(200)
             ->assertExactJson($page1response);
     }

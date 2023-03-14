@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\App\Http\Controller;
+namespace Tests\App\Http\Controllers;
 
 use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationshipAction;

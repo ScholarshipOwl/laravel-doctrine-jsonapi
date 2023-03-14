@@ -6,9 +6,9 @@ use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Default;
 use Sowl\JsonApi\Response;
 use Tests\App\Entities\Role;
-use Tests\App\Http\Controller\PageCommentController;
-use Tests\App\Http\Controller\PageController;
-use Tests\App\Http\Controller\UsersController;
+use Tests\App\Http\Controllers\PageCommentController;
+use Tests\App\Http\Controllers\PageController;
+use Tests\App\Http\Controllers\UserController;
 use Tests\TestCase;
 
 class ShowResourceTest extends TestCase
@@ -24,9 +24,9 @@ class ShowResourceTest extends TestCase
 
         $this->get('/pages/1')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pageComments/1')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/2')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/3')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/2')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/3')->assertStatus(Response::HTTP_OK);
     }
 
     public function testAuthorizationPermissionsForUserRole()
@@ -41,9 +41,9 @@ class ShowResourceTest extends TestCase
 
         $this->get('/pages/1')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pageComments/1')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/2')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/3')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/2')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/3')->assertStatus(Response::HTTP_OK);
     }
 
     public function testAuthorizationPermissionsForRootRole()
@@ -58,9 +58,9 @@ class ShowResourceTest extends TestCase
 
         $this->get('/pages/1')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pageComments/1')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/2')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/3')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/2')->assertStatus(Response::HTTP_OK);
+        $this->get('/page-comments/3')->assertStatus(Response::HTTP_OK);
     }
 
     public function testShowUserResponse()
@@ -240,90 +240,90 @@ class ShowResourceTest extends TestCase
 
     public function testShowPageCommentsResponse()
     {
-        $this->get('/pageComments/2232')->assertStatus(404);
+        $this->get('/page-comments/2232')->assertStatus(404);
 
-        $this->get('/pageComments/1')
+        $this->get('/page-comments/1')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
                     'id' => '1',
-                    'type' => 'pageComments',
+                    'type' => 'page-comments',
                     'attributes' => [
                         'content' => '<span>It is mine comment</span>'
                     ],
                     'relationships' => [
                         'user' => [
                             'links' => [
-                                'related' => '/pageComments/1/user',
-                                'self' => '/pageComments/1/relationships/user'
+                                'related' => '/page-comments/1/user',
+                                'self' => '/page-comments/1/relationships/user'
                             ]
                         ],
                         'page' => [
                             'links' => [
-                                'related' => '/pageComments/1/page',
-                                'self' => '/pageComments/1/relationships/page'
+                                'related' => '/page-comments/1/page',
+                                'self' => '/page-comments/1/relationships/page'
                             ]
                         ],
                     ],
                     'links' => [
-                        'self' => '/pageComments/1'
+                        'self' => '/page-comments/1'
                     ]
                 ]
             ]);
-        $this->get('/pageComments/2')
+        $this->get('/page-comments/2')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
                     'id' => '2',
-                    'type' => 'pageComments',
+                    'type' => 'page-comments',
                     'attributes' => [
                         'content' => '<span>I know better</span>'
                     ],
                     'relationships' => [
                         'user' => [
                             'links' => [
-                                'related' => '/pageComments/2/user',
-                                'self' => '/pageComments/2/relationships/user'
+                                'related' => '/page-comments/2/user',
+                                'self' => '/page-comments/2/relationships/user'
                             ]
                         ],
                         'page' => [
                             'links' => [
-                                'related' => '/pageComments/2/page',
-                                'self' => '/pageComments/2/relationships/page'
+                                'related' => '/page-comments/2/page',
+                                'self' => '/page-comments/2/relationships/page'
                             ]
                         ],
                     ],
                     'links' => [
-                        'self' => '/pageComments/2'
+                        'self' => '/page-comments/2'
                     ]
                 ]
             ]);
 
-        $this->get('/pageComments/3')
+        $this->get('/page-comments/3')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
                     'id' => '3',
-                    'type' => 'pageComments',
+                    'type' => 'page-comments',
                     'attributes' => [
                         'content' => '<span>I think he is right</span>'
                     ],
                     'relationships' => [
                         'user' => [
                             'links' => [
-                                'related' => '/pageComments/3/user',
-                                'self' => '/pageComments/3/relationships/user'
+                                'related' => '/page-comments/3/user',
+                                'self' => '/page-comments/3/relationships/user'
                             ]
                         ],
                         'page' => [
                             'links' => [
-                                'related' => '/pageComments/3/page',
-                                'self' => '/pageComments/3/relationships/page'
+                                'related' => '/page-comments/3/page',
+                                'self' => '/page-comments/3/relationships/page'
                             ]
                         ],
                     ],
                     'links' => [
-                        'self' => '/pageComments/3'
+                        'self' => '/page-comments/3'
                     ]
                 ]
             ]);
