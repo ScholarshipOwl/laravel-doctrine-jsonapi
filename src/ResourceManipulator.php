@@ -262,7 +262,7 @@ class ResourceManipulator
      */
     public function addRelationItem(ResourceInterface $resource, string $property, mixed $item): ResourceInterface
     {
-        $adder = 'add' . ucfirst($property);
+        $adder = 'addTo' . ucfirst($property);
 
         if (!method_exists($resource, $adder)) {
             throw (new BadRequestException())->error(
@@ -282,7 +282,7 @@ class ResourceManipulator
      */
     public function removeRelationItem(ResourceInterface $resource, string $property, mixed $item): ResourceInterface
     {
-        $remover = 'remove' . ucfirst($property);
+        $remover = 'removeFrom' . ucfirst($property);
 
         if (!method_exists($resource, $remover)) {
             throw (new BadRequestException())->error(

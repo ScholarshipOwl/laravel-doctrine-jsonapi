@@ -5,6 +5,7 @@ namespace Tests;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\ResourceManipulator;
 use Tests\App\Entities\User;
+use Tests\App\Entities\Role;
 
 class ResourceManipulatorTest extends TestCase
 {
@@ -28,7 +29,7 @@ class ResourceManipulatorTest extends TestCase
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals('TestName', $user->getName());
         $this->assertEquals('test@test.com', $user->getEmail());
-        $this->assertEquals('User', $user->getRoles()->first()->getName());
+        $this->assertTrue($user->hasRoleByName(Role::USER_NAME));
     }
 
     public function testHydrateExceptions()

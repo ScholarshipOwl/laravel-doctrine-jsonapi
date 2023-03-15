@@ -55,7 +55,7 @@ class ListRelatedResourcesTest extends TestCase
                 ]
             ]);
 
-        $user->addRole(Role::root());
+        $user->addToRoles(Role::root());
         $this->em()->flush();
 
         $this->get('/users/'.$user->getId().'/roles')
@@ -89,8 +89,8 @@ class ListRelatedResourcesTest extends TestCase
     public function testListRelatedUserRolesPaginationAndSorting()
     {
         $user = $this->actingAsUser();
-        $user->addRole(Role::root());
-        $user->addRole(Role::moderator());
+        $user->addToRoles(Role::root());
+        $user->addToRoles(Role::moderator());
 
         $this->em()->flush();
 

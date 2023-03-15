@@ -13,7 +13,7 @@ class CreateUserAction extends AbstractAction
     {
         /** @var User $user */
         $user = $this->manipulator()->hydrateResource(new User(), $this->request()->getData());
-        $user->addRole(Role::user());
+        $user->addToRoles(Role::user());
 
         $this->em()->persist($user);
         $this->em()->flush();

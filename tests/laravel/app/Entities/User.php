@@ -8,9 +8,9 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Foundation\Auth\Access\Authorizable;
+use LaravelDoctrine\ACL\Roles\HasRoles;
 use LaravelDoctrine\Extensions\Timestamps\Timestamps;
 use LaravelDoctrine\ORM\Auth\Authenticatable;
-use LaravelDoctrine\ORM\Facades\EntityManager;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\MemoizeRelationshipsTrait;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
@@ -30,6 +30,7 @@ class User implements AuthenticatableContract,
     use CanResetPassword;
     use Authenticatable;
     use Authorizable;
+    use HasRoles;
     use MemoizeRelationshipsTrait;
     use Timestamps;
 
@@ -150,7 +151,7 @@ class User implements AuthenticatableContract,
         return $this->roles;
     }
 
-    public function addRole(Role $role): static
+    public function addToRoles(Role $role): static
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
@@ -159,7 +160,7 @@ class User implements AuthenticatableContract,
         return $this;
     }
 
-    public function removeRoles(Role $role): static
+    public function removeFromRoles(Role $role): static
     {
         if ($role !== Role::user()){
             $this->roles->removeElement($role);
@@ -170,7 +171,6 @@ class User implements AuthenticatableContract,
 
     public function isRoot(): bool
     {
-        return $this->getRoles()
-            ->contains(EntityManager::getReference(Role::class, Role::ROOT));
+        return $this->hasRoleByName(Role::ROOT_NAME);
     }
 }

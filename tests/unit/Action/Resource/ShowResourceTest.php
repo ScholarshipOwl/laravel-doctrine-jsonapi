@@ -332,7 +332,7 @@ class ShowResourceTest extends TestCase
     public function testIncludeUserRoles()
     {
         $user = $this->actingAsUser();
-        $user->addRole(Role::moderator());
+        $user->addToRoles(Role::moderator());
         $this->em()->flush();
 
         $this->get('/users/1?include=roles')

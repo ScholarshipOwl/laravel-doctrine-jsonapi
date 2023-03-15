@@ -142,7 +142,7 @@ class UpdateResourceTest extends TestCase
         $user = $this->em()->find(User::class, 1);
 
         $this->assertCount(1, $user->getRoles()->toArray());
-        $this->assertTrue($user->getRoles()->contains(Role::user()));
+        $this->assertTrue($user->hasRole(Role::user()));
 
         $this->actingAsRoot();
         $response = $this->patch('/users/1?include=roles', [
@@ -209,8 +209,8 @@ class UpdateResourceTest extends TestCase
         $this->em()->clear();
         $user = $this->em()->find(User::class, 1);
 
-        $this->assertTrue($user->getRoles()->contains(Role::user()));
-        $this->assertTrue($user->getRoles()->contains(Role::moderator()));
+        $this->assertTrue($user->hasRole(Role::user()));
+        $this->assertTrue($user->hasRole(Role::moderator()));
     }
 
     public function testUpdateUserValidation()
