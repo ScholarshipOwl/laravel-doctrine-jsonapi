@@ -6,14 +6,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Sowl\JsonApi\Exceptions\BadRequestException;
+use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\Exceptions\MissingDataException;
 use Sowl\JsonApi\Exceptions\MissingDataMembersException;
-use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\Exceptions\UnknownAttributeException;
 use Sowl\JsonApi\Exceptions\UnknownRelationException;
+use Sowl\JsonApi\Relationships\ToManyRelationship;
+use Sowl\JsonApi\Relationships\ToOneRelationship;
 
+/**
+ * ResourceManipulator class provides method for manipulate resource objects in a JSON:API context.
+ */
 class ResourceManipulator
 {
     public function __construct(
@@ -21,86 +25,153 @@ class ResourceManipulator
         protected ResourceManager $rm,
     ) {}
 
+    /**
+     * Method is used to hydrate a resource object with data from a JSON:API request.
+     *
+     * The method takes the resource object, an array of data, a pointer (used for error reporting), and
+     * a boolean flag to indicate whether to throw an exception if the data is missing.
+     *
+     * The method uses the hydrateAttributes() and hydrateRelationships() methods to set the
+     * attributes and relationships on the resource object.
+     */
     public function hydrateResource(
         ResourceInterface $resource,
-        array $data,
-        string $scope = "/data",
-        bool $throwOnMissing = false
+        array             $data,
+        string            $pointer = "/data",
+        bool              $throwOnMissing = false,
     ): ResourceInterface
     {
         if ($throwOnMissing && !isset($data['attributes']) && !isset($data['relationships'])) {
-            throw new MissingDataMembersException($scope);
+            throw new MissingDataMembersException($pointer);
         }
 
         if (isset($data['attributes']) && is_array($data['attributes'])) {
-            $this->hydrateAttributes($resource, $data['attributes'], "$scope/attributes");
+            $this->hydrateAttributes($resource, $data['attributes'], "$pointer/attributes");
         }
 
         if (isset($data['relationships']) && is_array($data['relationships'])) {
-            $this->hydrateRelationships($resource, $data['relationships'], "$scope/relationships");
+            $this->hydrateRelationships($resource, $data['relationships'], "$pointer/relationships");
         }
 
         return $resource;
     }
 
-    public function hydrateAttributes(ResourceInterface $resource, array $attributes, string $scope): void
+    /**
+     * The method sets the attributes on the resource object using the setProperty() method.
+     *
+     * Method takes a resource object, an array of attributes from the request data and a pointer that
+     * used for error reporting in case of problems.
+     */
+    public function hydrateAttributes(
+        ResourceInterface $resource,
+        array             $attributes,
+        string            $pointer,
+    ): ResourceInterface
     {
-        $metadata = $this->em->getClassMetadata(ClassUtils::getClass($resource));
-
         foreach ($attributes as $name => $value) {
-            if (!isset($metadata->reflFields[$name])) {
-                throw new UnknownAttributeException("$scope/$name");
+            try {
+                $this->setProperty($resource, $name, $value);
+            } catch (BadRequestException $e) {
+                throw (new UnknownAttributeException("$pointer/$name"))
+                    ->errorsFromException($e);
             }
-
-            $this->setProperty($resource, $name, $value);
         }
+
+        return $resource;
     }
 
-    public function hydrateRelationships(ResourceInterface $resource, array $relationships, string $scope): void
+    /**
+     * The method sets the relationships on the resource object using the setProperty() method in case to-one
+     * relationship and hydrateToManyRelation() used for setting to-many.
+     *
+     * Method takes a resource object, an array of relationships from request data, and a pointer for error reporting
+     * and pointing to the problematic place.
+     */
+    public function hydrateRelationships(
+        ResourceInterface $resource,
+        array             $relationships,
+        string            $pointer,
+    ): ResourceInterface
     {
-        $metadata = $this->em->getClassMetadata(ClassUtils::getClass($resource));
-
         foreach ($relationships as $name => $data) {
-            if (!isset($metadata->associationMappings[$name])) {
-                throw new UnknownRelationException("$scope/$name");
-            }
+            $relationPointer = "$pointer/$name";
 
-            $mapping = $metadata->associationMappings[$name];
+            if (is_null($relationship = $resource::relationships()->get($name))) {
+                throw new UnknownRelationException($relationPointer);
+            }
 
             if (!is_array($data) || !array_key_exists('data', $data)) {
-                throw new MissingDataException("$scope/$name");
+                throw new MissingDataException($relationPointer);
             }
 
-            // To-One relation update
-            if (in_array($mapping['type'], [ClassMetadataInfo::ONE_TO_ONE, ClassMetadataInfo::MANY_TO_ONE])) {
-                $this->setProperty($resource, $name,
-                    $this->objectIdentifierToResource($mapping['targetEntity'], $data['data'], "$scope/$name")
-                );
+            $relationData = $data['data'];
+
+            if ($relationship instanceof ToOneRelationship) {
+                $this->hydrateToOneRelation($resource, $relationship, $relationData, $relationPointer);
             }
 
-            // To-Many relation update
-            if (in_array($mapping['type'], [ClassMetadataInfo::ONE_TO_MANY, ClassMetadataInfo::MANY_TO_MANY])) {
-                $this->hydrateToManyRelation($resource, $name, $mapping['targetEntity'], $data['data'], "$scope/$name");
+            if ($relationship instanceof ToManyRelationship) {
+                $this->hydrateToManyRelation($resource, $relationship, $relationData, $relationPointer);
             }
         }
+
+        return $resource;
     }
 
-    public function hydrateToManyRelation(ResourceInterface $resource, string $name, string $targetEntity, mixed $data, string $scope): void
+    /**
+     * Handles the hydration of to-one relationships.
+     */
+    public function hydrateToOneRelation(
+        ResourceInterface $resource,
+        ToOneRelationship $relationship,
+        mixed             $data,
+        string            $pointer,
+    ): ResourceInterface
+    {
+        $relationshipObject = $this->objectIdentifierToResource($data, $pointer, $relationship->class());
+
+        $this->setProperty($resource, $relationship->property(), $relationshipObject);
+
+        return $resource;
+    }
+
+    /**
+     * Handles the hydration of to-many relationships.
+     */
+    public function hydrateToManyRelation(
+        ResourceInterface  $resource,
+        ToManyRelationship $relationship,
+        mixed              $data,
+        string             $pointer
+    ): ResourceInterface
     {
         if (!is_array($data)) {
-            throw new MissingDataException($scope);
+            throw new MissingDataException($pointer);
         }
 
         $collection = new ArrayCollection(array_map(
-            fn ($item, $index) => $this->objectIdentifierToResource($targetEntity, $item, "$scope/$index"),
+            fn ($item, $index) => $this->objectIdentifierToResource(
+                $item, "$pointer/$index", $relationship->class()
+            ),
             $data,
             array_keys($data)
         ));
 
-        $this->replaceResourceCollection($resource, $name, $collection);
+        $this->replaceResourceCollection($resource, $relationship->property(), $collection);
+
+        return $resource;
     }
 
-    public function replaceResourceCollection(ResourceInterface $resource, string $property, Collection $replace): void
+    /**
+     * Replaces a resource collection with a new one.
+     * It takes a resource object, the name of the property to replace, and the new collection.
+     * It will remove or add new relationships, making the changes optimized.
+     */
+    public function replaceResourceCollection(
+        ResourceInterface $resource,
+        string            $property,
+        Collection        $replace,
+    ): ResourceInterface
     {
         /** @var Collection $current */
         $current = $this->getProperty($resource, $property);
@@ -118,53 +189,57 @@ class ResourceManipulator
                 $this->addRelationItem($resource, $property, $replaceResource);
             }
         }
+
+        return $resource;
     }
 
-    public function objectIdentifierToResource(string $class, mixed $data, string $scope): ?ResourceInterface
+    /**
+     * Converts an object identifier to a ResourceInterface object, if null provided null will be returned.
+     */
+    public function objectIdentifierToResource(
+        mixed  $data,
+        string $pointer,
+        string $expectedClass = null
+    ): ?ResourceInterface
     {
         if (is_null($data)) {
             return null;
         }
 
-        if (is_object($data)) {
-            return $data;
-        }
-
         try {
             if (is_array($data)) {
-                return $this->rm->objectIdentifierToResource($data, $class);
+                return $this->rm->objectIdentifierToResource($data, $expectedClass);
             }
         } catch (\InvalidArgumentException $e) {
             throw BadRequestException::create()
-                ->error(400, ['pointer' => $scope], $e->getMessage());
+                ->error(400, ['pointer' => $pointer], $e->getMessage());
         }
 
         throw JsonApiException::create('Wrong primary data provided.', 400)
-            ->error(400, ['pointer' => $scope], 'Wrong primary data provided.');
+            ->error(400, ['pointer' => $pointer], 'Wrong primary data provided.');
     }
 
-    public function hasProperty(ResourceInterface $resource, string $property): bool
-    {
-        $getter = $this->buildGetter($property);
-
-        return method_exists($resource, $getter);
-    }
-
+    /**
+     * Gets the value of a specified property from a resource object.
+     */
     public function getProperty(ResourceInterface $resource, string $property): mixed
     {
-        $getter = $this->buildGetter($property);
+        $getter = 'get' . ucfirst($property);
 
         if (!method_exists($resource, $getter)) {
             throw (new BadRequestException())->error(
                     'missing-getter',
                     ['getter' => sprintf('%s::%s', ClassUtils::getClass($resource), $getter)],
-                    'Missing field getter.'
+                    'Missing property getter.'
                 );
         }
 
         return $resource->$getter();
     }
 
+    /**
+     * Sets the value of a specified property on a resource object.
+     */
     public function setProperty(ResourceInterface $resource, string $property, mixed $value): ResourceInterface
     {
         $setter = 'set' . ucfirst($property);
@@ -173,7 +248,7 @@ class ResourceManipulator
             throw (new BadRequestException())->error(
                 400,
                 ['setter' => sprintf('%s::%s', ClassUtils::getClass($resource), $setter)],
-                'Missing field setter.'
+                'Missing property setter.'
             );
         }
 
@@ -182,7 +257,10 @@ class ResourceManipulator
         return $resource;
     }
 
-    public function addRelationItem(object $resource, string $property, mixed $item): object
+    /**
+     * Adds a relation item to the resource object's property.
+     */
+    public function addRelationItem(ResourceInterface $resource, string $property, mixed $item): ResourceInterface
     {
         $adder = 'add' . ucfirst($property);
 
@@ -199,6 +277,9 @@ class ResourceManipulator
         return $resource;
     }
 
+    /**
+     * Removes a relation item from the resource object's property.
+     */
     public function removeRelationItem(ResourceInterface $resource, string $property, mixed $item): ResourceInterface
     {
         $remover = 'remove' . ucfirst($property);
@@ -214,10 +295,5 @@ class ResourceManipulator
         $resource->$remover($item);
 
         return $resource;
-    }
-
-    protected function buildGetter(string $property): string
-    {
-        return 'get' . ucfirst($property);
     }
 }
