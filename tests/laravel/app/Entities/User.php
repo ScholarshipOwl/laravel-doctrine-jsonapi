@@ -150,7 +150,7 @@ class User implements AuthenticatableContract,
         return $this->roles;
     }
 
-    public function addRoles(Role $role): static
+    public function addRole(Role $role): static
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
