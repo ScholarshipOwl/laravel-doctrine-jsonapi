@@ -6,6 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
+use Illuminate\Support\Str;
 use Sowl\JsonApi\Exceptions\BadRequestException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\Exceptions\MissingDataException;
@@ -262,7 +263,7 @@ class ResourceManipulator
      */
     public function addRelationItem(ResourceInterface $resource, string $property, mixed $item): ResourceInterface
     {
-        $adder = 'addTo' . ucfirst($property);
+        $adder = 'add' . ucfirst(Str::singular($property));
 
         if (!method_exists($resource, $adder)) {
             throw (new BadRequestException())->error(
@@ -282,7 +283,7 @@ class ResourceManipulator
      */
     public function removeRelationItem(ResourceInterface $resource, string $property, mixed $item): ResourceInterface
     {
-        $remover = 'removeFrom' . ucfirst($property);
+        $remover = 'remove' . ucfirst(Str::singular($property));
 
         if (!method_exists($resource, $remover)) {
             throw (new BadRequestException())->error(

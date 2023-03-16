@@ -51,7 +51,7 @@ class ListRelationshipsTest extends TestCase
                 ]
             ]);
 
-        $user->addToRoles(Role::root());
+        $user->addRole(Role::root());
         $this->em()->flush();
 
         $this->get('/users/'.$user->getId().'/relationships/roles')
@@ -79,8 +79,8 @@ class ListRelationshipsTest extends TestCase
     public function testListRelatedUserRolesPaginationAndSorting()
     {
         $user = $this->actingAsUser();
-        $user->addToRoles(Role::root());
-        $user->addToRoles(Role::moderator());
+        $user->addRole(Role::root());
+        $user->addRole(Role::moderator());
 
         $this->em()->flush();
 

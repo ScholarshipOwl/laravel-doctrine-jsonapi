@@ -151,7 +151,7 @@ class User implements AuthenticatableContract,
         return $this->roles;
     }
 
-    public function addToRoles(Role $role): static
+    public function addRole(Role $role): static
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
@@ -160,7 +160,7 @@ class User implements AuthenticatableContract,
         return $this;
     }
 
-    public function removeFromRoles(Role $role): static
+    public function removeRole(Role $role): static
     {
         if ($role !== Role::user()){
             $this->roles->removeElement($role);
