@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\App\Http\Controller;
+namespace Tests\App\Http\Controllers;
 
 use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationshipsAction;
@@ -17,7 +17,7 @@ use Tests\App\Actions\User\Relationships\UpdateUserRolesRequest;
 use Tests\App\Actions\User\UpdateUserRequest;
 use Tests\App\Entities\User;
 
-class UsersController extends Controller
+class UserController extends Controller
 {
     use WithListTrait;
 

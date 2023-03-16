@@ -1,10 +1,10 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Tests\App\Http\Controller\PageCommentController;
-use Tests\App\Http\Controller\PageController;
-use Tests\App\Http\Controller\RolesController;
-use Tests\App\Http\Controller\UsersController;
+use Tests\App\Http\Controllers\PageCommentController;
+use Tests\App\Http\Controllers\PageController;
+use Tests\App\Http\Controllers\RoleController;
+use Tests\App\Http\Controllers\UserController;
 
 use Sowl\JsonApi\Default\Controller as DefaultController;
 
@@ -16,16 +16,16 @@ Route::group(['as' => 'jsonapi.'], function () {
 
     Route::patch('/pages/{id}/relationships/user', [PageController::class, 'updateUserRelationship']);
 
-    Route::get('/pageComments/{id}', [PageCommentController::class, 'show']);
+    Route::get('/page-comments/{id}', [PageCommentController::class, 'show']);
 
-    Route::get('/roles', [RolesController::class, 'list']);
-    Route::get('/users', [UsersController::class, 'list']);
+    Route::get('/roles', [RoleController::class, 'list']);
+    Route::get('/users', [UserController::class, 'list']);
 
-    Route::post('/users', [UsersController::class, 'create']);
-    Route::patch('/users/{id}', [UsersController::class, 'update']);
-    Route::post('/users/{id}/relationships/roles', [UsersController::class, 'createUserRoles']);
-    Route::delete('/users/{id}/relationships/roles', [UsersController::class, 'removeUserRoles']);
-    Route::patch('/users/{id}/relationships/roles', [UsersController::class, 'updateUserRoles']);
+    Route::post('/users', [UserController::class, 'create']);
+    Route::patch('/users/{id}', [UserController::class, 'update']);
+    Route::post('/users/{id}/relationships/roles', [UserController::class, 'createUserRoles']);
+    Route::delete('/users/{id}/relationships/roles', [UserController::class, 'removeUserRoles']);
+    Route::patch('/users/{id}/relationships/roles', [UserController::class, 'updateUserRoles']);
 
 
     /* ---------------------------------------------------------
