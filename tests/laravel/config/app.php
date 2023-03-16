@@ -159,7 +159,7 @@ return [
         Illuminate\Queue\QueueServiceProvider::class,
         Illuminate\Redis\RedisServiceProvider::class,
         // Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
-        \LaravelDoctrine\ORM\Auth\Passwords\PasswordResetServiceProvider::class,
+        LaravelDoctrine\ORM\Auth\Passwords\PasswordResetServiceProvider::class,
         Illuminate\Session\SessionServiceProvider::class,
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
@@ -172,20 +172,20 @@ return [
         /*
          * Application Service Providers...
          */
-        // App\Providers\AuthServiceProvider::class,
         // App\Providers\BroadcastServiceProvider::class,
         // App\Providers\EventServiceProvider::class,
         // App\Providers\RouteServiceProvider::class,
 
-        \Tests\App\Providers\AppServiceProvider::class,
-        \Tests\App\Providers\RouteServiceProvider::class,
+        Tests\App\Providers\AuthServiceProvider::class,
+        Tests\App\Providers\AppServiceProvider::class,
+        Tests\App\Providers\RouteServiceProvider::class,
 
-        \LaravelDoctrine\ORM\DoctrineServiceProvider::class,
-        \LaravelDoctrine\ORM\Queue\FailedJobsServiceProvider::class,
-        \LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
-        \LaravelDoctrine\ACL\AclServiceProvider::class,
+        LaravelDoctrine\ORM\DoctrineServiceProvider::class,
+        LaravelDoctrine\ORM\Queue\FailedJobsServiceProvider::class,
+        LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
+        LaravelDoctrine\ACL\AclServiceProvider::class,
 
-        \Sowl\JsonApi\JsonApiServiceProvider::class,
+        Sowl\JsonApi\JsonApiServiceProvider::class,
     ],
 
     /*
