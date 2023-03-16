@@ -79,37 +79,37 @@ public function updateRole(User $user): bool
 ```
 
 ### To-Many relationships
-| Method | Route                                            | Ability               |
-|--------|--------------------------------------------------|-----------------------|
+| Method | Route                                             | Ability               |
+|--------|---------------------------------------------------|-----------------------|
 | GET    | /{resourceType}/{id}/{relationship}               | viewAny{Relationship} |
 | GET    | /{resourceType}/{id}/relationships/{relationship} | viewAny{Relationship} |
 | PATCH  | /{resourceType}/{id}/relationships/{relationship} | update{Relationship}  |
-| POST   | /{resourceType}/{id}/relationships/{relationship} | create{Relationship}  |
-| DELETE | /{resourceType}/{id}/relationships/{relationship} | delete{Relationship}  |
+| POST   | /{resourceType}/{id}/relationships/{relationship} | attach{Relationship}  |
+| DELETE | /{resourceType}/{id}/relationships/{relationship} | detach{Relationship}  |
 
 In case multiple "roles" can be assigned to the user in your application, the policy definition going to look different.
 
 ```php
 // Anyone can see user roles
-public function viewAnyRoles(User $user): bool
+public function viewAnyRoles(User $user, User $resource): bool
 {
     return true;
 }
 
 // Replace user roles
-public function updateRoles(User $user): bool
+public function updateRoles(User $user, User $resource): bool
 {
     return $user->isAdmin();
 }
 
-// Append new roles to user
-public function createRoles(User $user): bool
+// Attach any new roles to resource
+public function attachRoles(User $user, User $resource): bool
 {
     return $user->isAdmin();
 }
 
-// Remove assigned roles
-public function deleteRoles(User $user): bool
+// Detach roles from resource
+public function detachRoles(User $user, User $resource): bool
 {
     return $user->isAdmin();
 }

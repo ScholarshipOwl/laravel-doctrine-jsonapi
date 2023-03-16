@@ -19,11 +19,18 @@ class Authorize
         protected ResourceManager $resourceManager,
     ) {}
 
-    static protected array $methodAbilityMap = [
+    static protected array $methodResourceAbilityMap = [
         HttpRequest::METHOD_GET => AbilitiesInterface::SHOW,
         HttpRequest::METHOD_POST => AbilitiesInterface::CREATE,
         HttpRequest::METHOD_PATCH => AbilitiesInterface::UPDATE,
         HttpRequest::METHOD_DELETE => AbilitiesInterface::REMOVE,
+    ];
+
+    static protected array $methodRelationshipAbilityMap = [
+        HttpRequest::METHOD_GET => AbilitiesInterface::SHOW,
+        HttpRequest::METHOD_POST => AbilitiesInterface::ATTACH,
+        HttpRequest::METHOD_PATCH => AbilitiesInterface::UPDATE,
+        HttpRequest::METHOD_DELETE => AbilitiesInterface::DETACH,
     ];
 
     /**
@@ -55,17 +62,19 @@ class Authorize
         $method = $request->method();
 
         if ($this->request()->getId()) {
-            if (!empty($ability = static::$methodAbilityMap[$request->method()] ?? null)) {
-                if (!empty($this->request()->relationshipName())) {
+            if (!empty($this->request()->relationshipName())) {
+                if (!empty($ability = static::$methodRelationshipAbilityMap[$request->method()] ?? null)) {
                     $relationship = $this->request()->relationship();
 
                     if ($relationship instanceof ToManyRelationship && $ability === AbilitiesInterface::SHOW) {
                         $ability = AbilitiesInterface::LIST;
                     }
 
-                    $ability = $ability . ucfirst($relationship->name());
+                    return $ability . ucfirst($relationship->name());
                 }
+            }
 
+            if (!empty($ability = static::$methodResourceAbilityMap[$request->method()] ?? null)) {
                 return $ability;
             }
         } elseif ($request->method() === HttpRequest::METHOD_GET) {
