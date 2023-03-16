@@ -2,31 +2,49 @@
 
 namespace Sowl\JsonApi;
 
-use Illuminate\Contracts\Auth\Access\Gate;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\TransformerAbstract;
 use Sowl\JsonApi\Fractal\Scope;
 
+/**
+ * AbstractTransformer abstract class that must be inherited by resource transformers.
+ * It's used by the Fractal package for serialization doctrine entity into the JSON:API response data.
+ *
+ * @link https://fractal.thephpleague.com/transformers/
+ */
 abstract class AbstractTransformer extends TransformerAbstract
 {
     protected array $availableMetas = [];
 
-    public static function create(): static
+    /**
+     * Creates a new instance of the transformer.
+     */
+    public static function create(...$args): static
     {
-        return new static();
+        return new static(...$args);
     }
 
+    /**
+     * Returns the list of available metadata fields for the transformer.
+     */
     public function getAvailableMetas(): array
     {
         return $this->availableMetas;
     }
 
+    /**
+     * Sets the list of available metadata fields for the transformer.
+     */
     public function setAvailableMetas(array $availableMetas): static
     {
         $this->availableMetas = $availableMetas;
         return $this;
     }
 
+    /**
+     * Processes the metasets for the given scope and data, and returns the requested metadata.
+     * It's includes only metadata requested by the metadata field sets.
+     */
     public function processMetasets(Scope $scope, mixed $data): ?array
     {
         $requestedMetaset = $scope->getRequestedMetasets();
@@ -68,17 +86,11 @@ abstract class AbstractTransformer extends TransformerAbstract
         return $meta;
     }
 
+    /**
+     * Primitive values are not supported in this transformer. This method will throw an exception.
+     */
     protected function primitive($data, $transformer = null, $resourceType = null): Primitive
     {
         throw new \RuntimeException('Primitive values is not supported.');
-    }
-
-    /**
-     * Some includes may have some additional authorization permissions.
-     * The gate can be used for verifying the permissions.
-     */
-    protected function gate(): Gate
-    {
-        return app(Gate::class);
     }
 }

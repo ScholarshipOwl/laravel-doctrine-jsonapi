@@ -2,13 +2,10 @@
 
 namespace Sowl\JsonApi;
 
-use Doctrine\ORM\EntityManager;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\Exceptions\NotFoundException;
 use Sowl\JsonApi\Relationships\AbstractRelationship;
 use Sowl\JsonApi\Request\WithDataTrait;
@@ -17,6 +14,11 @@ use Sowl\JsonApi\Request\WithFilterParamsTrait;
 use Sowl\JsonApi\Request\WithIncludeParamsTrait;
 use Sowl\JsonApi\Request\WithPaginationParamsTrait;
 
+/**
+ * Class Request
+ *
+ * A class for handling JSON:API requests, including data validation, path, query parameters, and relationships.
+ */
 class Request extends FormRequest
 {
     use WithDataTrait;
@@ -32,8 +34,36 @@ class Request extends FormRequest
     protected string $resourceType;
     protected ?string $relationshipName;
 
-    const JSON_API_CONTENT_TYPE = 'application/vnd.api+json';
+    const JSONAPI_CONTENT_TYPE = 'application/vnd.api+json';
 
+    /**
+     * Return the base URL for the request.
+     */
+    public function getBaseUrl(): string
+    {
+        return parent::getBaseUrl();
+    }
+
+    /**
+     * Returns the "id" route param value.
+     * Will be "null" if id not provided.
+     */
+    public function getId(): ?string
+    {
+        return $this->route('id');
+    }
+
+    /**
+     * Gets the resource manager instance.
+     */
+    public function rm(): ResourceManager
+    {
+        return app(ResourceManager::class);
+    }
+
+    /**
+     * Returns array of the validation rules that is validation on request resolve.
+     */
     public function rules(): array
     {
         return $this->dataRules()
@@ -43,40 +73,24 @@ class Request extends FormRequest
             + $this->paginationParamsRules();
     }
 
-    public function repository(): ResourceRepository
+    /**
+     * Gets the resource instance associated with the identifier.
+     * NotFoundException will be thrown if resource is not found.
+     */
+    public function resource(): ResourceInterface
     {
-        if (!isset($this->repository)) {
-            $class = $this->resourceClass();
-            $repository = $this->rm()->repositoryByClass($class);
-
-            $this->repository = $repository;
+        if (!isset($this->resource)) {
+            $this->resource = $this->repository()->findById($this->getId());
         }
 
-        return $this->repository;
-    }
-
-    public function em(): EntityManager
-    {
-        return $this->repository()->em();
-    }
-
-    public function rm(): ResourceManager
-    {
-        return app(ResourceManager::class);
-    }
-
-    public function getBaseUrl(): string
-    {
-        return parent::getBaseUrl();
-    }
-
-    public function getId(): ?string
-    {
-        return $this->route('id');
+        return $this->resource;
     }
 
     /**
-     * @throws JsonApiException
+     * Gets the "resourceType" route param value.
+     * If custom route is used without the "resourceType", regexp used to get the resource type from URL.
+     * If resource not found NotFoundException thrown, as any JSON:API request must have resourceType.
+     * URI Part resourceType: "/prefix/../[resourceType]/..."
      */
     public function resourceType(): string
     {
@@ -100,22 +114,12 @@ class Request extends FormRequest
         return $this->resourceType;
     }
 
-    public function resourceClass(): string
-    {
-        $type = $this->resourceType();
-
-        return $this->rm()->classByResourceType($type);
-    }
-
-    public function resource(): ResourceInterface
-    {
-        if (!isset($this->resource)) {
-            $this->resource = $this->repository()->findById($this->getId());
-        }
-
-        return $this->resource;
-    }
-
+    /**
+     * Gets the relationship name URI part from the request.
+     * First we try to get relationship name from "relationship" route param value, if no route param regex used.
+     * Will be null if request is not relationship request.
+     * URI Part relationshipName: "/prefix/../resourceType/(relationships)?/[relationshipName]..."
+     */
     public function relationshipName(): ?string
     {
         if (!isset($this->relationshipName)) {
@@ -138,11 +142,10 @@ class Request extends FormRequest
         return $this->relationshipName;
     }
 
-    public function isRelationship(): bool
-    {
-        return !empty($this->relationshipName());
-    }
-
+    /**
+     * Gets the relationship instance associated with the relationship name.
+     * If not found NotFoundException thrown.
+     */
     public function relationship(): AbstractRelationship
     {
         if (!isset($this->relationship)) {
@@ -163,17 +166,24 @@ class Request extends FormRequest
         return $this->relationship;
     }
 
-    protected function allowsResource(string $ability, mixed ...$arguments): bool
+    /**
+     * Gets the resource repository associated with the resource type.
+     */
+    public function repository(): ResourceRepository
     {
-        $resourceArgument = ($id = $this->getId())
-            ? $this->repository()->findById($id)
-            : $this->repository()->getClassName();
+        if (!isset($this->repository)) {
+            $type = $this->resourceType();
+            $class = $this->rm()->classByResourceType($type);
+            $repository = $this->rm()->repositoryByClass($class);
 
-        return Gate::allows($ability, [$resourceArgument, ...$arguments]);
+            $this->repository = $repository;
+        }
+
+        return $this->repository;
     }
 
     /**
-     * Converts validation exception into JSON:API response
+     * Converts validation exception into JSON:API response when request validation fails on resolve.
      * @throws ValidationException
      */
     protected function failedValidation(Validator $validator): void

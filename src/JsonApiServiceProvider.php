@@ -2,15 +2,16 @@
 
 namespace Sowl\JsonApi;
 
+use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;
 use Illuminate\Foundation\Application;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
-use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 
+/**
+ * JsonApi package Laravel service provider.
+ */
 class JsonApiServiceProvider extends ServiceProvider
 {
-
     public function boot()
     {
         $this->bootConfig();

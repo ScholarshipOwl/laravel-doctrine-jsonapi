@@ -51,30 +51,42 @@ abstract class AbstractAction
     }
 
     /**
-     * Method returns the repository object for the current resource.
+     * Returns the current JSON:API request.
+     */
+    protected function request(): Request
+    {
+        return $this->request;
+    }
+
+    /**
+     * Get the resource repository from the request.
      */
     protected function repository(): ResourceRepository
     {
         return $this->request->repository();
     }
 
-    protected function request(): Request
+    /**
+     * Returns the entity manager for the current resource.
+     */
+    protected function em(): EntityManager
     {
-        return $this->request;
+        return $this->repository()->em();
     }
 
+    /**
+     * Returns the resource manager instance.
+     */
     protected function rm(): ResourceManager
     {
         return app(ResourceManager::class);
     }
 
+    /**
+     * Returns the resource manipulator instance.
+     */
     protected function manipulator(): ResourceManipulator
     {
         return app(ResourceManipulator::class);
-    }
-
-    protected function em(): EntityManager
-    {
-        return $this->repository()->em();
     }
 }

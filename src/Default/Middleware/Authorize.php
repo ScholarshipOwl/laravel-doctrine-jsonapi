@@ -56,7 +56,7 @@ class Authorize
 
         if ($this->request()->getId()) {
             if (!empty($ability = static::$methodAbilityMap[$request->method()] ?? null)) {
-                if ($this->request()->isRelationship()) {
+                if (!empty($this->request()->relationshipName())) {
                     $relationship = $this->request()->relationship();
 
                     if ($relationship instanceof ToManyRelationship && $ability === AbilitiesInterface::SHOW) {

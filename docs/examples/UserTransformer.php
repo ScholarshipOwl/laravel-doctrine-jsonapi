@@ -2,6 +2,7 @@
 
 namespace Sowl\JsonApi\AbstractTransformer;
 
+use Illuminate\Support\Facades\Gate;
 use Tests\App\Entities\User;
 use Illuminate\Support\Str;
 use League\Fractal\Resource\Collection;
@@ -30,7 +31,7 @@ class UserTransformer extends AbstractTransformer
 
     public function includeRoles(User $user): Collection
     {
-        $this->gate()->authorize('listRoles', $user);
+        Gate::authorize('listRoles', $user);
 
         return $this->collection($user->getRoles(), new RoleTransformer(), Role::getResourceType());
     }

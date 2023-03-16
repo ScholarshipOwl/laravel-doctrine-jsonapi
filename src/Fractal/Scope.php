@@ -2,9 +2,8 @@
 
 namespace Sowl\JsonApi\Fractal;
 
-use League\Fractal\ParamBag;
-use Sowl\JsonApi\AbstractTransformer;
 use League\Fractal\Manager;
+use Sowl\JsonApi\AbstractTransformer;
 
 class Scope extends \League\Fractal\Scope
 {

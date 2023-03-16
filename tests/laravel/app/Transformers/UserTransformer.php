@@ -1,5 +1,6 @@
 <?php namespace Tests\App\Transformers;
 
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use League\Fractal\Resource\Collection;
 use Sowl\JsonApi\AbstractTransformer;
@@ -27,7 +28,7 @@ class UserTransformer extends AbstractTransformer
 
     public function includeRoles(User $user): Collection
     {
-        $this->gate()->authorize('viewAnyRoles', $user);
+        Gate::authorize('viewAnyRoles', $user);
 
         return $this->collection($user->getRoles(), new RoleTransformer(), Role::getResourceType());
     }
