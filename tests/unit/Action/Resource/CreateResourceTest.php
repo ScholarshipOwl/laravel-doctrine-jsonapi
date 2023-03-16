@@ -30,7 +30,7 @@ class CreateResourceTest extends TestCase
         $this->em()->clear();
         $newUser = $this->em()->find(User::class, $response->json('data.id'));
 
-        $this->assertTrue($newUser->getRoles()->contains(Role::user()));
+        $this->assertTrue($newUser->hasRole(Role::user()));
     }
 
     public function testCantCreateUserWithRootRole()
@@ -57,8 +57,8 @@ class CreateResourceTest extends TestCase
         $this->em()->clear();
         $newUser = $this->em()->find(User::class, $response->json('data.id'));
 
-        $this->assertTrue($newUser->getRoles()->contains(Role::user()));
-        $this->assertFalse($newUser->getRoles()->contains(Role::root()));
+        $this->assertTrue($newUser->hasRole(Role::user()));
+        $this->assertFalse($newUser->hasRole(Role::root()));
     }
 
     public function testUserCreateValidation(): void

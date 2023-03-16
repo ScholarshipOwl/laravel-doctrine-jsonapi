@@ -15,7 +15,7 @@ class PagePolicy
 
     public function updateUser(User $user, Page $page): bool
     {
-        return $user->getRoles()->contains(Role::moderator());
+        return $user->hasRole(Role::moderator());
     }
 
     public function viewUser(User $user, Page $page): bool

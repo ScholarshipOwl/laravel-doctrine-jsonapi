@@ -19,7 +19,7 @@ class UserRoleRemoveRule extends ObjectIdentifierRule
 
     public function roleAssignedOnUser($attr, Role $role, $fail): void
     {
-        if (!$this->user()->getRoles()->contains($role)) {
+        if (!$this->user()->hasRole($role)) {
             $fail(sprintf('User don\'t have assigned role "%s"', $role->getName()));
         }
     }

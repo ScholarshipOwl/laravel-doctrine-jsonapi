@@ -9,7 +9,7 @@ class RolePolicy
 {
     public function view(User $user, Role $role): bool
     {
-        return $user->getRoles()->contains($role);
+        return $user->hasRole($role);
     }
 
     public function viewAny(): bool
