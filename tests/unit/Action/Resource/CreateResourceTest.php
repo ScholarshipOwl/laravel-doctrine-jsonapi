@@ -2,13 +2,8 @@
 
 namespace Tests\Action\Resource;
 
-use Illuminate\Support\Facades\Route;
-use Tests\App\Actions\User\CreateUserAction;
-use Tests\App\Actions\User\CreateUserRequest;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
-use Tests\App\Http\Controller\UsersController;
-use Tests\App\Transformers\UserTransformer;
 use Tests\TestCase;
 
 class CreateResourceTest extends TestCase

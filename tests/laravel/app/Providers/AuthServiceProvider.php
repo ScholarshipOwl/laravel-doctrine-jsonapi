@@ -36,12 +36,7 @@ class AuthServiceProvider extends ServiceProvider
     {
         $this->registerPolicies();
 
-        Gate::guessPolicyNamesUsing(fn () => false);
-
-        Gate::before(function($user, $ability) {
-            if ($user instanceof User && $user->isRoot()) {
-                return true;
-            }
-        });
+        // Disable Policies auto-discovery
+        Gate::guessPolicyNamesUsing(fn () => null);
     }
 }
