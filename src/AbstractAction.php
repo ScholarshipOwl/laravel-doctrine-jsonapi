@@ -1,4 +1,6 @@
-<?php namespace Sowl\JsonApi;
+<?php
+
+namespace Sowl\JsonApi;
 
 use Doctrine\ORM\EntityManager;
 use Illuminate\Auth\Access\AuthorizationException;

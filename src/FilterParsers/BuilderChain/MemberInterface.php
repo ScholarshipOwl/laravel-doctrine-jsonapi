@@ -1,4 +1,6 @@
-<?php namespace Sowl\JsonApi\FilterParsers\BuilderChain;
+<?php
+
+namespace Sowl\JsonApi\FilterParsers\BuilderChain;
 
 /**
  * Member of the builder chain.

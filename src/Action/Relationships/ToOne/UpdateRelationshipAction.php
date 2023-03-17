@@ -1,4 +1,6 @@
-<?php namespace Sowl\JsonApi\Action\Relationships\ToOne;
+<?php
+
+namespace Sowl\JsonApi\Action\Relationships\ToOne;
 
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Response;

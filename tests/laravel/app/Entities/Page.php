@@ -22,6 +22,7 @@ class Page implements ResourceInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\GeneratedValue(strategy="AUTO")
      */
+    #[ORM\Id, ORM\Column]
     protected ?int $id;
 
     /**

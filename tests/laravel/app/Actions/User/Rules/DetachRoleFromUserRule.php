@@ -7,7 +7,7 @@ use Sowl\JsonApi\Rules\ObjectIdentifierRule;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 
-class UserRoleRemoveRule extends ObjectIdentifierRule
+class DetachRoleFromUserRule extends ObjectIdentifierRule
 {
     public function __construct(protected Request $request)
     {

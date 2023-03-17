@@ -1,4 +1,6 @@
-<?php namespace Sowl\JsonApi;
+<?php
+
+namespace Sowl\JsonApi;
 
 use Illuminate\Http\JsonResponse;
 

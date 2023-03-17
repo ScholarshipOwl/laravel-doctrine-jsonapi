@@ -1,4 +1,6 @@
-<?php namespace Sowl\JsonApi\Action\Relationships\ToMany;
+<?php
+
+namespace Sowl\JsonApi\Action\Relationships\ToMany;
 
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Relationships\ToManyRelationship;

@@ -6,7 +6,7 @@ use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Rules\ObjectIdentifierRule;
 use Tests\App\Entities\User;
 
-class UpdateUserRelationshipsRequest extends Request
+class UpdatePageUserRequest extends Request
 {
     public function dataRules(): array
     {

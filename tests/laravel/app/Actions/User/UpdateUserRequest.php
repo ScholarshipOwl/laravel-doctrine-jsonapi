@@ -5,7 +5,7 @@ namespace Tests\App\Actions\User;
 use Illuminate\Support\Facades\Gate;
 use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Request;
-use Tests\App\Actions\User\Rules\UserRoleAssignRule;
+use Tests\App\Actions\User\Rules\AttachRoleToUserRule;
 
 class UpdateUserRequest extends Request
 {
@@ -22,7 +22,7 @@ class UpdateUserRequest extends Request
             'data.attributes.password' => 'sometimes|required|string',
 
             'data.relationships.roles.data' => 'sometimes|array',
-            'data.relationships.roles.data.*' => [new UserRoleAssignRule($this)]
+            'data.relationships.roles.data.*' => [new AttachRoleToUserRule($this)]
         ];
     }
 }

@@ -1,4 +1,6 @@
-<?php namespace Sowl\JsonApi\FilterParsers;
+<?php
+
+namespace Sowl\JsonApi\FilterParsers;
 
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Exceptions\BadRequestException;

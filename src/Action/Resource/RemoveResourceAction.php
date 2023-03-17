@@ -1,4 +1,6 @@
-<?php namespace Sowl\JsonApi\Action\Resource;
+<?php
+
+namespace Sowl\JsonApi\Action\Resource;
 
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Response;

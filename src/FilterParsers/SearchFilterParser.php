@@ -1,4 +1,6 @@
-<?php namespace Sowl\JsonApi\FilterParsers;
+<?php
+
+namespace Sowl\JsonApi\FilterParsers;
 
 use Doctrine\Common\Collections\Criteria;
 use Sowl\JsonApi\Request;

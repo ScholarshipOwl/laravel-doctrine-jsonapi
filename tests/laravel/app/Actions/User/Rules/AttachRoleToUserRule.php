@@ -11,7 +11,7 @@ use Tests\App\Entities\User;
 /**
  * The rule will verify that authorized user have access to assign role on the user.
  */
-class UserRoleAssignRule extends ObjectIdentifierRule
+class AttachRoleToUserRule extends ObjectIdentifierRule
 {
     public function __construct(protected Request $request)
     {

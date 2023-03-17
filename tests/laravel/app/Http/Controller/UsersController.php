@@ -11,8 +11,8 @@ use Sowl\JsonApi\Default\WithListTrait;
 use Sowl\JsonApi\Response;
 use Tests\App\Actions\User\CreateUserAction;
 use Tests\App\Actions\User\CreateUserRequest;
-use Tests\App\Actions\User\Relationships\CreateUserRolesRequest;
-use Tests\App\Actions\User\Relationships\RemoveUserRolesRequest;
+use Tests\App\Actions\User\Relationships\AttachRolesToUserRequest;
+use Tests\App\Actions\User\Relationships\DetachRolesFromUserRequest;
 use Tests\App\Actions\User\Relationships\UpdateUserRolesRequest;
 use Tests\App\Actions\User\UpdateUserRequest;
 use Tests\App\Entities\User;
@@ -43,7 +43,7 @@ class UsersController extends Controller
             ->dispatch($request);
     }
 
-    public function createUserRoles(CreateUserRolesRequest $request): Response
+    public function createUserRoles(AttachRolesToUserRequest $request): Response
     {
         return (new CreateRelationshipsAction(User::relationships()->toMany()->get('roles')))
             ->dispatch($request);
@@ -55,7 +55,7 @@ class UsersController extends Controller
             ->dispatch($request);
     }
 
-    public function removeUserRoles(RemoveUserRolesRequest $request): Response
+    public function removeUserRoles(DetachRolesFromUserRequest $request): Response
     {
         return (new RemoveRelationshipsAction(User::relationships()->toMany()->get('roles')))
             ->dispatch($request);

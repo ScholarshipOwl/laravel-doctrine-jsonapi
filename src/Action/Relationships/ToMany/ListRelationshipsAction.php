@@ -1,4 +1,6 @@
-<?php namespace Sowl\JsonApi\Action\Relationships\ToMany;
+<?php
+
+namespace Sowl\JsonApi\Action\Relationships\ToMany;
 
 
 use Doctrine\Common\Collections\Criteria;

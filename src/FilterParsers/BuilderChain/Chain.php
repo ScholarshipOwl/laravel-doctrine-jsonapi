@@ -1,4 +1,6 @@
-<?php namespace Sowl\JsonApi\FilterParsers\BuilderChain;
+<?php
+
+namespace Sowl\JsonApi\FilterParsers\BuilderChain;
 
 class Chain
 {

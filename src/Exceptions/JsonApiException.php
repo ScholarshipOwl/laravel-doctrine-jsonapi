@@ -1,4 +1,6 @@
-<?php namespace Sowl\JsonApi\Exceptions;
+<?php
+
+namespace Sowl\JsonApi\Exceptions;
 
 use Illuminate\Contracts\Support\Responsable;
 use Sowl\JsonApi\Response;
