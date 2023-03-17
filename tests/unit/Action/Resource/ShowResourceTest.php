@@ -2,13 +2,8 @@
 
 namespace Tests\Action\Resource;
 
-use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Default;
 use Sowl\JsonApi\Response;
 use Tests\App\Entities\Role;
-use Tests\App\Http\Controller\PageCommentController;
-use Tests\App\Http\Controller\PageController;
-use Tests\App\Http\Controller\UsersController;
 use Tests\TestCase;
 
 class ShowResourceTest extends TestCase
@@ -32,6 +27,7 @@ class ShowResourceTest extends TestCase
     public function testAuthorizationPermissionsForUserRole()
     {
         $this->actingAsUser();
+
         $this->get('/users/1')->assertStatus(Response::HTTP_OK);
         $this->get('/users/2')->assertStatus(Response::HTTP_OK);
         $this->get('/users/3')->assertStatus(Response::HTTP_OK);
@@ -49,6 +45,7 @@ class ShowResourceTest extends TestCase
     public function testAuthorizationPermissionsForRootRole()
     {
         $this->actingAsRoot();
+
         $this->get('/users/1')->assertStatus(Response::HTTP_OK);
         $this->get('/users/2')->assertStatus(Response::HTTP_OK);
         $this->get('/users/3')->assertStatus(Response::HTTP_OK);

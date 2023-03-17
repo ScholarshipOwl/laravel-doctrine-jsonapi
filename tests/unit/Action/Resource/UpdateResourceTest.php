@@ -2,14 +2,9 @@
 
 namespace Tests\Action\Resource;
 
-use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Action\Resource\UpdateResourceAction;
 use Sowl\JsonApi\Response;
-use Tests\App\Actions\User\UpdateUserRequest;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
-use Tests\App\Http\Controller\UsersController;
-use Tests\App\Transformers\UserTransformer;
 use Tests\TestCase;
 
 class UpdateResourceTest extends TestCase
