@@ -106,7 +106,7 @@ class Request extends FormRequest
             }
 
             if (is_null($resourceType) || !$this->rm()->hasResourceType($resourceType)) {
-                throw NotFoundException::create('No resource type found for the request');
+                throw NotFoundException::create()->detail('No resource type found for the request');
             }
 
             $this->resourceType = $resourceType;
@@ -191,16 +191,11 @@ class Request extends FormRequest
     {
         $exception = new Exceptions\ValidationException();
         foreach ($validator->errors()->getMessages() as $attribute => $messages) {
-            foreach ($messages as $message) {
-                $pointer = "/".str_replace('.', '/', $attribute);
-                $exception->validationError($pointer, $message);
-            }
+            $pointer = "/".str_replace('.', '/', $attribute);
+            array_map(fn ($message) => $exception->detail($message, $pointer), $messages);
         }
 
-        throw new ValidationException(
-            $validator,
-            new Response(['errors' => $exception->errors()], $exception->getCode())
-        );
+        throw $exception;
     }
 
     /**

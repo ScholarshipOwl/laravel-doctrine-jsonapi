@@ -9,10 +9,6 @@ use Doctrine\ORM\EntityManager;
 use Illuminate\Support\Str;
 use Sowl\JsonApi\Exceptions\BadRequestException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
-use Sowl\JsonApi\Exceptions\MissingDataException;
-use Sowl\JsonApi\Exceptions\MissingDataMembersException;
-use Sowl\JsonApi\Exceptions\UnknownAttributeException;
-use Sowl\JsonApi\Exceptions\UnknownRelationException;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 
@@ -43,7 +39,8 @@ class ResourceManipulator
     ): ResourceInterface
     {
         if ($throwOnMissing && !isset($data['attributes']) && !isset($data['relationships'])) {
-            throw new MissingDataMembersException($pointer);
+            throw (new BadRequestException())
+                ->detail('Missing or not array `/data/attributes` or `/data/relationships.', $pointer);
         }
 
         if (isset($data['attributes']) && is_array($data['attributes'])) {
@@ -73,7 +70,8 @@ class ResourceManipulator
             try {
                 $this->setProperty($resource, $name, $value);
             } catch (BadRequestException $e) {
-                throw (new UnknownAttributeException("$pointer/$name"))
+                throw BadRequestException::create()
+                    ->detail('Unknown attribute.', "$pointer/$name")
                     ->errorsFromException($e);
             }
         }
@@ -98,11 +96,13 @@ class ResourceManipulator
             $relationPointer = "$pointer/$name";
 
             if (is_null($relationship = $resource::relationships()->get($name))) {
-                throw new UnknownRelationException($relationPointer);
+                throw BadRequestException::create(sprintf('Unknown relationship "%s".', $name))
+                    ->detail('Unknown relationship.', $relationPointer);
             }
 
             if (!is_array($data) || !array_key_exists('data', $data)) {
-                throw new MissingDataException($relationPointer);
+                throw (new BadRequestException('Wrong data.'))
+                    ->detail('Data is missing or not an array.', $relationPointer);
             }
 
             $relationData = $data['data'];
@@ -147,7 +147,8 @@ class ResourceManipulator
     ): ResourceInterface
     {
         if (!is_array($data)) {
-            throw new MissingDataException($pointer);
+            throw (new BadRequestException())
+                ->detail('Data is not an array', $pointer);
         }
 
         $collection = new ArrayCollection(array_map(

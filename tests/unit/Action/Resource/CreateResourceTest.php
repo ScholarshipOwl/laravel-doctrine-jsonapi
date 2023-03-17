@@ -62,21 +62,21 @@ class CreateResourceTest extends TestCase
         $response->assertExactJson([
             'errors' => [
                 [
-                    'code' => '422',
+                    'code' => 422,
                     'detail' => 'validation.required',
                     'source' => [
                         'pointer' => '/data/attributes/name'
                     ],
                 ],
                 [
-                    'code' => '422',
+                    'code' => 422,
                     'detail' => 'validation.required',
                     'source' => [
                         'pointer' => '/data/attributes/password'
                     ],
                 ],
                 [
-                    'code' => '422',
+                    'code' => 422,
                     'detail' => 'validation.required',
                     'source' => [
                         'pointer' => '/data/attributes/email'
@@ -98,7 +98,7 @@ class CreateResourceTest extends TestCase
         $response->assertExactJson([
             'errors' => [
                 [
-                    'code' => '422',
+                    'code' => 422,
                     'detail' => 'validation.email',
                     'source' => [
                         'pointer' => '/data/attributes/email'

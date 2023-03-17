@@ -40,12 +40,12 @@ class ResourceManipulatorTest extends TestCase
         } catch (JsonApiException $e) {
             $this->assertEquals([
                 [
-                    'code' => '400',
+                    'code' => 400,
                     'source' => ['pointer' => '/data/attributes/not_exists'],
                     'detail' => 'Unknown attribute.',
                 ],
                 [
-                    'code' => '400',
+                    'code' => 400,
                     'source' => ['setter' => 'Tests\App\Entities\User::setNot_exists'],
                     'detail' => 'Missing property setter.'
                 ]
@@ -71,9 +71,9 @@ class ResourceManipulatorTest extends TestCase
         } catch (JsonApiException $e) {
             $this->assertEquals([
                 [
-                    'code' => '400',
+                    'code' => 400,
                     'source' => ['pointer' => '/data/relationships/roles'],
-                    'detail' => 'Data is missing or not an array on pointer level.',
+                    'detail' => 'Data is missing or not an array.',
                 ]
             ], $e->errors());
         }

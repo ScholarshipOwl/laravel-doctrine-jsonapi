@@ -223,7 +223,7 @@ class UpdateResourceTest extends TestCase
         $response->assertExactJson([
             'errors' => [
                 [
-                    'code' => '422',
+                    'code' => 422,
                     'detail' => 'validation.email',
                     'source' => [
                         'pointer' => '/data/attributes/email'

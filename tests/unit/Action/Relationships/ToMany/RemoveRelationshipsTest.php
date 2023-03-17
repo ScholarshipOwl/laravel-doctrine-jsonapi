@@ -39,7 +39,7 @@ class RemoveRelationshipsTest extends TestCase
             ->assertExactJson([
                 'errors' => [
                     [
-                        'code' => '422',
+                        'code' => 422,
                         'detail' => 'User don\'t have assigned role "Root"',
                         'source' => [
                             'pointer' => '/data/0'

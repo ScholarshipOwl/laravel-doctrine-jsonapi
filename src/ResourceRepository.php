@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
 use Sowl\JsonApi\Exceptions\BadRequestException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
-use Sowl\JsonApi\Exceptions\ResourceNotFoundException;
+use Sowl\JsonApi\Exceptions\NotFoundException;
 
 /**
  * ResourceRepository class is used for managing resources in a JSON:API context.
@@ -77,7 +77,9 @@ class ResourceRepository extends EntityRepository
     public function findById(string|int $id): ResourceInterface
     {
         if (null === ($entity = $this->find($id))) {
-            throw new ResourceNotFoundException($id, $this->getResourceType());
+            throw NotFoundException::create()->detail(
+                sprintf('Resource type "%s" and id "%s" is not found.', $id, $this->getResourceType())
+            );
         }
 
         return $entity;
