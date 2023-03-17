@@ -26,6 +26,9 @@ class ObjectIdentifierRule implements Rule
         }
     }
 
+    /**
+     * @inheritdoc
+     */
     public function passes($attribute, $value): bool
     {
         $valid = false;
@@ -54,6 +57,9 @@ class ObjectIdentifierRule implements Rule
         return $valid;
     }
 
+    /**
+     * @inheritdoc
+     */
     public function message(): array|string
     {
         return $this->message;
