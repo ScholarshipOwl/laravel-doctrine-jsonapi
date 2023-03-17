@@ -2,10 +2,16 @@
 
 namespace Sowl\JsonApi\Request;
 
+/**
+ * Provides functionality to handle the filter part of a JSON:API request.
+ */
 trait WithFilterParamsTrait
 {
     abstract public function get(string $key, mixed $default = null): mixed;
 
+    /**
+     * Returns an array of validation rules for filter parameters.
+     */
     public function filterParamsRules(): array
     {
         return [
@@ -13,6 +19,9 @@ trait WithFilterParamsTrait
         ];
     }
 
+    /**
+     * Retrieves the filter part of a JSON:API request.
+     */
     public function getFilter(): mixed
     {
         $filter = $this->get('filter');

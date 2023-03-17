@@ -7,7 +7,8 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Sowl\JsonApi\Exceptions\NotFoundException;
-use Sowl\JsonApi\Relationships\AbstractRelationship;
+use Sowl\JsonApi\Relationships\ToManyRelationship;
+use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Request\WithDataTrait;
 use Sowl\JsonApi\Request\WithFieldsParamsTrait;
 use Sowl\JsonApi\Request\WithFilterParamsTrait;
@@ -29,7 +30,7 @@ class Request extends FormRequest
 
     protected ResourceInterface $resource;
     protected ResourceRepository $repository;
-    protected AbstractRelationship $relationship;
+    protected ToOneRelationship|ToManyRelationship $relationship;
 
     protected string $resourceType;
     protected ?string $relationshipName;
@@ -146,7 +147,7 @@ class Request extends FormRequest
      * Gets the relationship instance associated with the relationship name.
      * If not found NotFoundException thrown.
      */
-    public function relationship(): AbstractRelationship
+    public function relationship(): ToOneRelationship|ToManyRelationship
     {
         if (!isset($this->relationship)) {
             $relationshipName = $this->relationshipName();

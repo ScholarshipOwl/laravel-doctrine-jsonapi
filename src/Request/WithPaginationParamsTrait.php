@@ -4,10 +4,16 @@ namespace Sowl\JsonApi\Request;
 
 use Doctrine\Common\Collections\Criteria;
 
+/**
+ * Provides functionality to handle pagination-related parameters of a JSON:API request.
+ */
 trait WithPaginationParamsTrait
 {
     abstract public function get(string $key, mixed $default = null): mixed;
 
+    /**
+     * Returns an array of validation rules for pagination-related parameters.
+     */
     public function paginationParamsRules(): array
     {
         return [
@@ -20,6 +26,9 @@ trait WithPaginationParamsTrait
         ];
     }
 
+    /**
+     * Retrieves the sort part of a JSON:API request.
+     */
     public function getSort(): array
     {
         $sortBy = [];
@@ -42,6 +51,9 @@ trait WithPaginationParamsTrait
         return $sortBy;
     }
 
+    /**
+     * Retrieves the page part of a JSON:API request.
+     */
     public function getPage(): array|null
     {
         $page = $this->get('page');
@@ -52,6 +64,9 @@ trait WithPaginationParamsTrait
         return null;
     }
 
+    /**
+     * Retrieves the first result index for pagination from a JSON:API request.
+     */
     public function getFirstResult(): int|null
     {
         $page = $this->getPage();
@@ -72,6 +87,9 @@ trait WithPaginationParamsTrait
         return null;
     }
 
+    /**
+     * Retrieves the maximum number of results per page for pagination from a JSON:API request.
+     */
     public function getMaxResults(): int|null
     {
         $page = $this->getPage();
@@ -93,6 +111,9 @@ trait WithPaginationParamsTrait
         return null;
     }
 
+    /**
+     * Returns the default pagination limit.
+     */
     protected function defaultPaginationLimit(): int
     {
         return 1000;

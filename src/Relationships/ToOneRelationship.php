@@ -4,8 +4,13 @@ namespace Sowl\JsonApi\Relationships;
 
 use Sowl\JsonApi\ResourceManager;
 
-class ToOneRelationship extends AbstractRelationship
+/**
+ * Class represents a to-one relationship between resources in a JSON:API implementation.
+ */
+class ToOneRelationship
 {
+    use RelationshipTrait;
+
     public function __construct(
         protected string $name,
         protected string $class,
@@ -15,6 +20,9 @@ class ToOneRelationship extends AbstractRelationship
         $this->property = $property ?: $this->name;
     }
 
+    /**
+     * Creates a new ToOneRelationship object.
+     */
     public static function create(string $name, string $class, ?string $property = null): static
     {
         return new static($name, $class, $property);

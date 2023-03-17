@@ -6,7 +6,7 @@ use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\ResourceRepository;
 use Sowl\JsonApi\Rules\ObjectIdentifierRule;
 
-class AbstractRelationship
+trait RelationshipTrait
 {
     protected string $name;
     protected string $class;
