@@ -2,16 +2,25 @@
 
 namespace Sowl\JsonApi\Default\Middleware;
 
-use Illuminate\Http\Request as HttpRequest;
-use Illuminate\Contracts\Auth\Access\Gate;
 use Closure;
+use Illuminate\Contracts\Auth\Access\Gate;
+use Illuminate\Http\Request as HttpRequest;
 use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
-use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\ResourceManager;
 
+/**
+ * Middleware is responsible for authorizing the actions performed on resources and relationships.
+ *
+ * It uses the Laravel's Gate contract to check if the user has the necessary permissions to perform the requested
+ * action on the given resource or relationship.
+ *
+ * Middleware is useful for enforcing access control in your JSON:API implementation, ensuring that users can only
+ * perform actions they have the necessary permissions for. By using this middleware, you can prevent unauthorized
+ * access to your resources and relationships.
+ */
 class Authorize
 {
     public function __construct(
@@ -34,8 +43,11 @@ class Authorize
     ];
 
     /**
-     * @throws ForbiddenException
-     * @throws JsonApiException
+     * Method receives an HttpRequest, a Closure for the next middleware in the stack, and additional arguments.
+     *
+     * It checks if the user has the required ability for the requested action by calling the guessAbility method.
+     * If the user has the required ability, the request proceeds to the next middleware in the stack; otherwise,
+     * it throws a ForbiddenException.
      */
     public function handle(HttpRequest $request, Closure $next, ...$args)
     {
@@ -52,9 +64,8 @@ class Authorize
     }
 
     /**
-     * Guess the ability by the request method and path.
-     *
-     * @throws ForbiddenException
+     * Method determines the required ability based on the request's method and path.
+     * It maps the request's method to the corresponding ability for resources and relationships.
      */
     protected function guessAbility(): string
     {
@@ -88,7 +99,12 @@ class Authorize
     }
 
     /**
-     * @throws JsonApiException
+     * Method constructs an array of arguments for the Gate to check if the user is authorized.
+     *
+     * It fetches the appropriate repository and finds the resource using the provided ID, if present.
+     * Otherwise, it uses the class name of the repository.
+     *
+     * The method then merges this base argument with any additional arguments passed to the middleware.
      */
     protected function buildArguments(array $arguments): array
     {
