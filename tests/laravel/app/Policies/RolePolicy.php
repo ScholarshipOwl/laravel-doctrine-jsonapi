@@ -11,21 +11,22 @@ use Tests\App\Entities\User;
 class RolePolicy
 {
     /**
-     * Allow a "root" user to perform any action.
+     * Allow the authenticated user to perform any action
+     * if he is "root".
      */
-    public function before(User $user, $ability)
+    public function before(User $authenticated, $ability)
     {
-        if ($user->isRoot()) {
+        if ($authenticated->isRoot()) {
             return true;
         }
     }
 
     /**
-     * Allow a user to view a specific role if assigned to them.
+     * Allow the authenticated user to view a specific role if assigned to them.
      */
-    public function view(User $user, Role $role): bool
+    public function view(User $authenticated, Role $role): bool
     {
-        return $user->hasRole($role);
+        return $authenticated->hasRole($role);
     }
 
     /**
