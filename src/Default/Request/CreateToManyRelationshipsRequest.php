@@ -13,7 +13,7 @@ use Sowl\JsonApi\Request;
  * When processing a create relationships request, the DefaultCreateRelationshipsRequest class ensures that the request
  * data follows the rules defined in the RelationshipsDataRulesTrait.
  */
-final class DefaultCreateRelationshipsRequest extends Request
+final class CreateToManyRelationshipsRequest extends Request
 {
-    use RelationshipsDataRulesTrait;
+    use ToManyRelationshipDataRulesTrait;
 }

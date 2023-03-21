@@ -3,7 +3,7 @@
 namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Resource\UpdateResourceAction;
-use Sowl\JsonApi\Default\Request\DefaultUpdateRequest;
+use Sowl\JsonApi\Default\Request\UpdateResourceRequest;
 use Sowl\JsonApi\Response;
 
 /**
@@ -17,7 +17,7 @@ trait WithUpdateTrait
     /**
      * Handle "PATCH /{resourceType}/{id}" route.
      */
-    public function update(DefaultUpdateRequest $request): Response
+    public function update(UpdateResourceRequest $request): Response
     {
         return (new UpdateResourceAction())
             ->dispatch($request);

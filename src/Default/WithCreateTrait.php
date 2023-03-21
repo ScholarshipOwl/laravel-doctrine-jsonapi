@@ -3,7 +3,7 @@
 namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Resource\CreateResourceAction;
-use Sowl\JsonApi\Default\Request\DefaultCreateRequest;
+use Sowl\JsonApi\Default\Request\CreateResourceRequest;
 use Sowl\JsonApi\Response;
 
 /**
@@ -17,7 +17,7 @@ trait WithCreateTrait
     /**
      * Handle "POST /{resourceType}" route.
      */
-    public function create(DefaultCreateRequest $request): Response
+    public function create(CreateResourceRequest $request): Response
     {
         return (new CreateResourceAction())
             ->dispatch($request);

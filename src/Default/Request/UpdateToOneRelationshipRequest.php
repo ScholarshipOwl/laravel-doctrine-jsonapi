@@ -10,7 +10,7 @@ use Sowl\JsonApi\Request;
  * This class ensures that the request data for updating a relationship between resources is properly validated
  * before processing.
  */
-final class DefaultUpdateRelationshipRequest extends Request
+final class UpdateToOneRelationshipRequest extends Request
 {
     /**
      * Sets up the validation rules for the request data for updating relationships between resources.

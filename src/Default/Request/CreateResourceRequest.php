@@ -11,7 +11,7 @@ use Sowl\JsonApi\Request;
  * By using the DefaultCreateRequest class, you can ensure that the incoming request data is validated before creating
  * a new resource
  */
-final class DefaultCreateRequest extends Request
+final class CreateResourceRequest extends Request
 {
     use ResourceDataRulesTrait;
 }

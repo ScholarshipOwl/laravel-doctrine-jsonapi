@@ -11,7 +11,7 @@ use Sowl\JsonApi\Request;
  * When processing an update relationships request, the DefaultCreateRelationshipsRequest class ensures that the request
  * data follows the rules defined in the RelationshipsDataRulesTrait.
  */
-final class DefaultUpdateRelationshipsRequest extends Request
+final class UpdateToManyRelationshipsRequest extends Request
 {
-    use RelationshipsDataRulesTrait;
+    use ToManyRelationshipDataRulesTrait;
 }

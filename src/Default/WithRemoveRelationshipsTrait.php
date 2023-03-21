@@ -3,7 +3,7 @@
 namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationshipsAction;
-use Sowl\JsonApi\Default\Request\DefaultRemoveRelationshipsRequest;
+use Sowl\JsonApi\Default\Request\RemoveToManyRelationshipsRequest;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Response;
 
@@ -22,7 +22,7 @@ trait WithRemoveRelationshipsTrait
      * This trait is specifically designed to handle ToManyRelationships.
      * If the relationship is not found the method returns a "Not Found" response.
      */
-    public function removeRelationships(DefaultRemoveRelationshipsRequest $request): Response
+    public function removeRelationships(RemoveToManyRelationshipsRequest $request): Response
     {
         $relationship = $request->relationship();
 

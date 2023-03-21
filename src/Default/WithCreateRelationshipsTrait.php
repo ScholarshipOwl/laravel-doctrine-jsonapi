@@ -3,7 +3,7 @@
 namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationshipsAction;
-use Sowl\JsonApi\Default\Request\DefaultCreateRelationshipsRequest;
+use Sowl\JsonApi\Default\Request\CreateToManyRelationshipsRequest;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Response;
 
@@ -22,7 +22,7 @@ trait WithCreateRelationshipsTrait
      * This trait is specifically designed to handle ToManyRelationships, as create for ToOne is not exists.
      * If the relationship is not found the method returns a "Not Found" response.
      */
-    public function createRelationships(DefaultCreateRelationshipsRequest $request): Response
+    public function createRelationships(CreateToManyRelationshipsRequest $request): Response
     {
         $relationship = $request->relationship();
 

@@ -4,7 +4,7 @@ namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationshipsAction;
 use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationshipAction;
-use Sowl\JsonApi\Default\Request\DefaultUpdateRelationshipsRequest;
+use Sowl\JsonApi\Default\Request\UpdateToManyRelationshipsRequest;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Response;
@@ -26,7 +26,7 @@ trait WithUpdateRelationshipsTrait
      *
      * If the relationship is not found the method returns a "Not Found" response.
      */
-    public function updateRelationships(DefaultUpdateRelationshipsRequest $request): Response
+    public function updateRelationships(UpdateToManyRelationshipsRequest $request): Response
     {
         $relationship = $request->relationship();
 
