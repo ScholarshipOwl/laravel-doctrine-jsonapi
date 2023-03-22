@@ -23,15 +23,7 @@ class PagePolicy
     }
 
     /**
-     * Allow the authenticated user to view a Page.
-     */
-    public function view(User $authenticated, Page $page): bool
-    {
-        return true;
-    }
-
-    /**
-     * Prohibit viewing a list of all Pages.
+     * Prohibit viewing a list of all pages.
      */
     public function viewAny(): bool
     {
@@ -39,10 +31,26 @@ class PagePolicy
     }
 
     /**
-     * Allow the authenticated user with moderator role to update a Page.
+     * Allow the authenticated user to view a page.
+     */
+    public function view(User $authenticated, Page $page): bool
+    {
+        return true;
+    }
+
+    /**
+     * Allow the authenticated user with moderator role to update a page.
      */
     public function updateUser(User $authenticated, Page $page): bool
     {
         return $authenticated->hasRole(Role::moderator());
+    }
+
+    /**
+     * Prohibit detaching a user from a page.
+     */
+    public function detachUser(User $authenticated, Page $page): bool
+    {
+        return false;
     }
 }

@@ -11,14 +11,14 @@ use Tests\App\Entities\User;
 /**
  * The rule will verify that authorized user have access to assign role on the user.
  */
-class AttachRoleToUserRule extends ObjectIdentifierRule
+class AssignRoleToUserRule extends ObjectIdentifierRule
 {
     public function __construct(protected Request $request)
     {
-        parent::__construct(Role::class, \Closure::fromCallable([$this, 'allowedAssignRole']));
+        parent::__construct(Role::class, \Closure::fromCallable([$this, 'allowAssignRole']));
     }
 
-    protected function allowedAssignRole($attr, Role $role, $fail): void
+    protected function allowAssignRole($attr, Role $role, $fail): void
     {
         $user = $this->em()->getReference(User::class, $this->request->getId());
 

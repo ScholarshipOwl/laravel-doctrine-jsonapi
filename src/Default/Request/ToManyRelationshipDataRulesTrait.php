@@ -5,13 +5,12 @@ namespace Sowl\JsonApi\Default\Request;
 use Sowl\JsonApi\Exceptions\NotFoundException;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
-use RuntimeException;
 
 /**
  * Trait that provides a method to define common validation rules for handling relationships.
  * Trait can be used by request classes that deal with relationships, such as creating, updating, or removing them.
  *
- * By using the RelationshipsDataRulesTrait trait, you can ensure that the incoming request data for handling
+ * By using the ToManyRelationshipDataRulesTrait trait, you can ensure that the incoming request data for handling
  * relationships is validated according to the relationship object identifier rule.
  * This trait can be easily reused in different request classes that require similar validation rules for relationships.
  */
@@ -28,9 +27,9 @@ trait ToManyRelationshipDataRulesTrait
     {
         $relationship = $this->relationship();
         if (!$relationship instanceof ToManyRelationship) {
-            throw NotFoundException::create('Relationship is not to-many type.')
+            throw NotFoundException::create('Relationship is not of to-many type.')
                 ->detail(sprintf(
-                    'Requested relationship "%s" is not to-many type.',
+                    'Requested relationship "%s" is not of to-many type.',
                     $relationship->name()
                 ));
         }

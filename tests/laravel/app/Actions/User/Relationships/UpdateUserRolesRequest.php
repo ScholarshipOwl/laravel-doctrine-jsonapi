@@ -3,7 +3,7 @@
 namespace Tests\App\Actions\User\Relationships;
 
 use Sowl\JsonApi\Request;
-use Tests\App\Actions\User\Rules\AttachRoleToUserRule;
+use Tests\App\Actions\User\Rules\AssignRoleToUserRule;
 
 class UpdateUserRolesRequest extends Request
 {
@@ -11,7 +11,7 @@ class UpdateUserRolesRequest extends Request
     {
         return [
             'data' => 'array|required',
-            'data.*' => [new AttachRoleToUserRule($this)]
+            'data.*' => [new AssignRoleToUserRule($this)]
         ];
     }
 }
