@@ -102,7 +102,7 @@ class JsonApiException extends \Exception implements Responsable
      */
     public function error(int|string $code, array $source, string $detail, array $extra = []): static
     {
-        $this->errors[] = array_merge(['code' => $code, 'source' => $source, 'detail' => $detail] + $extra);
+        $this->errors[] = array_merge(['code' => $code, 'source' => $source, 'detail' => $detail], $extra);
 
         return $this;
     }

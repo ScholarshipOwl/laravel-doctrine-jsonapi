@@ -17,6 +17,20 @@ use Sowl\JsonApi\Request;
  */
 class ArrayFilterParser extends AbstractFilterParser
 {
+    const OPERATORS = [
+        'eq',
+        'gt',
+        'gte',
+        'lt',
+        'lte',
+        'neq',
+        'in',
+        'notIn',
+        'contains',
+        'startsWith',
+        'endsWith',
+    ];
+
     /**
      * The constructor accepts a Request object and an array of filterable fields. It calls the parent constructor
      * to store the Request object.
@@ -55,6 +69,7 @@ class ArrayFilterParser extends AbstractFilterParser
      *
      * Example:
      *   filter[field]=value
+     *
      *     ---> "alias.field = value" condition will be added.
      */
     protected function processEqualFilter(Criteria $criteria, string $field, mixed $value): static
@@ -73,6 +88,12 @@ class ArrayFilterParser extends AbstractFilterParser
      *
      * If the value is an array with 'start' and 'end' keys, it creates a range expression for the
      * given field and value, and adds it to the Criteria's 'where' clause.
+     *
+     * Example:
+     *   filter[field][start]=fromValue
+     *   filter[field][end]=toValue
+     *
+     *     ---> "alias.field >= fromValue AND alias.field <= toValue" condition will be added.
      */
     protected function processBetweenFilter(Criteria $criteria, string $field, mixed $value): static
     {
@@ -93,6 +114,19 @@ class ArrayFilterParser extends AbstractFilterParser
      * with the given operator, field, and value. The expression is then added to the Criteria's 'where' clause.
      * Operator filter is usable as multiple conditions can be applied to same field.
      *
+     * Operators:
+     *   - eq
+     *   - gt
+     *   - gte
+     *   - lt
+     *   - lte
+     *   - neq
+     *   - in
+     *   - notIn
+     *   - contains
+     *   - startsWith
+     *   - endsWith
+     *
      * Example:
      *   filter[field][operator] = gte
      *   filter[field][value] = value
@@ -105,16 +139,22 @@ class ArrayFilterParser extends AbstractFilterParser
      */
     protected function processOperatorFilter(Criteria $criteria, string $field, mixed $value): static
     {
-        if (is_array($value) && isset($value['operator']) && array_key_exists('value', $value)) {
+        if (is_array($value) && array_key_exists('value', $value) && is_string($value['operator'] ?? false)) {
             $operator = $value['operator'];
+            $val = $value['value'];
 
-            if (!method_exists($criteria->expr(), $operator)) {
-                throw (new BadRequestException('Unknown filter operator.'))
-                    ->error('filter-array-unknown-operator', ['field' => $field, 'filter' => $value], 'Unknown operator.');
+            if (!in_array($operator, static::OPERATORS)) {
+                throw (new BadRequestException('Unknown array filter operator.'))
+                    ->detail('Unknown operator.', sprintf('filter/%s/operator/%s', $field, $operator), [
+                        'source' => [
+                            'operator' => $operator,
+                            'field' => $field,
+                        ]
+                    ]);
             }
 
             $criteria->andWhere(
-                $criteria->expr()->$operator($field, $value['value'])
+                $criteria->expr()->$operator($field, $val)
             );
         }
 

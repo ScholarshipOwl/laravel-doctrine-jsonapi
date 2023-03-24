@@ -28,8 +28,11 @@ class ArrayParserTest extends TestCase
             $this->assertEquals(Response::HTTP_BAD_REQUEST, $e->getCode());
             $this->assertEquals([
                 [
-                    'code' => 'filter-array-unknown-operator',
-                    'source' => ['field' => 'field1', 'filter' => ['operator' => 'not', 'value' => false]],
+                    'code' => 400,
+                    'source' => [
+                        'field' => 'field1',
+                        'operator' => 'not'
+                    ],
                     'detail' => 'Unknown operator.',
                 ]
             ], $e->errors());
