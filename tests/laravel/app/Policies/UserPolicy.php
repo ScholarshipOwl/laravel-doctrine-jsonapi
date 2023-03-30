@@ -11,21 +11,14 @@ use Tests\App\Entities\User;
 class UserPolicy
 {
     /**
-     * Allow a "root" user to perform any action.
+     * Allow the authenticated user to perform any action
+     * if he is "root".
      */
-    public function before(User $user, $ability)
+    public function before(User $authenticated, $ability)
     {
-        if ($user->isRoot()) {
+        if ($authenticated->isRoot()) {
             return true;
         }
-    }
-
-    /**
-     * Allow user to view any other user.
-     */
-    public function view(User $user, User $other): bool
-    {
-        return true;
     }
 
     /**
@@ -37,33 +30,41 @@ class UserPolicy
     }
 
     /**
-     * Allow user to update themselves.
+     * Allow the authenticated user to view any other user.
      */
-    public function update(User $user, User $other): bool
+    public function view(User $authenticated, User $user): bool
     {
-        return $user === $other;
+        return true;
     }
 
     /**
-     * Allow user to delete themselves.
+     * Allow the authenticated user to update themselves.
      */
-    public function delete(User $user, User $other): bool
+    public function update(User $authenticated, User $user): bool
     {
-        return $user === $other;
+        return $authenticated === $user;
     }
 
     /**
-     * Allow a user to view their own roles.
+     * Allow the authenticated user to delete themselves.
      */
-    public function viewAnyRoles(User $user, User $from): bool
+    public function delete(User $authenticated, User $user): bool
     {
-        return $user === $from;
+        return $authenticated === $user;
+    }
+
+    /**
+     * Allow the authenticated user to view their own roles.
+     */
+    public function viewAnyRoles(User $authenticated, User $user): bool
+    {
+        return $authenticated === $user;
     }
 
     /**
      * Prohibit attaching roles to a user.
      */
-    public function attachRoles(User $user, User $to): bool
+    public function attachRoles(User $authenticated, User $user): bool
     {
         return false;
     }
@@ -71,7 +72,7 @@ class UserPolicy
     /**
      * Prohibit detaching roles from a user.
      */
-    public function detachRoles(User $user, User $from): bool
+    public function detachRoles(User $authenticated, User $user): bool
     {
         return false;
     }
@@ -79,15 +80,23 @@ class UserPolicy
     /**
      * Prohibit assigning roles to a user.
      */
-    public function assignRole(User $user, User $to, Role $role): bool
+    public function assignRole(User $authenticated, User $user, Role $role): bool
     {
         return false;
     }
 
     /**
+     * Prohibit removing roles to a user.
+     */
+    public function removeRole(User $authenticated, User $user, Role $role): bool
+    {
+        return $user->hasRole($role);
+    }
+
+    /**
      * Prohibit updating a user's roles.
      */
-    public function updateRoles(User $user, User $from): bool
+    public function updateRoles(User $authenticated, User $user): bool
     {
         return false;
     }

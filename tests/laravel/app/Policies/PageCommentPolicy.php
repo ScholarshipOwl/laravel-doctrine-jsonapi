@@ -11,19 +11,20 @@ use Tests\App\Entities\User;
 class PageCommentPolicy
 {
     /**
-     * Allow a "root" user to perform any action.
+     * Allow the authenticated user to perform any action
+     * if he is "root".
      */
-    public function before(User $user, $ability)
+    public function before(User $authenticated, $ability)
     {
-        if ($user->isRoot()) {
+        if ($authenticated->isRoot()) {
             return true;
         }
     }
 
     /**
-     * Allow any user to view any PageComment.
+     * Allow the authenticated user to view any PageComment.
      */
-    public function view(User $user, PageComment $comment): bool
+    public function view(User $authenticated, PageComment $comment): bool
     {
         return true;
     }
@@ -37,17 +38,17 @@ class PageCommentPolicy
     }
 
     /**
-     * Allow a user to view any PageComment author.
+     * Allow the authenticated user to view any PageComment author.
      */
-    public function viewUser(User $user, PageComment $comment): bool
+    public function viewUser(User $authenticated, PageComment $comment): bool
     {
         return true;
     }
 
     /**
-     * Allow a user to view any PageComment's parent Page.
+     * Allow the authenticated  user to view any PageComment's parent Page.
      */
-    public function viewPage(User $user, PageComment $comment): bool
+    public function viewPage(User $authenticated, PageComment $comment): bool
     {
         return true;
     }

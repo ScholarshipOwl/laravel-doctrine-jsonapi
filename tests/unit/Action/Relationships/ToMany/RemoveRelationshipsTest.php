@@ -40,7 +40,7 @@ class RemoveRelationshipsTest extends TestCase
                 'errors' => [
                     [
                         'code' => 422,
-                        'detail' => 'User don\'t have assigned role "Root"',
+                        'detail' => 'User doesn\'t have the assigned role "Root"',
                         'source' => [
                             'pointer' => '/data/0'
                         ]

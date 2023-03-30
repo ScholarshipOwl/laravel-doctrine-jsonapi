@@ -12,25 +12,18 @@ use Tests\App\Entities\User;
 class PagePolicy
 {
     /**
-     * Allow a "root" user to perform any action.
+     * Allow the authenticated user to perform any action
+     * if he is "root".
      */
-    public function before(User $user, $ability)
+    public function before(User $authenticated, $ability)
     {
-        if ($user->isRoot()) {
+        if ($authenticated->isRoot()) {
             return true;
         }
     }
 
     /**
-     * Allow any user to view a Page.
-     */
-    public function view(User $user, ?Page $page): bool
-    {
-        return true;
-    }
-
-    /**
-     * Prohibit viewing a list of all Pages.
+     * Prohibit viewing a list of all pages.
      */
     public function viewAny(): bool
     {
@@ -38,10 +31,26 @@ class PagePolicy
     }
 
     /**
-     * Allow a user with moderator role to update a Page.
+     * Allow the authenticated user to view a page.
      */
-    public function updateUser(User $user, Page $page): bool
+    public function view(User $authenticated, Page $page): bool
     {
-        return $user->hasRole(Role::moderator());
+        return true;
+    }
+
+    /**
+     * Allow the authenticated user with moderator role to update a page.
+     */
+    public function updateUser(User $authenticated, Page $page): bool
+    {
+        return $authenticated->hasRole(Role::moderator());
+    }
+
+    /**
+     * Prohibit detaching a user from a page.
+     */
+    public function detachUser(User $authenticated, Page $page): bool
+    {
+        return false;
     }
 }

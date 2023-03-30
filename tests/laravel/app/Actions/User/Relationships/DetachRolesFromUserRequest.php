@@ -3,7 +3,7 @@
 namespace Tests\App\Actions\User\Relationships;
 
 use Sowl\JsonApi\Request;
-use Tests\App\Actions\User\Rules\DetachRoleFromUserRule;
+use Tests\App\Actions\User\Rules\RemoveRoleFromUserRule;
 
 class DetachRolesFromUserRequest extends Request
 {
@@ -11,7 +11,7 @@ class DetachRolesFromUserRequest extends Request
     {
         return [
             'data' => 'array|required',
-            'data.*' => [new DetachRoleFromUserRule($this)]
+            'data.*' => [new RemoveRoleFromUserRule($this)]
         ];
     }
 }
