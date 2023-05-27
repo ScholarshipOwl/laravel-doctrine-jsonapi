@@ -20,26 +20,6 @@ trait WithListTrait
     public function list(Request $request): Response
     {
         return (new ListResourcesAction())
-            ->setSearchProperty($this->searchProperty())
-            ->setFilterable($this->filterable())
             ->dispatch($request);
-    }
-
-    /**
-     * It returns a nullable string that represents the property on which a search can be performed.
-     * By default, search not allowed.
-     */
-    public function searchProperty(): ?string
-    {
-        return null;
-    }
-
-    /**
-     * It returns an array of fields that can be used for filtering the list of resources.
-     * By default, it returns an empty array.
-     */
-    public function filterable(): array
-    {
-        return [];
     }
 }

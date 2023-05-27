@@ -17,9 +17,10 @@ Route::group(['as' => 'jsonapi.'], function () {
     Route::patch('/pages/{id}/relationships/user', [PageController::class, 'updateUserRelationship']);
 
     Route::get('/pageComments/{id}', [PageCommentController::class, 'show']);
+    Route::get('/pageComments/{id}/{relationship}', [PageCommentController::class, 'showRelated']);
+    Route::get('/pageComments/{id}/relationships/{relationship}', [PageCommentController::class, 'showRelationships']);
 
     Route::get('/roles', [RolesController::class, 'list']);
-    Route::get('/users', [UsersController::class, 'list']);
 
     Route::post('/users', [UsersController::class, 'create']);
     Route::patch('/users/{id}', [UsersController::class, 'update']);

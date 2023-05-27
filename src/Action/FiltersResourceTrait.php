@@ -4,33 +4,15 @@ namespace Sowl\JsonApi\Action;
 
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\QueryBuilder;
-use Sowl\JsonApi\FilterParsers\ArrayFilterParser;
 use Sowl\JsonApi\FilterParsers\BuilderChain\CriteriaChain;
-use Sowl\JsonApi\FilterParsers\SearchFilterParser;
+use Sowl\JsonApi\Request;
+use Sowl\JsonApi\Resource\FilterableInterface;
+use Sowl\JsonApi\ResourceRepository;
 
 trait FiltersResourceTrait
 {
-    /**
-     * Field that can be filtered if filter is string.
-     */
-    protected ?string $searchProperty = null;
-
-    /**
-     * Get list of filterable entity fields.
-     */
-    protected array $filterable = [];
-
-    public function setSearchProperty(?string $property): static
-    {
-        $this->searchProperty = $property;
-        return $this;
-    }
-
-    public function setFilterable(array $filterable): static
-    {
-        $this->filterable = $filterable;
-        return $this;
-    }
+    abstract protected function repository(): ResourceRepository;
+    abstract protected function request(): Request;
 
     /**
      * Apply filter criteria on the query builder.
@@ -45,11 +27,14 @@ trait FiltersResourceTrait
         return $this;
     }
 
-    protected function filterParsers(): array
+    private function filterParsers(): array
     {
-        return [
-            new SearchFilterParser($this->request(), $this->searchProperty),
-            new ArrayFilterParser($this->request(), $this->filterable),
-        ];
+        $resourceClass = $this->repository()->getClassName();
+
+        if (in_array(FilterableInterface::class, class_implements($resourceClass))) {
+            return $resourceClass::filterParsers($this->request());
+        }
+
+        return [];
     }
 }

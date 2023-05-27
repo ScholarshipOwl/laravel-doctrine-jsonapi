@@ -18,6 +18,11 @@ class ShowRelatedTest extends TestCase
         $this->get('/pageComments/3/page')->assertStatus(Response::HTTP_OK);
     }
 
+    public function testNotFoundRelationship(): void
+    {
+        $this->get('/pageComments/1/notexists')->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
     public function testShowPageCommentsRelatedUserResponse()
     {
         $this->actingAsUser();

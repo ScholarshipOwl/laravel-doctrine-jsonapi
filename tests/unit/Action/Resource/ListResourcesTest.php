@@ -251,8 +251,8 @@ class ListResourcesTest extends TestCase
             ->assertSuccessful()
             ->assertJson([
                 'data' => [
-                    ['id' => 1],
-                    ['id' => 3]
+                    ['id' => '1'],
+                    ['id' => '3']
                 ],
             ]);
 
@@ -260,7 +260,7 @@ class ListResourcesTest extends TestCase
             ->assertSuccessful()
             ->assertJson([
                 'data' => [
-                    ['id' => 1]
+                    ['id' => '1']
                 ],
                 'meta' => [
                     'pagination' => [
@@ -277,7 +277,7 @@ class ListResourcesTest extends TestCase
         $this->get('/users?filter=@test.com&page[number]=2&page[size]=1')
             ->assertSuccessful()
             ->assertJson([
-                'data' => [['id' => 3]],
+                'data' => [['id' => '3']],
                 'meta' => [
                     'pagination' => [
                         'total' => 2,
@@ -294,7 +294,7 @@ class ListResourcesTest extends TestCase
             ->assertHeader('Content-Type', 'application/vnd.api+json')
             ->assertSuccessful()
             ->assertJson([
-                'data' => [['id' => 2]],
+                'data' => [['id' => '2']],
                 'meta' => [
                     'pagination' => [
                         'total' => 2,

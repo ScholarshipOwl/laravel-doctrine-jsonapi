@@ -21,10 +21,7 @@ class ListRelatedAction extends AbstractAction
 
     public function __construct(
         protected ToManyRelationship $relationship,
-    ) {
-        $this->setSearchProperty($this->relationship->getSearchProperty());
-        $this->setFilterable($this->relationship->getFilterable());
-    }
+    ) {}
 
     public function handle(): Response
     {

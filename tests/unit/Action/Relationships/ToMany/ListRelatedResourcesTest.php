@@ -33,6 +33,11 @@ class ListRelatedResourcesTest extends TestCase
         $this->get('/users/3/roles')->assertStatus(Response::HTTP_OK);
     }
 
+    public function testNotFoundRelationship(): void
+    {
+        $this->get('/pageComments/1/relationships/notexists')->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
     public function testListRelatedUserRolesResponse()
     {
         $user = $this->actingAsUser();

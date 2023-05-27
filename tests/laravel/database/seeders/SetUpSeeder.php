@@ -10,7 +10,7 @@ use Tests\App\Entities\User;
 
 class SetUpSeeder
 {
-    public function run(EntityManager $em)
+    public function run(EntityManager $em): void
     {
         entity(Role::class, Role::ROOT_NAME)->create();
         entity(Role::class, Role::USER_NAME)->create();

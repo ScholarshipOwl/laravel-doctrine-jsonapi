@@ -21,16 +21,6 @@ class UsersController extends Controller
 {
     use WithListTrait;
 
-    public function searchProperty(): ?string
-    {
-        return 'email';
-    }
-
-    public function filterable(): array
-    {
-        return ['id', 'email', 'name'];
-    }
-
     public function create(CreateUserRequest $request): Response
     {
         return CreateUserAction::create()

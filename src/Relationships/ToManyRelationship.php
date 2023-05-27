@@ -11,9 +11,6 @@ class ToManyRelationship
 {
     use RelationshipTrait;
 
-    protected ?string $searchProperty = null;
-    protected array $filterable = [];
-
     public function __construct(
         protected string $name,
         protected string $class,
@@ -38,41 +35,5 @@ class ToManyRelationship
     public function mappedBy(): string
     {
         return $this->mappedBy;
-    }
-
-    /**
-     * Sets the search property for the relationship.
-     * Search property will be used for "search" filter when retrieving list.
-     */
-    public function setSearchProperty(?string $searchProperty): static
-    {
-        $this->searchProperty = $searchProperty;
-        return $this;
-    }
-
-    /**
-     * Returns the search property for the relationship.
-     */
-    public function getSearchProperty(): ?string
-    {
-        return $this->searchProperty;
-    }
-
-    /**
-     * Sets the filterable properties for the relationship.
-     * List of fields that can be filtered when retrieving related.
-     */
-    public function setFilterable(array $filterable): static
-    {
-        $this->filterable = $filterable;
-        return $this;
-    }
-
-    /**
-     * Returns the filterable properties for the relationship.
-     */
-    public function getFilterable(): array
-    {
-        return $this->filterable;
     }
 }

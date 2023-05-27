@@ -12,9 +12,14 @@ use LaravelDoctrine\ACL\Roles\HasRoles;
 use LaravelDoctrine\Extensions\Timestamps\Timestamps;
 use LaravelDoctrine\ORM\Auth\Authenticatable;
 use Sowl\JsonApi\AbstractTransformer;
+use Sowl\JsonApi\Default\Resource\WithFilterParsersTrait;
+use Sowl\JsonApi\FilterParsers\ArrayFilterParser;
+use Sowl\JsonApi\FilterParsers\SearchFilterParser;
 use Sowl\JsonApi\Relationships\MemoizeRelationshipsTrait;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
+use Sowl\JsonApi\Request;
+use Sowl\JsonApi\Resource\FilterableInterface;
 use Sowl\JsonApi\ResourceInterface;
 use Tests\App\Transformers\UserTransformer;
 
@@ -25,7 +30,8 @@ use Tests\App\Transformers\UserTransformer;
 class User implements AuthenticatableContract,
                       AuthorizableContract,
                       CanResetPasswordContract,
-                      ResourceInterface
+                      ResourceInterface,
+                      FilterableInterface
 {
     use CanResetPassword;
     use Authenticatable;
@@ -33,6 +39,7 @@ class User implements AuthenticatableContract,
     use HasRoles;
     use MemoizeRelationshipsTrait;
     use Timestamps;
+    use WithFilterParsersTrait;
 
     public static function getResourceType(): string
     {
@@ -49,6 +56,16 @@ class User implements AuthenticatableContract,
         return static::memoizeRelationships(fn () => [
             ToManyRelationship::create('roles', Role::class, 'users')
         ]);
+    }
+
+    public static function searchProperty(): ?string
+    {
+        return 'email';
+    }
+
+    public static function filterable(): array
+    {
+        return ['id', 'email', 'name'];
     }
 
     /**
