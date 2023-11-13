@@ -29,13 +29,14 @@ return [
             'dev'           => env('APP_DEBUG', true),
             'meta'          => env('DOCTRINE_METADATA', 'annotations'),
             'connection'    => env('DB_CONNECTION', 'sqlite'),
-            'namespaces'    => [],
             'paths'         => [
                 base_path('app/Entities')
             ],
+
             'repository'    => Doctrine\ORM\EntityRepository::class,
+
             'proxies'       => [
-                'namespace'     => false,
+                'namespace'     => 'DoctrineProxies',
                 'path'          => storage_path('proxies'),
                 'auto_generate' => env('DOCTRINE_PROXY_AUTOGENERATE', true)
             ],
@@ -52,6 +53,7 @@ return [
                 'listeners'   => [],
                 'subscribers' => []
             ],
+
             'filters'       => [],
             /*
             |--------------------------------------------------------------------------
@@ -77,6 +79,14 @@ return [
             */
             'mapping_types' => [
                 //'enum' => 'string'
+            ],
+
+            /**
+             * References:
+             * https://www.doctrine-project.org/projects/doctrine-dbal/en/current/reference/architecture.html#middlewares
+             */
+            'middlewares' => [
+                // Doctrine\DBAL\Logging\Middleware::class
             ]
         ]
     ],

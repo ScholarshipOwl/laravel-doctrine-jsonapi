@@ -6,11 +6,11 @@ in your [Laravel](https://laravel.com/) applications using [Doctrine ORM](https:
 Follow this guide to install this package in a new or existing laravel project.
 
 ### Laravel Installation
-This package requires Laravel `>=9.0.0 <10.0.0`.
+This package requires Laravel `>=9.0.0`.
 
 Install Laravel:
 ```shell
-composer create-project laravel/laravel:^9.0 laravel-jsonapi
+composer create-project laravel/laravel:^10.0 laravel-jsonapi
 ```
 
 ### Laravel Doctrine Installation

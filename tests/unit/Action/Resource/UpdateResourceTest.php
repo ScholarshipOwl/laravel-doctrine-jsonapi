@@ -224,7 +224,7 @@ class UpdateResourceTest extends TestCase
             'errors' => [
                 [
                     'code' => 422,
-                    'detail' => 'validation.email',
+                    'detail' => 'The data.attributes.email field must be a valid email address.',
                     'source' => [
                         'pointer' => '/data/attributes/email'
                     ],
