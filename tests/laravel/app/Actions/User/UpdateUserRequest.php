@@ -25,4 +25,13 @@ class UpdateUserRequest extends Request
             'data.relationships.roles.data.*' => [new AttachRoleToUserRule($this)]
         ];
     }
+
+    public function attributes(): array
+    {
+        return [
+            'data.attributes.name' => 'name',
+            'data.attributes.email' => 'email',
+            'data.attributes.password' => 'password',
+        ];
+    }
 }

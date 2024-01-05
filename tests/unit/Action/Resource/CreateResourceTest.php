@@ -63,21 +63,21 @@ class CreateResourceTest extends TestCase
             'errors' => [
                 [
                     'code' => 422,
-                    'detail' => 'The data.attributes.name field is required.',
+                    'detail' => 'The name field is required.',
                     'source' => [
                         'pointer' => '/data/attributes/name'
                     ],
                 ],
                 [
                     'code' => 422,
-                    'detail' => 'The data.attributes.password field is required.',
+                    'detail' => 'The password field is required.',
                     'source' => [
                         'pointer' => '/data/attributes/password'
                     ],
                 ],
                 [
                     'code' => 422,
-                    'detail' => 'The data.attributes.email field is required.',
+                    'detail' => 'The email field is required.',
                     'source' => [
                         'pointer' => '/data/attributes/email'
                     ],
@@ -99,7 +99,7 @@ class CreateResourceTest extends TestCase
             'errors' => [
                 [
                     'code' => 422,
-                    'detail' => 'The data.attributes.email field must be a valid email address.',
+                    'detail' => 'The email field must be a valid email address.',
                     'source' => [
                         'pointer' => '/data/attributes/email'
                     ],

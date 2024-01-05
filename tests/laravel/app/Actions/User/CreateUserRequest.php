@@ -14,4 +14,13 @@ class CreateUserRequest extends Request
             'data.attributes.email' => 'required|email',
         ]);
     }
+
+    public function attributes(): array
+    {
+        return [
+            'data.attributes.name' => 'name',
+            'data.attributes.password' => 'password',
+            'data.attributes.email' => 'email',
+        ];
+    }
 }
