@@ -2,6 +2,7 @@
 
 namespace Tests\App\Actions\User;
 
+use Ramsey\Uuid\Uuid;
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Response;
 use Tests\App\Entities\Role;
@@ -13,6 +14,7 @@ class CreateUserAction extends AbstractAction
     {
         /** @var User $user */
         $user = $this->manipulator()->hydrateResource(new User(), $this->request()->getData());
+        $user->setId(Uuid::uuid4()->toString());
         $user->addRole(Role::user());
 
         $this->em()->persist($user);

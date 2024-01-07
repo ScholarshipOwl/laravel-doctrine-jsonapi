@@ -9,6 +9,7 @@ use Faker\Generator;
 
 $factory->define(PageComment::class, function (Generator $faker, array $attributes) {
     return [
+        'id' => $attributes['id'] ?? $faker->unique()->uuid,
         'user' => $attributes['user'],
         'page' => $attributes['page'],
         'content' => $attributes['content'] ?? $faker->paragraphs(1),

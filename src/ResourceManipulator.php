@@ -6,7 +6,9 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 use Sowl\JsonApi\Exceptions\BadRequestException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
@@ -21,6 +23,30 @@ class ResourceManipulator
         protected EntityManager $em,
         protected ResourceManager $rm,
     ) {}
+
+    /**
+     * Method takes a string that represents a resource type and an optional string that represents
+     * the object identifier. It returns a new resource entity.
+     */
+    public function createResource(string $resourceType, string $id = null): ResourceInterface
+    {
+        $class = $this->rm->classByResourceType($resourceType);
+
+        $resource = new $class;
+
+        if (is_null($id)) {
+            $classMetadata = $this->em->getClassMetadata($class);
+            if ($classMetadata->generatorType === ClassMetadataInfo::GENERATOR_TYPE_NONE) {
+                $id = Uuid::uuid4()->toString();
+            }
+        }
+
+        if (!is_null($id)) {
+            $this->setProperty($resource, 'id', $id);
+        }
+
+        return $resource;
+    }
 
     /**
      * Method is used to hydrate a resource object with data from a JSON:API request.
@@ -297,5 +323,14 @@ class ResourceManipulator
         $resource->$remover($item);
 
         return $resource;
+    }
+
+    public function getResourceId(ResourceInterface $resource): int|string|null
+    {
+        try {
+            return $resource->getId();
+        } catch (\Error $e) {}
+
+        return null;
     }
 }

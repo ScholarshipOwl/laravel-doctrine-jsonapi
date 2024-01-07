@@ -4,11 +4,10 @@
 use Tests\App\Entities\User;
 use Tests\App\Entities\Role;
 use Doctrine\Common\Collections\ArrayCollection;
-use Faker\Generator;
 
-$factory->defineAs(User::class, 'user', function () {
+$factory->defineAs(User::class, 'user', function (Faker\Generator $faker) {
     return [
-        'id' => 1,
+        'id' => User::USER_ID,
         'name' => 'testing user1',
         'email' => 'test1email@test.com',
         'password' => 'secret',
@@ -20,7 +19,7 @@ $factory->defineAs(User::class, 'user', function () {
 
 $factory->defineAs(User::class, 'root', function () {
     return [
-        'id' => 2,
+        'id' => User::ROOT_ID,
         'name' => 'testing user2',
         'email' => 'test2email@gmail.com',
         'password' => 'secret',
@@ -33,7 +32,7 @@ $factory->defineAs(User::class, 'root', function () {
 
 $factory->defineAs(User::class, 'moderator', function () {
     return [
-        'id' => 2,
+        'id' => User::MODERATOR_ID,
         'name' => 'testing user3',
         'email' => 'test3email@test.com',
         'password' => 'secret',

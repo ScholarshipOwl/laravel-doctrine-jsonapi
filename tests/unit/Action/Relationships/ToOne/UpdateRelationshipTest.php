@@ -2,13 +2,14 @@
 
 namespace Tests\Action\Relationships\ToOne;
 
+use Tests\App\Entities\User;
 use Tests\TestCase;
 
 class UpdateRelationshipTest extends TestCase
 {
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
-        $data = ['data' => ['type' => 'users', 'id' => '2']];
+        $data = ['data' => ['type' => 'users', 'id' => User::ROOT_ID]];
 
         $this->patch('/pages/1/relationships/user', $data)->assertStatus(403);
     }
@@ -16,7 +17,7 @@ class UpdateRelationshipTest extends TestCase
     public function testAuthorizationPermissionsForUserRole()
     {
         $this->actingAsUser();
-        $data = ['data' => ['type' => 'users', 'id' => '2']];
+        $data = ['data' => ['type' => 'users', 'id' => User::ROOT_ID]];
 
         $this->patch('/pages/1/relationships/user', $data)->assertStatus(403);
     }
@@ -24,7 +25,7 @@ class UpdateRelationshipTest extends TestCase
     public function testAuthorizationPermissionsForModeratorRole()
     {
         $this->actingAsModerator();
-        $data = ['data' => ['type' => 'users', 'id' => '2']];
+        $data = ['data' => ['type' => 'users', 'id' => User::ROOT_ID]];
 
         $this->patch('/pages/1/relationships/user', $data)->assertStatus(200);
     }
@@ -32,7 +33,7 @@ class UpdateRelationshipTest extends TestCase
     public function testAuthorizationPermissionsForRootRole()
     {
         $this->actingAsRoot();
-        $data = ['data' => ['type' => 'users', 'id' => '2']];
+        $data = ['data' => ['type' => 'users', 'id' => User::ROOT_ID]];
 
         $this->patch('/pages/1/relationships/user', $data)->assertStatus(200);
     }
@@ -40,24 +41,24 @@ class UpdateRelationshipTest extends TestCase
     public function testUpdatePageUserRelationshipResponse()
     {
         $this->actingAsModerator();
-        $data = ['data' => ['type' => 'users', 'id' => '2']];
+        $data = ['data' => ['type' => 'users', 'id' => User::ROOT_ID]];
 
         $response = $this->patch('/pages/1/relationships/user', $data);
 
         $response->assertExactJson([
             'data' => [
-                'id' => '2',
+                'id' => User::ROOT_ID,
                 'type' => 'users',
                 'relationships' => [
                     'roles' => [
                         'links' => [
-                            'related' => '/users/2/roles',
-                            'self' => '/users/2/relationships/roles'
+                            'related' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/roles',
+                            'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles'
                         ]
                     ]
                 ],
                 'links' => [
-                    'self' => '/users/2'
+                    'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d'
                 ]
             ],
         ]);

@@ -27,18 +27,21 @@ class SetUpSeeder
         ]);
 
         entity(PageComment::class)->create([
+            'id' => PageComment::FIRST,
             'page' => $page,
             'user' => $user,
             'content' => '<span>It is mine comment</span>',
         ]);
 
         entity(PageComment::class)->create([
+            'id' => PageComment::SECOND,
             'page' => $page,
             'user' => $root,
             'content' => '<span>I know better</span>',
         ]);
 
         entity(PageComment::class)->create([
+            'id' => PageComment::THIRD,
             'page' => $page,
             'user' => $moderator,
             'content' => '<span>I think he is right</span>',

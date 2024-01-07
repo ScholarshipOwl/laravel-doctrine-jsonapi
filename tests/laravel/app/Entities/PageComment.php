@@ -15,12 +15,15 @@ use Tests\App\Transformers\PageCommentTransformer;
  */
 class PageComment implements ResourceInterface
 {
+    const FIRST = '00000000-0000-0000-0000-000000000001';
+    const SECOND = '00000000-0000-0000-0000-000000000002';
+    const THIRD = '00000000-0000-0000-0000-000000000003';
+
     /**
      * @ORM\Id()
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
+     * @ORM\Column(type="guid")
      */
-    protected ?int $id;
+    protected ?string $id;
 
     /**
      * @ORM\Column(name="content", type="string", length=1023, nullable=false)
@@ -57,7 +60,13 @@ class PageComment implements ResourceInterface
         ]);
     }
 
-    public function getId(): ?int
+    public function setId(string $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+
+    public function getId(): ?string
     {
         return $this->id;
     }

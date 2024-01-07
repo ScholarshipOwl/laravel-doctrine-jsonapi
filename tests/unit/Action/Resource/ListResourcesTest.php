@@ -3,6 +3,7 @@
 namespace Tests\Action\Resource;
 
 use Sowl\JsonApi\Response;
+use Tests\App\Entities\User;
 use Tests\TestCase;
 
 class ListResourcesTest extends TestCase
@@ -80,7 +81,7 @@ class ListResourcesTest extends TestCase
             ->assertExactJson([
                 'data' => [
                     [
-                        'id' => '1',
+                        'id' => User::USER_ID,
                         'type' => 'users',
                         'attributes' => [
                             'email' => 'test1email@test.com',
@@ -92,17 +93,17 @@ class ListResourcesTest extends TestCase
                                     ['type' => 'roles', 'id' => '2'],
                                 ],
                                 'links' => [
-                                    'related' => '/users/1/roles',
-                                    'self' => '/users/1/relationships/roles'
+                                    'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
+                                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles'
                                 ]
                             ]
                         ],
                         'links' => [
-                            'self' => '/users/1'
+                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
                         ],
                     ],
                     [
-                        'id' => '2',
+                        'id' => User::ROOT_ID,
                         'type' => 'users',
                         'attributes' => [
                             'email' => 'test2email@gmail.com',
@@ -115,17 +116,17 @@ class ListResourcesTest extends TestCase
                                     ['type' => 'roles', 'id' => '2'],
                                 ],
                                 'links' => [
-                                    'related' => '/users/2/roles',
-                                    'self' => '/users/2/relationships/roles'
+                                    'related' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/roles',
+                                    'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles'
                                 ]
                             ]
                         ],
                         'links' => [
-                            'self' => '/users/2'
+                            'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d'
                         ],
                     ],
                     [
-                        'id' => '3',
+                        'id' => User::MODERATOR_ID,
                         'type' => 'users',
                         'attributes' => [
                             'email' => 'test3email@test.com',
@@ -138,13 +139,13 @@ class ListResourcesTest extends TestCase
                                     ['type' => 'roles', 'id' => '3'],
                                 ],
                                 'links' => [
-                                    'related' => '/users/3/roles',
-                                    'self' => '/users/3/relationships/roles'
+                                    'related' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/roles',
+                                    'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles'
                                 ]
                             ]
                         ],
                         'links' => [
-                            'self' => '/users/3'
+                            'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8'
                         ],
                     ],
                 ],
@@ -191,16 +192,16 @@ class ListResourcesTest extends TestCase
             ->assertSuccessful()
             ->assertJson([
                 'data' => [
-                    ['id' => 1],
-                    ['id' => 2],
-                    ['id' => 3]],
+                    ['id' => User::USER_ID],
+                    ['id' => User::ROOT_ID],
+                    ['id' => User::MODERATOR_ID]],
             ]);
 
         $this->get('/users?page[limit]=1&page[offset]=2')
             ->assertSuccessful()
             ->assertJson([
                 'data' => [
-                    ['id' => 3]
+                    ['id' => User::MODERATOR_ID]
                 ],
                 'meta' => [
                     'pagination' => [
@@ -218,7 +219,7 @@ class ListResourcesTest extends TestCase
             ->assertJson([
                 'data' => [
                     [
-                        'id' => 3,
+                        'id' => User::MODERATOR_ID,
                         'attributes' => [
                             'name' => 'testing user3',
                             'email' => 'test3email@test.com',
@@ -240,9 +241,9 @@ class ListResourcesTest extends TestCase
             ->assertSuccessful()
             ->assertJson([
                 'data' => [
-                    ['id' => 3],
-                    ['id' => 2],
-                    ['id' => 1]
+                    ['id' => User::ROOT_ID],
+                    ['id' => User::MODERATOR_ID],
+                    ['id' => User::USER_ID]
                 ],
             ]);
 
@@ -251,8 +252,8 @@ class ListResourcesTest extends TestCase
             ->assertSuccessful()
             ->assertJson([
                 'data' => [
-                    ['id' => '1'],
-                    ['id' => '3']
+                    ['id' => User::USER_ID],
+                    ['id' => User::MODERATOR_ID]
                 ],
             ]);
 
@@ -260,7 +261,7 @@ class ListResourcesTest extends TestCase
             ->assertSuccessful()
             ->assertJson([
                 'data' => [
-                    ['id' => '1']
+                    ['id' => User::USER_ID]
                 ],
                 'meta' => [
                     'pagination' => [
@@ -277,30 +278,13 @@ class ListResourcesTest extends TestCase
         $this->get('/users?filter=@test.com&page[number]=2&page[size]=1')
             ->assertSuccessful()
             ->assertJson([
-                'data' => [['id' => '3']],
+                'data' => [['id' => User::MODERATOR_ID]],
                 'meta' => [
                     'pagination' => [
                         'total' => 2,
                         'count' => 1,
                         'per_page' => 1,
                         'current_page' => 2,
-                        'total_pages' => 2,
-                    ],
-                ],
-                'links' => [],
-            ]);
-
-        $this->get('/users?page[limit]=1&sort=-id&filter[id][start]=1&filter[id][end]=2')
-            ->assertHeader('Content-Type', 'application/vnd.api+json')
-            ->assertSuccessful()
-            ->assertJson([
-                'data' => [['id' => '2']],
-                'meta' => [
-                    'pagination' => [
-                        'total' => 2,
-                        'count' => 1,
-                        'per_page' => 1,
-                        'current_page' => 1,
                         'total_pages' => 2,
                     ],
                 ],

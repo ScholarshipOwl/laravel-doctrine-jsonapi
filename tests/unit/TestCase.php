@@ -64,19 +64,19 @@ class TestCase extends LaravelTestCase
 
     protected function actingAsRoot(): User
     {
-        $this->actingAs($user = $this->em->find(User::class, 2));
+        $this->actingAs($user = $this->em->find(User::class, User::ROOT_ID));
         return $user;
     }
 
     protected function actingAsUser(): User
     {
-        $this->actingAs($user = $this->em->find(User::class, 1));
+        $this->actingAs($user = $this->em->find(User::class, User::USER_ID));
         return $user;
     }
 
     protected function actingAsModerator(): User
     {
-        $this->actingAs($user = $this->em->find(User::class, 3));
+        $this->actingAs($user = $this->em->find(User::class, User::MODERATOR_ID));
         return $user;
     }
 }

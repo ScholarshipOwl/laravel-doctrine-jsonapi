@@ -11,9 +11,9 @@ class UpdateResourceTest extends TestCase
 {
     public function testAuthorizationPermissionsForNoLoggedIn()
     {
-        $this->patch('/users/1')->assertStatus(Response::HTTP_FORBIDDEN);
-        $this->patch('/users/2')->assertStatus(Response::HTTP_FORBIDDEN);
-        $this->patch('/users/3')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8')->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     public function testAuthorizationPermissionsForUserRole()
@@ -25,9 +25,9 @@ class UpdateResourceTest extends TestCase
             ],
         ];
 
-        $this->patch('/users/1', ['data' => $data])->assertStatus(Response::HTTP_OK);
-        $this->patch('/users/2', ['data' => $data])->assertStatus(Response::HTTP_FORBIDDEN);
-        $this->patch('/users/3', ['data' => $data])->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b', ['data' => $data])->assertStatus(Response::HTTP_OK);
+        $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d', ['data' => $data])->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8', ['data' => $data])->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
     public function testAuthorizationPermissionsForRootRole()
@@ -40,16 +40,16 @@ class UpdateResourceTest extends TestCase
         ];
 
 
-        $this->patch('/users/1', ['data' => $data])->assertStatus(Response::HTTP_OK);
-        $this->patch('/users/2', ['data' => $data])->assertStatus(Response::HTTP_OK);
-        $this->patch('/users/3', ['data' => $data])->assertStatus(Response::HTTP_OK);
+        $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b', ['data' => $data])->assertStatus(Response::HTTP_OK);
+        $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d', ['data' => $data])->assertStatus(Response::HTTP_OK);
+        $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8', ['data' => $data])->assertStatus(Response::HTTP_OK);
     }
 
     public function testUpdateUser()
     {
         $this->actingAsUser();
 
-        $response = $this->patch('/users/1', [
+        $response = $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b', [
             'data' => [
                 'attributes' => [
                     'email' => 'newemail@gmail.com',
@@ -61,7 +61,7 @@ class UpdateResourceTest extends TestCase
 
         $response->assertExactJson([
             'data' => [
-                'id' => '1',
+                'id' => User::USER_ID,
                 'type' => 'users',
                 'attributes' => [
                     'email' => 'newemail@gmail.com',
@@ -70,13 +70,13 @@ class UpdateResourceTest extends TestCase
                 'relationships' => [
                     'roles' => [
                         'links' => [
-                            'related' => '/users/1/roles',
-                            'self' => '/users/1/relationships/roles'
+                            'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
+                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles'
                         ]
                     ]
                 ],
                 'links' => [
-                    'self' => '/users/1'
+                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
                 ]
             ]
         ]);
@@ -86,7 +86,7 @@ class UpdateResourceTest extends TestCase
     {
         $this->actingAsRoot();
 
-        $response = $this->patch('/users/1?include=roles', [
+        $response = $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b?include=roles', [
             'data' => [
                 'relationships' => [
                     'roles' => [
@@ -98,7 +98,7 @@ class UpdateResourceTest extends TestCase
 
         $response->assertExactJson([
             'data' => [
-                'id' => '1',
+                'id' => User::USER_ID,
                 'type' => 'users',
                 'attributes' => [
                     'email' => 'test1email@test.com',
@@ -110,13 +110,13 @@ class UpdateResourceTest extends TestCase
                             ['type' => 'roles', 'id' => '2'],
                         ],
                         'links' => [
-                            'related' => '/users/1/roles',
-                            'self' => '/users/1/relationships/roles'
+                            'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
+                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles'
                         ]
                     ]
                 ],
                 'links' => [
-                    'self' => '/users/1'
+                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
                 ]
             ],
             'included' => [
@@ -134,13 +134,13 @@ class UpdateResourceTest extends TestCase
         ]);
 
         $this->em()->clear();
-        $user = $this->em()->find(User::class, 1);
+        $user = $this->em()->find(User::class, User::USER_ID);
 
         $this->assertCount(1, $user->getRoles()->toArray());
         $this->assertTrue($user->hasRole(Role::user()));
 
         $this->actingAsRoot();
-        $response = $this->patch('/users/1?include=roles', [
+        $response = $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b?include=roles', [
             'data' => [
                 'relationships' => [
                     'roles' => [
@@ -155,7 +155,7 @@ class UpdateResourceTest extends TestCase
 
         $response->assertExactJson([
             'data' => [
-                'id' => '1',
+                'id' => User::USER_ID,
                 'type' => 'users',
                 'attributes' => [
                     'email' => 'test1email@test.com',
@@ -168,13 +168,13 @@ class UpdateResourceTest extends TestCase
                             ['type' => Role::getResourceType(), 'id' => (string) Role::moderator()->getId()],
                         ],
                         'links' => [
-                            'related' => '/users/1/roles',
-                            'self' => '/users/1/relationships/roles'
+                            'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
+                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles'
                         ]
                     ]
                 ],
                 'links' => [
-                    'self' => '/users/1'
+                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
                 ]
             ],
             'included' => [
@@ -202,7 +202,7 @@ class UpdateResourceTest extends TestCase
         ]);
 
         $this->em()->clear();
-        $user = $this->em()->find(User::class, 1);
+        $user = $this->em()->find(User::class, User::USER_ID);
 
         $this->assertTrue($user->hasRole(Role::user()));
         $this->assertTrue($user->hasRole(Role::moderator()));
@@ -212,7 +212,7 @@ class UpdateResourceTest extends TestCase
     {
         $this->actingAsUser();
 
-        $response = $this->patch('/users/1', [
+        $response = $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b', [
             'data' => [
                 'attributes' => [
                     'email' => 'wrongemail',

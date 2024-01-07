@@ -37,7 +37,8 @@
         "league/fractal": "^0.20.1",
         "doctrine/orm": "^2.14",
         "laravel/framework": "^10.0",
-        "php": "^8.1"
+        "php": "^8.1",
+        "ramsey/uuid": "^4.7"
     },
     "extra": {
         "laravel": {

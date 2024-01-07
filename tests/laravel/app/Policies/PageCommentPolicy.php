@@ -29,6 +29,14 @@ class PageCommentPolicy
     }
 
     /**
+     * Allow any user to create a new PageComment.
+     */
+    public function create(User $user): bool
+    {
+        return true;
+    }
+
+    /**
      * Prohibit viewing a list of all PageComments.
      */
     public function viewAny(): bool

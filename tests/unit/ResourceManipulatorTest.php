@@ -94,6 +94,18 @@ class ResourceManipulatorTest extends TestCase
         }
     }
 
+    public function testCreateResource(): void
+    {
+        $user = $this->manipulator()->createResource('users');
+
+        $this->assertInstanceOf(User::class, $user);
+
+        $userWithId = $this->manipulator()->createResource('users', 'test');
+
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertEquals('test', $userWithId->getId());
+    }
+
     protected function manipulator(): ResourceManipulator
     {
         return app(ResourceManipulator::class);

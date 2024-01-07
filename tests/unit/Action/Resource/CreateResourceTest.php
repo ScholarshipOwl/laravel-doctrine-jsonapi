@@ -2,9 +2,11 @@
 
 namespace Tests\Action\Resource;
 
+use Tests\App\Entities\PageComment;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 use Tests\TestCase;
+use Ramsey\Uuid\Uuid;
 
 class CreateResourceTest extends TestCase
 {
@@ -12,6 +14,8 @@ class CreateResourceTest extends TestCase
     {
         $response = $this->post('/users', [
             'data' => [
+                'id' => Uuid::uuid4()->toString(),
+                'type' => 'users',
                 'attributes' => [
                     'name' => 'New user',
                     'email' => 'newuser@gmail.com',
@@ -106,5 +110,80 @@ class CreateResourceTest extends TestCase
                 ]
             ]
         ]);
+    }
+
+    public function testCreatePageCommentWithUserProvidedId()
+    {
+        $user = $this->actingAsUser();
+
+        $response = $this->post('/pageComments', [
+            'data' => [
+                'id' => Uuid::uuid4()->toString(),
+                'type' => 'pageComments',
+                'attributes' => [
+                    'content' => 'New comment',
+                ],
+                'relationships' => [
+                    'page' => [
+                        'data' => [
+                            'type' => 'pages',
+                            'id' => '1',
+                        ]
+                    ],
+                    'user' => [
+                        'data' => [
+                            'type' => 'users',
+                            'id' => $user->getId(),
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $response->assertCreated();
+
+        $this->em()->clear();
+        $newComment = $this->em()->find(PageComment::class, $response->json('data.id'));
+
+        $this->assertEquals('New comment', $newComment->getContent());
+        $this->assertEquals(1, $newComment->getPage()->getId());
+        $this->assertEquals($user->getId(), $newComment->getUser()->getId());
+    }
+
+    public function testCreatePageComment()
+    {
+        $user = $this->actingAsUser();
+
+        $response = $this->post('/pageComments', [
+            'data' => [
+                'type' => 'pageComments',
+                'attributes' => [
+                    'content' => 'New comment',
+                ],
+                'relationships' => [
+                    'page' => [
+                        'data' => [
+                            'type' => 'pages',
+                            'id' => '1',
+                        ]
+                    ],
+                    'user' => [
+                        'data' => [
+                            'type' => 'users',
+                            'id' => $user->getId(),
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $response->assertCreated();
+
+        $this->em()->clear();
+        $newComment = $this->em()->find(PageComment::class, $response->json('data.id'));
+
+        $this->assertEquals('New comment', $newComment->getContent());
+        $this->assertEquals(1, $newComment->getPage()->getId());
+        $this->assertEquals($user->getId(), $newComment->getUser()->getId());
     }
 }
