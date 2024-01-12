@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\App\Http\Controller;
+namespace Tests\App\Http\Controller\Roles;
 
 use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Default\WithListTrait;

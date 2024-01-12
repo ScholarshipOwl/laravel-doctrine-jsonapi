@@ -5,6 +5,7 @@ namespace Tests\Action\Resource;
 use Sowl\JsonApi\Response;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
+use Tests\App\Entities\UserStatus;
 use Tests\TestCase;
 
 class UpdateResourceTest extends TestCase
@@ -67,16 +68,59 @@ class UpdateResourceTest extends TestCase
                     'email' => 'newemail@gmail.com',
                     'name' => 'newname',
                 ],
+                'links' => [
+                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
+                ]
+            ]
+        ]);
+
+        $response = $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b?include=status', [
+            'data' => [
                 'relationships' => [
-                    'roles' => [
+                    'status' => [
+                        'data' => [
+                            'type' => UserStatus::getResourceType(),
+                            'id' => UserStatus::INACTIVE,
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $response->assertExactJson([
+            'data' => [
+                'id' => User::USER_ID,
+                'type' => 'users',
+                'attributes' => [
+                    'email' => 'newemail@gmail.com',
+                    'name' => 'newname',
+                ],
+                'relationships' => [
+                    'status' => [
+                        'data' => [
+                            'type' => UserStatus::getResourceType(),
+                            'id' => UserStatus::INACTIVE,
+                        ],
                         'links' => [
-                            'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
-                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles'
+                            'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/status',
+                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/status'
                         ]
                     ]
                 ],
                 'links' => [
                     'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
+                ]
+            ],
+            'included' => [
+                [
+                    'id' => UserStatus::INACTIVE,
+                    'type' => 'user-statuses',
+                    'attributes' => [
+                        'name' => 'Inactive',
+                    ],
+                    'links' => [
+                        'self' => '/user-statuses/' . UserStatus::INACTIVE
+                    ]
                 ]
             ]
         ]);

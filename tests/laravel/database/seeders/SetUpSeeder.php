@@ -7,11 +7,16 @@ use Tests\App\Entities\Page;
 use Tests\App\Entities\PageComment;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
+use Tests\App\Entities\UserStatus;
 
 class SetUpSeeder
 {
     public function run(EntityManager $em): void
     {
+        entity(UserStatus::class, 'active')->create();
+        entity(UserStatus::class, 'inactive')->create();
+        entity(UserStatus::class, 'deleted')->create();
+
         entity(Role::class, Role::ROOT_NAME)->create();
         entity(Role::class, Role::USER_NAME)->create();
         entity(Role::class, Role::MODERATOR_NAME)->create();

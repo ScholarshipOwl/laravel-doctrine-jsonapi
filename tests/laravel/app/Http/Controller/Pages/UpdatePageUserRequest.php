@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\App\Actions\Page;
+namespace Tests\App\Http\Controller\Pages;
 
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Rules\ObjectIdentifierRule;

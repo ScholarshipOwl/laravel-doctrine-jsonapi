@@ -29,4 +29,52 @@ class JsonApiSerializer extends \League\Fractal\Serializer\JsonApiSerializer
 
         return $item;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function injectAvailableIncludeData(array $data, array $availableIncludes): array
+    {
+        if (!$this->shouldIncludeLinks()) {
+            return $data;
+        }
+
+        if ($this->isCollection($data)) {
+            $data['data'] = array_map(function ($resource) use ($availableIncludes) {
+                foreach ($availableIncludes as $relationshipKey) {
+                    $resource = $this->addRelationshipLinks($resource, $relationshipKey);
+                }
+                return $resource;
+            }, $data['data']);
+        } else {
+            foreach ($availableIncludes as $relationshipKey) {
+                $data['data'] = $this->addRelationshipLinks($data['data'], $relationshipKey);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
+     * Adds links for all available includes to a single resource.
+     *
+     * @param array $resource         The resource to add relationship links to
+     * @param string $relationshipKey The resource key of the relationship
+     */
+    private function addRelationshipLinks(array $resource, string $relationshipKey): array
+    {
+        if (isset($resource['relationships'][$relationshipKey]['data'])) {
+            $resource['relationships'][$relationshipKey] = array_merge(
+                [
+                    'links' => [
+                        'self' => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/relationships/{$relationshipKey}",
+                        'related' => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/{$relationshipKey}",
+                    ]
+                ],
+                $resource['relationships'][$relationshipKey]
+            );
+        }
+
+        return $resource;
+    }
 }

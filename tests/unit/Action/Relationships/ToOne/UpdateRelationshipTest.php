@@ -49,14 +49,6 @@ class UpdateRelationshipTest extends TestCase
             'data' => [
                 'id' => User::ROOT_ID,
                 'type' => 'users',
-                'relationships' => [
-                    'roles' => [
-                        'links' => [
-                            'related' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/roles',
-                            'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles'
-                        ]
-                    ]
-                ],
                 'links' => [
                     'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d'
                 ]

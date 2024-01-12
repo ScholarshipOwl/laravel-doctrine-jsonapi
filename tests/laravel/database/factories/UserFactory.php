@@ -2,6 +2,7 @@
 /** @var LaravelDoctrine\ORM\Testing\Factory $factory */
 
 use Tests\App\Entities\User;
+use Tests\App\Entities\UserStatus;
 use Tests\App\Entities\Role;
 use Doctrine\Common\Collections\ArrayCollection;
 
@@ -11,6 +12,7 @@ $factory->defineAs(User::class, 'user', function (Faker\Generator $faker) {
         'name' => 'testing user1',
         'email' => 'test1email@test.com',
         'password' => 'secret',
+        'status' => entity(UserStatus::class, 'active')->create(),
         'roles' => new ArrayCollection([
             Role::user(),
         ]),
@@ -23,6 +25,7 @@ $factory->defineAs(User::class, 'root', function () {
         'name' => 'testing user2',
         'email' => 'test2email@gmail.com',
         'password' => 'secret',
+        'status' => entity(UserStatus::class, 'active')->create(),
         'roles' => new ArrayCollection([
             Role::user(),
             Role::root(),
@@ -36,6 +39,7 @@ $factory->defineAs(User::class, 'moderator', function () {
         'name' => 'testing user3',
         'email' => 'test3email@test.com',
         'password' => 'secret',
+        'status' => entity(UserStatus::class, 'active')->create(),
         'roles' => new ArrayCollection([
             Role::user(),
             Role::moderator(),

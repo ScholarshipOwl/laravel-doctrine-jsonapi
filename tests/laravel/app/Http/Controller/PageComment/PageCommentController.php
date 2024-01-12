@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\App\Http\Controller;
+namespace Tests\App\Http\Controller\PageComment;
 
 use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Default\WithRelatedTrait;

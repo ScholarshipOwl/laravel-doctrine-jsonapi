@@ -1,12 +1,11 @@
 <?php
 
-namespace Tests\App\Http\Controller;
+namespace Tests\App\Http\Controller\Pages;
 
 use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationshipAction;
 use Sowl\JsonApi\Default\WithShowTrait;
 use Sowl\JsonApi\Response;
-use Tests\App\Actions\Page\UpdatePageUserRequest;
 
 class PageController extends Controller
 {

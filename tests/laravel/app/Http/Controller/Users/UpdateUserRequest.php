@@ -1,11 +1,13 @@
 <?php
 
-namespace Tests\App\Actions\User;
+namespace Tests\App\Http\Controller\Users;
 
 use Illuminate\Support\Facades\Gate;
 use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Request;
-use Tests\App\Actions\User\Rules\AttachRoleToUserRule;
+use Sowl\JsonApi\Rules\ObjectIdentifierRule;
+use Tests\App\Entities\UserStatus;
+use Tests\App\Http\Controller\Users\Rules\AttachRoleToUserRule;
 
 class UpdateUserRequest extends Request
 {
@@ -20,6 +22,8 @@ class UpdateUserRequest extends Request
             'data.attributes.name' => 'sometimes|required|string',
             'data.attributes.email' => 'sometimes|required|email',
             'data.attributes.password' => 'sometimes|required|string',
+
+            'data.relationships.status.data' => ['sometimes', new ObjectIdentifierRule(UserStatus::class)],
 
             'data.relationships.roles.data' => 'sometimes|array',
             'data.relationships.roles.data.*' => [new AttachRoleToUserRule($this)]

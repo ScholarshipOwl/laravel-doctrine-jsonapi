@@ -1,11 +1,11 @@
 <?php
 
-namespace Tests\App\Actions\User\Relationships;
+namespace Tests\App\Http\Controller\Users\Relationships;
 
 use Sowl\JsonApi\Request;
-use Tests\App\Actions\User\Rules\AttachRoleToUserRule;
+use Tests\App\Http\Controller\Users\Rules\AttachRoleToUserRule;
 
-class AttachRolesToUserRequest extends Request
+class UpdateUserRolesRequest extends Request
 {
     public function dataRules(): array
     {

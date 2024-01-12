@@ -22,7 +22,6 @@ use Sowl\JsonApi\Exceptions\JsonApiException;
 abstract class AbstractAction
 {
     protected Request $request;
-    protected array $authorization = [];
 
     /**
      * Helper for new action object construction.

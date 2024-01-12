@@ -77,14 +77,6 @@ class ShowResourceTest extends TestCase
                         'email' => 'test1email@test.com',
                         'name' => 'testing user1',
                     ],
-                    'relationships' => [
-                        'roles' => [
-                            'links' => [
-                                'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
-                                'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles'
-                            ]
-                        ]
-                    ],
                     'links' => [
                         'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
                     ]
@@ -101,14 +93,6 @@ class ShowResourceTest extends TestCase
                         'email' => 'test2email@gmail.com',
                         'name' => 'testing user2',
                     ],
-                    'relationships' => [
-                        'roles' => [
-                            'links' => [
-                                'related' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/roles',
-                                'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles'
-                            ]
-                        ]
-                    ],
                     'links' => [
                         'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d'
                     ]
@@ -124,14 +108,6 @@ class ShowResourceTest extends TestCase
                     'attributes' => [
                         'email' => 'test3email@test.com',
                         'name' => 'testing user3',
-                    ],
-                    'relationships' => [
-                        'roles' => [
-                            'links' => [
-                                'related' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/roles',
-                                'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles'
-                            ]
-                        ]
                     ],
                     'links' => [
                         'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8'
@@ -221,14 +197,6 @@ class ShowResourceTest extends TestCase
                         'title' => 'JSON:API standard',
                         'content' => '<strong>JSON:API</strong>'
                     ],
-                    'relationships' => [
-                        'user' => [
-                            'links' => [
-                                'related' => '/pages/1/user',
-                                'self' => '/pages/1/relationships/user'
-                            ]
-                        ]
-                    ],
                     'links' => [
                         'self' => '/pages/1'
                     ]
@@ -249,20 +217,6 @@ class ShowResourceTest extends TestCase
                     'attributes' => [
                         'content' => '<span>It is mine comment</span>'
                     ],
-                    'relationships' => [
-                        'user' => [
-                            'links' => [
-                                'related' => '/pageComments/00000000-0000-0000-0000-000000000001/user',
-                                'self' => '/pageComments/00000000-0000-0000-0000-000000000001/relationships/user'
-                            ]
-                        ],
-                        'page' => [
-                            'links' => [
-                                'related' => '/pageComments/00000000-0000-0000-0000-000000000001/page',
-                                'self' => '/pageComments/00000000-0000-0000-0000-000000000001/relationships/page'
-                            ]
-                        ],
-                    ],
                     'links' => [
                         'self' => '/pageComments/00000000-0000-0000-0000-000000000001'
                     ]
@@ -276,20 +230,6 @@ class ShowResourceTest extends TestCase
                     'type' => 'pageComments',
                     'attributes' => [
                         'content' => '<span>I know better</span>'
-                    ],
-                    'relationships' => [
-                        'user' => [
-                            'links' => [
-                                'related' => '/pageComments/00000000-0000-0000-0000-000000000002/user',
-                                'self' => '/pageComments/00000000-0000-0000-0000-000000000002/relationships/user'
-                            ]
-                        ],
-                        'page' => [
-                            'links' => [
-                                'related' => '/pageComments/00000000-0000-0000-0000-000000000002/page',
-                                'self' => '/pageComments/00000000-0000-0000-0000-000000000002/relationships/page'
-                            ]
-                        ],
                     ],
                     'links' => [
                         'self' => '/pageComments/00000000-0000-0000-0000-000000000002'
@@ -305,20 +245,6 @@ class ShowResourceTest extends TestCase
                     'type' => 'pageComments',
                     'attributes' => [
                         'content' => '<span>I think he is right</span>'
-                    ],
-                    'relationships' => [
-                        'user' => [
-                            'links' => [
-                                'related' => '/pageComments/00000000-0000-0000-0000-000000000003/user',
-                                'self' => '/pageComments/00000000-0000-0000-0000-000000000003/relationships/user'
-                            ]
-                        ],
-                        'page' => [
-                            'links' => [
-                                'related' => '/pageComments/00000000-0000-0000-0000-000000000003/page',
-                                'self' => '/pageComments/00000000-0000-0000-0000-000000000003/relationships/page'
-                            ]
-                        ],
                     ],
                     'links' => [
                         'self' => '/pageComments/00000000-0000-0000-0000-000000000003'

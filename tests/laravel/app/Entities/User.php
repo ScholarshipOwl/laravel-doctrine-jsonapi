@@ -16,6 +16,7 @@ use Sowl\JsonApi\Default\Resource\WithFilterParsersTrait;
 use Sowl\JsonApi\Relationships\MemoizeRelationshipsTrait;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
+use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Resource\FilterableInterface;
 use Sowl\JsonApi\ResourceInterface;
 use Tests\App\Transformers\UserTransformer;
@@ -55,6 +56,7 @@ class User implements AuthenticatableContract,
     public static function relationships(): RelationshipsCollection
     {
         return static::memoizeRelationships(fn () => [
+            ToOneRelationship::create('status', UserStatus::class, 'status'),
             ToManyRelationship::create('roles', Role::class, 'users')
         ]);
     }
@@ -89,6 +91,12 @@ class User implements AuthenticatableContract,
      * @ORM\Column(name="password", type="string", nullable=false)
      */
     protected $password;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="UserStatus")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    protected ?UserStatus $status;
 
     /**
      * @ORM\ManyToMany(targetEntity="Role")
@@ -167,6 +175,17 @@ class User implements AuthenticatableContract,
     public function getName(): string
     {
         return $this->name;
+    }
+
+    public function setStatus(UserStatus $status): static
+    {
+        $this->status = $status;
+        return $this;
+    }
+
+    public function getStatus(): UserStatus
+    {
+        return $this->status;
     }
 
     public function getRoles(): Collection

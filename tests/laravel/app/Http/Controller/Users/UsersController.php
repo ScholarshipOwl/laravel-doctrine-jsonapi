@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\App\Http\Controller;
+namespace Tests\App\Http\Controller\Users;
 
 use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationshipsAction;
@@ -9,12 +9,12 @@ use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationshipsAction;
 use Sowl\JsonApi\Action\Resource\UpdateResourceAction;
 use Sowl\JsonApi\Default\WithListTrait;
 use Sowl\JsonApi\Response;
-use Tests\App\Actions\User\CreateUserAction;
-use Tests\App\Actions\User\CreateUserRequest;
-use Tests\App\Actions\User\Relationships\AttachRolesToUserRequest;
-use Tests\App\Actions\User\Relationships\DetachRolesFromUserRequest;
-use Tests\App\Actions\User\Relationships\UpdateUserRolesRequest;
-use Tests\App\Actions\User\UpdateUserRequest;
+use Tests\App\Http\Controller\Users\CreateUserAction;
+use Tests\App\Http\Controller\Users\CreateUserRequest;
+use Tests\App\Http\Controller\Users\Relationships\AttachRolesToUserRequest;
+use Tests\App\Http\Controller\Users\Relationships\DetachRolesFromUserRequest;
+use Tests\App\Http\Controller\Users\Relationships\UpdateUserRolesRequest;
+use Tests\App\Http\Controller\Users\UpdateUserRequest;
 use Tests\App\Entities\User;
 
 class UsersController extends Controller

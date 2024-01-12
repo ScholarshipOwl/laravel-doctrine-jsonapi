@@ -28,6 +28,14 @@ class ResourceManager
     }
 
     /**
+     * Returns the EntityManager object.
+     */
+    public function em(): EntityManager
+    {
+        return $this->em;
+    }
+
+    /**
      * Method takes a string that represents the name of a class and verifies if it implements the ResourceInterface.
      * It throws an exception if the class is not found or does not implement the interface.
      */

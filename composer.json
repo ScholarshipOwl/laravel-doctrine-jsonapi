@@ -7,7 +7,8 @@
     "license": "MIT",
     "scripts": {
         "test": "./vendor/bin/phpunit --config phpunit.xml",
-        "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --config phpunit.xml --coverage-html ./tests/coverage"
+        "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --config phpunit.xml --coverage-html ./tests/coverage",
+        "dev:migration:diff": "docker compose run php tests/artisan doctrine:migrations:diff --no-interaction\n"
     },
     "autoload": {
         "psr-4": {
