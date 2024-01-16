@@ -41,6 +41,12 @@ docker compose run php sh
 
 ### Roadmap
   - [ ] Make it possible to disable links generation. As it is not required by JSON:API spec and increases response size.
+  - [ ] Create a validation rule "resource", "resourceExists" for validating resource identifier. Example of usage:
+        ```php
+        $this->validate($request, [
+            'data' => 'required|resource:users',
+        ]);
+        ```
   - [ ] Create default global error handler or write down documentation how to create such one.
         How to handle missing route\endpoint 404 and internal 500 errors.
   - [ ] Create console command for resource policy generation: "jsonapi:make:policy".

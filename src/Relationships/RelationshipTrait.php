@@ -4,7 +4,7 @@ namespace Sowl\JsonApi\Relationships;
 
 use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\ResourceRepository;
-use Sowl\JsonApi\Rules\ObjectIdentifierRule;
+use Sowl\JsonApi\Rules\ResourceIdentifierRule;
 
 trait RelationshipTrait
 {
@@ -37,8 +37,8 @@ trait RelationshipTrait
         return $this->rm()->repositoryByClass($this->class());
     }
 
-    public function objectIdentifierRule(): ObjectIdentifierRule
+    public function objectIdentifierRule(): ResourceIdentifierRule
     {
-        return new ObjectIdentifierRule($this->class());
+        return new ResourceIdentifierRule($this->class());
     }
 }

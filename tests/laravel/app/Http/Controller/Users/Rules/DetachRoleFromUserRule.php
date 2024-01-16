@@ -3,11 +3,11 @@
 namespace Tests\App\Http\Controller\Users\Rules;
 
 use Sowl\JsonApi\Request;
-use Sowl\JsonApi\Rules\ObjectIdentifierRule;
+use Sowl\JsonApi\Rules\ResourceIdentifierRule;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 
-class DetachRoleFromUserRule extends ObjectIdentifierRule
+class DetachRoleFromUserRule extends ResourceIdentifierRule
 {
     public function __construct(protected Request $request)
     {

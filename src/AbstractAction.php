@@ -15,9 +15,9 @@ use Sowl\JsonApi\Exceptions\JsonApiException;
  * The "dispatch" method handles the request and generates response.
  * It's calling the "handle" method that can inject dependencies from Laravel DI.
  *
- * @method Response handle(...$args) The handle method must be implemented, but we do not define it as abstract
- *                                   because we PHP do not allow arguments override , and we want to use laravel
- *                                   dependency injection container to get dependencies.
+ * @method Response handle() The handle method must be implemented, but we do not define it as abstract
+ *                           because we PHP do not allow arguments override , and we want to use laravel
+ *                           dependency injection container to get dependencies.
  */
 abstract class AbstractAction
 {

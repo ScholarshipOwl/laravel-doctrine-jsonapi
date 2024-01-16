@@ -11,9 +11,18 @@ use Sowl\JsonApi\ResourceManager;
  * Validates if the `data` key contains an `id` of the entity with required `type`.
  * The target entity must implement JsonApiResource
  */
-class ObjectIdentifierRule implements Rule
+class ResourceIdentifierRule implements Rule
 {
     protected array $message = ['The :attribute field is invalid.'];
+
+    static public function make(
+        string $resourceClass,
+        mixed $rule = null,
+        array $messages = []
+    ): static
+    {
+        return new static($resourceClass, $rule, $messages);
+    }
 
     public function __construct(
         protected ?string $resourceClass = null,
@@ -24,6 +33,18 @@ class ObjectIdentifierRule implements Rule
         if (!is_null($this->resourceClass)) {
             $this->rm()->verifyResourceInterface($this->resourceClass);
         }
+    }
+
+    public function withRule(mixed $rule): static
+    {
+        $this->rule = $rule;
+        return $this;
+    }
+
+    public function withMessages(array $messages): static
+    {
+        $this->messages = $messages;
+        return $this;
     }
 
     /**

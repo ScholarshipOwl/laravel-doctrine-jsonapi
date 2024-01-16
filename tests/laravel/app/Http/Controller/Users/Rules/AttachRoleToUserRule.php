@@ -4,14 +4,14 @@ namespace Tests\App\Http\Controller\Users\Rules;
 
 use Illuminate\Support\Facades\Gate;
 use Sowl\JsonApi\Request;
-use Sowl\JsonApi\Rules\ObjectIdentifierRule;
+use Sowl\JsonApi\Rules\ResourceIdentifierRule;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 
 /**
  * The rule will verify that authorized user have access to assign role on the user.
  */
-class AttachRoleToUserRule extends ObjectIdentifierRule
+class AttachRoleToUserRule extends ResourceIdentifierRule
 {
     public function __construct(protected Request $request)
     {

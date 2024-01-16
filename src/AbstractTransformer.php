@@ -2,6 +2,7 @@
 
 namespace Sowl\JsonApi;
 
+use League\Fractal\Resource\Item;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\TransformerAbstract;
 use Sowl\JsonApi\Fractal\Scope;
@@ -86,10 +87,15 @@ abstract class AbstractTransformer extends TransformerAbstract
         return $meta;
     }
 
+    protected function resource(ResourceInterface $resource): Item
+    {
+        return parent::item($resource, $resource->transformer(), $resource->getResourceType());
+    }
+
     /**
      * Primitive values are not supported in this transformer. This method will throw an exception.
      */
-    protected function primitive($data, $transformer = null, $resourceType = null): Primitive
+    protected function primitive($data, $transformer = null, $resourceKey = null): Primitive
     {
         throw new \RuntimeException('Primitive values is not supported.');
     }
