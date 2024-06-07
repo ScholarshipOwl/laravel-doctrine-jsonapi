@@ -131,7 +131,7 @@ class Request extends FormRequest
                 $path = $this->pathWithoutPrefix();
 
                 $matches = [];
-                $pattern = "/^${resourceType}\/${id}\/(relationships\/)?([^\/.]*)\/?.*$/";
+                $pattern = "/^{$resourceType}\/{$id}\/(relationships\/)?([^\/.]*)\/?.*$/";
                 if (preg_match($pattern, $path, $matches)) {
                     $relationshipName = $matches[2];
                 }
