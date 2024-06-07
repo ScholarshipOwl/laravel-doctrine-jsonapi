@@ -78,7 +78,7 @@ class ResourceRepository extends EntityRepository
     {
         if (null === ($entity = $this->find($id))) {
             throw NotFoundException::create()->detail(
-                sprintf('Resource type "%s" and id "%s" is not found.', $id, $this->getResourceType())
+                sprintf('Resource type "%s" and id "%s" is not found.', $this->getResourceType(), $id)
             );
         }
 
