@@ -3,6 +3,7 @@
 namespace Sowl\JsonApi;
 
 use League\Fractal\Resource\Item;
+use League\Fractal\Resource\NullResource;
 use League\Fractal\Resource\Primitive;
 use League\Fractal\TransformerAbstract;
 use Sowl\JsonApi\Fractal\Scope;
@@ -90,6 +91,11 @@ abstract class AbstractTransformer extends TransformerAbstract
     protected function resource(ResourceInterface $resource): Item
     {
         return parent::item($resource, $resource->transformer(), $resource->getResourceType());
+    }
+
+    protected function nullable(?ResourceInterface $resource): Item | NullResource
+    {
+        return $resource ? $this->resource($resource) : $this->null();
     }
 
     /**
