@@ -3,6 +3,7 @@
 namespace Tests\Action\Relationships\ToMany;
 
 use Sowl\JsonApi\Response;
+use Tests\App\Entities\Page;
 use Tests\App\Entities\Role;
 use Tests\TestCase;
 
@@ -36,6 +37,22 @@ class ListRelatedResourcesTest extends TestCase
     public function testNotFoundRelationship(): void
     {
         $this->get('/pageComments/00000000-0000-0000-0000-000000000001/relationships/notexists')->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
+    public function testListRelatedOneToManyRelationship(): void
+    {
+        $this->actingAsUser();
+
+        $this->get('/pages/1/pageComments')
+            ->assertJson([
+                'data' => [
+                    [
+                        'type' => 'pageComments',
+                        'id' => '00000000-0000-0000-0000-000000000001'
+                    ]
+                ]
+            ])
+            ->assertOk();
     }
 
     public function testListRelatedUserRolesResponse()

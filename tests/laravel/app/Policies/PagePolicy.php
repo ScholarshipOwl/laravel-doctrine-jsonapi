@@ -44,4 +44,9 @@ class PagePolicy
     {
         return $user->hasRole(Role::moderator());
     }
+
+    public function viewAnyPageComments(User $user, Page $page): bool
+    {
+        return $user === $page->getUser();
+    }
 }

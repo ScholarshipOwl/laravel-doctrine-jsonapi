@@ -46,10 +46,38 @@ class ListRelatedAction extends AbstractAction
         $relatedRepo = $this->relationship->repository();
         $mappedByAlias = $mappedBy.'relation';
 
+        $relationshipField = $this->isIdentityMustBeUsed() ? 'identity('.$mappedByAlias.')' : $mappedByAlias;
+
         return $relatedRepo->resourceQueryBuilder()
             ->innerJoin(sprintf('%s.%s', $relatedRepo->alias(), $mappedBy), $mappedByAlias)
-            ->addCriteria(
-                Criteria::create()->andWhere(Criteria::expr()->eq($mappedByAlias, $resource->getId()))
-            );
+            ->andWhere(sprintf('%s = :resource', $relationshipField))
+            ->setParameter('resource', $resource);
+    }
+
+    /**
+     * Determines if the "identity()" function must be used in the query.
+     *
+     * This method checks the metadata of the repository to determine whether
+     * any of the identifier fields in the entity's metadata are also part of
+     * the association mappings. If so, it indicates that the "identity()"
+     * function should be used for building the query.
+     *
+     * Basically, if identifier is association\relationship we must use identity() function in comparison.
+     *
+     * @return bool True if "identity()" must be used, false otherwise.
+     */
+    private function isIdentityMustBeUsed(): bool
+    {
+        $metadata = $this->repository()->metadata();
+        $identifiers = $metadata->getIdentifierFieldNames();
+        $associationsMappings = $metadata->getAssociationMappings();
+
+        foreach ($identifiers as $identifier) {
+            if (isset($associationsMappings[$identifier])) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
