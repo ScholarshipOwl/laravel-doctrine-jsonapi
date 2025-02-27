@@ -2,26 +2,52 @@
 Implement feature-rich [JSON:API](https://jsonapi.org/) compliant APIs
 in your [Laravel](https://laravel.com/) applications using [Doctrine ORM](https://www.doctrine-project.org/).
 
+## Overview
+This package provides a comprehensive implementation of the JSON:API specification for Laravel applications using Doctrine ORM instead of Eloquent. It reduces boilerplate code by offering default controllers and actions that handle standard API operations while ensuring full compliance with the JSON:API standard.
+
 ## Features
-- Built for Doctrine ORM
-- Battle-tested
-- Standardised, consistent APIs
-- Fetch resources
-- Fetch relationships
-- Inclusion of related resources (compound documents)
-- Sparse field sets
-- Sorting
-- Pagination
-- Filtering
-- Create resources
-- Update resources
-- Update relationships
-- Delete resources
+- **Complete JSON:API Implementation**: Full compliance with the JSON:API specification
+- **Built for Doctrine ORM**: Designed specifically for Laravel applications using Doctrine ORM
+- **Battle-tested**: Production-ready and robust
+- **Standardised, Consistent APIs**: Uniform interface for all resources
+- **Resource Operations**:
+  - Fetch resources with advanced querying
+  - Fetch and manipulate relationships
+  - Inclusion of related resources (compound documents)
+  - Sparse field sets
+  - Sorting
+  - Pagination
+  - Filtering
+- **Full CRUD Support**:
+  - Create resources
+  - Update resources
+  - Update relationships
+  - Delete resources
+- **Authorization**: Policy-based access control
+
+## Quick Start
+
+### Installation
+```bash
+composer require sowl/laravel-doctrine-jsonapi
+```
+
+### Configuration
+```bash
+php artisan vendor:publish --provider="Sowl\JsonApi\JsonApiServiceProvider"
+```
+
+### Usage
+1. Implement `ResourceInterface` on your Doctrine entities
+2. Create transformers extending `AbstractTransformer`
+3. Define entity relationships using `RelationshipsCollection`
+4. Register resources in the `config/jsonapi.php` file
+5. Use the default controller or create custom ones
 
 ## Documentation
-Installation instructions, config guides and tutorials.
+For detailed installation instructions, configuration guides and tutorials:
 
-[Documentation](./docs/README.md)
+[Read the Documentation](./docs/README.md)
 
 ## Development
 Clone the project locally.
