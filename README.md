@@ -40,6 +40,7 @@ docker compose run php sh
 [Testing Documentation](./tests)
 
 ### Roadmap
+  - [ ] Add documentation about the `meta` param usage. ( meta[account]=mailbox&meta[profile]=completeness )
   - [ ] Make it possible to disable links generation. As it is not required by JSON:API spec and increases response size.
   - [ ] Create a validation rule "resource", "resourceExists" for validating resource identifier. Example of usage:
         ```php
