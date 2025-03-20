@@ -32,7 +32,7 @@
         "mockery/mockery": "^1.5",
         "laravel-doctrine/extensions": "^1.6",
         "gedmo/doctrine-extensions": "^3.11",
-        "fzaninotto/faker": "^1.5"
+        "fakerphp/faker": "^1.24"
     },
     "require": {
         "league/fractal": "^0.20.1",
