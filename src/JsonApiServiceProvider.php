@@ -24,6 +24,7 @@ class JsonApiServiceProvider extends ServiceProvider
         $this->registerResponseFactory();
         $this->registerResourceManager();
         $this->registerResourceManipulator();
+        $this->registerDocumentation();
     }
 
     public function bootConfig()
@@ -72,5 +73,18 @@ class JsonApiServiceProvider extends ServiceProvider
         $this->app->singleton(ResourceManipulator::class, function (Application $app) {
             return new ResourceManipulator($app['em'], $app[ResourceManager::class]);
         });
+    }
+    
+    /**
+     * Register documentation services if Scribe is available
+     *
+     * @return void
+     */
+    protected function registerDocumentation()
+    {
+        // Register documentation services only if Scribe is available
+        if (class_exists('Knuckles\Scribe\ScribeServiceProvider')) {
+            $this->app->register(Scribe\ScribeServiceProvider::class);
+        }
     }
 }

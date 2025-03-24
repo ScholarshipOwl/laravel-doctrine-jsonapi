@@ -87,6 +87,12 @@ Entity policies are required to enforce API resources access through autorizatio
 
 [Policies Implementation Guide](./Policies.md)
 
+### API Documentation
+
+This package integrates with Scribe to generate API documentation automatically.
+
+[Scribe Integration Guide](./Scribe.md)
+
 ### API Testing
 Test your API with help of [Laravel HTTP Tests](https://laravel.com/docs/9.x/http-tests).
 

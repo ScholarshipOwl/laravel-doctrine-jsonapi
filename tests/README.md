@@ -9,6 +9,13 @@ docker compose run php phpunit
 ## Laravel
 We install Laravel as composer dev dependency and putting all it's files into the [tests/laravel]() folder. Doctrine is set up in this laravel instance and some testing entities created.
 
+## Artisan
+Use next command and file `artisan` for running Laravel artisan for testign purposes.
+
+```shell
+php artisan ...
+```
+
 ## Database
 We are using SQLite in memory database. Each time we start the tests we apply migrations from the [./database/migrations](./database/migrations) folder. After change in the entities metadata we need to create a new schema in our migration folder.
 
@@ -26,3 +33,11 @@ You can find seeders in the [./database/seeders](./database/seeders) folder. You
 ```php
 $this->seed(\laravel\database\seeders\SetUpSeeder::class);
 ```
+
+## Documentation
+We can generate documentation for this test instance.
+
+```shell
+docker compose run php tests/artisan scribe:generate
+```
+
