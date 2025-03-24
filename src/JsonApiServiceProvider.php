@@ -17,16 +17,6 @@ class JsonApiServiceProvider extends ServiceProvider
         $this->bootConfig();
     }
 
-    public function register()
-    {
-        $this->mergeConfigFrom(__DIR__.'/../config/jsonapi.php', 'jsonapi');
-        $this->registerRequest();
-        $this->registerResponseFactory();
-        $this->registerResourceManager();
-        $this->registerResourceManipulator();
-        $this->registerDocumentation();
-    }
-
     public function bootConfig()
     {
         $this->publishes([
@@ -34,8 +24,19 @@ class JsonApiServiceProvider extends ServiceProvider
         ], 'jsonapi-config');
 
         $this->publishes([
-            __DIR__.'/../routes/jsonapi.php' => base_path('routes/jsonapi.php')
+            __DIR__.'/../routes/jsonapi.php' => base_path('routes/jsonapi.php'),
         ], 'jsonapi-routes');
+    }
+
+    public function register()
+    {
+        $this->mergeConfigFrom(__DIR__.'/../config/jsonapi.php', 'jsonapi');
+
+        $this->registerRequest();
+        $this->registerResponseFactory();
+        $this->registerResourceManager();
+        $this->registerResourceManipulator();
+        $this->registerDocumentation();
     }
 
     public function registerRequest()
@@ -74,7 +75,7 @@ class JsonApiServiceProvider extends ServiceProvider
             return new ResourceManipulator($app['em'], $app[ResourceManager::class]);
         });
     }
-    
+
     /**
      * Register documentation services if Scribe is available
      *

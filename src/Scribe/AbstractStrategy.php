@@ -7,6 +7,8 @@ use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Extracting\Strategies\Strategy;
 use ReflectionClass;
 use Sowl\JsonApi\ResourceManager;
+use Sowl\JsonApi\Routing\RelationshipNameExtractor;
+use Sowl\JsonApi\Routing\ResourceTypeExtractor;
 
 /**
  * Abstract base strategy for JSON:API documentation.
@@ -15,6 +17,8 @@ use Sowl\JsonApi\ResourceManager;
 abstract class AbstractStrategy extends Strategy
 {
     protected ResourceManager $resourceManager;
+    protected ResourceTypeExtractor $resourceTypeExtractor;
+    protected RelationshipNameExtractor $relationshipNameExtractor;
 
     /**
      * Constructor
@@ -26,6 +30,8 @@ abstract class AbstractStrategy extends Strategy
     {
         parent::__construct($config);
         $this->resourceManager = $resourceManager ?? app(ResourceManager::class);
+        $this->resourceTypeExtractor = new ResourceTypeExtractor();
+        $this->relationshipNameExtractor = new RelationshipNameExtractor();
     }
 
     /**
@@ -33,45 +39,33 @@ abstract class AbstractStrategy extends Strategy
      */
     public function isJsonApi(ExtractedEndpointData $endpointData): bool
     {
-        return \Str::startsWith($endpointData->name(), 'jsonapi.');
+        $routeName = $endpointData->route->getName();
+        return \Str::startsWith($routeName, 'jsonapi.');
     }
 
+    /**
+     * Determine if the route is a list route (returns multiple resources)
+     *
+     * @param ExtractedEndpointData $endpointData
+     * @return bool
+     */
     public function isListRoute(ExtractedEndpointData $endpointData): bool
     {
-        if (\Str::endsWith($endpointData->name(), '.list')) {
+        // Routes explicitly marked as list routes
+        if (\Str::endsWith($endpointData->route->getName(), '.list')) {
             return true;
         }
 
-        if (in_array($endpointData->name(), $this->getListRelationshipsRouteSuffixes())) {
-            // Extract the relationship name from the route
-            $routeParts = explode('.', $endpointData->name());
-            $relationshipName = $routeParts[count($routeParts) - 2] ?? null;
-            
-            // Get the resource type from route
-            $resourceType = $this->extractResourceTypeFromRoute($endpointData->route);
-            
-            if ($resourceType && $relationshipName) {
-                // Check if the resource exists and if the relationship is to-many
-                try {
-                    if ($this->resourceManager->hasResourceType($resourceType)) {
-                        // Get relationships collection for the resource type
-                        $relationships = $this->resourceManager->relationshipsByResourceType($resourceType);
-                        
-                        // Check if the relationship exists and if it's to-many
-                        if ($relationships->has($relationshipName)) {
-                            $relationship = $relationships->get($relationshipName);
-                            // Check if it's a to-many relationship by checking the instance type
-                            return $relationship instanceof \Sowl\JsonApi\Relationships\ToManyRelationship;
-                        }
-                    }
-                } catch (\Exception $e) {
-                    // If we can't determine the relationship type, default to previous behavior
-                    return true;
-                }
-            }
-            
-            // If we can't determine the relationship type, default to previous behavior
-            return true;
+        // Get the resource type and relationship name from the route
+        $resourceType = $this->resourceTypeExtractor->extract($endpointData->route);
+        $relationshipName = $this->relationshipNameExtractor->extract($endpointData->route);
+
+        if ($resourceType && $relationshipName) {
+            $relationship = $this->resourceManager
+                ->relationshipsByResourceType($resourceType)
+                ->get($relationshipName);
+
+            return $relationship instanceof \Sowl\JsonApi\Relationships\ToManyRelationship;
         }
 
         return false;
@@ -99,30 +93,6 @@ abstract class AbstractStrategy extends Strategy
         ];
 
         return $actionTypeMap[$methodName] ?? 'other';
-    }
-
-    /**
-     * Extract resource type from route parameters or URI
-     *
-     * @param Route $route
-     * @return string|null
-     */
-    protected function extractResourceTypeFromRoute(Route $route): ?string
-    {
-        // First check if this is a specific resource route
-        $uri = $route->uri();
-        if (preg_match('/^(\w+)\//', $uri, $matches)) {
-            // Specific resource like 'users', 'roles', etc.
-            return $matches[1];
-        }
-
-        // Check if this is a generic {resourceType} route
-        $parameterNames = $route->parameterNames();
-        if (in_array('resourceType', $parameterNames)) {
-            return '{resourceType}';
-        }
-
-        return null;
     }
 
     /**

@@ -1,0 +1,43 @@
+## Code generation
+  - If you want to add string constant ask for confirmation
+
+### Step-by-Step Approach
+
+When using the "Step-by-Step" approach:
+
+1. **Analyze**: First analyze the problem or task at hand
+2. **Propose**: Propose a single, specific action to take
+  2.1 Add to proposition some pseudocode or code snippet
+3. **Wait**: Wait for explicit confirmation before proceeding
+  3.1 If proposed action exectly what you suggest to do you can proceed.
+4. **Execute**: Only after receiving confirmation, execute the agreed-upon action
+5. **Report**: Report the results of the action
+6. **Repeat**: Return to step 2 for the next actio
+
+## Code Style
+  - Write human readable code
+  - Use 4 spaces for indentation
+  - Use 120 characters for line width
+  - Use PSR-12 for code style
+  - Use Laravel's coding standards
+  - Remove any unnecessary whitespace
+  - Don't create phpdoc with params if it's possible to type hint them
+  - Type hint all variables and parameters
+
+## Unit Tests
+  - Run tests after each code change
+  - Write tests for new code
+  - Use PHPUnit for unit testing
+  - Use Mockery for mocking
+    - Create mocks ONLY when needed
+    - Don't create mocks for tested classes
+    - assign mocks to variables with prefix `$mock...`
+  - Use Laravel's testing helpers
+
+## Code Refactoring
+  - Make minimal changes to fix issues
+    - Focus on the specific problem rather than rewriting large sections
+    - Update tests to match implementation changes when necessary
+    - Prefer direct fixes over complex abstractions
+    - When refactoring, maintain existing patterns and conventions
+    - Test after each significant change

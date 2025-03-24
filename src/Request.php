@@ -14,6 +14,8 @@ use Sowl\JsonApi\Request\WithFieldsParamsTrait;
 use Sowl\JsonApi\Request\WithFilterParamsTrait;
 use Sowl\JsonApi\Request\WithIncludeParamsTrait;
 use Sowl\JsonApi\Request\WithPaginationParamsTrait;
+use Sowl\JsonApi\Routing\RelationshipNameExtractor;
+use Sowl\JsonApi\Routing\ResourceTypeExtractor;
 
 /**
  * Class Request
@@ -29,11 +31,9 @@ class Request extends FormRequest
     use WithPaginationParamsTrait;
 
     protected ResourceInterface $resource;
-    protected ResourceRepository $repository;
+    protected ?string $resourceType = null;
+    protected ?string $relationshipName = null;
     protected ToOneRelationship|ToManyRelationship $relationship;
-
-    protected string $resourceType;
-    protected ?string $relationshipName;
 
     const JSONAPI_CONTENT_TYPE = 'application/vnd.api+json';
 
@@ -89,20 +89,20 @@ class Request extends FormRequest
 
     /**
      * Gets the "resourceType" route param value.
-     * If custom route is used without the "resourceType", regexp used to get the resource type from URL.
+     * If custom route is used without the "resourceType", we use the ResourceTypeExtractor.
      * If resource not found NotFoundException thrown, as any JSON:API request must have resourceType.
      * URI Part resourceType: "/prefix/../[resourceType]/..."
      */
     public function resourceType(): string
     {
         if (!isset($this->resourceType)) {
+            // Try to get from route parameter first
             $resourceType = $this->route('resourceType');
-
+            
+            // If not found in route parameter, use ResourceTypeExtractor
             if (is_null($resourceType)) {
-                $matches = [];
-                if (preg_match('/^([^\/.]*)\/?.*$/', $this->pathWithoutPrefix(), $matches)) {
-                    $resourceType = $matches[1];
-                }
+                $extractor = new ResourceTypeExtractor();
+                $resourceType = $extractor->extract($this->route());
             }
 
             if (is_null($resourceType) || !$this->rm()->hasResourceType($resourceType)) {
@@ -117,24 +117,20 @@ class Request extends FormRequest
 
     /**
      * Gets the relationship name URI part from the request.
-     * First we try to get relationship name from "relationship" route param value, if no route param regex used.
+     * First we try to get relationship name from "relationship" route param value, if no route param we use RelationshipNameExtractor.
      * Will be null if request is not relationship request.
      * URI Part relationshipName: "/prefix/../resourceType/(relationships)?/[relationshipName]..."
      */
     public function relationshipName(): ?string
     {
         if (!isset($this->relationshipName)) {
+            // Try to get from route parameter first
             $relationshipName = $this->route('relationship');
-
-            if (is_null($relationshipName) && ($id = $this->getId())) {
-                $resourceType = $this->resourceType();
-                $path = $this->pathWithoutPrefix();
-
-                $matches = [];
-                $pattern = "/^{$resourceType}\/{$id}\/(relationships\/)?([^\/.]*)\/?.*$/";
-                if (preg_match($pattern, $path, $matches)) {
-                    $relationshipName = $matches[2];
-                }
+            
+            // If not found in route parameter, use RelationshipNameExtractor
+            if (is_null($relationshipName)) {
+                $extractor = new RelationshipNameExtractor();
+                $relationshipName = $extractor->extract($this->route());
             }
 
             $this->relationshipName = $relationshipName;
