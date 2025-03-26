@@ -1,4 +1,6 @@
-<?php namespace Tests\App\Entities;
+<?php
+
+namespace Tests\App\Entities;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,11 +26,12 @@ use Tests\App\Transformers\UserTransformer;
  * @ORM\Entity(repositoryClass="Tests\App\Repositories\UsersRepository")
  * @ORM\Table(name="users")
  */
-class User implements AuthenticatableContract,
-                      AuthorizableContract,
-                      CanResetPasswordContract,
-                      ResourceInterface,
-                      FilterableInterface
+class User implements
+    AuthenticatableContract,
+    AuthorizableContract,
+    CanResetPasswordContract,
+    ResourceInterface,
+    FilterableInterface
 {
     use CanResetPassword;
     use Authenticatable;
@@ -202,7 +205,7 @@ class User implements AuthenticatableContract,
 
     public function removeRole(Role $role): static
     {
-        if ($role !== Role::user()){
+        if ($role !== Role::user()) {
             $this->roles->removeElement($role);
         }
 

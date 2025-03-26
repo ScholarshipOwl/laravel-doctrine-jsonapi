@@ -15,5 +15,6 @@ ENV PATH="${PATH}:/opt/project/vendor/bin"
 # Configurations files
 COPY conf.d/error_reporting.ini $PHP_INI_DIR/conf.d/error_reporting.ini
 COPY conf.d/xdebug.ini $PHP_INI_DIR/conf.d/xdebug.ini
+COPY conf.d/custom.ini $PHP_INI_DIR/conf.d/custom.ini
 
 WORKDIR /opt/project

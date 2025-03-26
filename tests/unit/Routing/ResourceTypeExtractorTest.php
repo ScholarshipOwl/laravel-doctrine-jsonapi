@@ -9,7 +9,7 @@ use Tests\TestCase;
 class ResourceTypeExtractorTest extends TestCase
 {
     private ResourceTypeExtractor $extractor;
-    
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -23,14 +23,14 @@ class ResourceTypeExtractorTest extends TestCase
     {
         // Arrange
         $route = new Route('GET', $uri, $options);
-        
+
         // Act
         $actualResourceType = $this->extractor->extract($route);
-        
+
         // Assert
         $this->assertEquals($expectedResourceType, $actualResourceType);
     }
-    
+
     /**
      * Provides test cases for resource type extraction
      *
@@ -40,83 +40,83 @@ class ResourceTypeExtractorTest extends TestCase
     {
         return [
             'simple resource' => [
-                'users', 
+                'users',
                 'users',
                 []
             ],
             'resource with id' => [
-                'users/{id}', 
+                'users/{id}',
                 'users',
                 []
             ],
             'prefixed resource' => [
-                'users', 
+                'users',
                 'users',
                 ['prefix' => 'api/v1']
             ],
             'nested resource' => [
-                'users/{id}/posts', 
+                'users/{id}/posts',
                 'users',
                 []
             ],
             'relationship' => [
-                'users/{id}/relationships/posts', 
+                'users/{id}/relationships/posts',
                 'users',
                 []
             ],
             'multiple parameters' => [
-                'users/{userId}/posts/{postId}', 
+                'users/{userId}/posts/{postId}',
                 'users',
                 []
             ],
             'resource type parameter' => [
-                '{resourceType}/{id}', 
+                '{resourceType}/{id}',
                 null,
                 []
             ],
             // Additional creative test cases
             'kebab-case resource' => [
-                'blog-posts', 
+                'blog-posts',
                 'blog-posts',
                 []
             ],
             'snake_case resource' => [
-                'user_profiles', 
+                'user_profiles',
                 'user_profiles',
                 []
             ],
             'multiple prefixes' => [
-                'admin/users', 
+                'admin/users',
                 'admin',
                 ['prefix' => 'api/v2']
             ],
             'complex nested resources' => [
-                'organizations/{orgId}/departments/{deptId}/employees/{empId}/tasks', 
+                'organizations/{orgId}/departments/{deptId}/employees/{empId}/tasks',
                 'organizations',
                 []
             ],
             'resource with query parameter in route definition' => [
-                'search/{query?}', 
+                'search/{query?}',
                 'search',
                 []
             ],
             'resource with regex constraint' => [
-                'articles/{id:[0-9]+}', 
+                'articles/{id:[0-9]+}',
                 'articles',
                 []
             ],
             'deeply nested API version' => [
-                'beta/users', 
+                'beta/users',
                 'beta',
                 ['prefix' => 'api/v3.1']
             ],
             'resource with dot notation' => [
-                'api.v1.users', 
+                'api.v1.users',
                 'api.v1.users',
                 []
             ],
             'empty URI' => [
-                '', 
+                '',
                 null,
                 []
             ]

@@ -1,4 +1,6 @@
-<?php namespace Tests\App\Transformers;
+<?php
+
+namespace Tests\App\Transformers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;

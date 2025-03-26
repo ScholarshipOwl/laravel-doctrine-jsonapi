@@ -37,7 +37,7 @@ class ListRelationshipsTest extends TestCase
     {
         $user = $this->actingAsUser();
 
-        $this->get('/users/'.$user->getId().'/relationships/roles')
+        $this->get('/users/' . $user->getId() . '/relationships/roles')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -54,7 +54,7 @@ class ListRelationshipsTest extends TestCase
         $user->addRole(Role::root());
         $this->em()->flush();
 
-        $this->get('/users/'.$user->getId().'/relationships/roles')
+        $this->get('/users/' . $user->getId() . '/relationships/roles')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -85,7 +85,7 @@ class ListRelationshipsTest extends TestCase
         $this->em()->flush();
 
 
-        $this->get('/users/'.$user->getId().'/relationships/roles?sort=-id')
+        $this->get('/users/' . $user->getId() . '/relationships/roles?sort=-id')
             ->assertStatus(200)
             ->assertJson([
                 'data' => [
@@ -95,7 +95,7 @@ class ListRelationshipsTest extends TestCase
                 ]
             ]);
 
-        $this->get('/users/'.$user->getId().'/relationships/roles?page[number]=2&page[size]=1')
+        $this->get('/users/' . $user->getId() . '/relationships/roles?page[number]=2&page[size]=1')
             ->assertStatus(200)
             ->assertJson([
                 'data' => [
@@ -103,7 +103,7 @@ class ListRelationshipsTest extends TestCase
                 ]
             ]);
 
-        $this->get('/users/'.$user->getId().'/relationships/roles?page[offset]=2&page[limit]=1')
+        $this->get('/users/' . $user->getId() . '/relationships/roles?page[offset]=2&page[limit]=1')
             ->assertStatus(200)
             ->assertJson([
                 'data' => [

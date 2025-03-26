@@ -38,6 +38,17 @@ $this->seed(\laravel\database\seeders\SetUpSeeder::class);
 We can generate documentation for this test instance.
 
 ```shell
-docker compose run php tests/artisan scribe:generate
+docker compose run php tests/artisan scribe:generate --no-upgrade-check --force
 ```
 
+or 
+
+```shell
+composer run-script -d ../ test:scribe:generate
+```
+
+
+### Scalar
+We suggest to render the Open API documentation with [Scalar](https://github.com/scalar/scalar).
+
+For that you can open the [./scalar/index.html](./scalar/index.html) file using PHP Storm re-view feature.

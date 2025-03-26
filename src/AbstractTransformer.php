@@ -59,19 +59,19 @@ abstract class AbstractTransformer extends TransformerAbstract
 
         $meta = [];
         foreach ($filteredMeta as $metaField) {
-            $methodName = 'meta'.str_replace(
+            $methodName = 'meta' . str_replace(
+                ' ',
+                '',
+                ucwords(str_replace(
+                    '_',
                     ' ',
-                    '',
-                    ucwords(str_replace(
-                        '_',
+                    str_replace(
+                        '-',
                         ' ',
-                        str_replace(
-                            '-',
-                            ' ',
-                            $metaField
-                        )
-                    ))
-                );
+                        $metaField
+                    )
+                ))
+            );
 
             if (!method_exists($this, $methodName)) {
                 throw new \RuntimeException(sprintf(

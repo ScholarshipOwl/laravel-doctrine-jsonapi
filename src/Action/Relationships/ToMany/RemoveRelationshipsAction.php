@@ -10,7 +10,8 @@ class RemoveRelationshipsAction extends AbstractAction
 {
     public function __construct(
         protected ToManyRelationship $relationship,
-    ) {}
+    ) {
+    }
 
     public function handle(): Response
     {

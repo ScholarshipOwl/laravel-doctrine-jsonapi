@@ -60,7 +60,7 @@ class ListRelatedResourcesTest extends TestCase
         $user = $this->actingAsUser();
         $roles = $user->getRoles()->toArray();
 
-        $this->get('/users/'.$user->getId().'/roles')
+        $this->get('/users/' . $user->getId() . '/roles')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -80,7 +80,7 @@ class ListRelatedResourcesTest extends TestCase
         $user->addRole(Role::root());
         $this->em()->flush();
 
-        $this->get('/users/'.$user->getId().'/roles')
+        $this->get('/users/' . $user->getId() . '/roles')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -117,7 +117,7 @@ class ListRelatedResourcesTest extends TestCase
         $this->em()->flush();
 
 
-        $this->get('/users/'.$user->getId().'/roles?sort=-id')
+        $this->get('/users/' . $user->getId() . '/roles?sort=-id')
             ->assertStatus(200)
             ->assertJson([
                 'data' => [
@@ -127,7 +127,7 @@ class ListRelatedResourcesTest extends TestCase
                 ]
             ]);
 
-        $this->get('/users/'.$user->getId().'/roles?page[number]=2&page[size]=1')
+        $this->get('/users/' . $user->getId() . '/roles?page[number]=2&page[size]=1')
             ->assertStatus(200)
             ->assertJson([
                 'data' => [
@@ -135,7 +135,7 @@ class ListRelatedResourcesTest extends TestCase
                 ]
             ]);
 
-        $this->get('/users/'.$user->getId().'/roles?page[offset]=2&page[limit]=1')
+        $this->get('/users/' . $user->getId() . '/roles?page[offset]=2&page[limit]=1')
             ->assertStatus(200)
             ->assertJson([
                 'data' => [

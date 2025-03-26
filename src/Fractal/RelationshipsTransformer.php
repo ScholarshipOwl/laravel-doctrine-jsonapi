@@ -27,7 +27,9 @@ class RelationshipsTransformer extends AbstractTransformer
     /**
      * The constructor takes a TransformerAbstract instance as an argument and sets it as the $parent property.
      */
-    public function __construct(protected TransformerAbstract $parent) {}
+    public function __construct(protected TransformerAbstract $parent)
+    {
+    }
 
     /**
      * This method takes a ResourceInterface object and returns an array containing only the resource's ID and

@@ -8,7 +8,9 @@ use Sowl\JsonApi\AbstractAction;
 
 class UpdateRelationshipAction extends AbstractAction
 {
-    public function __construct(protected ToOneRelationship $relationship) {}
+    public function __construct(protected ToOneRelationship $relationship)
+    {
+    }
 
     public function handle(): Response
     {

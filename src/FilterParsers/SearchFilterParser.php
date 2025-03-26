@@ -29,9 +29,9 @@ class SearchFilterParser extends AbstractFilterParser
      * optional search key (which defaults to 'search'). It calls the parent constructor to store the Request object.
      */
     public function __construct(
-        Request           $request,
+        Request $request,
         protected ?string $property,
-        protected string  $searchKey = self::SEARCH_KEY
+        protected string $searchKey = self::SEARCH_KEY
     ) {
         parent::__construct($request);
     }

@@ -15,7 +15,7 @@ class AddJsonApiHeadersStrategy extends AbstractStrategy
      */
     public function __invoke(ExtractedEndpointData $endpointData, array $settings = []): array
     {
-        if (!$this->isJsonApi($endpointData)) {
+        if (!$this->initJsonApiEndpointData($endpointData)) {
             // Not a JSON:API route, skip
             return [];
         }

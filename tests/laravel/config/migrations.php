@@ -43,7 +43,7 @@ return [
         ],
 
         'migrations_paths' => [
-            'Database\\Migrations' => realpath(__DIR__).'/../database/migrations'
+            'Database\\Migrations' => realpath(__DIR__) . '/../database/migrations'
         ],
 
         /*

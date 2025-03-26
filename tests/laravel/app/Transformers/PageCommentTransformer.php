@@ -1,4 +1,6 @@
-<?php namespace Tests\App\Transformers;
+<?php
+
+namespace Tests\App\Transformers;
 
 use League\Fractal\Resource\Item;
 use Sowl\JsonApi\AbstractTransformer;

@@ -8,10 +8,12 @@ use Sowl\JsonApi\Response;
 
 class ShowRelationshipAction extends AbstractAction
 {
-    public function __construct(protected ToOneRelationship $relationship) {}
+    public function __construct(protected ToOneRelationship $relationship)
+    {
+    }
 
     public function handle(): Response
-	{
+    {
         $resource = $this->request()->resource();
         $field = $this->relationship->name();
 
@@ -20,5 +22,5 @@ class ShowRelationshipAction extends AbstractAction
         }
 
         return response()->null();
-	}
+    }
 }

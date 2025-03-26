@@ -23,7 +23,8 @@ class UpdateUserRequest extends Request
             'data.attributes.email' => 'sometimes|required|email',
             'data.attributes.password' => 'sometimes|required|string',
 
-            'data.relationships.status.data' => ['sometimes', new ResourceIdentifierRule(UserStatus::class)],
+            // Example: No Example
+            'data.relationships.status.data' => ['sometimes', 'array', new ResourceIdentifierRule(UserStatus::class)],
 
             'data.relationships.roles.data' => 'sometimes|array',
             'data.relationships.roles.data.*' => [new AttachRoleToUserRule($this)]

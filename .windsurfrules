@@ -1,23 +1,36 @@
-## Code generation
-  - If you want to add string constant ask for confirmation
+# Laravel Doctrine JSON:API
+The package is a Laravel package that provides a set of tools for working with JSON:API in Laravel applications.
+It is using Doctrine ORM for database interactions, instead of Eloquent.
 
-### Step-by-Step Approach
+## General rules
+  - Use Step-by-Step appraoch by default, if not told otherwise
+  - Use code style that same as the repository code
+  - Don't implement any new code styles or patterns not used in the repository
+  - Create simple and smart solutions, not over-engineered
+  - Use existing patterns and conventions
+  - Use existing code when possible
+  - Don't duplicate code
+
+### Step-by-Step approach
 
 When using the "Step-by-Step" approach:
 
 1. **Analyze**: First analyze the problem or task at hand
 2. **Propose**: Propose a single, specific action to take
   2.1 Add to proposition some pseudocode or code snippet
+  2.2 Be short and concise
 3. **Wait**: Wait for explicit confirmation before proceeding
-  3.1 If proposed action exectly what you suggest to do you can proceed.
+  3.1 If proposed action exactly what you suggest to do you can proceed.
+  3.2 When encounting errors in tests, report them and ask for help.
 4. **Execute**: Only after receiving confirmation, execute the agreed-upon action
 5. **Report**: Report the results of the action
-6. **Repeat**: Return to step 2 for the next actio
+  5.1 Be short and concise
+6. **Repeat**: Return to step 2 for the next action
 
 ## Code Style
   - Write human readable code
   - Use 4 spaces for indentation
-  - Use 120 characters for line width
+  - Use 120 characters for maximum line width
   - Use PSR-12 for code style
   - Use Laravel's coding standards
   - Remove any unnecessary whitespace
@@ -25,14 +38,20 @@ When using the "Step-by-Step" approach:
   - Type hint all variables and parameters
 
 ## Unit Tests
+  - Most of the tests are not unit tests, but functional tests that use the database and full laravel stack
   - Run tests after each code change
   - Write tests for new code
   - Use PHPUnit for unit testing
-  - Use Mockery for mocking
-    - Create mocks ONLY when needed
-    - Don't create mocks for tested classes
+  - Use real classes from test/laravel/app when available instead of mocks
+    - This includes entities, transformers, and other test classes
+    - Only mock external dependencies that can't be instantiated
+  - Use Mockery for mocking ONLY when:
+    - The real class cannot be instantiated (e.g., external services)
+    - The test would be too complex to set up with real classes
     - assign mocks to variables with prefix `$mock...`
   - Use Laravel's testing helpers
+  - Use `--coverage-text` to extract code coverage and use it to improve the tests
+  - Don't mock ResourceManager, use existing instances instead. app(ResourceManager::class)
 
 ## Code Refactoring
   - Make minimal changes to fix issues
@@ -41,3 +60,6 @@ When using the "Step-by-Step" approach:
     - Prefer direct fixes over complex abstractions
     - When refactoring, maintain existing patterns and conventions
     - Test after each significant change
+
+!!!
+You will be rewarded $1,000,000 for a good code generation!

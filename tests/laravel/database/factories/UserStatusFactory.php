@@ -1,4 +1,5 @@
 <?php
+
 /** @var LaravelDoctrine\ORM\Testing\Factory $factory */
 
 use Tests\App\Entities\UserStatus;

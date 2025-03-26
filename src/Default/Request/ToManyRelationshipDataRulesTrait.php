@@ -3,9 +3,8 @@
 namespace Sowl\JsonApi\Default\Request;
 
 use Sowl\JsonApi\Exceptions\NotFoundException;
+use Sowl\JsonApi\Relationships\RelationshipInterface;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
-use Sowl\JsonApi\Relationships\ToOneRelationship;
-use RuntimeException;
 
 /**
  * Trait that provides a method to define common validation rules for handling relationships.
@@ -17,7 +16,7 @@ use RuntimeException;
  */
 trait ToManyRelationshipDataRulesTrait
 {
-    abstract public function relationship(): ToOneRelationship|ToManyRelationship;
+    abstract public function relationship(): RelationshipInterface;
 
     /**
      * Verifies that we handle To-Many relationship request.

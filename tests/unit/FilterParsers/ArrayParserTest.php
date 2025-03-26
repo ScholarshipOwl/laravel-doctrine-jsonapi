@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ArrayParserTest extends TestCase
 {
-
     public function test_filterable_query_parser_operator_filter_exception()
     {
         try {

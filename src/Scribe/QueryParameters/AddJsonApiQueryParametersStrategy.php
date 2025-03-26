@@ -3,19 +3,29 @@
 namespace Sowl\JsonApi\Scribe\QueryParameters;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
+use Knuckles\Scribe\Extracting\ParamBag;
 use Sowl\JsonApi\Scribe\AbstractStrategy;
+use Sowl\JsonApi\Scribe\ResponseGenerationHelper;
 
 /**
  * Strategy to add common JSON:API query parameters to GET routes
  */
 class AddJsonApiQueryParametersStrategy extends AbstractStrategy
 {
+    use ResponseGenerationHelper;
+
+    private const SPEC_URL_INCLUDES = 'https://jsonapi.org/format/#fetching-includes';
+    private const SPEC_URL_SPARSE_FIELDSETS = 'https://jsonapi.org/format/#fetching-sparse-fieldsets';
+    private const SPEC_URL_SORTING = 'https://jsonapi.org/format/#fetching-sorting';
+    private const SPEC_URL_PAGINATION = 'https://jsonapi.org/format/#fetching-pagination';
+    private const SPEC_URL_FILTERING = 'https://jsonapi.org/format/#fetching-filtering';
+
     /**
      * @inheritDoc
      */
     public function __invoke(ExtractedEndpointData $endpointData, array $settings = []): array
     {
-        if (!$this->isJsonApi($endpointData)) {
+        if (!$this->initJsonApiEndpointData($endpointData)) {
             // Not a JSON:API route, skip
             return [];
         }
@@ -26,28 +36,224 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
         }
 
         $queryParameters = [
-            'include' => [
-                'description' => 'Include related resources',
-                'required' => false,
-                'example' => 'roles,status'
-            ],
-            'fields' => [
-                'description' => 'Sparse fieldsets - only return specific fields',
-                'required' => false,
-                'example' => 'fields[users]=name,email'
-            ],
-            'meta' => [
-                'description' => 'Sparse meta fieldsets - only return specific fields',
-                'required' => false,
-                'example' => 'meta[users]=stats'
-            ]
+            'fields' => $this->buildFieldsQueryParameter(),
         ];
 
-        if ($this->isListRoute($endpointData)) {
-            $queryParameters = [...$queryParameters, ...$this->listRoutes()];
+        if (($include = $this->buildIncludeQueryParameter()) !== null) {
+            $queryParameters['include'] = $include;
+        }
+
+        if (($exclude = $this->buildExcludeQueryParameter()) !== null) {
+            $queryParameters['exclude'] = $exclude;
+        }
+
+        if (($meta = $this->buildMetaQueryParameter()) !== null) {
+            $queryParameters['meta'] = $meta;
+        }
+
+        if ($this->jsonApiEndpointData->isCollectionRoute()) {
+            $queryParameters = array_merge($queryParameters, [
+                'page' => $this->buildPageQueryParameter(),
+                'sort' => $this->buildSortQueryParameter(),
+            ]);
+
+            if (($filter = $this->buildFilterQueryParameter()) !== null) {
+                $queryParameters['filter'] = $filter;
+            }
         }
 
         return $queryParameters;
+    }
+
+    private function buildFieldsQueryParameter(): array
+    {
+        $resourceType = $this->jsonApiEndpointData->resourceType;
+        $response = $this->generateSingleContent($resourceType);
+        $fields = array_keys($response['data']['attributes'] ?? []);
+
+        $description = __(
+            'jsonapi::query_params.fields.description',
+            ['specUrl' => self::SPEC_URL_SPARSE_FIELDSETS]
+        );
+
+        if (!empty($fields)) {
+            $description .= "\n\n" . __(
+                'jsonapi::query_params.fields.available',
+                [
+                    'resourceType' => $resourceType,
+                    'fields' => implode(', ', array_map(fn($field) => "`$field`", $fields))
+                ]
+            );
+        }
+
+        return [
+            'type' => 'object',
+            'required' => false,
+            'description' => $description,
+            'test' => 'test',
+            'example' => [
+                $resourceType => implode(',', $fields)
+            ]
+        ];
+    }
+
+    private function buildIncludeQueryParameter(): ?array
+    {
+        $transformer = $this->jsonApiEndpointData->resourceTransformer();
+        $includes = $transformer->getAvailableIncludes();
+        $default = $transformer->getDefaultIncludes();
+
+        if (empty($includes)) {
+            return null;
+        }
+
+        $includeDescription = __(
+            'jsonapi::query_params.include.description',
+            ['specUrl' => self::SPEC_URL_INCLUDES]
+        ) . "\n\n";
+
+        $availableIncludesText = implode(', ', array_map(fn ($include) => "`$include`", $includes));
+        $includeDescription .= __(
+            'jsonapi::query_params.include.available',
+            ['includes' => $availableIncludesText]
+        );
+
+        if ($default) {
+            $defaultIncludesText = implode(', ', array_map(fn ($include) => "`$include`", $default));
+            $includeDescription .= "\n\n" . __(
+                'jsonapi::query_params.include.defaults_title',
+                ['defaults' => $defaultIncludesText]
+            );
+        }
+
+        $includeExample = implode(',', array_slice($includes, 0, 2));
+
+        return [
+            'description' => $includeDescription,
+            'required' => false,
+            'example' => $includeExample,
+            'enum' => $includes,
+        ];
+    }
+
+    private function buildExcludeQueryParameter(): ?array
+    {
+        $transformer = $this->jsonApiEndpointData->resourceTransformer();
+        $excludes = $transformer->getDefaultIncludes();
+
+        if (empty($excludes)) {
+            return null;
+        }
+
+        $excludeDescription = __('jsonapi::query_params.exclude.description');
+        $excludeDescription .= "\n\n";
+        $excludeDescription .= __(
+            'jsonapi::query_params.exclude.available',
+            ['excludes' => implode(', ', array_map(fn ($exclude) => "`$exclude`", $excludes))]
+        );
+
+        return [
+            'description' => $excludeDescription,
+            'required' => false,
+            'example' => '', // Provide a meaningful example if possible
+            'enum' => $excludes,
+        ];
+    }
+
+    private function buildMetaQueryParameter(): ?array
+    {
+        $resourceType = $this->jsonApiEndpointData->resourceType;
+        $transformer = $this->jsonApiEndpointData->resourceTransformer();
+        $metas = $transformer->getAvailableMetas();
+
+        if (empty($metas)) {
+            return null;
+        }
+
+        $description = __('jsonapi::query_params.meta.description');
+        $description .= "\n\n" . __(
+            'jsonapi::query_params.meta.available',
+            [
+                'resourceType' => $resourceType,
+                'metas' => implode(', ', array_map(fn($meta) => "`$meta`", $metas))
+            ]
+        );
+
+        return [
+            'type' => 'object',
+            'required' => false,
+            'description' => $description,
+            'example' => [
+                $resourceType => implode(',', $metas)
+            ]
+        ];
+    }
+
+    private function buildFilterQueryParameter(): array
+    {
+        // TODO: Add filter examples
+        $description = __(
+            'jsonapi::query_params.filter.description',
+            ['specUrl' => self::SPEC_URL_FILTERING]
+        );
+        return [
+            'description' => $description,
+            'style' => 'deepObject',
+            'explode' => true,
+            'required' => false,
+            'schema' => [
+                'type' => 'object',
+                'additionalProperties' => true
+            ],
+            'example' => [
+                'name' => 'John',
+            ]
+        ];
+    }
+
+    private function buildPageQueryParameter(): array
+    {
+        $description = __(
+            'jsonapi::query_params.page.description',
+            ['specUrl' => self::SPEC_URL_PAGINATION]
+        );
+
+        return [
+            'description' => $description,
+            'type' => 'object',
+            'example' => [
+                'number' => 1,
+                'size' => 10
+            ],
+        ];
+    }
+
+    private function buildSortQueryParameter(): array
+    {
+        $resourceType = $this->jsonApiEndpointData->resourceType;
+        $response = $this->generateSingleContent($resourceType);
+        $fields = array_keys($response['data']['attributes'] ?? []);
+
+        $description = __(
+            'jsonapi::query_params.sort.description',
+            ['specUrl' => self::SPEC_URL_SORTING]
+        );
+
+        if (!empty($fields)) {
+            $description .= "\n\n" . __(
+                'jsonapi::query_params.sort.available',
+                [
+                    'resourceType' => $resourceType,
+                    'fields' => implode(', ', array_map(fn($field) => "`$field`", $fields))
+                ]
+            );
+        }
+
+        return [
+            'description' => $description,
+            'required' => false,
+            'example' => $fields[0] ?? null,
+        ];
     }
 
     protected function allowedMethods(): array
@@ -57,42 +263,6 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
             'POST',
             'PATCH',
             'PUT'
-        ];
-    }
-
-    protected function listRoutes(): array
-    {
-        return [
-            'filter' => [
-                'description' => 'Filter the resources by attributes',
-                'required' => false,
-                'example' => 'filter[name]=John'
-            ],
-            'page[number]' => [
-                'description' => 'Page number for pagination',
-                'required' => false,
-                'example' => '1'
-            ],
-            'page[size]' => [
-                'description' => 'Number of items per page',
-                'required' => false,
-                'example' => '10'
-            ],
-            'page[limit]' => [
-                'description' => 'Limit the number of items per page (alternative to size)',
-                'required' => false,
-                'example' => '15'
-            ],
-            'page[offset]' => [
-                'description' => 'Offset for pagination (zero-based)',
-                'required' => false,
-                'example' => '0'
-            ],
-            'sort' => [
-                'description' => 'Sort the resources by attributes. Prefix with - for descending order.',
-                'required' => false,
-                'example' => '-created_at,name'
-            ]
         ];
     }
 }

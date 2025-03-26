@@ -5,9 +5,7 @@ namespace Tests\App\Entities;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
-
 use Tests\App\Transformers\UserStatusTransformer;
-
 use Doctrine\ORM\Mapping as ORM;
 
 /**

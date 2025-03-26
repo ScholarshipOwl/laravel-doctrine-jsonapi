@@ -13,7 +13,7 @@ class ResourceManipulatorTest extends TestCase
     {
         /** @var User $user */
         $user = $this->manipulator()->hydrateResource(new User(), [
-            'attributes'=> [
+            'attributes' => [
                 'name' => 'TestName',
                 'email' => 'test@test.com',
             ],
@@ -86,7 +86,7 @@ class ResourceManipulatorTest extends TestCase
                 [
                     'code' => '400',
                     'source' => [
-                        'setter' => User::class.'::setNot_exists',
+                        'setter' => User::class . '::setNot_exists',
                     ],
                     'detail' => 'Missing property setter.',
                 ]

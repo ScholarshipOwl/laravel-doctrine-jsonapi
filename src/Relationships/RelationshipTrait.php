@@ -2,6 +2,7 @@
 
 namespace Sowl\JsonApi\Relationships;
 
+use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\ResourceRepository;
 use Sowl\JsonApi\Rules\ResourceIdentifierRule;
@@ -35,6 +36,11 @@ trait RelationshipTrait
     public function repository(): ResourceRepository
     {
         return $this->rm()->repositoryByClass($this->class());
+    }
+
+    public function transformer(): AbstractTransformer
+    {
+        return $this->repository()->transformer();
     }
 
     public function objectIdentifierRule(): ResourceIdentifierRule

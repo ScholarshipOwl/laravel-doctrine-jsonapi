@@ -6,21 +6,22 @@ use Doctrine\ORM\EntityManager;
 use Illuminate\Contracts\Validation\Rule;
 use Illuminate\Support\Facades\Validator;
 use Sowl\JsonApi\ResourceManager;
+use Sowl\JsonApi\Scribe\DisplayHelper;
 
 /**
  * Validates if the `data` key contains an `id` of the entity with required `type`.
  * The target entity must implement JsonApiResource
  */
+// TODO: Use ValidationRule for the rule
 class ResourceIdentifierRule implements Rule
 {
     protected array $message = ['The :attribute field is invalid.'];
 
-    static public function make(
+    public static function make(
         string $resourceClass,
         mixed $rule = null,
         array $messages = []
-    ): static
-    {
+    ): static {
         return new static($resourceClass, $rule, $messages);
     }
 
@@ -28,8 +29,7 @@ class ResourceIdentifierRule implements Rule
         protected ?string $resourceClass = null,
         protected mixed $rule = null,
         protected ?array $messages = [],
-    )
-    {
+    ) {
         if (!is_null($this->resourceClass)) {
             $this->rm()->verifyResourceInterface($this->resourceClass);
         }
@@ -94,5 +94,41 @@ class ResourceIdentifierRule implements Rule
     protected function em(): EntityManager
     {
         return app(EntityManager::class);
+    }
+
+    /**
+     * Used by scribe to generate OpenAPI docs.
+     */
+    public function docs(): array
+    {
+        $resourceType = ResourceManager::resourceType($this->resourceClass);
+
+        return [
+            'description' => sprintf(
+                'The resource identifier for a %s.',
+                DisplayHelper::displayResourceType($resourceType)
+            ),
+            'type' => 'object',
+            'required' => true,
+            'nullable' => true,
+
+            // TODO: We can improve it by generating fake id, depend on the mapping information.
+            'setter' => fn () => [
+                'id' => '1',
+                'type' => $resourceType,
+            ],
+            'properties' => [
+                'type' => [
+                    'type' => 'string',
+                    'description' => 'The resource type.',
+                    'example' => (string) $resourceType,
+                ],
+                'id' => [
+                    'type' => 'string',
+                    'description' => 'The resource identifier.',
+                    'example' => '1',
+                ],
+            ],
+        ];
     }
 }

@@ -24,18 +24,19 @@ use Sowl\JsonApi\ResourceManager;
 class Authorize
 {
     public function __construct(
-        protected Gate            $gate,
+        protected Gate $gate,
         protected ResourceManager $resourceManager,
-    ) {}
+    ) {
+    }
 
-    static protected array $methodResourceAbilityMap = [
+    protected static array $methodResourceAbilityMap = [
         HttpRequest::METHOD_GET => AbilitiesInterface::SHOW,
         HttpRequest::METHOD_POST => AbilitiesInterface::CREATE,
         HttpRequest::METHOD_PATCH => AbilitiesInterface::UPDATE,
         HttpRequest::METHOD_DELETE => AbilitiesInterface::REMOVE,
     ];
 
-    static protected array $methodRelationshipAbilityMap = [
+    protected static array $methodRelationshipAbilityMap = [
         HttpRequest::METHOD_GET => AbilitiesInterface::SHOW,
         HttpRequest::METHOD_POST => AbilitiesInterface::ATTACH,
         HttpRequest::METHOD_PATCH => AbilitiesInterface::UPDATE,

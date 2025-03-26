@@ -20,7 +20,9 @@ class ChainTest extends TestCase
         $member2 = m::mock(MemberInterface::class)
             ->shouldReceive('__invoke')->with($object)->andReturn($object)
             ->getMock();
-        $member3 = function($qb) { return $qb; };
+        $member3 = function ($qb) {
+            return $qb;
+        };
 
         $chain = new Chain([$member1, $member2, $member3]);
 

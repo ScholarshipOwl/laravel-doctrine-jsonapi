@@ -66,6 +66,18 @@ docker compose run php sh
 [Testing Documentation](./tests)
 
 ### Roadmap
+  - [ ] Integrate scribe into the package. Automatically generate Open API specs.
+  - - [ ] Update metadata for each endpoint
+      - [ ] Endpoint description
+      - [ ] Endpoint tags
+      - [ ] Endpoint name
+      - [ ] Endpoint group
+    - [ ] Route\URL params documentation
+    - [ ] Query params documentation
+      - [ ] Add a fields lists to each query documentation. Need to extract it from the transformer.
+    - [ ] Request body documentation
+    - [ ] Response body documentation
+      - [ ] Allow to disable links generation.
   - [ ] Add documentation about the `meta` param usage. ( meta[account]=mailbox&meta[profile]=completeness )
   - [ ] Make it possible to disable links generation. As it is not required by JSON:API spec and increases response size.
   - [ ] Create a validation rule "resource", "resourceExists" for validating resource identifier. Example of usage:

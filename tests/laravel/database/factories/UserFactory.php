@@ -1,10 +1,24 @@
 <?php
+
 /** @var LaravelDoctrine\ORM\Testing\Factory $factory */
 
 use Tests\App\Entities\User;
 use Tests\App\Entities\UserStatus;
 use Tests\App\Entities\Role;
 use Doctrine\Common\Collections\ArrayCollection;
+
+$factory->define(User::class, function (Faker\Generator $faker) use ($factory) {
+    return [
+        'id' => $faker->uuid,
+        'name' => $faker->name,
+        'email' => $faker->email,
+        'password' => 'secret',
+        'status' => entity(UserStatus::class, 'active')->create(),
+//        'roles' => new ArrayCollection([
+//            $factory->makeAs(Role::class, Role::USER_NAME)
+//        ]),
+    ];
+});
 
 $factory->defineAs(User::class, 'user', function (Faker\Generator $faker) {
     return [

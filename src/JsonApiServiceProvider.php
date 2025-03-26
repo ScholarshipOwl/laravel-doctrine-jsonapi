@@ -12,25 +12,49 @@ use Illuminate\Support\ServiceProvider;
  */
 class JsonApiServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
         $this->bootConfig();
     }
 
-    public function bootConfig()
+    public function bootConfig(): void
+    {
+        $this->registerConfig();
+        $this->registerRoutes();
+
+        $this->configureTranslations();
+    }
+
+    protected function registerConfig(): void
     {
         $this->publishes([
-            __DIR__.'/../config/jsonapi.php' => config_path('jsonapi.php'),
+            __DIR__ . '/../config/jsonapi.php' => config_path('jsonapi.php'),
         ], 'jsonapi-config');
+    }
 
+    protected function registerRoutes(): void
+    {
         $this->publishes([
-            __DIR__.'/../routes/jsonapi.php' => base_path('routes/jsonapi.php'),
+            __DIR__ . '/../routes/jsonapi.php' => base_path('routes/jsonapi.php'),
         ], 'jsonapi-routes');
     }
 
-    public function register()
+    protected function configureTranslations(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/jsonapi.php', 'jsonapi');
+        // Register Scribe strategies translations
+        if ($this->isScribeInstalled()) {
+            $this->publishes([
+                __DIR__ . '/../lang' => $this->app->langPath('jsonapi'),
+            ], 'jsonapi-scribe-translations');
+
+            $this->loadTranslationsFrom($this->app->langPath('jsonapi'), 'jsonapi');
+            $this->loadTranslationsFrom(realpath(__DIR__ . '/../lang'), 'jsonapi');
+        }
+    }
+
+    public function register(): void
+    {
+        $this->mergeConfigFrom(__DIR__ . '/../config/jsonapi.php', 'jsonapi');
 
         $this->registerRequest();
         $this->registerResponseFactory();
@@ -39,7 +63,7 @@ class JsonApiServiceProvider extends ServiceProvider
         $this->registerDocumentation();
     }
 
-    public function registerRequest()
+    public function registerRequest(): void
     {
         $this->app->resolving(Request::class, function (Request $request, Application $app) {
             $request = Request::createFrom($app['request'], $request);
@@ -52,7 +76,7 @@ class JsonApiServiceProvider extends ServiceProvider
         });
     }
 
-    public function registerResponseFactory()
+    public function registerResponseFactory(): void
     {
         $this->app->singleton(ResponseFactoryContract::class, function (Application $app) {
             return new ResponseFactory(
@@ -62,14 +86,14 @@ class JsonApiServiceProvider extends ServiceProvider
         });
     }
 
-    public function registerResourceManager()
+    public function registerResourceManager(): void
     {
         $this->app->singleton(ResourceManager::class, function (Application $app) {
             return new ResourceManager($app['em'], config('jsonapi.resources'));
         });
     }
 
-    public function registerResourceManipulator()
+    public function registerResourceManipulator(): void
     {
         $this->app->singleton(ResourceManipulator::class, function (Application $app) {
             return new ResourceManipulator($app['em'], $app[ResourceManager::class]);
@@ -81,11 +105,16 @@ class JsonApiServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    protected function registerDocumentation()
+    protected function registerDocumentation(): void
     {
         // Register documentation services only if Scribe is available
-        if (class_exists('Knuckles\Scribe\ScribeServiceProvider')) {
-            $this->app->register(Scribe\ScribeServiceProvider::class);
-        }
+        // if (class_exists('Knuckles\Scribe\ScribeServiceProvider')) {
+        //     $this->app->register(Scribe\ScribeServiceProvider::class);
+        // }
+    }
+
+    private function isScribeInstalled(): bool
+    {
+        return class_exists('Knuckles\Scribe\ScribeServiceProvider');
     }
 }

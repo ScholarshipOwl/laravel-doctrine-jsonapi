@@ -22,7 +22,7 @@ class RelationshipsCollection
     /**
      * Adds a relationship to the collection.
      */
-    public function add(ToOneRelationship|ToManyRelationship $relationship): static
+    public function add(RelationshipInterface $relationship): static
     {
         $this->relationships[$relationship->name()] = $relationship;
 
@@ -32,7 +32,7 @@ class RelationshipsCollection
     /**
      * Retrieves a relationship by name from the collection.
      */
-    public function get(string $name): ToOneRelationship|ToManyRelationship|null
+    public function get(string $name): RelationshipInterface|null
     {
         return $this->relationships[$name] ?? null;
     }
@@ -48,28 +48,38 @@ class RelationshipsCollection
     /**
      * Returns all relationships in the collection.
      *
-     * @return array<string, ToOneRelationship|ToManyRelationship>
+     * @return array<string, RelationshipInterface>
      */
     public function all(): array
     {
         return $this->relationships->all();
     }
 
+
+    /**
+     * Maps over the relationships in the collection.
+     * @param callable(RelationshipInterface): RelationshipInterface $callback
+     */
+    public function map(callable $callback): Collection
+    {
+        return $this->relationships->map($callback);
+    }
+
     /**
      * Retrieves all To-One relationships.
-     * @return Collection<string, ToOneRelationship>
+     * @return static<string, ToOneRelationship>
      */
-    public function toOne(): Collection
+    public function toOne(): static
     {
-        return $this->relationships->filter(fn ($rel) => $rel instanceof ToOneRelationship);
+        return new static($this->relationships->filter(fn ($rel) => $rel instanceof ToOneRelationship)->all());
     }
 
     /**
      * Retrieves all To-Many relationships.
-     * @return Collection<string, ToManyRelationship>
+     * @return static<string, ToManyRelationship>
      */
-    public function toMany(): Collection
+    public function toMany(): static
     {
-        return $this->relationships->filter(fn ($rel) => $rel instanceof ToManyRelationship);
+        return new static($this->relationships->filter(fn ($rel) => $rel instanceof ToManyRelationship)->all());
     }
 }

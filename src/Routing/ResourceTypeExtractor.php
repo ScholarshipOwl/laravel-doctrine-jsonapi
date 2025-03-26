@@ -33,34 +33,34 @@ class ResourceTypeExtractor
 
         // Try to extract from route URI pattern
         $uri = $route->uri();
-        
+
         // Handle empty URI
         if (empty($uri)) {
             return null;
         }
-        
+
         // Handle special case for {resourceType} parameter
         if (preg_match('/^\{resourceType\}/', $uri)) {
             return null;
         }
-        
+
         // Handle dot notation (e.g., api.v1.users)
         if (!Str::contains($uri, '/') && Str::contains($uri, '.')) {
             return $uri;
         }
-        
+
         // Get the path without prefix
         $pathWithoutPrefix = $this->pathWithoutPrefix($route);
-        
+
         // Extract resource type using regex pattern
         $matches = [];
         if (preg_match('/^([^\/.]*)\/?.*$/', $pathWithoutPrefix, $matches)) {
             return $matches[1] ?: null;
         }
-        
+
         return null;
     }
-    
+
     /**
      * Remove any prefix from the URI.
      *
@@ -71,14 +71,14 @@ class ResourceTypeExtractor
     {
         $uri = $route->uri();
         $prefix = $route->getPrefix();
-        
+
         if ($prefix) {
             // Remove the prefix and trailing slash if present
-            return Str::startsWith($uri, $prefix . '/') 
-                ? substr($uri, strlen($prefix) + 1) 
+            return Str::startsWith($uri, $prefix . '/')
+                ? substr($uri, strlen($prefix) + 1)
                 : $uri;
         }
-        
+
         return $uri;
     }
 }

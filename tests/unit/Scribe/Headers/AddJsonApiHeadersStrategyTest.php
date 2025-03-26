@@ -41,9 +41,10 @@ class AddJsonApiHeadersStrategyTest extends TestCase
 
     public function testReturnsJsonApiHeadersForJsonApiRoutes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'api/users', [
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
             'as' => 'jsonapi.users.list',
-            'uses' => fn () => null
+            'uses' => fn () => null,
+            ['prefix' => '/api']
         ]));
 
         // Execute the strategy
@@ -58,7 +59,7 @@ class AddJsonApiHeadersStrategyTest extends TestCase
 
     public function testReturnsEmptyArrayForNonJsonApiRoutes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'api/users', [
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
             'as' => 'api.users.list',
             'uses' => fn () => null
         ]));
@@ -86,7 +87,7 @@ class AddJsonApiHeadersStrategyTest extends TestCase
         ];
 
         foreach ($jsonApiRouteNames as $routeName) {
-            $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'api/users', [
+            $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
                 'as' => $routeName,
                 'uses' => fn () => null
             ]));
@@ -107,7 +108,7 @@ class AddJsonApiHeadersStrategyTest extends TestCase
         // Execute the strategy with custom settings
         $customSettings = ['custom' => 'setting'];
 
-        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'api/users', [
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
             'as' => 'jsonapi.users.list',
             'uses' => fn () => null,
         ]));

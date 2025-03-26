@@ -138,7 +138,8 @@ class ResourceRepository extends EntityRepository
             throw JsonApiException::create('Resource is not found', 404)
                 ->error(404, ['pointer' => $scope], sprintf(
                     'Resource not found by primary data %s(%s)',
-                    $data['type'], $data['id']
+                    $data['type'],
+                    $data['id']
                 ));
         }
 

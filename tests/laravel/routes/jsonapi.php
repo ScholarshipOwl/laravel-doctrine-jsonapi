@@ -5,7 +5,6 @@ use Tests\App\Http\Controller\PageComment\PageCommentController;
 use Tests\App\Http\Controller\Pages\PageController;
 use Tests\App\Http\Controller\Roles\RolesController;
 use Tests\App\Http\Controller\Users\UsersController;
-
 use Sowl\JsonApi\Default\Controller as DefaultController;
 
 Route::group(['as' => 'jsonapi.'], function () {

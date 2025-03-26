@@ -49,7 +49,8 @@ class Scope extends \League\Fractal\Scope
         if (!empty($transformer->getAvailableMetas())) {
             if (null !== ($meta = $transformer->processMetasets($this, $data))) {
                 $transformedData['meta'] = (object) array_merge(
-                    $transformedData['meta'] ?? [], $meta
+                    $transformedData['meta'] ?? [],
+                    $meta
                 );
             }
         }

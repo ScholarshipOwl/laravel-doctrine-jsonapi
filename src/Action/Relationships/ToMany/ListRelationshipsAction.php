@@ -2,7 +2,6 @@
 
 namespace Sowl\JsonApi\Action\Relationships\ToMany;
 
-
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use Sowl\JsonApi\AbstractAction;
@@ -19,7 +18,8 @@ class ListRelationshipsAction extends AbstractAction
 
     public function __construct(
         protected ToManyRelationship $relationship,
-    ) {}
+    ) {
+    }
 
     public function handle(): Response
     {
@@ -42,7 +42,7 @@ class ListRelationshipsAction extends AbstractAction
     {
         $mappedBy = $this->relationship->mappedBy();
         $relatedRepo = $this->relationship->repository();
-        $mappedByAlias = $mappedBy.'relation';
+        $mappedByAlias = $mappedBy . 'relation';
 
         return $relatedRepo->resourceQueryBuilder()
             ->innerJoin(sprintf('%s.%s', $relatedRepo->alias(), $mappedBy), $mappedByAlias)

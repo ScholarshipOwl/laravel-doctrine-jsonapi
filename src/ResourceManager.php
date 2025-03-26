@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use InvalidArgumentException;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
+use Sowl\JsonApi\Relationships\ToOneRelationship;
 use UnexpectedValueException;
 
 /**
@@ -35,6 +36,15 @@ class ResourceManager
         return $this->em;
     }
 
+
+    /**
+     * Returns an array of all registered resources.
+     */
+    public function getResources(): array
+    {
+        return $this->resources;
+    }
+
     /**
      * Method takes a string that represents the name of a class and verifies if it implements the ResourceInterface.
      * It throws an exception if the class is not found or does not implement the interface.
@@ -47,7 +57,9 @@ class ResourceManager
 
         if (!isset(class_implements($class)[ResourceInterface::class])) {
             throw new UnexpectedValueException(sprintf(
-                '%s - not implements %s', $class, ResourceInterface::class
+                '%s - not implements %s',
+                $class,
+                ResourceInterface::class
             ));
         }
     }
@@ -133,7 +145,9 @@ class ResourceManager
 
             if ($data['type'] !== $expectedType) {
                 throw new InvalidArgumentException(sprintf(
-                    'Invalid type "%s" expecting "%s".', $data['type'], $expectedType
+                    'Invalid type "%s" expecting "%s".',
+                    $data['type'],
+                    $expectedType
                 ));
             }
         }
@@ -143,7 +157,8 @@ class ResourceManager
         if (is_null($resource)) {
             throw new InvalidArgumentException(sprintf(
                 'Resource not found by object identifier "%s(%s)"',
-                $data['type'], $data['id']
+                $data['type'],
+                $data['id']
             ));
         }
 
@@ -167,6 +182,17 @@ class ResourceManager
     public function relationshipsByResourceType(string $resourceType): RelationshipsCollection
     {
         $class = $this->classByResourceType($resourceType);
+        return call_user_func("$class::relationships");
+    }
+
+
+    /**
+     * Method takes a string that represents the name of a resource class and returns the corresponding
+     * RelationshipsCollection by calling the "relationships" static method on the resource class.
+     */
+    public function relationshipsByClass(string $class): RelationshipsCollection
+    {
+        static::verifyResourceInterface($class);
         return call_user_func("$class::relationships");
     }
 

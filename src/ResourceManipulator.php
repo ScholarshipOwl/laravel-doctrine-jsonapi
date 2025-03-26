@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 use Sowl\JsonApi\Exceptions\BadRequestException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
+use Sowl\JsonApi\Relationships\RelationshipInterface;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 
@@ -22,7 +23,8 @@ class ResourceManipulator
     public function __construct(
         protected EntityManager $em,
         protected ResourceManager $rm,
-    ) {}
+    ) {
+    }
 
     /**
      * Method takes a string that represents a resource type and an optional string that represents
@@ -32,7 +34,7 @@ class ResourceManipulator
     {
         $class = $this->rm->classByResourceType($resourceType);
 
-        $resource = new $class;
+        $resource = new $class();
 
         if (is_null($id)) {
             $classMetadata = $this->em->getClassMetadata($class);
@@ -59,11 +61,10 @@ class ResourceManipulator
      */
     public function hydrateResource(
         ResourceInterface $resource,
-        array             $data,
-        string            $pointer = "/data",
-        bool              $throwOnMissing = false,
-    ): ResourceInterface
-    {
+        array $data,
+        string $pointer = "/data",
+        bool $throwOnMissing = false,
+    ): ResourceInterface {
         if ($throwOnMissing && !isset($data['attributes']) && !isset($data['relationships'])) {
             throw (new BadRequestException())
                 ->detail('Missing or not array `/data/attributes` or `/data/relationships.', $pointer);
@@ -88,10 +89,9 @@ class ResourceManipulator
      */
     public function hydrateAttributes(
         ResourceInterface $resource,
-        array             $attributes,
-        string            $pointer,
-    ): ResourceInterface
-    {
+        array $attributes,
+        string $pointer,
+    ): ResourceInterface {
         foreach ($attributes as $name => $value) {
             try {
                 $this->setProperty($resource, $name, $value);
@@ -114,10 +114,9 @@ class ResourceManipulator
      */
     public function hydrateRelationships(
         ResourceInterface $resource,
-        array             $relationships,
-        string            $pointer,
-    ): ResourceInterface
-    {
+        array $relationships,
+        string $pointer,
+    ): ResourceInterface {
         foreach ($relationships as $name => $data) {
             $relationPointer = "$pointer/$name";
 
@@ -151,10 +150,9 @@ class ResourceManipulator
     public function hydrateToOneRelation(
         ResourceInterface $resource,
         ToOneRelationship $relationship,
-        mixed             $data,
-        string            $pointer,
-    ): ResourceInterface
-    {
+        mixed $data,
+        string $pointer,
+    ): ResourceInterface {
         $relationshipObject = $this->objectIdentifierToResource($data, $pointer, $relationship->class());
 
         $this->setProperty($resource, $relationship->property(), $relationshipObject);
@@ -166,12 +164,11 @@ class ResourceManipulator
      * Handles the hydration of to-many relationships.
      */
     public function hydrateToManyRelation(
-        ResourceInterface  $resource,
+        ResourceInterface $resource,
         ToManyRelationship $relationship,
-        mixed              $data,
-        string             $pointer
-    ): ResourceInterface
-    {
+        mixed $data,
+        string $pointer
+    ): ResourceInterface {
         if (!is_array($data)) {
             throw (new BadRequestException())
                 ->detail('Data is not an array', $pointer);
@@ -179,7 +176,9 @@ class ResourceManipulator
 
         $collection = new ArrayCollection(array_map(
             fn ($item, $index) => $this->objectIdentifierToResource(
-                $item, "$pointer/$index", $relationship->class()
+                $item,
+                "$pointer/$index",
+                $relationship->class()
             ),
             $data,
             array_keys($data)
@@ -197,10 +196,9 @@ class ResourceManipulator
      */
     public function replaceResourceCollection(
         ResourceInterface $resource,
-        string            $property,
-        Collection        $replace,
-    ): ResourceInterface
-    {
+        string $property,
+        Collection $replace,
+    ): ResourceInterface {
         /** @var Collection $current */
         $current = $this->getProperty($resource, $property);
 
@@ -225,11 +223,10 @@ class ResourceManipulator
      * Converts an object identifier to a ResourceInterface object, if null provided null will be returned.
      */
     public function objectIdentifierToResource(
-        mixed  $data,
+        mixed $data,
         string $pointer,
         string $expectedClass = null
-    ): ?ResourceInterface
-    {
+    ): ?ResourceInterface {
         if (is_null($data)) {
             return null;
         }
@@ -256,10 +253,10 @@ class ResourceManipulator
 
         if (!method_exists($resource, $getter)) {
             throw (new BadRequestException())->error(
-                    'missing-getter',
-                    ['getter' => sprintf('%s::%s', ClassUtils::getClass($resource), $getter)],
-                    'Missing property getter.'
-                );
+                'missing-getter',
+                ['getter' => sprintf('%s::%s', ClassUtils::getClass($resource), $getter)],
+                'Missing property getter.'
+            );
         }
 
         return $resource->$getter();
@@ -283,6 +280,17 @@ class ResourceManipulator
         $resource->$setter($value);
 
         return $resource;
+    }
+
+
+    /**
+     * Gets the value of a specified relationship from a resource object.
+     */
+    public function getRelationshipValue(
+        ResourceInterface $resource,
+        RelationshipInterface $relationship
+    ): mixed {
+        return $this->getProperty($resource, $relationship->property());
     }
 
     /**
@@ -329,7 +337,8 @@ class ResourceManipulator
     {
         try {
             return $resource->getId();
-        } catch (\Error $e) {}
+        } catch (\Error $e) {
+        }
 
         return null;
     }

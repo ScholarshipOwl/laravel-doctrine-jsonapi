@@ -37,14 +37,108 @@ trait ResourceDataRulesTrait
      *
      * It iterates through the resource's fields from Doctrine metadata to get a list of attributes.
      * Using 'sometimes' rule used to make sure that the data will be included in the validated method output.
+     * Adds type-specific validation rules based on the field's Doctrine mapping information.
      */
     private function attributeRules(): array
     {
         $rules = [];
 
         $metadata = $this->repository()->metadata();
-        foreach (array_keys($metadata->reflFields) as $attribute) {
-            $rules["data.attributes.$attribute"] = ['sometimes'];
+        $fieldMappings = $metadata->fieldMappings;
+        $attributes = array_diff(array_keys($fieldMappings), $metadata->identifier);
+
+        foreach ($attributes as $attribute) {
+            $fieldMapping = $fieldMappings[$attribute];
+            $fieldRules = ['sometimes'];
+
+            // Add type-specific validation rules
+            $typeRules = $this->getFieldTypeRules($fieldMapping);
+            $fieldRules = array_merge($fieldRules, $typeRules);
+
+            $rules["data.attributes.$attribute"] = $fieldRules;
+        }
+
+        return $rules;
+    }
+
+    /**
+     * Generate validation rules based on field type and constraints from Doctrine metadata.
+     *
+     * @param array $fieldMapping The field mapping information from Doctrine metadata
+     * @return array List of Laravel validation rules for the field
+     */
+    private function getFieldTypeRules(array $fieldMapping): array
+    {
+        $rules = [];
+
+        // Add type-specific validation rules based on the field type
+        if (isset($fieldMapping['type'])) {
+            switch ($fieldMapping['type']) {
+                case 'string':
+                    $rules[] = 'string';
+                    // Add max length rule if defined
+                    if (isset($fieldMapping['length']) && $fieldMapping['length'] > 0) {
+                        $rules[] = 'max:' . $fieldMapping['length'];
+                    }
+                    break;
+
+                case 'text':
+                    $rules[] = 'string';
+                    break;
+
+                case 'integer':
+                case 'smallint':
+                case 'bigint':
+                    $rules[] = 'integer';
+                    break;
+
+                case 'boolean':
+                    $rules[] = 'boolean';
+                    break;
+
+                case 'decimal':
+                case 'float':
+                    $rules[] = 'numeric';
+                    // Add precision and scale rules if defined
+                    if (isset($fieldMapping['precision']) && isset($fieldMapping['scale'])) {
+                        $rules[] = 'decimal:' . $fieldMapping['scale'];
+                    }
+                    break;
+
+                case 'date':
+                    $rules[] = 'date';
+                    break;
+
+                case 'datetime':
+                case 'datetimetz':
+                    $rules[] = 'date_format:Y-m-d\TH:i:s.u\Z';
+                    break;
+
+                case 'time':
+                    $rules[] = 'date_format:H:i:s';
+                    break;
+
+                case 'array':
+                case 'json':
+                case 'json_array':
+                    $rules[] = 'array';
+                    break;
+
+                case 'simple_array':
+                    $rules[] = 'string';
+                    break;
+
+                case 'guid':
+                    $rules[] = 'uuid';
+                    break;
+
+                // Add more type mappings as needed
+            }
+        }
+
+        // Add nullable rule if the field is nullable
+        if (isset($fieldMapping['nullable']) && $fieldMapping['nullable']) {
+            $rules[] = 'nullable';
         }
 
         return $rules;

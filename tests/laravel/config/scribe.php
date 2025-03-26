@@ -35,16 +35,6 @@ return [
             // Exclude these routes even if they matched the rules above.
             'exclude' => [
                 // Exclude dynamic routes with {resourceType} parameter for now
-                'GET /{resourceType}',
-                'POST /{resourceType}',
-                'GET /{resourceType}/{id}',
-                'PATCH /{resourceType}/{id}',
-                'DELETE /{resourceType}/{id}',
-                'GET /{resourceType}/{id}/{relationship}',
-                'GET /{resourceType}/{id}/relationships/{relationship}',
-                'POST /{resourceType}/{id}/relationships/{relationship}',
-                'PATCH /{resourceType}/{id}/relationships/{relationship}',
-                'DELETE /{resourceType}/{id}/relationships/{relationship}'
             ],
         ],
     ],
@@ -57,6 +47,7 @@ return [
     'type' => 'static',
 
     // See https://scribe.knuckles.wtf/laravel/reference/config#theme for supported options
+    // 'theme' => 'default',
     'theme' => 'default',
 
     'static' => [
@@ -166,6 +157,13 @@ INTRO
         'overrides' => [
             // 'info.version' => '2.0.0',
         ],
+
+
+        // Additional generators to use when generating the OpenAPI spec.
+        // Should extend `Knuckles\Scribe\Writing\OpenApiSpecGenerators\OpenApiGenerator`.
+        'generators' => [
+            \Sowl\JsonApi\Scribe\JsonApiSpecGenerator::class,
+        ],
     ],
 
     'groups' => [
@@ -229,20 +227,12 @@ INTRO
             Strategies\Headers\GetFromHeaderAttribute::class,
             Strategies\Headers\GetFromHeaderTag::class,
             \Sowl\JsonApi\Scribe\Headers\AddJsonApiHeadersStrategy::class,
-            [
-                'override',
-                [
-                    'Content-Type' => 'application/json',
-                    'Accept' => 'application/json',
-                ]
-            ]
         ],
         'bodyParameters' => [
             Strategies\BodyParameters\GetFromFormRequest::class,
             Strategies\BodyParameters\GetFromInlineValidator::class,
             Strategies\BodyParameters\GetFromBodyParamAttribute::class,
             Strategies\BodyParameters\GetFromBodyParamTag::class,
-            \Sowl\JsonApi\Scribe\BodyParameters\GetFromJsonApiRouteStrategy::class,
         ],
         'responses' => [
             Strategies\Responses\UseResponseAttributes::class,
@@ -250,7 +240,7 @@ INTRO
             Strategies\Responses\UseApiResourceTags::class,
             Strategies\Responses\UseResponseTag::class,
             Strategies\Responses\UseResponseFileTag::class,
-            \Sowl\JsonApi\Scribe\Responses\UseJsonApiResourceResponseStrategy::class,
+            Sowl\JsonApi\Scribe\Responses\UseJsonApiResourceResponseStrategy::class,
             [
                 Strategies\Responses\ResponseCalls::class,
                 ['only' => ['GET *']]
@@ -272,5 +262,5 @@ INTRO
         'serializer' => null,
     ],
 
-    'routeMatcher' => \Knuckles\Scribe\Matching\RouteMatcher::class,
+    'routeMatcher' => \Sowl\JsonApi\Scribe\RouteMatcher::class,
 ];

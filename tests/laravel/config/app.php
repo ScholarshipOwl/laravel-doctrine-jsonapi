@@ -158,7 +158,7 @@ return [
         LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
 
         Sowl\JsonApi\JsonApiServiceProvider::class,
-        
+
         \Knuckles\Scribe\ScribeServiceProvider::class,
     ])->except([
         Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,

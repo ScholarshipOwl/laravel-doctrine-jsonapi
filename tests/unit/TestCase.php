@@ -1,4 +1,6 @@
-<?php namespace Tests;
+<?php
+
+namespace Tests;
 
 use Database\Seeders\SetUpSeeder;
 use Doctrine\ORM\EntityManager;
@@ -55,7 +57,7 @@ class TestCase extends LaravelTestCase
         }
 
         $this->em()->clear();
-        $seeder = new $class;
+        $seeder = new $class();
         $seeder->run($this->em);
         $this->em()->clear();
 

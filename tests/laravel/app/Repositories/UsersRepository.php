@@ -6,5 +6,4 @@ use Sowl\JsonApi\ResourceRepository;
 
 class UsersRepository extends ResourceRepository
 {
-
 }

@@ -7,7 +7,7 @@ use Illuminate\Support\Str;
 
 /**
  * Extracts relationship name from route.
- * 
+ *
  * This class provides functionality to extract relationship names from routes.
  * It supports extraction from route parameters and URI patterns.
  */
@@ -15,11 +15,11 @@ class RelationshipNameExtractor
 {
     /**
      * Extract relationship name from route.
-     * 
+     *
      * This method attempts to extract the relationship name from the given route.
      * It first tries to get the relationship name from the route parameter if the route is bound.
      * If the route is not bound, it falls back to pattern matching in the URI.
-     * 
+     *
      * @param Route $route The route to extract from
      * @return string|null The extracted relationship name or null if not found
      */
@@ -36,7 +36,7 @@ class RelationshipNameExtractor
         }
 
         $uri = $route->uri();
-        
+
         // Handle empty URI
         if (empty($uri)) {
             return null;
@@ -53,11 +53,40 @@ class RelationshipNameExtractor
         if ($relationshipName !== null) {
             return $relationshipName;
         }
-        
+
         // Check for resource/{id}/something pattern (related resource)
         return $this->extractFromRelatedResourcePattern($uri);
     }
-    
+
+    /**
+     * Check if the route is a relationships route.
+     *
+     * This method determines if the given route follows the relationships pattern
+     * (e.g., /resource/{id}/relationships/relationName). This is used to distinguish
+     * between relationship routes and related resource routes.
+     *
+     * @param Route $route The route to check
+     * @return bool True if the route is a relationships route, false otherwise
+     */
+    public function isRelationships(Route $route): bool
+    {
+        $uri = $route->uri();
+
+        // Handle empty URI
+        if (empty($uri)) {
+            return false;
+        }
+
+        // Remove prefix from URI
+        $uri = $this->pathWithoutPrefix($route);
+
+        // Simplify the URI to handle regex constraints and optional parameters
+        $uri = $this->simplifyUri($uri);
+
+        // Check for /relationships/ pattern followed by a parameter or path segment
+        return (bool)preg_match('/\/relationships\/(\{[^}]+\}|[^\/\{][^\/]*?)(\/?|\/.*)?$/', $uri);
+    }
+
     /**
      * Remove any prefix from the URI.
      *
@@ -68,20 +97,20 @@ class RelationshipNameExtractor
     {
         $uri = $route->uri();
         $prefix = $route->getPrefix();
-        
+
         if ($prefix) {
             // Remove the prefix and trailing slash if present
-            return Str::startsWith($uri, $prefix . '/') 
-                ? substr($uri, strlen($prefix) + 1) 
+            return Str::startsWith($uri, $prefix . '/')
+                ? substr($uri, strlen($prefix) + 1)
                 : $uri;
         }
-        
+
         return $uri;
     }
-    
+
     /**
      * Simplify a URI by removing regex constraints and optional parameter markers.
-     * 
+     *
      * @param string $uri The URI to simplify
      * @return string The simplified URI
      */
@@ -89,19 +118,19 @@ class RelationshipNameExtractor
     {
         // Remove regex constraints from parameters
         $uri = preg_replace('/\{([^}:]+):[^}]+\}/', '{$1}', $uri);
-        
+
         // Remove optional parameter markers
         $uri = preg_replace('/\{([^}]+)\?\}/', '{$1}', $uri);
-        
+
         return $uri;
     }
-    
+
     /**
      * Extract relationship name from a relationships pattern.
-     * 
+     *
      * This method checks if the given URI matches the relationships pattern (e.g., /relationships/something).
      * If a match is found, it returns the relationship name; otherwise, it returns null.
-     * 
+     *
      * @param string $uri The URI to extract from
      * @return string|null The extracted relationship name or null if not found
      */
@@ -111,16 +140,16 @@ class RelationshipNameExtractor
         if (preg_match('/\/relationships\/([^\/\{][^\/]*?)(\/?|\/.*)?$/', $uri, $matches)) {
             return $matches[1];
         }
-        
+
         return null;
     }
-    
+
     /**
      * Extract relationship name from a related resource pattern.
-     * 
+     *
      * This method checks if the given URI matches the related resource pattern (e.g., /resource/{id}/something).
      * If a match is found and the relationship name is not "relationships" (which is a keyword), it returns the relationship name; otherwise, it returns null.
-     * 
+     *
      * @param string $uri The URI to extract from
      * @return string|null The extracted relationship name or null if not found
      */
@@ -133,7 +162,7 @@ class RelationshipNameExtractor
                 return $matches[1];
             }
         }
-        
+
         return null;
     }
 }

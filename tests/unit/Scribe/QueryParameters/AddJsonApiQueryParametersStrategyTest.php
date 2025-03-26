@@ -9,29 +9,22 @@ use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
 use Sowl\JsonApi\ResourceManager;
-use Sowl\JsonApi\Relationships\ToManyRelationship;
-use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Scribe\QueryParameters\AddJsonApiQueryParametersStrategy;
 
 class AddJsonApiQueryParametersStrategyTest extends TestCase
 {
-    private ResourceManager|MockInterface $mockResourceManager;
-
     private AddJsonApiQueryParametersStrategy $strategy;
-
     private DocumentationConfig|MockInterface $mockConfig;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->mockResourceManager = Mockery::mock(ResourceManager::class);
-
-        // Create a mock for DocumentationConfig
         $this->mockConfig = Mockery::mock(DocumentationConfig::class);
-
-        // Create our test strategy with overridden methods
-        $this->strategy = new AddJsonApiQueryParametersStrategy($this->mockConfig, $this->mockResourceManager);
+        $this->strategy = new AddJsonApiQueryParametersStrategy(
+            $this->mockConfig,
+            app(ResourceManager::class)
+        );
     }
 
     protected function tearDown(): void
@@ -42,9 +35,9 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
 
     public function testReturnsCommonQueryParametersForJsonApiRoutes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'api/users/{user}', [
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users/{user}', [
             'as' => 'jsonapi.users.show',
-            'uses' => fn () => null
+            'uses' => fn () => null,
         ]));
 
         // Execute the strategy
@@ -58,13 +51,13 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         // Verify the parameters don't include list-specific parameters
         $this->assertArrayNotHasKey('filter', $result);
         $this->assertArrayNotHasKey('sort', $result);
-        $this->assertArrayNotHasKey('page[number]', $result);
+        $this->assertArrayNotHasKey('page', $result);
     }
 
     public function testReturnsEmptyArrayForNonJsonApiRoutes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'api/users', [
-            'as' => 'api.users.list',
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
+            'as' => 'users.list',
             'uses' => fn () => null
         ]));
 
@@ -91,54 +84,95 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         $this->assertArrayHasKey('meta', $result);
         $this->assertArrayHasKey('filter', $result);
         $this->assertArrayHasKey('sort', $result);
-        $this->assertArrayHasKey('page[number]', $result);
-        $this->assertArrayHasKey('page[size]', $result);
-        $this->assertArrayHasKey('page[limit]', $result);
-        $this->assertArrayHasKey('page[offset]', $result);
+        $this->assertArrayHasKey('page', $result);
+
+        // Assert page parameter structure
+        $this->assertArrayHasKey('page', $result);
+        $page = $result['page'];
+        
+        $this->assertStringContainsString('Pagination parameters', $page['description']);
+        $this->assertStringContainsString('https://jsonapi.org/format/#fetching-pagination', $page['description']);
+        $this->assertEquals('object', $page['type']);
+        $this->assertEquals(['number' => 1, 'size' => 10], $page['example']);
+
+        // Assert filter parameter structure
+        $this->assertIsArray($result['filter']);
+        $this->assertEquals([
+            'description' => 'Filter the resources by attributes. ([Spec](https://jsonapi.org/format/#fetching-filtering))',
+            'required' => false,
+            'style' => 'deepObject',
+            'explode' => true,
+            'schema' => [
+                'type' => 'object',
+                'additionalProperties' => true
+            ],
+            'example' => ['name' => 'John']
+        ], $result['filter']);
+
+        // Assert sort parameter structure
+        $this->assertIsArray($result['sort']);
+        $this->assertEquals([
+            'description' => 'Sort the results by attributes. Prefix with `-` for descending order. ([Spec](https://jsonapi.org/format/#fetching-sorting))',
+            'required' => false,
+            'example' => '-createdAt,title',
+            'enum' => null,
+        ], $result['sort']);
     }
 
     public function testAddsListParametersForToManyRelationshipRoutes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users/{user}/roles', [
-            'as' => 'jsonapi.users.roles.showRelated',
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users/{user}/relationships/roles', [
+            'as' => 'jsonapi.users.relationships.roles.list',
             'uses' => fn () => null
         ]));
-
-        // Set up the resource manager expectations
-        $this->mockResourceManager->shouldReceive('hasResourceType')->with('users')->andReturn(true);
-
-        // Create a ToManyRelationship mock
-        $mockRelationship = Mockery::mock(ToManyRelationship::class);
-
-        // Create a relationships collection with the relationship
-        $relationships = new RelationshipsCollection();
-
-        // Use reflection to set the protected relationships property
-        $reflection = new \ReflectionClass($relationships);
-        $property = $reflection->getProperty('relationships');
-        $property->setAccessible(true);
-        $property->setValue($relationships, collect(['roles' => $mockRelationship]));
-
-        // Set up the resource manager to return our collection
-        $this->mockResourceManager->shouldReceive('relationshipsByResourceType')
-            ->with('users')
-            ->andReturn($relationships);
 
         // Execute the strategy
         $result = $this->strategy->__invoke($endpointData);
 
-        // Assert that both common and list-specific parameters are returned for to-many relationships
+        // Assert that both common and list-specific parameters are returned
         $this->assertArrayHasKey('include', $result);
         $this->assertArrayHasKey('fields', $result);
         $this->assertArrayHasKey('meta', $result);
         $this->assertArrayHasKey('filter', $result);
         $this->assertArrayHasKey('sort', $result);
-        $this->assertArrayHasKey('page[number]', $result);
+        $this->assertArrayHasKey('page', $result);
+
+        // Assert page parameter structure
+        $this->assertArrayHasKey('page', $result);
+        $page = $result['page'];
+        
+        $this->assertStringContainsString('Pagination parameters', $page['description']);
+        $this->assertStringContainsString('https://jsonapi.org/format/#fetching-pagination', $page['description']);
+        $this->assertEquals('object', $page['type']);
+        $this->assertEquals(['number' => 1, 'size' => 10], $page['example']);
+
+        // Assert filter parameter structure
+        $this->assertIsArray($result['filter']);
+        $this->assertEquals([
+            'description' => 'Filter the resources by attributes. ([Spec](https://jsonapi.org/format/#fetching-filtering))',
+            'required' => false,
+            'style' => 'deepObject',
+            'explode' => true,
+            'schema' => [
+                'type' => 'object',
+                'additionalProperties' => true
+            ],
+            'example' => ['name' => 'John']
+        ], $result['filter']);
+
+        // Assert sort parameter structure
+        $this->assertIsArray($result['sort']);
+        $this->assertEquals([
+            'description' => 'Sort the results by attributes. Prefix with `-` for descending order. ([Spec](https://jsonapi.org/format/#fetching-sorting))',
+            'required' => false,
+            'example' => '-createdAt,title',
+            'enum' => null,
+        ], $result['sort']);
     }
 
     public function testReturnsEmptyArrayForNonAllowedMethods()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(new Route(['DELETE'], 'api/users', [
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['DELETE'], 'users', [
             'as' => 'jsonapi.users.list',
             'uses' => fn () => null
         ]));
@@ -150,12 +184,12 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function testHandlesAllAllowedHttpMethods()
+    public function testReturnsQueryParametersForAllowedMethods()
     {
         $allowedMethods = ['GET', 'POST', 'PATCH', 'PUT'];
 
         foreach ($allowedMethods as $method) {
-            $endpointData = ExtractedEndpointData::fromRoute(new Route([$method], 'api/users/{user}', [
+            $endpointData = ExtractedEndpointData::fromRoute(new Route([$method], 'users/{user}', [
                 'as' => 'jsonapi.users.show',
                 'uses' => fn () => null
             ]));
@@ -167,5 +201,132 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
             $this->assertNotEmpty($result, "Expected non-empty result for HTTP method: {$method}");
             $this->assertArrayHasKey('include', $result);
         }
+    }
+
+    public function testIncludeParameterWithAvailableIncludes()
+    {
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users/{user}', [
+            'as' => 'jsonapi.users.show',
+            'uses' => fn () => null
+        ]));
+
+        // Execute the strategy
+        $result = $this->strategy->__invoke($endpointData);
+
+        // Assert include parameter structure
+        $this->assertArrayHasKey('include', $result);
+        $includeParam = $result['include'];
+        $this->assertStringContainsString('Include related resources.', $includeParam['description']);
+        $this->assertStringContainsString('([Spec](https://jsonapi.org/format/#fetching-includes))', $includeParam['description']);
+        $this->assertStringContainsString('Available includes:', $includeParam['description']);
+        $this->assertStringContainsString('`status`, `roles`', $includeParam['description']); // Check specific includes
+        $this->assertEquals(false, $includeParam['required']);
+        $this->assertEquals('status,roles', $includeParam['example']);
+        $this->assertEquals(['status', 'roles'], $includeParam['enum']);
+    }
+
+    public function testMetaParameterWithAvailableMetas()
+    {
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users/{user}', [
+            'as' => 'jsonapi.users.show',
+            'uses' => fn () => null
+        ]));
+
+        // Execute the strategy
+        $result = $this->strategy->__invoke($endpointData);
+
+        // Assert meta parameter structure
+        $this->assertArrayHasKey('meta', $result);
+        $meta = $result['meta'];
+
+        $this->assertStringContainsString('Additional metadata', $meta['description']);
+        $this->assertFalse($meta['required']);
+        $this->assertEquals('object', $meta['type']);
+        $this->assertArrayHasKey('example', $meta);
+    }
+
+    public function testFieldsParameterStructure()
+    {
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users/{user}', [
+            'as' => 'jsonapi.users.show',
+            'uses' => fn () => null
+        ]));
+
+        // Execute the strategy
+        $result = $this->strategy->__invoke($endpointData);
+
+        // Assert fields parameter structure
+        $this->assertArrayHasKey('fields', $result);
+        $fields = $result['fields'];
+
+        $this->assertStringContainsString('Sparse fieldsets', $fields['description']);
+        $this->assertStringContainsString('https://jsonapi.org/format/#fetching-sparse-fieldsets', $fields['description']);
+        $this->assertFalse($fields['required']);
+        $this->assertEquals('object', $fields['type']);
+    }
+
+    public function testFilterParameterForCollectionRoute()
+    {
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
+            'as' => 'jsonapi.users.index',
+            'uses' => fn () => null
+        ]));
+
+        // Execute the strategy
+        $result = $this->strategy->__invoke($endpointData);
+
+        // Assert filter parameter structure
+        $this->assertArrayHasKey('filter', $result);
+        $this->assertEquals([
+            'description' => 'Filter the resources by attributes. ([Spec](https://jsonapi.org/format/#fetching-filtering))',
+            'required' => false,
+            'style' => 'deepObject',
+            'explode' => true,
+            'schema' => [
+                'type' => 'object',
+                'additionalProperties' => true
+            ],
+            'example' => ['name' => 'John']
+        ], $result['filter']);
+    }
+
+    public function testSortParameterForCollectionRoute()
+    {
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
+            'as' => 'jsonapi.users.index',
+            'uses' => fn () => null
+        ]));
+
+        // Execute the strategy
+        $result = $this->strategy->__invoke($endpointData);
+
+        // Assert sort parameter structure
+        $this->assertArrayHasKey('sort', $result);
+        $this->assertEquals([
+            'description' => 'Sort the results by attributes. Prefix with `-` for descending order. ([Spec](https://jsonapi.org/format/#fetching-sorting))',
+            'required' => false,
+            'example' => '-createdAt,title',
+            'enum' => null,
+        ], $result['sort']);
+    }
+
+    public function testPageParameterForCollectionRoute()
+    {
+        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
+            'as' => 'jsonapi.users.index',
+            'uses' => fn () => null
+        ]));
+
+        // Execute the strategy
+        $result = $this->strategy->__invoke($endpointData);
+
+        // Assert page parameter structure
+        $this->assertArrayHasKey('page', $result);
+        $page = $result['page'];
+
+        $this->assertStringContainsString('Pagination parameters', $page['description']);
+        $this->assertStringContainsString('https://jsonapi.org/format/#fetching-pagination', $page['description']);
+        $this->assertEquals('object', $page['type']);
+        $this->assertEquals(['number' => 1, 'size' => 10], $page['example']);
     }
 }

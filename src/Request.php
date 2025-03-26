@@ -4,11 +4,9 @@ namespace Sowl\JsonApi;
 
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Sowl\JsonApi\Exceptions\NotFoundException;
-use Sowl\JsonApi\Relationships\ToManyRelationship;
-use Sowl\JsonApi\Relationships\ToOneRelationship;
+use Sowl\JsonApi\Relationships\RelationshipInterface;
 use Sowl\JsonApi\Request\WithDataTrait;
 use Sowl\JsonApi\Request\WithFieldsParamsTrait;
 use Sowl\JsonApi\Request\WithFilterParamsTrait;
@@ -33,7 +31,7 @@ class Request extends FormRequest
     protected ResourceInterface $resource;
     protected ?string $resourceType = null;
     protected ?string $relationshipName = null;
-    protected ToOneRelationship|ToManyRelationship $relationship;
+    protected RelationshipInterface $relationship;
 
     const JSONAPI_CONTENT_TYPE = 'application/vnd.api+json';
 
@@ -63,12 +61,20 @@ class Request extends FormRequest
     }
 
     /**
-     * Returns array of the validation rules that is validation on request resolve.
+     * Returns array of validation rules for request data.
      */
     public function rules(): array
     {
-        return $this->dataRules()
-            + $this->fieldsParamsRules()
+        return $this->dataRules();
+    }
+
+    /**
+     * Returns array of validation rules for query parameters.
+     * Override this method to customize query parameter validation rules.
+     */
+    protected function queryParameterRules(): array
+    {
+        return $this->fieldsParamsRules()
             + $this->filterParamsRules()
             + $this->includeParamsRules()
             + $this->paginationParamsRules();
@@ -98,7 +104,7 @@ class Request extends FormRequest
         if (!isset($this->resourceType)) {
             // Try to get from route parameter first
             $resourceType = $this->route('resourceType');
-            
+
             // If not found in route parameter, use ResourceTypeExtractor
             if (is_null($resourceType)) {
                 $extractor = new ResourceTypeExtractor();
@@ -126,7 +132,7 @@ class Request extends FormRequest
         if (!isset($this->relationshipName)) {
             // Try to get from route parameter first
             $relationshipName = $this->route('relationship');
-            
+
             // If not found in route parameter, use RelationshipNameExtractor
             if (is_null($relationshipName)) {
                 $extractor = new RelationshipNameExtractor();
@@ -143,14 +149,17 @@ class Request extends FormRequest
      * Gets the relationship instance associated with the relationship name.
      * If not found NotFoundException thrown.
      */
-    public function relationship(): ToOneRelationship|ToManyRelationship
+    public function relationship(): RelationshipInterface
     {
         if (!isset($this->relationship)) {
             $relationshipName = $this->relationshipName();
 
-            $relationship = $this
-                ->resource()
-                ->relationships()
+            if (is_null($relationshipName)) {
+                throw new NotFoundException();
+            }
+
+            $relationship = $this->rm()
+                ->relationshipsByResourceType($this->resourceType())
                 ->get($relationshipName);
 
             if (is_null($relationship)) {
@@ -180,6 +189,22 @@ class Request extends FormRequest
     }
 
     /**
+     * Handle request validation on resolve.
+     * Validates query parameters first, then validates request data.
+     */
+    public function validateResolved(): void
+    {
+        // Validate query parameters first
+        $validator = validator($this->all(), $this->queryParameterRules());
+        if ($validator->fails()) {
+            $this->failedValidation($validator);
+        }
+
+        // Then validate data rules through parent
+        parent::validateResolved();
+    }
+
+    /**
      * Converts validation exception into JSON:API response when request validation fails on resolve.
      * @throws ValidationException
      */
@@ -187,22 +212,10 @@ class Request extends FormRequest
     {
         $exception = new Exceptions\ValidationException();
         foreach ($validator->errors()->getMessages() as $attribute => $messages) {
-            $pointer = "/".str_replace('.', '/', $attribute);
+            $pointer = "/" . str_replace('.', '/', $attribute);
             array_map(fn ($message) => $exception->detail($message, $pointer), $messages);
         }
 
         throw $exception;
-    }
-
-    /**
-     * Remove any prefix from the path.
-     */
-    protected function pathWithoutPrefix(): string
-    {
-        $prefix = $this->route()->getPrefix();
-
-        return $prefix
-            ? Str::remove($prefix . '/', $this->path())
-            : $this->path();
     }
 }

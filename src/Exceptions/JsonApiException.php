@@ -60,7 +60,7 @@ class JsonApiException extends \Exception implements Responsable
     public function __construct(
         $message = '',
         $httpStatus = self::HTTP_INTERNAL_SERVER_ERROR,
-        \Throwable  $previous = null,
+        \Throwable $previous = null,
         protected array $errors = [],
     ) {
         parent::__construct($message, $httpStatus, $previous);

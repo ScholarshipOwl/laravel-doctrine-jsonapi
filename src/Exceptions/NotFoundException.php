@@ -9,11 +9,10 @@ namespace Sowl\JsonApi\Exceptions;
 class NotFoundException extends JsonApiException
 {
     public function __construct(
-        string     $message = 'Not found.',
-        int        $httpStatus = self::HTTP_NOT_FOUND,
+        string $message = 'Not found.',
+        int $httpStatus = self::HTTP_NOT_FOUND,
         \Throwable $previous = null
-    )
-    {
+    ) {
         parent::__construct($message, $httpStatus, $previous);
     }
 }

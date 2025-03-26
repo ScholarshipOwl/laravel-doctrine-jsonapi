@@ -8,8 +8,8 @@ use Sowl\JsonApi\Request;
 
 trait WithFilterParsersTrait
 {
-    abstract static public function searchProperty(): ?string;
-    abstract static public function filterable(): array;
+    abstract public static function searchProperty(): ?string;
+    abstract public static function filterable(): array;
 
     public static function filterParsers(Request $request): array
     {

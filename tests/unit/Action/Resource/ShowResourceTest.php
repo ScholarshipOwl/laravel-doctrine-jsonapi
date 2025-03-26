@@ -120,10 +120,10 @@ class ShowResourceTest extends TestCase
     {
         $user = $this->actingAsUser();
 
-        $this->get('/users/'.$user->getId())
+        $this->get('/users/' . $user->getId())
             ->assertJson([
                 'data' => [
-                    'id' => ''.$user->getId(),
+                    'id' => '' . $user->getId(),
                     'type' => 'users',
                 ]
             ]);
@@ -362,8 +362,8 @@ class ShowResourceTest extends TestCase
                         'links' => [
                             'self' => '/roles/2',
                         ]
-                   ],
-                   [
+                    ],
+                    [
                        'id' => User::USER_ID,
                        'type' => 'users',
                        'attributes' => [
@@ -387,7 +387,7 @@ class ShowResourceTest extends TestCase
                        'links' => [
                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
                        ],
-                   ]
+                    ]
                 ]
             ]);
     }

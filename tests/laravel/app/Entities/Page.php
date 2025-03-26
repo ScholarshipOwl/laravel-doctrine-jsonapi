@@ -66,7 +66,7 @@ class Page implements ResourceInterface
     {
         return new RelationshipsCollection([
             ToOneRelationship::create('user', User::class),
-            ToManyRelationship::create('pageComments', PageComment::class, 'page'),
+            ToManyRelationship::create('pageComments', PageComment::class, 'page', 'comments'),
         ]);
     }
 

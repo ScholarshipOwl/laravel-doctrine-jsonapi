@@ -5,6 +5,8 @@ namespace Sowl\JsonApi;
 use Doctrine\Common\Collections\Collection as DoctrineCollection;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Illuminate\Contracts\View\Factory as ViewFactory;
+use Illuminate\Routing\Redirector;
 use League\Fractal\Pagination\DoctrinePaginatorAdapter;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
@@ -21,6 +23,11 @@ use Sowl\JsonApi\Fractal\RelationshipsTransformer;
  */
 class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 {
+    public function __construct(ViewFactory $view, Redirector $redirector, protected ?Request $request = null)
+    {
+        parent::__construct($view, $redirector);
+    }
+
     /**
      * Method takes a resource, status code, headers, meta, and a flag to indicate if it is a relationship response.
      * It transforms data with help of resource's transformer then creates a response from the transformed data and
@@ -30,13 +37,12 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
      * "attributes" in the data.
      */
     public function item(
-        ResourceInterface   $resource,
-        int                 $status = Response::HTTP_OK,
-        array               $headers = [],
-        array               $meta = [],
-        bool                $relationship = false,
-    ): Response
-    {
+        ResourceInterface $resource,
+        int $status = Response::HTTP_OK,
+        array $headers = [],
+        array $meta = [],
+        bool $relationship = false,
+    ): Response {
         $transformer = $resource->transformer();
 
         if ($relationship) {
@@ -61,11 +67,10 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
      * @link https://jsonapi.org/format/#crud-creating-responses-201
      */
     public function created(
-        ResourceInterface   $resource,
-        array               $headers = [],
-        array               $meta = []
-    ): Response
-    {
+        ResourceInterface $resource,
+        array $headers = [],
+        array $meta = []
+    ): Response {
         return $this->item(
             resource: $resource,
             status: Response::HTTP_CREATED,
@@ -88,12 +93,11 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
         array|DoctrineCollection $collection,
         string $resourceType,
         AbstractTransformer $transformer,
-        int                 $status = Response::HTTP_OK,
-        array               $headers = [],
-        array               $meta = [],
-        bool                $relationship = false,
-    ): Response
-    {
+        int $status = Response::HTTP_OK,
+        array $headers = [],
+        array $meta = [],
+        bool $relationship = false,
+    ): Response {
         if ($relationship) {
             $transformer = new RelationshipsTransformer($transformer);
         }
@@ -117,15 +121,14 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
      * "attributes" in the data.
      */
     public function query(
-        QueryBuilder        $qb,
-        string              $resourceType,
+        QueryBuilder $qb,
+        string $resourceType,
         AbstractTransformer $transformer,
-        int                 $status = Response::HTTP_OK,
-        array               $headers = [],
-        array               $meta = [],
-        bool                $relationship = false,
-    ): Response
-    {
+        int $status = Response::HTTP_OK,
+        array $headers = [],
+        array $meta = [],
+        bool $relationship = false,
+    ): Response {
         $data = new Paginator($qb, false);
 
         if ($relationship) {
@@ -142,8 +145,9 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
             $size = $qb->getMaxResults();
             $basePath = $this->request()->getBasePath();
 
-            $collection->setPaginator(new DoctrinePaginatorAdapter($data,
-                fn (int $page) => $basePath.'?'.http_build_query(['page' => ['number' => $page, 'size' => $size]]),
+            $collection->setPaginator(new DoctrinePaginatorAdapter(
+                $data,
+                fn (int $page) => $basePath . '?' . http_build_query(['page' => ['number' => $page, 'size' => $size]]),
             ));
         }
 
@@ -194,9 +198,9 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
     /**
      * Method takes a body, status code, and headers and creates a response with the provided parameters.
      */
-    protected function buildResponse(?array $body, int $status = Response::HTTP_OK, array $header = []): Response
+    protected function buildResponse(?array $body, int $status = Response::HTTP_OK, array $headers = []): Response
     {
-        return new Response($body, $status, $header);
+        return new Response($body, $status, $headers);
     }
 
     /**
@@ -212,6 +216,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
      */
     protected function request(): ?Request
     {
-        return app('request.jsonapi');
+        // We must keep the app('request.jsonapi') because of tests implementation and how the request is created.
+        return $this->request ?? app('request.jsonapi');
     }
 }

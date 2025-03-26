@@ -1,4 +1,6 @@
-<?php namespace Tests\App\Transformers;
+<?php
+
+namespace Tests\App\Transformers;
 
 use Sowl\JsonApi\AbstractTransformer;
 use Tests\App\Entities\Role;
