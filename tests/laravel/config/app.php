@@ -156,7 +156,6 @@ return [
         LaravelDoctrine\ORM\DoctrineServiceProvider::class,
         LaravelDoctrine\ORM\Queue\FailedJobsServiceProvider::class,
         LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
-        LaravelDoctrine\ACL\AclServiceProvider::class,
 
         Sowl\JsonApi\JsonApiServiceProvider::class,
     ])->except([

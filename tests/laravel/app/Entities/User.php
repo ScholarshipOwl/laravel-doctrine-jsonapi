@@ -8,7 +8,6 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Foundation\Auth\Access\Authorizable;
-use LaravelDoctrine\ACL\Roles\HasRoles;
 use LaravelDoctrine\Extensions\Timestamps\Timestamps;
 use LaravelDoctrine\ORM\Auth\Authenticatable;
 use Sowl\JsonApi\AbstractTransformer;
@@ -34,7 +33,6 @@ class User implements AuthenticatableContract,
     use CanResetPassword;
     use Authenticatable;
     use Authorizable;
-    use HasRoles;
     use MemoizeRelationshipsTrait;
     use Timestamps;
     use WithFilterParsersTrait;
@@ -214,5 +212,16 @@ class User implements AuthenticatableContract,
     public function isRoot(): bool
     {
         return $this->hasRoleByName(Role::ROOT_NAME);
+    }
+
+
+    public function hasRole(Role $role): bool
+    {
+        return $this->roles->contains($role);
+    }
+
+    public function hasRoleByName(string $name): bool
+    {
+        return $this->roles->exists(fn(int $_, Role $role) => $role->getName() === $name);
     }
 }

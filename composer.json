@@ -25,7 +25,6 @@
     },
     "require-dev": {
         "laravel-doctrine/orm": "^2.0",
-        "laravel-doctrine/acl": "^1.7",
         "laravel-doctrine/migrations": "^3.1",
         "doctrine/annotations": "^2",
         "phpunit/phpunit": "^9.5",

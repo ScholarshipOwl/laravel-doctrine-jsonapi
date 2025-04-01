@@ -2,8 +2,6 @@
 
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use LaravelDoctrine\ACL\Contracts\Role as RoleContract;
-use LaravelDoctrine\ACL\Permissions\HasPermissions;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
@@ -14,10 +12,8 @@ use Tests\App\Transformers\RoleTransformer;
  * @ORM\Entity(repositoryClass="Tests\App\Repositories\RolesRepository")
  * @ORM\Table(name="role")
  */
-class Role implements ResourceInterface, RoleContract
+class Role implements ResourceInterface
 {
-    use HasPermissions;
-
     const ROOT = 1;
     const ROOT_NAME = 'Root';
 
