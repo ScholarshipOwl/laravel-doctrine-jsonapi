@@ -10,7 +10,7 @@ use Sowl\JsonApi\Scribe\AbstractStrategy;
  */
 class GetFromJsonApiRouteStrategy extends AbstractStrategy
 {
-    public function __invoke(ExtractedEndpointData $endpointData, array $routeRules = []): array
+    public function __invoke(ExtractedEndpointData $endpointData, array $settings = []): array
     {
         if (!$this->initJsonApiEndpointData($endpointData)) {
             // Not a JSON:API route, skip

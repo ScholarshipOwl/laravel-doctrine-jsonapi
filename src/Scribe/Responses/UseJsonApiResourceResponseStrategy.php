@@ -17,7 +17,7 @@ class UseJsonApiResourceResponseStrategy extends AbstractStrategy
     /**
      * @inheritDoc
      */
-    public function __invoke(ExtractedEndpointData $endpointData, array $routeRules = []): array
+    public function __invoke(ExtractedEndpointData $endpointData, array $settings = []): array
     {
         if (!$this->initJsonApiEndpointData($endpointData)) {
             // Not a JSON:API route, skip
