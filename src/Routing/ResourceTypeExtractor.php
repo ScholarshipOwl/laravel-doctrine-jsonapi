@@ -70,7 +70,7 @@ class ResourceTypeExtractor
     private function pathWithoutPrefix(Route $route): string
     {
         $uri = $route->uri();
-        $prefix = $route->getPrefix();
+        $prefix = config('jsonapi.routing.rootPathPrefix', '');
 
         if ($prefix) {
             // Remove the prefix and trailing slash if present

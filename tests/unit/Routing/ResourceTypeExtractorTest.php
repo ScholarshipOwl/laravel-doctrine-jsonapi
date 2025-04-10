@@ -39,6 +39,11 @@ class ResourceTypeExtractorTest extends TestCase
     public function provideRouteData(): array
     {
         return [
+            'special route case' => [
+                'users/specialCustomEndpoint',
+                'users',
+                [],
+            ],
             'simple resource' => [
                 'users',
                 'users',
@@ -52,7 +57,6 @@ class ResourceTypeExtractorTest extends TestCase
             'prefixed resource' => [
                 'users',
                 'users',
-                ['prefix' => 'api/v1']
             ],
             'nested resource' => [
                 'users/{id}/posts',
@@ -85,11 +89,6 @@ class ResourceTypeExtractorTest extends TestCase
                 'user_profiles',
                 []
             ],
-            'multiple prefixes' => [
-                'admin/users',
-                'admin',
-                ['prefix' => 'api/v2']
-            ],
             'complex nested resources' => [
                 'organizations/{orgId}/departments/{deptId}/employees/{empId}/tasks',
                 'organizations',
@@ -104,11 +103,6 @@ class ResourceTypeExtractorTest extends TestCase
                 'articles/{id:[0-9]+}',
                 'articles',
                 []
-            ],
-            'deeply nested API version' => [
-                'beta/users',
-                'beta',
-                ['prefix' => 'api/v3.1']
             ],
             'resource with dot notation' => [
                 'api.v1.users',

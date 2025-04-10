@@ -148,11 +148,19 @@ class JsonApiEndpointData
         $relationshipExtractor = new RelationshipNameExtractor();
 
         // Extract JSON:API specific data
-        if (
-            empty($resourceType = $resourceTypeExtractor->extract($route)) ||
-            !$this->rm->hasResourceType($resourceType)
-        ) {
-            throw new \RuntimeException('No resource type found, are you sure this is a JSON:API endpoint?');
+        if (empty($resourceType = $resourceTypeExtractor->extract($route))) {
+            throw new \RuntimeException(
+                'No resource type found, are you sure this is a JSON:API endpoint?'
+            );
+        }
+
+        if (!$this->rm->hasResourceType($resourceType)) {
+            throw new \RuntimeException(
+                sprintf(
+                    'Resource type "%s" is not registered in the ResourceManager.',
+                    $resourceType
+                )
+            );
         }
 
         $this->resourceType = $resourceType;

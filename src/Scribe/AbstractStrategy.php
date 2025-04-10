@@ -35,7 +35,7 @@ abstract class AbstractStrategy extends Strategy
         $this->resourceManager = $resourceManager ?? app(ResourceManager::class);
         $this->resourceTypeExtractor = new ResourceTypeExtractor();
         $this->relationshipNameExtractor = new RelationshipNameExtractor();
-        $this->jsonapiPrefix = config('jsonapi.scribe.routeNamePrefix', 'jsonapi.');
+        $this->jsonapiPrefix = config('jsonapi.routing.rootNamePrefix', 'jsonapi.');
     }
 
     public function initJsonApiEndpointData(ExtractedEndpointData $endpointData): bool
