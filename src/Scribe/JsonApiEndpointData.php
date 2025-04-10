@@ -10,6 +10,7 @@ use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\Routing\RelationshipNameExtractor;
 use Sowl\JsonApi\Routing\ResourceTypeExtractor;
+use Sowl\JsonApi\Routing\Concerns\HandlesRoutePrefixes;
 
 /**
  * Wraps ExtractedEndpointData with JSON:API specific data.
@@ -20,6 +21,8 @@ use Sowl\JsonApi\Routing\ResourceTypeExtractor;
  */
 class JsonApiEndpointData
 {
+    use HandlesRoutePrefixes;
+
     // Resource actions
     public const ACTION_LIST = 'list';
     public const ACTION_SHOW = 'show';
@@ -164,119 +167,110 @@ class JsonApiEndpointData
         }
 
         $this->resourceType = $resourceType;
-        $this->isRelationships = $relationshipExtractor->isRelationships($route);
         $this->relationshipName = $relationshipExtractor->extract($route);
         $this->relationship = $this->relationshipName
             ? $this->rm
                 ->relationshipsByResourceType($this->resourceType)
                 ->get($this->relationshipName)
             : null;
+
+        // Make sure to set isRelationships only if real relationship is registered.
+        $this->isRelationships = $relationshipExtractor->isRelationships($route) && $this->relationship !== null;
     }
 
     /**
      * Determine the JSON:API action type for this endpoint.
+     *
+     * The algorithm follows this sequence of checks:
+     * 1. If the endpoint is a relationships endpoint (/resource/{id}/relationships/relation),
+     *    determine the relationship action based on HTTP method
+     * 2. If there's a relationship detected (/resource/{id}/relation), determine
+     *    the related resource action (show related to-one/to-many)
+     * 3. If it's a resource instance URI (/resource/{id}), determine the standard
+     *    instance action (show, update, delete) based on the HTTP method
+     * 4. If it's a root resource URI (/resource), determine the collection
+     *    action (list, create) based on the HTTP method
+     * 5. Any other pattern is considered a custom action
      */
     private function determineActionType(): void
     {
         $route = $this->endpointData->route;
         $httpMethod = $route->methods()[0];
-        $uri = $route->uri();
+        $uri = $this->pathWithoutPrefix($route);
 
-        if ($this->isRelationships) {
-            $this->determineRelationshipAction($httpMethod);
-            return;
-        }
+        $this->actionType = match (true) {
+            // 1. Check if it's a relationships endpoint
+            $this->isRelationships => $this->determineRelationshipAction($httpMethod),
 
-        if ($this->relationship !== null) {
-            if (preg_match('/^' . $this->resourceType . '\/\{[^}]+\}\/[^\/]+/', $uri)) {
-                $this->determineRelatedResourceAction();
-                return;
-            }
-        }
+            // 2. Check if it's a related resource endpoint (we have a relationship)
+            $this->relationship !== null => $this->determineRelatedResourceAction(),
 
-        $this->determineResourceAction($httpMethod, $uri);
+            // 3. Check for instance resource actions (show, update, delete)
+            $this->isResourceInstanceUri($uri) => $this->determineInstanceResourceAction($httpMethod),
 
-        if ($this->actionType === null) {
-            $this->actionType = self::ACTION_CUSTOM;
-        }
+            // 4. Check for root resource actions (list, create)
+            $this->isRootResourceUri($uri) => $this->determineRootResourceAction($httpMethod),
+
+            // 5. All other patterns are custom actions
+            default => self::ACTION_CUSTOM,
+        };
     }
 
-    private function determineRelationshipAction(string $httpMethod): void
+    /**
+     * Check if the URI represents a root resource (e.g., /users, /posts)
+     */
+    private function isRootResourceUri(string $uri): bool
     {
-        if ($this->relationship === null) {
-            $this->actionType = self::ACTION_CUSTOM;
-            return;
-        }
+        return preg_match('/^' . $this->resourceType . '\/?$/', $uri);
+    }
 
-        switch ($httpMethod) {
-            case 'GET':
-                $this->actionType = $this->relationship->isToOne()
+    /**
+     * Check if the URI represents a resource instance (e.g., /users/{id}, /posts/{post_id})
+     */
+    private function isResourceInstanceUri(string $uri): bool
+    {
+        // Matches patterns like: 'users/{user_id}', 'pages/{id}', 'comments/{comment}'
+        return preg_match('/^' . $this->resourceType . '\/\{[^\/}]+\}$/', $uri);
+    }
+
+    private function determineRelationshipAction(string $httpMethod): string
+    {
+        return match ($httpMethod) {
+            'GET' => $this->relationship->isToOne()
                 ? self::ACTION_SHOW_RELATIONSHIP_TO_ONE
-                : self::ACTION_SHOW_RELATIONSHIP_TO_MANY;
-                break;
-            case 'POST':
-                $this->actionType = self::ACTION_ADD_RELATIONSHIP_TO_MANY;
-                break;
-            case 'PATCH':
-                $this->actionType = $this->relationship->isToOne()
+                : self::ACTION_SHOW_RELATIONSHIP_TO_MANY,
+            'POST' => self::ACTION_ADD_RELATIONSHIP_TO_MANY,
+            'PATCH' => $this->relationship->isToOne()
                 ? self::ACTION_UPDATE_RELATIONSHIP_TO_ONE
-                : self::ACTION_UPDATE_RELATIONSHIP_TO_MANY;
-                break;
-            case 'DELETE':
-                $this->actionType = self::ACTION_REMOVE_RELATIONSHIP_TO_MANY;
-                break;
-            default:
-                $this->actionType = self::ACTION_CUSTOM;
-        }
+                : self::ACTION_UPDATE_RELATIONSHIP_TO_MANY,
+            'DELETE' => self::ACTION_REMOVE_RELATIONSHIP_TO_MANY,
+            default => self::ACTION_CUSTOM,
+        };
     }
 
-    private function determineRelatedResourceAction(): void
+    private function determineRelatedResourceAction(): string
     {
-        if ($this->relationship === null) {
-            $this->actionType = self::ACTION_CUSTOM;
-            return;
-        }
-
-        $this->actionType = $this->relationship->isToOne()
+        return $this->relationship->isToOne()
             ? self::ACTION_SHOW_RELATED_TO_ONE
             : self::ACTION_SHOW_RELATED_TO_MANY;
     }
 
-    private function determineResourceAction(string $httpMethod, string $uri): void
+    private function determineRootResourceAction(string $httpMethod): string
     {
-        if (preg_match('/^' . $this->resourceType . '\/?$/', $uri) && $httpMethod === 'GET') {
-            $this->actionType = self::ACTION_LIST;
-            return;
-        }
-
-        switch ($httpMethod) {
-            case 'GET':
-                $this->actionType = self::ACTION_SHOW;
-                break;
-            case 'POST':
-                $this->actionType = self::ACTION_CREATE;
-                break;
-            case 'PATCH':
-            case 'PUT':
-                $this->actionType = self::ACTION_UPDATE;
-                break;
-            case 'DELETE':
-                $this->actionType = self::ACTION_DELETE;
-                break;
-            default:
-                $this->actionType = self::ACTION_CUSTOM;
-        }
+        return match ($httpMethod) {
+            'GET' => self::ACTION_LIST,
+            'POST' => self::ACTION_CREATE,
+            default => self::ACTION_CUSTOM,
+        };
     }
 
-    /**
-     * Get controller method name from route
-     */
-    private function getMethodNameFromRoute(Route $route): ?string
+    private function determineInstanceResourceAction(string $httpMethod): string
     {
-        if (method_exists($route, 'getActionMethod')) {
-            return $route->getActionMethod();
-        }
-
-        return null;
+        return match ($httpMethod) {
+            'GET' => self::ACTION_SHOW,
+            'PATCH', 'PUT' => self::ACTION_UPDATE,
+            'DELETE' => self::ACTION_DELETE,
+            default => self::ACTION_CUSTOM,
+        };
     }
 }

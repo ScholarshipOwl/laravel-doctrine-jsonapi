@@ -4,6 +4,7 @@ namespace Sowl\JsonApi\Routing;
 
 use Illuminate\Routing\Route;
 use Illuminate\Support\Str;
+use Sowl\JsonApi\Routing\Concerns\HandlesRoutePrefixes;
 
 /**
  * Extracts resource type from route.
@@ -13,6 +14,8 @@ use Illuminate\Support\Str;
  */
 class ResourceTypeExtractor
 {
+    use HandlesRoutePrefixes;
+
     /**
      * Extract resource type from route.
      *
@@ -59,26 +62,5 @@ class ResourceTypeExtractor
         }
 
         return null;
-    }
-
-    /**
-     * Remove any prefix from the URI.
-     *
-     * @param Route $route The route to get the URI from
-     * @return string The URI without the prefix
-     */
-    private function pathWithoutPrefix(Route $route): string
-    {
-        $uri = $route->uri();
-        $prefix = config('jsonapi.routing.rootPathPrefix', '');
-
-        if ($prefix) {
-            // Remove the prefix and trailing slash if present
-            return Str::startsWith($uri, $prefix . '/')
-                ? substr($uri, strlen($prefix) + 1)
-                : $uri;
-        }
-
-        return $uri;
     }
 }

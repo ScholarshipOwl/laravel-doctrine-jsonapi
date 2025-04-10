@@ -4,6 +4,7 @@ namespace Sowl\JsonApi\Routing;
 
 use Illuminate\Routing\Route;
 use Illuminate\Support\Str;
+use Sowl\JsonApi\Routing\Concerns\HandlesRoutePrefixes;
 
 /**
  * Extracts relationship name from route.
@@ -13,6 +14,8 @@ use Illuminate\Support\Str;
  */
 class RelationshipNameExtractor
 {
+    use HandlesRoutePrefixes;
+
     /**
      * Extract relationship name from route.
      *
@@ -88,27 +91,6 @@ class RelationshipNameExtractor
     }
 
     /**
-     * Remove any prefix from the URI.
-     *
-     * @param Route $route The route to get the URI from
-     * @return string The URI without the prefix
-     */
-    private function pathWithoutPrefix(Route $route): string
-    {
-        $uri = $route->uri();
-        $prefix = $route->getPrefix();
-
-        if ($prefix) {
-            // Remove the prefix and trailing slash if present
-            return Str::startsWith($uri, $prefix . '/')
-                ? substr($uri, strlen($prefix) + 1)
-                : $uri;
-        }
-
-        return $uri;
-    }
-
-    /**
      * Simplify a URI by removing regex constraints and optional parameter markers.
      *
      * @param string $uri The URI to simplify
@@ -148,7 +130,7 @@ class RelationshipNameExtractor
      * Extract relationship name from a related resource pattern.
      *
      * This method checks if the given URI matches the related resource pattern (e.g., /resource/{id}/something).
-     * If a match is found and the relationship name is not "relationships" (which is a keyword), it returns the relationship name; otherwise, it returns null.
+     * If a match is found and the relationship name is not "relationships" (which is a keyword) and not kebab-case (custom action), it returns the relationship name; otherwise, it returns null.
      *
      * @param string $uri The URI to extract from
      * @return string|null The extracted relationship name or null if not found
@@ -157,8 +139,8 @@ class RelationshipNameExtractor
     {
         $matches = [];
         if (preg_match('/\/\{[^\/]+\}\/([^\/\{][^\/]*?)(\/?|\/.*)?$/', $uri, $matches)) {
-            // Skip "relationships" as it's a keyword
-            if ($matches[1] !== 'relationships') {
+            // Skip "relationships" as it's a keyword and skip custom action paths
+            if ($matches[1] !== 'relationships' && !preg_match('/^(publish|archive|import|export|count-.*|verify-.*|reset-.*|toggle-.*|calculate-.*|bulk-.*)$/', $matches[1])) {
                 return $matches[1];
             }
         }
