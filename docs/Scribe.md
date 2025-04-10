@@ -64,7 +64,7 @@ To use the JSON:API custom strategies, you need to add them to your Scribe confi
 2. Add the JSON:API OpenAPI spec generator:
 
 ```php
-'api' => [
+'openapi' => [
     // ...other api config
     'generators' => [
         \Sowl\JsonApi\Scribe\JsonApiSpecGenerator::class,

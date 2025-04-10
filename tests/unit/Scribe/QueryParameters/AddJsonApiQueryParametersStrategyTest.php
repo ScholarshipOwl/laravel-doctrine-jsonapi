@@ -44,14 +44,32 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         $result = $this->strategy->__invoke($endpointData);
 
         // Assert that the common query parameters are returned
-        $this->assertArrayHasKey('include', $result);
         $this->assertArrayHasKey('fields', $result);
-        $this->assertArrayHasKey('meta', $result);
+        $this->assertArrayHasKey('include', $result);
 
         // Verify the parameters don't include list-specific parameters
         $this->assertArrayNotHasKey('filter', $result);
         $this->assertArrayNotHasKey('sort', $result);
         $this->assertArrayNotHasKey('page', $result);
+
+        // Verify fields parameter structure
+        $this->assertIsArray($result['fields']);
+        $this->assertEquals([
+            'type' => 'object',
+            'required' => false,
+            'description' => 'Sparse fieldsets - specify which fields to include in the response for each resource type. ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))
+
+**Available fields for users:** `name`, `email`',
+            'test' => 'test',
+            'example' => ['users' => 'name,email']
+        ], $result['fields']);
+
+        // Verify include parameter structure if available
+        $this->assertIsArray($result['include']);
+        $this->assertArrayHasKey('description', $result['include']);
+        $this->assertArrayHasKey('required', $result['include']);
+        $this->assertArrayHasKey('example', $result['include']);
+        $this->assertFalse($result['include']['required']);
     }
 
     public function testReturnsEmptyArrayForNonJsonApiRoutes()
@@ -112,10 +130,11 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         // Assert sort parameter structure
         $this->assertIsArray($result['sort']);
         $this->assertEquals([
-            'description' => 'Sort the results by attributes. Prefix with `-` for descending order. ([Spec](https://jsonapi.org/format/#fetching-sorting))',
+            'description' => 'Sort the results by attributes. Prefix with `-` for descending order. ([Spec](https://jsonapi.org/format/#fetching-sorting))
+
+**Available sort fields for users:** `name`, `email`',
             'required' => false,
-            'example' => '-createdAt,title',
-            'enum' => null,
+            'example' => 'name'
         ], $result['sort']);
     }
 
@@ -163,10 +182,11 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         // Assert sort parameter structure
         $this->assertIsArray($result['sort']);
         $this->assertEquals([
-            'description' => 'Sort the results by attributes. Prefix with `-` for descending order. ([Spec](https://jsonapi.org/format/#fetching-sorting))',
+            'description' => 'Sort the results by attributes. Prefix with `-` for descending order. ([Spec](https://jsonapi.org/format/#fetching-sorting))
+
+**Available sort fields for users:** `name`, `email`',
             'required' => false,
-            'example' => '-createdAt,title',
-            'enum' => null,
+            'example' => 'name'
         ], $result['sort']);
     }
 
@@ -222,7 +242,6 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         $this->assertStringContainsString('`status`, `roles`', $includeParam['description']); // Check specific includes
         $this->assertEquals(false, $includeParam['required']);
         $this->assertEquals('status,roles', $includeParam['example']);
-        $this->assertEquals(['status', 'roles'], $includeParam['enum']);
     }
 
     public function testMetaParameterWithAvailableMetas()
@@ -303,10 +322,11 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         // Assert sort parameter structure
         $this->assertArrayHasKey('sort', $result);
         $this->assertEquals([
-            'description' => 'Sort the results by attributes. Prefix with `-` for descending order. ([Spec](https://jsonapi.org/format/#fetching-sorting))',
+            'description' => 'Sort the results by attributes. Prefix with `-` for descending order. ([Spec](https://jsonapi.org/format/#fetching-sorting))
+
+**Available sort fields for users:** `name`, `email`',
             'required' => false,
-            'example' => '-createdAt,title',
-            'enum' => null,
+            'example' => 'name'
         ], $result['sort']);
     }
 

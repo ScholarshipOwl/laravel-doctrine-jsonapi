@@ -132,7 +132,6 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
             'description' => $includeDescription,
             'required' => false,
             'example' => $includeExample,
-            'enum' => $includes,
         ];
     }
 
@@ -156,7 +155,6 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
             'description' => $excludeDescription,
             'required' => false,
             'example' => '', // Provide a meaningful example if possible
-            'enum' => $excludes,
         ];
     }
 
