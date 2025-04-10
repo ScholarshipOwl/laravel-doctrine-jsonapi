@@ -4,6 +4,7 @@ namespace Sowl\JsonApi\Scribe\Metadata;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Sowl\JsonApi\Scribe\AbstractStrategy;
+use Sowl\JsonApi\Scribe\DisplayHelper;
 use Sowl\JsonApi\Scribe\JsonApiEndpointData;
 
 /**
@@ -11,7 +12,10 @@ use Sowl\JsonApi\Scribe\JsonApiEndpointData;
  */
 class GetFromJsonApiRouteStrategy extends AbstractStrategy
 {
+    use DisplayHelper;
+
     protected array $transParams;
+
     /**
      * @inheritDoc
      */
@@ -106,9 +110,9 @@ class GetFromJsonApiRouteStrategy extends AbstractStrategy
                 __('jsonapi::metadata.description.default_description', $this->transParams),
         };
     }
-    protected function generateGroupName(): string
+    protected function generateGroupName(): ?string
     {
-        return  $this->convertToDisplay($this->jsonApiEndpointData->resourceType);
+        return  $this->displayResourceType($this->jsonApiEndpointData->resourceType);
     }
 
     protected function generateSubgroupName(): ?string
@@ -128,25 +132,13 @@ class GetFromJsonApiRouteStrategy extends AbstractStrategy
         return $subgroup;
     }
 
-    // TODO: Refactor and use separate helper class for display convertations.
-    protected function convertToDisplay(?string $value, bool $plural = true): ?string
-    {
-        if (!$value) {
-            return null;
-        }
-
-        $display = \Str::headline(\Str::singular(\Str::snake($value)));
-        $display = ucfirst(strtolower($display));
-        return $plural ? \Str::plural($display) : \Str::singular($display);
-    }
-
     protected function defaultTransParams(): array
     {
         $endpoint = $this->jsonApiEndpointData;
-        $displayTypeSingular = $this->convertToDisplay($endpoint->resourceType, false);
-        $displayTypePlural = $this->convertToDisplay($endpoint->resourceType);
-        $displayRelationshipSingular = $this->convertToDisplay($endpoint->relationshipName, false);
-        $displayRelationshipPlural = $this->convertToDisplay($endpoint->relationshipName);
+        $displayTypeSingular = $this->displayResourceType($endpoint->resourceType, false);
+        $displayTypePlural = $this->displayResourceType($endpoint->resourceType);
+        $displayRelationshipSingular = $this->displayResourceType($endpoint->relationshipName, false);
+        $displayRelationshipPlural = $this->displayResourceType($endpoint->relationshipName);
 
         return [
             'displayTypeSingular' => $displayTypeSingular,

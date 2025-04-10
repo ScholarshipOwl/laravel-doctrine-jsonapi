@@ -2,13 +2,19 @@
 
 namespace Sowl\JsonApi\Scribe;
 
-class DisplayHelper
+use Illuminate\Support\Str;
+
+trait DisplayHelper
 {
-    public static function displayResourceType(string $resourceType): string
+    protected function displayResourceType(?string $resourceType, bool $plural = true): ?string
     {
-        $display = \Str::headline(\Str::singular(\Str::snake($resourceType)));
+        if (is_null($resourceType)) {
+            return null;
+        }
+
+        $display = Str::headline(Str::singular(Str::snake($resourceType)));
         $display = ucfirst(strtolower($display));
 
-        return $display;
+        return $plural ? Str::plural($display) : Str::singular($display);
     }
 }
