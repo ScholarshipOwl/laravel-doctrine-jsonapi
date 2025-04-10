@@ -11,12 +11,11 @@ use Sowl\JsonApi\Response;
  *
  * By using the WithRemoveTrait in your controller classes, you can quickly and easily add the functionality to delete
  * a resource in your JSON:API implementation.
+ *
+ * Handle "DELETE /{resourceType}/{id}" route.
  */
 trait WithRemoveTrait
 {
-    /**
-     * Handle "DELETE /{resourceType}/{id}" route.
-     */
     public function remove(Request $request): Response
     {
         return RemoveResourceAction::create()

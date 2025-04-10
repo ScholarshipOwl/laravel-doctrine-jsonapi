@@ -11,12 +11,11 @@ use Sowl\JsonApi\Response;
  *
  * By using the WithShowTrait in your controller classes, you can quickly and easily add the functionality to fetch a
  * single resource in your JSON:API implementation.
+ *
+ * Handle "GET /{resourceType}/{id}" route.
  */
 trait WithShowTrait
 {
-    /**
-     * Handle "GET /{resourceType}/{id}" route.
-     */
     public function show(Request $request): Response
     {
         return (new ShowResourceAction())

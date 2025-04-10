@@ -11,12 +11,11 @@ use Sowl\JsonApi\Response;
  *
  * By using the WithCreateTrait in your controller classes, you can quickly and easily add the functionality to
  * create a new resource in your JSON:API implementation.
+ *
+ * Handle "POST /{resourceType}" route.
  */
 trait WithCreateTrait
 {
-    /**
-     * Handle "POST /{resourceType}" route.
-     */
     public function create(CreateResourceRequest $request): Response
     {
         return (new CreateResourceAction())

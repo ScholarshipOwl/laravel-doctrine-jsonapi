@@ -11,12 +11,11 @@ use Sowl\JsonApi\Response;
  *
  * By using the WithListTrait in your controller classes, you can quickly and easily add the functionality to list
  * resources in your JSON:API implementation, with support for search and filtering.
+ *
+ * Handle "GET /{resourceType}" route.
  */
 trait WithListTrait
 {
-    /**
-     * Handle "GET /{resourceType}" route.
-     */
     public function list(Request $request): Response
     {
         return (new ListResourcesAction())
