@@ -5,6 +5,7 @@ namespace Sowl\JsonApi\Scribe\QueryParameters;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Extracting\ParamBag;
 use Sowl\JsonApi\Scribe\AbstractStrategy;
+use Sowl\JsonApi\Scribe\JsonApiEndpointData;
 use Sowl\JsonApi\Scribe\ResponseGenerationHelper;
 
 /**
@@ -35,9 +36,11 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
             return [];
         }
 
-        $queryParameters = [
-            'fields' => $this->buildFieldsQueryParameter(),
-        ];
+        $queryParameters = [];
+
+        if (($fields = $this->buildFieldsQueryParameter()) !== null) {
+            $queryParameters['fields'] = $fields;
+        }
 
         if (($include = $this->buildIncludeQueryParameter()) !== null) {
             $queryParameters['include'] = $include;
@@ -65,8 +68,12 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
         return $queryParameters;
     }
 
-    private function buildFieldsQueryParameter(): array
+    private function buildFieldsQueryParameter(): ?array
     {
+        if (!$this->isDataWillBeReturned()) {
+            return null;
+        }
+
         $resourceType = $this->jsonApiEndpointData->resourceType;
         $response = $this->generateSingleContent($resourceType);
         $fields = array_keys($response['data']['attributes'] ?? []);
@@ -99,6 +106,10 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
 
     private function buildIncludeQueryParameter(): ?array
     {
+        if (!$this->isDataWillBeReturned()) {
+            return null;
+        }
+
         $transformer = $this->jsonApiEndpointData->resourceTransformer();
         $includes = $transformer->getAvailableIncludes();
         $default = $transformer->getDefaultIncludes();
@@ -137,6 +148,10 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
 
     private function buildExcludeQueryParameter(): ?array
     {
+        if (!$this->isDataWillBeReturned()) {
+            return null;
+        }
+
         $transformer = $this->jsonApiEndpointData->resourceTransformer();
         $excludes = $transformer->getDefaultIncludes();
 
@@ -160,6 +175,10 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
 
     private function buildMetaQueryParameter(): ?array
     {
+        if (!$this->isDataWillBeReturned()) {
+            return null;
+        }
+
         $resourceType = $this->jsonApiEndpointData->resourceType;
         $transformer = $this->jsonApiEndpointData->resourceTransformer();
         $metas = $transformer->getAvailableMetas();
@@ -252,6 +271,18 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
             'required' => false,
             'example' => $fields[0] ?? null,
         ];
+    }
+
+    protected function isDataWillBeReturned(): bool
+    {
+        return in_array($this->jsonApiEndpointData->actionType, [
+            JsonApiEndpointData::ACTION_LIST,
+            JsonApiEndpointData::ACTION_SHOW,
+            JsonApiEndpointData::ACTION_CREATE,
+            JsonApiEndpointData::ACTION_UPDATE,
+            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_ONE,
+            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_MANY,
+        ]);
     }
 
     protected function allowedMethods(): array

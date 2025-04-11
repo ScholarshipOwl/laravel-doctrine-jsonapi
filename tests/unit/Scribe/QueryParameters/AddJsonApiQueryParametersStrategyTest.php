@@ -148,10 +148,7 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         // Execute the strategy
         $result = $this->strategy->__invoke($endpointData);
 
-        // Assert that both common and list-specific parameters are returned
-        $this->assertArrayHasKey('include', $result);
-        $this->assertArrayHasKey('fields', $result);
-        $this->assertArrayHasKey('meta', $result);
+        // Assert that only list-specific parameters applicable to relationships are returned
         $this->assertArrayHasKey('filter', $result);
         $this->assertArrayHasKey('sort', $result);
         $this->assertArrayHasKey('page', $result);
@@ -206,21 +203,33 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
 
     public function testReturnsQueryParametersForAllowedMethods()
     {
-        $allowedMethods = ['GET', 'POST', 'PATCH', 'PUT'];
+        $routeInfo = [
+            'as' => 'jsonapi.users.show',
+            'uses' => fn () => null
+        ];
+        $routePath = 'users/{user}';
 
-        foreach ($allowedMethods as $method) {
-            $endpointData = ExtractedEndpointData::fromRoute(new Route([$method], 'users/{user}', [
-                'as' => 'jsonapi.users.show',
-                'uses' => fn () => null
-            ]));
-
-            // Execute the strategy
+        // Test methods expected to have query parameters (GET, PATCH, PUT)
+        $methodsWithParams = ['GET', 'PATCH', 'PUT'];
+        foreach ($methodsWithParams as $method) {
+            $endpointData = ExtractedEndpointData::fromRoute(new Route([$method], $routePath, $routeInfo));
             $result = $this->strategy->__invoke($endpointData);
-
-            // Assert that the query parameters are returned for allowed HTTP methods
             $this->assertNotEmpty($result, "Expected non-empty result for HTTP method: {$method}");
-            $this->assertArrayHasKey('include', $result);
+            // Could add more specific assertions here if needed (e.g., assertArrayHasKey 'include')
+            $this->assertArrayHasKey('include', $result); // Re-add common assertion
+            $this->assertArrayHasKey('fields', $result); // Re-add common assertion
+            $this->assertArrayHasKey('meta', $result); // Re-add common assertion
+             // Assert keys not expected for detail route
+            $this->assertArrayNotHasKey('page', $result);
+            $this->assertArrayNotHasKey('sort', $result);
+            $this->assertArrayNotHasKey('filter', $result);
         }
+
+        // Test custom action POST method - Expect empty result
+        $postMethod = 'POST';
+        $endpointDataPost = ExtractedEndpointData::fromRoute(new Route([$postMethod], $routePath, $routeInfo));
+        $resultPost = $this->strategy->__invoke($endpointDataPost);
+        $this->assertEmpty($resultPost, "Expected empty result for custom action HTTP method: {$postMethod}");
     }
 
     public function testIncludeParameterWithAvailableIncludes()
