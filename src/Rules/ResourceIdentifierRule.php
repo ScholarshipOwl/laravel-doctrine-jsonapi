@@ -15,6 +15,8 @@ use Sowl\JsonApi\Scribe\DisplayHelper;
 // TODO: Use ValidationRule for the rule
 class ResourceIdentifierRule implements Rule
 {
+    use DisplayHelper;
+
     protected array $message = ['The :attribute field is invalid.'];
 
     public static function make(
@@ -106,7 +108,7 @@ class ResourceIdentifierRule implements Rule
         return [
             'description' => sprintf(
                 'The resource identifier for a %s.',
-                DisplayHelper::displayResourceType($resourceType)
+                $this->displayResourceType($resourceType)
             ),
             'type' => 'object',
             'required' => true,
