@@ -18,7 +18,7 @@ use UnexpectedValueException;
  */
 class ResourceManager
 {
-    /** @var array<string, ResourceInterface>  */
+    /** @var array<string, class-string<ResourceInterface>>  */
     protected array $resources;
 
     public function __construct(protected EntityManager $em, array $resources = [])
@@ -36,11 +36,11 @@ class ResourceManager
         return $this->em;
     }
 
-
     /**
      * Returns an array of all registered resources.
+     * @return array<string, class-string<ResourceInterface>>
      */
-    public function getResources(): array
+    public function resources(): array
     {
         return $this->resources;
     }
@@ -100,7 +100,7 @@ class ResourceManager
      */
     public function classByResourceType(string $resourceType): string
     {
-        if (!$this->hasresourceType($resourceType)) {
+        if (!$this->hasResourceType($resourceType)) {
             throw new InvalidArgumentException(sprintf('%s - is not registered resource key', $resourceType));
         }
 

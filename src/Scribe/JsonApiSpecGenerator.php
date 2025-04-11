@@ -3,16 +3,38 @@
 namespace Sowl\JsonApi\Scribe;
 
 use Knuckles\Camel\Output\OutputEndpointData;
+use Knuckles\Scribe\Tools\DocumentationConfig;
 use Knuckles\Scribe\Writing\OpenApiSpecGenerators\OpenApiGenerator;
+use Sowl\JsonApi\ResourceInterface;
+use Sowl\JsonApi\ResourceManager;
 
 class JsonApiSpecGenerator extends OpenApiGenerator
 {
-    private const DEEP_OBJECT_PARAMS = [
+    protected const DEEP_OBJECT_PARAMS = [
         'fields',
         'meta',
         'filter',
         'page',
     ];
+
+    public function __construct(
+        protected DocumentationConfig $config,
+        protected ResourceManager $rm,
+    )
+    {
+        parent::__construct($config);
+    }
+
+    public function root(array $root, array $groupedEndpoints): array
+    {
+        $resourcesSchemas = $this->generateResourcesSchemas($root, $groupedEndpoints);
+
+        $root['components'] = [
+            'schemas' => array_merge($root['components']['schemas'] ?? [], $resourcesSchemas),
+        ];
+
+        return $root;
+    }
 
     public function pathItem(array $pathItem, array $groupedEndpoints, OutputEndpointData $endpoint): array
     {
@@ -22,7 +44,10 @@ class JsonApiSpecGenerator extends OpenApiGenerator
         return $pathItem;
     }
 
-    private function extendPageParamSchema(array $pathItem): array
+    /**
+     * Extends `page` query parameter with proper Open API spec, that is not supported by scribe.
+     */
+    protected function extendPageParamSchema(array $pathItem): array
     {
         if (isset($pathItem['parameters'])) {
             foreach ($pathItem['parameters'] as &$param) {
@@ -84,7 +109,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
      * In JSON:API parameters are deepObjects. But Scribe is not supports it out of the box.
      * https://swagger.io/docs/specification/v3_0/serialization/
      */
-    private function appendDeepObjectStyle(array $pathItem): array
+    protected function appendDeepObjectStyle(array $pathItem): array
     {
         if (!isset($pathItem['parameters'])) {
             foreach ($pathItem['parameters'] as &$param) {
@@ -96,5 +121,82 @@ class JsonApiSpecGenerator extends OpenApiGenerator
         }
 
         return $pathItem;
+    }
+
+    protected function generateResourcesSchemas(array $root, array $groupedEndpoints): array
+    {
+        $schemas = [];
+
+        foreach ($this->rm->resources() as $resourceType => $resourceClass) {
+            $schemas[$resourceType] = [
+                'type' => 'object',
+                'required' => ['data'],
+                'properties' => [
+                    'data' => [
+                        'type' => 'object',
+                        'required' => ['id', 'type'],
+                        'properties' => array_merge_recursive(
+                            $this->specObjectIdentifierProperties($resourceType),
+                            // TODO: Implement the attributes
+                            //                            [
+                            //                                'attributes' => [
+                            //                                    'type' => 'object',
+                            //                                ],
+                            //                            ],
+                            $this->specRelationships($resourceClass),
+                            //  TODO: Implement meta params
+                        )
+                    ]
+                ]
+            ];
+        }
+
+        return $schemas;
+    }
+
+    /**
+     * @param class-string<ResourceInterface> $resourceClass
+     */
+    protected function specRelationships(string $resourceClass): array
+    {
+        $relationshipsProperties = [];
+
+        foreach ($this->rm->relationshipsByClass($resourceClass)->all() as $relationship) {
+            $relationshipClass = $relationship->class();
+            $relationshipType = ResourceManager::resourceType($relationshipClass);
+
+            $relationshipsProperties[$relationship->name()] = [
+                'type' => 'object',
+                'properties' => [
+                    'data' => [
+                        'type' => 'object',
+                        'required' => ['id', 'type'],
+                        'properties' => $this->specObjectIdentifierProperties($relationshipType)
+                    ]
+                ]
+            ];
+        }
+
+        return empty($relationshipsProperties) ? [] : [
+            'relationships' => [
+                'type' => 'object',
+                'properties' => $relationshipsProperties
+            ],
+        ];
+    }
+
+    protected function specObjectIdentifierProperties(string $resourceType): array
+    {
+        return [
+            'id' => [
+                'type' => 'string',
+                'example' => '1',
+            ],
+            'type' => [
+                'type' => 'string',
+                'example' => $resourceType,
+                'enum' => [$resourceType],
+            ],
+        ];
     }
 }

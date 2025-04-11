@@ -47,7 +47,7 @@ class RouteMatcher extends ScribeRouteMatcher
         $routes = [];
 
         if (\Str::contains($uri, '{resourceType}')) {
-            foreach ($this->rm->getResources() as $resourceType => $resourceClass) {
+            foreach ($this->rm->resources() as $resourceType => $resourceClass) {
                 $resourceRoute = new MatchedRoute(
                     new Route(
                         $route->getRoute()->methods(),
