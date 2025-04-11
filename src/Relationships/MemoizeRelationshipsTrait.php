@@ -14,7 +14,7 @@ trait MemoizeRelationshipsTrait
      * The method returns the cached instance of RelationshipsCollection if it exists; otherwise, it creates
      * a new instance and caches it before returning.
      */
-    private static RelationshipsCollection $memoizedRelationships;
+    protected static RelationshipsCollection $memoizedRelationships;
 
     /**
      * Takes a callable as an argument, which is expected to return an array of relationships
