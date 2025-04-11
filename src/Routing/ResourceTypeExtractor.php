@@ -42,8 +42,8 @@ class ResourceTypeExtractor
             return null;
         }
 
-        // Handle special case for {resourceType} parameter
-        if (preg_match('/^\{resourceType\}/', $uri)) {
+        // Handle special case for parameter at the start of the URI
+        if (preg_match('/^\{[^\/]+\}/', $uri)) {
             return null;
         }
 

@@ -78,6 +78,11 @@ class ResourceTypeExtractorTest extends TestCase
                 null,
                 []
             ],
+            'dictionary type parameter only' => [
+                '/{dictionaryType}',
+                null,
+                []
+            ],
             // Additional creative test cases
             'kebab-case resource' => [
                 'blog-posts',
