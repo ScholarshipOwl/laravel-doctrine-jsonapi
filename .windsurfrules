@@ -3,6 +3,7 @@ The package is a Laravel package that provides a set of tools for working with J
 It is using Doctrine ORM for database interactions, instead of Eloquent.
 
 ## General rules
+  - Always take into account repository code and library purpose
   - Use Step-by-Step approach by default, if not told otherwise
   - Use code style that same as the repository code
   - Don't implement any new code styles or patterns not used in the repository

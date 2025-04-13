@@ -194,12 +194,16 @@ INTRO
 
     'examples' => [
         // Set this to any number (eg. 1234) to generate the same example values for parameters on each run,
-        'faker_seed' => null,
+        'faker_seed' => 1234,
 
         // With API resources and transformers, Scribe tries to generate example models to use in your API responses.
         // By default, Scribe will try the model's factory, and if that fails, try fetching the first from the database.
         // You can reorder or remove strategies here.
-        'models_source' => ['factoryCreate', 'factoryMake', 'databaseFirst'],
+        'models_source' => [
+            'doctrineFactoryCreate',
+            'doctrineFactoryMake',
+            'doctrineRepositoryFirst',
+        ],
     ],
 
     // The strategies Scribe will use to extract information about your routes at each stage.

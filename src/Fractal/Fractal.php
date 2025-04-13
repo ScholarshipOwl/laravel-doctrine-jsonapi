@@ -3,7 +3,6 @@
 namespace Sowl\JsonApi\Fractal;
 
 use League\Fractal\Manager;
-use Sowl\JsonApi\Request;
 
 /**
  * The Fractal class extends the League\Fractal\Manager class and provides a custom implementation for
@@ -18,29 +17,29 @@ class Fractal extends Manager
 
     /**
      * Sets up a new instance of ScopeFactory, creates a new JsonApiSerializer instance, and sets it as the serializer.
-     * It then processes the "include", "exclude", "fields", and "meta" parameters from the request.
+     * It then processes the "include", "exclude", "fields", and "meta" parameters from the options DTO.
      */
-    public function __construct(protected Request $request)
+    public function __construct(protected FractalOptions $options)
     {
         parent::__construct(new ScopeFactory());
 
-        $serializer = new JsonApiSerializer($this->request->getBaseUrl());
+        $serializer = new JsonApiSerializer($options->baseUrl);
         $this->setSerializer($serializer);
 
-        if ($includes = $this->request->getInclude()) {
-            $this->parseIncludes($includes);
+        if ($options->includes) {
+            $this->parseIncludes($options->includes);
         }
 
-        if ($excludes = $this->request->getExclude()) {
-            $this->parseExcludes($excludes);
+        if ($options->excludes) {
+            $this->parseExcludes($options->excludes);
         }
 
-        if ($fields = $this->request->getFields()) {
-            $this->parseFieldsets($fields);
+        if ($options->fields) {
+            $this->parseFieldsets($options->fields);
         }
 
-        if ($meta = $this->request->getMeta()) {
-            $this->parseMetasets($meta);
+        if ($options->meta) {
+            $this->parseMetasets($options->meta);
         }
     }
 

@@ -12,6 +12,7 @@ use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\Fractal\Fractal;
+use Sowl\JsonApi\Fractal\FractalOptions;
 use Sowl\JsonApi\Fractal\RelationshipsTransformer;
 
 /**
@@ -208,7 +209,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
      */
     protected function fractal(): Fractal
     {
-        return new Fractal($this->request());
+        return new Fractal(FractalOptions::fromRequest($this->request()));
     }
 
     /**

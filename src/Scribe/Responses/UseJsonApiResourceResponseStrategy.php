@@ -138,7 +138,10 @@ class UseJsonApiResourceResponseStrategy extends AbstractStrategy
             return 201; // Created
         }
 
-        if (in_array($actionType, [JsonApiEndpointData::ACTION_DELETE, JsonApiEndpointData::ACTION_REMOVE_RELATIONSHIP_TO_MANY])) {
+        if (in_array($actionType, [
+            JsonApiEndpointData::ACTION_DELETE,
+            JsonApiEndpointData::ACTION_REMOVE_RELATIONSHIP_TO_MANY
+        ])) {
             return 204; // No Content
         }
 
