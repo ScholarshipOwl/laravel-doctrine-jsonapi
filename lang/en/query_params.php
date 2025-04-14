@@ -33,11 +33,10 @@ return [
         'description' => 'Filter the resources by attributes. ([Spec](:specUrl))',
     ],
     'page' => [
-        'description' => 'Pagination parameters. ([Spec](:specUrl))',
-        'number_description' => 'Page number.',
-        'size_description' => 'Number of results per page.',
-        'limit_description' => 'Maximum number of results to return.',
-        'offset_description' => 'Number of results to skip.',
+        'number_description' => 'Page number. ([Spec](:specUrl))',
+        'size_description' => 'Number of results per page. ([Spec](:specUrl))',
+        'limit_description' => 'Maximum number of results to return. ([Spec](:specUrl))',
+        'offset_description' => 'Number of results to skip. ([Spec](:specUrl))',
     ],
     'sort' => [
         'description' => 'Sort the results by attributes. Prefix with `-` for descending order. ([Spec](:specUrl))',

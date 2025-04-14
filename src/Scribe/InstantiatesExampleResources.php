@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Sowl\JsonApi\Scribe;
 
-use Knuckles\Scribe\Extracting\DatabaseTransactionHelpers;
 use Knuckles\Scribe\Tools\ConsoleOutputUtils as c;
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Knuckles\Scribe\Tools\ErrorHandlingUtils as e;
@@ -55,7 +54,7 @@ trait InstantiatesExampleResources
                     return $model;
                 }
             } catch (Throwable $e) {
-                c::warn("Couldn't get example model for {$resourceClass} via $strategy.");
+                c::warn("Couldn't get example resource for {$resourceClass} via $strategy.");
                 e::dumpExceptionIfVerbose($e, true);
             }
         }
@@ -69,6 +68,8 @@ trait InstantiatesExampleResources
     protected function getExampleResourceFromDatabaseFirst(string $resourceClass): ?object
     {
         $entityManager = $this->rm()->em();
+        // TODO: investigate on possible different fix.
+        $entityManager->clear();
         $repository = $entityManager->getRepository($resourceClass);
         return $repository->findOneBy([]); // Find the first available entity
     }

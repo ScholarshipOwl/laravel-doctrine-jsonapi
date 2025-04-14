@@ -32,7 +32,7 @@ When using the "Step-by-Step" approach:
   - Write human readable code
   - Use 4 spaces for indentation
   - Use 120 characters for maximum line width
-  - Use PSR-12 for code style
+  - Use PSR-12 for code style (https://www.php-fig.org/psr/psr-12/)
   - Use Laravel's coding standards
   - Remove any unnecessary whitespace
   - Don't create phpdoc with params if it's possible to type hint them

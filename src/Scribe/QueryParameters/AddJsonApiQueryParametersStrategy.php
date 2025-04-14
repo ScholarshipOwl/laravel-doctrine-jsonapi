@@ -37,40 +37,30 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
 
         $queryParameters = [];
 
-        if (($fields = $this->buildFieldsQueryParameter()) !== null) {
-            $queryParameters['fields'] = $fields;
-        }
-
-        if (($include = $this->buildIncludeQueryParameter()) !== null) {
-            $queryParameters['include'] = $include;
-        }
-
-        if (($exclude = $this->buildExcludeQueryParameter()) !== null) {
-            $queryParameters['exclude'] = $exclude;
-        }
-
-        if (($meta = $this->buildMetaQueryParameter()) !== null) {
-            $queryParameters['meta'] = $meta;
-        }
-
         if ($this->jsonApiEndpointData->isCollectionRoute()) {
-            $queryParameters = array_merge($queryParameters, [
-                'page' => $this->buildPageQueryParameter(),
-                'sort' => $this->buildSortQueryParameter(),
-            ]);
-
-            if (($filter = $this->buildFilterQueryParameter()) !== null) {
-                $queryParameters['filter'] = $filter;
-            }
+            $queryParameters = array_merge(
+                $queryParameters,
+                $this->buildPageQueryParameter(),
+                $this->buildSortQueryParameter(),
+                $this->buildFilterQueryParameter(),
+            );
         }
+
+        $queryParameters = array_merge(
+            $queryParameters,
+            $this->buildFieldsQueryParameter(),
+            $this->buildMetaQueryParameter(),
+            $this->buildIncludeQueryParameter(),
+            $this->buildExcludeQueryParameter(),
+        );
 
         return $queryParameters;
     }
 
-    private function buildFieldsQueryParameter(): ?array
+    private function buildFieldsQueryParameter(): array
     {
         if (!$this->isDataWillBeReturned()) {
-            return null;
+            return [];
         }
 
         $resourceType = $this->jsonApiEndpointData->resourceType;
@@ -92,21 +82,23 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
             );
         }
 
-        return [
-            'type' => 'object',
+        $fieldsParameter = [
+            'type' => 'string',
             'required' => false,
             'description' => $description,
-            'test' => 'test',
-            'example' => [
-                $resourceType => implode(',', $fields)
-            ]
+            'example' => implode(',', $fields)
         ];
+
+        // In order to support nested fields, we need to use a custom name
+        // ( Scalar does not support nested parameters )
+        // Wait for scalar and Scribe to support nested parameters ( style: deepObject )
+        return ["fields[$resourceType]" => $fieldsParameter];
     }
 
-    private function buildIncludeQueryParameter(): ?array
+    private function buildIncludeQueryParameter(): array
     {
         if (!$this->isDataWillBeReturned()) {
-            return null;
+            return [];
         }
 
         $transformer = $this->jsonApiEndpointData->resourceTransformer();
@@ -114,7 +106,7 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
         $default = $transformer->getDefaultIncludes();
 
         if (empty($includes)) {
-            return null;
+            return [];
         }
 
         $includeDescription = __(
@@ -138,24 +130,26 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
 
         $includeExample = implode(',', array_slice($includes, 0, 2));
 
-        return [
+        $includeParameter = [
             'description' => $includeDescription,
             'required' => false,
             'example' => $includeExample,
         ];
+
+        return ['include' => $includeParameter];
     }
 
-    private function buildExcludeQueryParameter(): ?array
+    private function buildExcludeQueryParameter(): array
     {
         if (!$this->isDataWillBeReturned()) {
-            return null;
+            return [];
         }
 
         $transformer = $this->jsonApiEndpointData->resourceTransformer();
         $excludes = $transformer->getDefaultIncludes();
 
         if (empty($excludes)) {
-            return null;
+            return [];
         }
 
         $excludeDescription = __('jsonapi::query_params.exclude.description');
@@ -165,17 +159,19 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
             ['excludes' => implode(', ', array_map(fn ($exclude) => "`$exclude`", $excludes))]
         );
 
-        return [
+        $excludeParameter = [
             'description' => $excludeDescription,
             'required' => false,
             'example' => '', // Provide a meaningful example if possible
         ];
+
+        return ['exclude' => $excludeParameter];
     }
 
-    private function buildMetaQueryParameter(): ?array
+    private function buildMetaQueryParameter(): array
     {
         if (!$this->isDataWillBeReturned()) {
-            return null;
+            return [];
         }
 
         $resourceType = $this->jsonApiEndpointData->resourceType;
@@ -183,7 +179,7 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
         $metas = $transformer->getAvailableMetas();
 
         if (empty($metas)) {
-            return null;
+            return [];
         }
 
         $description = __('jsonapi::query_params.meta.description');
@@ -195,59 +191,59 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
             ]
         );
 
-        return [
-            'type' => 'object',
+        $metaParameter = [
+            'type' => 'string',
             'required' => false,
             'description' => $description,
-            'example' => [
-                $resourceType => implode(',', $metas)
-            ]
+            'example' => implode(',', $metas)
         ];
-    }
 
-    private function buildFilterQueryParameter(): array
-    {
-        // TODO: Add filter examples
-        $description = __(
-            'jsonapi::query_params.filter.description',
-            ['specUrl' => self::SPEC_URL_FILTERING]
-        );
-        return [
-            'description' => $description,
-            'style' => 'deepObject',
-            'explode' => true,
-            'required' => false,
-            'schema' => [
-                'type' => 'object',
-                'additionalProperties' => true
-            ],
-            'example' => [
-                'name' => 'John',
-            ]
-        ];
+        return ["meta[$resourceType]" => $metaParameter];
     }
 
     private function buildPageQueryParameter(): array
     {
-        $description = __(
-            'jsonapi::query_params.page.description',
-            ['specUrl' => self::SPEC_URL_PAGINATION]
-        );
-
+        // Scribe doesn't fully support complex nested objects with 'oneOf' like OpenAPI spec allows.
+        // We define each sub-parameter individually.
         return [
-            'description' => $description,
-            'type' => 'object',
-            'example' => [
-                'number' => 1,
-                'size' => 10
+            'page[number]' => [
+                'description' => __('jsonapi::query_params.page.number_description', [
+                    'specUrl' => self::SPEC_URL_PAGINATION
+                ]),
+                'required' => false,
+                'type' => 'integer',
+                'example' => 1,
+            ],
+            'page[size]' => [
+                'description' => __('jsonapi::query_params.page.size_description', [
+                    'specUrl' => self::SPEC_URL_PAGINATION
+                ]),
+                'required' => false,
+                'type' => 'integer',
+                'example' => 10,
+            ],
+            'page[limit]' => [
+                'description' => __('jsonapi::query_params.page.limit_description', [
+                    'specUrl' => self::SPEC_URL_PAGINATION
+                ]),
+                'required' => false,
+                'type' => 'integer',
+                'example' => 10,
+            ],
+            'page[offset]' => [
+                'description' => __('jsonapi::query_params.page.offset_description', [
+                    'specUrl' => self::SPEC_URL_PAGINATION
+                ]),
+                'required' => false,
+                'type' => 'integer',
+                'example' => 0,
             ],
         ];
     }
 
     private function buildSortQueryParameter(): array
     {
-        $resourceType = $this->jsonApiEndpointData->resourceType;
-        $response = $this->fetchTransformedResponse($resourceType);
+        $response = $this->fetchTransformedResponse($this->jsonApiEndpointData->resourceType);
         $fields = array_keys($response['data']['attributes'] ?? []);
 
         $description = __(
@@ -259,17 +255,36 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
             $description .= "\n\n" . __(
                 'jsonapi::query_params.sort.available',
                 [
-                    'resourceType' => $resourceType,
+                    'resourceType' => $this->jsonApiEndpointData->resourceType,
                     'fields' => implode(', ', array_map(fn($field) => "`$field`", $fields))
                 ]
             );
         }
 
-        return [
+        $sortParam = [
             'description' => $description,
             'required' => false,
-            'example' => $fields[0] ?? null,
+            'example' => implode(',', array_slice($fields, 0, 2))
         ];
+
+        return ['sort' => $sortParam];
+    }
+
+    private function buildFilterQueryParameter(): array
+    {
+        $description = __(
+            'jsonapi::query_params.filter.description',
+            ['specUrl' => self::SPEC_URL_FILTERING]
+        );
+
+        $filterParam = [
+            'type' => 'string',
+            'required' => false,
+            'description' => $description,
+            'example' => 'TODO',
+        ];
+
+        return ['filter' => $filterParam];
     }
 
     protected function isDataWillBeReturned(): bool

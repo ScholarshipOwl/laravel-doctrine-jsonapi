@@ -2,30 +2,18 @@
 
 namespace Sowl\JsonApi\Scribe;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Illuminate\Contracts\View\Factory as ViewFactoryContract;
 use Knuckles\Camel\Output\OutputEndpointData;
-use Knuckles\Scribe\Extracting\DatabaseTransactionHelpers;
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Knuckles\Scribe\Writing\OpenApiSpecGenerators\OpenApiGenerator;
 use Knuckles\Scribe\Tools\ConsoleOutputUtils as c;
 use Knuckles\Scribe\Tools\ErrorHandlingUtils as e;
-use LaravelDoctrine\ORM\Testing\Factory;
-use LaravelDoctrine\ORM\Testing\Factory as DoctrineTestingFactory;
-use League\Fractal\Resource\Item;
-use Sowl\JsonApi\Fractal\Fractal;
 use Sowl\JsonApi\Fractal\FractalOptions;
-use Sowl\JsonApi\Request;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceManager;
-use Sowl\JsonApi\ResponseFactory;
 
 class JsonApiSpecGenerator extends OpenApiGenerator
 {
-    use DatabaseTransactionHelpers;
-    use InstantiatesExampleResources;
-
-    protected ResponseFactory $responseFactory;
+    use TransformerHelper;
 
     protected const DEEP_OBJECT_PARAMS = [
         'fields',
@@ -40,13 +28,6 @@ class JsonApiSpecGenerator extends OpenApiGenerator
     )
     {
         parent::__construct($config);
-
-        $this->responseFactory = new ResponseFactory(
-            app(ViewFactoryContract::class),
-            app('redirect'),
-            // TODO: Implement proper request creation.
-            Request::create('/')
-        );
     }
 
     public function getConfig(): DocumentationConfig
@@ -62,14 +43,6 @@ class JsonApiSpecGenerator extends OpenApiGenerator
         return $this->rm;
     }
 
-    /**
-     * Get the Doctrine testing factory instance needed by InstantiatesExampleResources trait.
-     */
-    protected function factory(): DoctrineTestingFactory
-    {
-        return app(Factory::class);
-    }
-
     public function root(array $root, array $groupedEndpoints): array
     {
         $resourcesSchemas = $this->generateResourcesSchemas($root, $groupedEndpoints);
@@ -83,8 +56,8 @@ class JsonApiSpecGenerator extends OpenApiGenerator
 
     public function pathItem(array $pathItem, array $groupedEndpoints, OutputEndpointData $endpoint): array
     {
-        $pathItem = $this->appendDeepObjectStyle($pathItem);
-        $pathItem = $this->extendPageParamSchema($pathItem);
+        // $pathItem = $this->appendDeepObjectStyle($pathItem);
+        // $pathItem = $this->extendPageParamSchema($pathItem);
 
         return $pathItem;
     }
@@ -156,7 +129,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
      */
     protected function appendDeepObjectStyle(array $pathItem): array
     {
-        if (!isset($pathItem['parameters'])) {
+        if (is_array($pathItem['parameters'])) {
             foreach ($pathItem['parameters'] as &$param) {
                 if (in_array($param['name'], self::DEEP_OBJECT_PARAMS)) {
                     $param['style'] = 'deepObject';
@@ -200,19 +173,10 @@ class JsonApiSpecGenerator extends OpenApiGenerator
         $this->startDbTransaction();
 
         try {
-            /** @var ResourceInterface $resource */
-            $resource = $this->instantiateExampleResource($resourceType);
-            $transformer = $resource->transformer();
-
-            $fractal = new Fractal(
-                new FractalOptions(meta: [
-                    $resource->getResourceType() => $transformer->getAvailableMetas()
-                ])
-            );
-
-            $response = $fractal
-                ->createData(new Item($resource, $transformer, $resource->getResourceType()))
-                ->toArray();
+            $transformer = $this->rm()->transformerByResourceType($resourceType);
+            $response = $this->fetchTransformedResponse($resourceType, new FractalOptions(meta: [
+                $resourceType => $transformer->getAvailableMetas()
+            ]));
 
             if (!empty($attributes = $response['data']['attributes'] ?? [])) {
                 $spec['attributes'] = [
@@ -221,7 +185,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                 ];
             }
 
-            if (!empty($meta = (array) $response['data']['meta'] ?? [])) {
+            if (!empty($meta = (array) ($response['data']['meta'] ?? []))) {
                 $spec['meta'] = [
                     'type' => 'object',
                     'properties' => $this->convertToOpenApiSchema($meta)
