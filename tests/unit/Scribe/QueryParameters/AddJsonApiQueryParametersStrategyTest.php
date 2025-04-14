@@ -6,7 +6,6 @@ use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Illuminate\Routing\Route;
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Mockery;
-use Mockery\MockInterface;
 use Tests\TestCase;
 use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\Scribe\QueryParameters\AddJsonApiQueryParametersStrategy;
@@ -14,15 +13,15 @@ use Sowl\JsonApi\Scribe\QueryParameters\AddJsonApiQueryParametersStrategy;
 class AddJsonApiQueryParametersStrategyTest extends TestCase
 {
     private AddJsonApiQueryParametersStrategy $strategy;
-    private DocumentationConfig|MockInterface $mockConfig;
+    private DocumentationConfig $config;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->mockConfig = Mockery::mock(DocumentationConfig::class);
+        $this->config = new DocumentationConfig([]);
         $this->strategy = new AddJsonApiQueryParametersStrategy(
-            $this->mockConfig,
+            $this->config,
             app(ResourceManager::class)
         );
     }

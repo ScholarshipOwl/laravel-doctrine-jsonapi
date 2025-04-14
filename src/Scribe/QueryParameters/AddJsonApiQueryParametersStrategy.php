@@ -3,17 +3,16 @@
 namespace Sowl\JsonApi\Scribe\QueryParameters;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
-use Knuckles\Scribe\Extracting\ParamBag;
 use Sowl\JsonApi\Scribe\AbstractStrategy;
 use Sowl\JsonApi\Scribe\JsonApiEndpointData;
-use Sowl\JsonApi\Scribe\ResponseGenerationHelper;
+use Sowl\JsonApi\Scribe\TransformerHelper;
 
 /**
  * Strategy to add common JSON:API query parameters to GET routes
  */
 class AddJsonApiQueryParametersStrategy extends AbstractStrategy
 {
-    use ResponseGenerationHelper;
+    use TransformerHelper;
 
     private const SPEC_URL_INCLUDES = 'https://jsonapi.org/format/#fetching-includes';
     private const SPEC_URL_SPARSE_FIELDSETS = 'https://jsonapi.org/format/#fetching-sparse-fieldsets';
@@ -75,7 +74,7 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
         }
 
         $resourceType = $this->jsonApiEndpointData->resourceType;
-        $response = $this->generateSingleContent($resourceType);
+        $response = $this->fetchTransformedResponse($resourceType);
         $fields = array_keys($response['data']['attributes'] ?? []);
 
         $description = __(
@@ -248,7 +247,7 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
     private function buildSortQueryParameter(): array
     {
         $resourceType = $this->jsonApiEndpointData->resourceType;
-        $response = $this->generateSingleContent($resourceType);
+        $response = $this->fetchTransformedResponse($resourceType);
         $fields = array_keys($response['data']['attributes'] ?? []);
 
         $description = __(

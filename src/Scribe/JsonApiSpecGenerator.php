@@ -57,7 +57,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
     /**
      * Get the ResourceManager instance needed by InstantiatesExampleResources trait.
      */
-    protected function getResourceManager(): ResourceManager
+    protected function rm(): ResourceManager
     {
         return $this->rm;
     }
@@ -65,7 +65,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
     /**
      * Get the Doctrine testing factory instance needed by InstantiatesExampleResources trait.
      */
-    protected function getDoctrineFactory(): DoctrineTestingFactory
+    protected function factory(): DoctrineTestingFactory
     {
         return app(Factory::class);
     }
@@ -182,7 +182,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                         'required' => ['id', 'type'],
                         'properties' => array_merge_recursive(
                             $this->specObjectIdentifier($resourceType),
-                            $this->specAttributes($resourceClass),
+                            $this->specAttributes($resourceType),
                             $this->specRelationships($resourceClass),
                         )
                     ]
@@ -193,7 +193,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
         return $schemas;
     }
 
-    protected function specAttributes(string $resourceClass): array
+    protected function specAttributes(string $resourceType): array
     {
         $spec = [];
 
@@ -201,7 +201,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
 
         try {
             /** @var ResourceInterface $resource */
-            $resource = $this->instantiateExampleResource($resourceClass);
+            $resource = $this->instantiateExampleResource($resourceType);
             $transformer = $resource->transformer();
 
             $fractal = new Fractal(
@@ -221,15 +221,15 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                 ];
             }
 
-            if (!empty($meta = $response['data']['meta'] ?? [])) {
+            if (!empty($meta = (array) $response['data']['meta'] ?? [])) {
                 $spec['meta'] = [
                     'type' => 'object',
-                    'properties' => $this->convertToOpenApiSchema((array) $meta)
+                    'properties' => $this->convertToOpenApiSchema($meta)
                 ];
             }
 
         } catch (\Throwable $e) {
-            c::warn("Couldn't generate attributes for {$resourceClass}");
+            c::warn("Couldn't generate attributes for '{$resourceType}'.");
             e::dumpExceptionIfVerbose($e, true);
         }
 
@@ -240,6 +240,8 @@ class JsonApiSpecGenerator extends OpenApiGenerator
 
     /**
      * Convert PHP array to OpenAPI schema with types and examples
+     * TODO: If there are null values we can't extract the type, that's why we can extract types from validation
+     *       rules or from the doctrine entity.
      */
     protected function convertToOpenApiSchema(array $data): array
     {

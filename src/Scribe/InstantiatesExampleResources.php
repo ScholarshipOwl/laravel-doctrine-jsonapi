@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Sowl\JsonApi\Scribe;
 
+use Knuckles\Scribe\Extracting\DatabaseTransactionHelpers;
 use Knuckles\Scribe\Tools\ConsoleOutputUtils as c;
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Knuckles\Scribe\Tools\ErrorHandlingUtils as e;
-use LaravelDoctrine\ORM\Testing\Factory as DoctrineTestingFactory;
+use LaravelDoctrine\ORM\Testing\Factory;
+use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceManager;
 use Throwable;
 
@@ -17,24 +19,18 @@ trait InstantiatesExampleResources
      * Get the ResourceManager instance.
      * Classes using this trait must implement this method.
      */
-    abstract protected function getResourceManager(): ResourceManager;
-
-    /**
-     * Get the Doctrine Testing Factory instance.
-     * Classes using this trait must implement this method.
-     */
-    abstract protected function getDoctrineFactory(): DoctrineTestingFactory;
+    abstract protected function rm(): ResourceManager;
 
     abstract public function getConfig(): DocumentationConfig;
 
     /**
      * Attempt to instantiate an example Doctrine entity for documentation using multiple strategies.
      *
-     * @param string $resourceClass The FQCN of the Doctrine entity.
-     *
-     * @return object|null An instance of the resourceClass or null if unable to instantiate.
+     * @template T of ResourceInterface
+     * @param class-string<T> $resourceClass The FQCN of the Doctrine entity.
+     * @return T
      */
-    protected function instantiateExampleResource(string $resourceClass): ?object
+    protected function instantiateExampleResource(string $resourceClass): ?ResourceInterface
     {
         $strategies = [
             'doctrineFactoryMake' => fn() => $this->getExampleResourceFromDoctrineFactoryMake($resourceClass),
@@ -72,7 +68,7 @@ trait InstantiatesExampleResources
      */
     protected function getExampleResourceFromDatabaseFirst(string $resourceClass): ?object
     {
-        $entityManager = $this->getResourceManager()->em();
+        $entityManager = $this->rm()->em();
         $repository = $entityManager->getRepository($resourceClass);
         return $repository->findOneBy([]); // Find the first available entity
     }
@@ -82,7 +78,7 @@ trait InstantiatesExampleResources
      */
     protected function getExampleResourceFromDoctrineFactoryMake(string $resourceClass): ?object
     {
-        $factory = $this->getDoctrineFactory();
+        $factory = $this->factory();
         return $factory->of($resourceClass)->make();
     }
 
@@ -91,8 +87,13 @@ trait InstantiatesExampleResources
      */
     protected function getExampleResourceFromDoctrineFactoryCreate(string $resourceClass): ?object
     {
-        $factory = $this->getDoctrineFactory();
+        $factory = $this->factory();
         // Note: This interacts with the database during factory creation
         return $factory->of($resourceClass)->create();
+    }
+
+    protected function factory(): Factory
+    {
+        return app(Factory::class);
     }
 }
