@@ -1,9 +1,9 @@
 <?php
 
-namespace Sowl\JsonApi\Scribe\Metadata;
+namespace Sowl\JsonApi\Scribe\Strategies\Metadata;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
-use Sowl\JsonApi\Scribe\AbstractStrategy;
+use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\DisplayHelper;
 use Sowl\JsonApi\Scribe\JsonApiEndpointData;
 

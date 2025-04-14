@@ -40,23 +40,23 @@ To use the JSON:API custom strategies, you need to add them to your Scribe confi
 'strategies' => [
     'metadata' => [
         // ...existing strategies
-        \Sowl\JsonApi\Scribe\Metadata\GetFromJsonApiRouteStrategy::class,
+        \Sowl\JsonApi\Scribe\Strategies\Metadata\GetFromJsonApiRouteStrategy::class,
     ],
     'urlParameters' => [
         // ...existing strategies
-        \Sowl\JsonApi\Scribe\UrlParameters\GetFromJsonApiRouteStrategy::class,
+        \Sowl\JsonApi\Scribe\Strategies\UrlParameters\GetFromJsonApiRouteStrategy::class,
     ],
     'queryParameters' => [
         // ...existing strategies
-        \Sowl\JsonApi\Scribe\QueryParameters\AddJsonApiQueryParametersStrategy::class,
+        \Sowl\JsonApi\Scribe\Strategies\QueryParameters\AddJsonApiQueryParametersStrategy::class,
     ],
     'headers' => [
         // ...existing strategies
-        \Sowl\JsonApi\Scribe\Headers\AddJsonApiHeadersStrategy::class,
+        \Sowl\JsonApi\Scribe\Strategies\Headers\AddJsonApiHeadersStrategy::class,
     ],
     'responses' => [
         // ...existing strategies
-        \Sowl\JsonApi\Scribe\Responses\UseJsonApiResourceResponseStrategy::class,
+        \Sowl\JsonApi\Scribe\Strategies\Responses\UseResourceResponseAttributes::class,
     ],
 ],
 ```

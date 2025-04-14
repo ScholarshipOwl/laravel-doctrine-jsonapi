@@ -8,7 +8,7 @@ use Knuckles\Scribe\Tools\DocumentationConfig;
 use Mockery;
 use Tests\TestCase;
 use Sowl\JsonApi\ResourceManager;
-use Sowl\JsonApi\Scribe\QueryParameters\AddJsonApiQueryParametersStrategy;
+use Sowl\JsonApi\Scribe\Strategies\QueryParameters\AddJsonApiQueryParametersStrategy;
 
 class AddJsonApiQueryParametersStrategyTest extends TestCase
 {

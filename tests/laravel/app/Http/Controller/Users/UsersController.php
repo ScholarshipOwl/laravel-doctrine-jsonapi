@@ -9,6 +9,7 @@ use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationshipsAction;
 use Sowl\JsonApi\Action\Resource\UpdateResourceAction;
 use Sowl\JsonApi\Default\WithListTrait;
 use Sowl\JsonApi\Response;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 use Tests\App\Http\Controller\Users\CreateUserAction;
 use Tests\App\Http\Controller\Users\CreateUserRequest;
 use Tests\App\Http\Controller\Users\Relationships\AttachRolesToUserRequest;
@@ -21,12 +22,14 @@ class UsersController extends Controller
 {
     use WithListTrait;
 
+    #[ResourceResponse(status: 201)]
     public function create(CreateUserRequest $request): Response
     {
         return CreateUserAction::create()
             ->dispatch($request);
     }
 
+    #[ResourceResponse(status: 200)]
     public function update(UpdateUserRequest $request): Response
     {
         return UpdateResourceAction::create()

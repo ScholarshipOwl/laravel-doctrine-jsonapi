@@ -1,9 +1,9 @@
 <?php
 
-namespace Sowl\JsonApi\Scribe\Headers;
+namespace Sowl\JsonApi\Scribe\Strategies\Headers;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
-use Sowl\JsonApi\Scribe\AbstractStrategy;
+use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 
 /**
  * Strategy to add JSON:API headers to the documentation

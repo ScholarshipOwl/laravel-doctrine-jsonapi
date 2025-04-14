@@ -9,7 +9,7 @@ use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Extracting\ParamBag;
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Sowl\JsonApi\Action\JsonApiAction;
-use Sowl\JsonApi\Scribe\Metadata\GetFromJsonApiRouteStrategy;
+use Sowl\JsonApi\Scribe\Strategies\Metadata\GetFromJsonApiRouteStrategy;
 use Tests\TestCase;
 
 /**

@@ -1,0 +1,137 @@
+<?php
+
+namespace Sowl\JsonApi\Scribe\Strategies\Responses;
+
+use Knuckles\Camel\Extraction\ExtractedEndpointData;
+use Knuckles\Scribe\Extracting\Strategies\PhpAttributeStrategy;
+use Sowl\JsonApi\Fractal\FractalOptions;
+use Sowl\JsonApi\Relationships\ToManyRelationship;
+use Sowl\JsonApi\Relationships\ToOneRelationship;
+use Sowl\JsonApi\ResourceManager;
+use Sowl\JsonApi\ResourceManipulator;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRelatedResponse;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRelationshipsResponse;
+use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
+use Sowl\JsonApi\Scribe\Strategies\InstantiatesExampleResources;
+use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
+use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
+
+class UseResourceResponseAttributes extends AbstractStrategy
+{
+    use ReadsPhpAttributes;
+    use TransformerHelper;
+
+    public function __invoke(ExtractedEndpointData $endpointData, array $settings = []): ?array
+    {
+        if (!$this->initJsonApiEndpointData($endpointData)) {
+            // Not a JSON:API route, skip
+            return [];
+        }
+
+        [$attributesOnMethod, $attributesOnFormRequest, $attributesOnController] =
+            $this->getAttributes($endpointData->method, $endpointData->controller);
+
+        return $this->extractFromAttributes($attributesOnMethod, $attributesOnFormRequest, $attributesOnController);
+    }
+
+    protected static function readAttributes(): array
+    {
+        return [
+            ResourceResponse::class,
+            ResourceRelatedResponse::class,
+            ResourceRelationshipsResponse::class,
+        ];
+    }
+
+    protected function extractFromAttributes(
+        array $attributesOnMethod,
+        array $attributesOnFormRequest = [],
+        array $attributesOnController = []
+    ): ?array
+    {
+        $responses = [];
+        $allAttributes = [
+            ...$attributesOnController,
+            ...$attributesOnFormRequest,
+            ...$attributesOnMethod
+        ];
+
+        foreach ($allAttributes as $attributeInstance) {
+            $responses[] = match (true) {
+
+                $attributeInstance instanceof ResourceResponse =>
+                    $this->getResourceResponse($attributeInstance),
+
+                $attributeInstance instanceof ResourceRelatedResponse,
+                $attributeInstance instanceof ResourceRelationshipsResponse =>
+                    $this->getResourceRelationshipOrRelatedResponse($attributeInstance),
+
+            };
+        }
+
+        return $responses;
+    }
+
+    protected function getResourceResponse(ResourceResponse $attributeInstance): array
+    {
+        $resourceType = $attributeInstance->resourceType ?? $this->jsonApiEndpointData->resourceType;
+        $fractalOptions = FractalOptions::fromArray($attributeInstance->fractalOptions);
+
+        $response = $attributeInstance->collection
+            ? $this->fetchTransformedCollectionResponse(
+                $resourceType,
+                $fractalOptions,
+                $attributeInstance->pageNumber,
+                $attributeInstance->pageSize,
+            )
+            : $this->fetchTransformedResponse($resourceType, $fractalOptions);
+
+        return [
+            'status' => $attributeInstance->status ?? 200,
+            'description' => $attributeInstance->description ?? '',
+            'content' => $response
+        ];
+    }
+
+    protected function getResourceRelationshipOrRelatedResponse(
+        ResourceRelatedResponse|ResourceRelationshipsResponse $attributeInstance
+    ): array
+    {
+        $resourceType = $attributeInstance->resourceType ?? $this->jsonApiEndpointData->resourceType;
+        $resourceClass = $this->rm()->classByResourceType($resourceType);
+        $relationshipName = $attributeInstance->relationshipName ??$this->jsonApiEndpointData->relationshipName;
+        $relationship = $this->rm()->relationshipsByClass($resourceClass)->get($relationshipName);
+        $isRelationships = $attributeInstance instanceof ResourceRelationshipsResponse;
+
+        if (!$relationship) {
+            throw new \InvalidArgumentException(
+                "Relationship $relationshipName on resource $resourceClass does not exist"
+            );
+        }
+
+        if ($relationship instanceof ToOneRelationship) {
+            $content = $this->fetchTransformedResponse(
+                $relationship->resourceType(),
+                FractalOptions::fromArray($attributeInstance->fractalOptions),
+                isRelationship: $isRelationships
+            );
+        }
+
+        if ($relationship instanceof ToManyRelationship) {
+            $content = $this->fetchTransformedCollectionResponse(
+                $relationship->resourceType(),
+                FractalOptions::fromArray($attributeInstance->fractalOptions),
+                $attributeInstance->pageNumber,
+                $attributeInstance->pageSize,
+                isRelationship: $isRelationships
+            );
+        }
+
+        return [
+            'status' => $attributeInstance->status ?? 200,
+            'description' => $attributeInstance->description,
+            'content' => $content
+        ];
+    }
+}

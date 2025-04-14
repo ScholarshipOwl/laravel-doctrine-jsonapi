@@ -1,11 +1,11 @@
 <?php
 
-namespace Sowl\JsonApi\Scribe\QueryParameters;
+namespace Sowl\JsonApi\Scribe\Strategies\QueryParameters;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
-use Sowl\JsonApi\Scribe\AbstractStrategy;
+use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\JsonApiEndpointData;
-use Sowl\JsonApi\Scribe\TransformerHelper;
+use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
 
 /**
  * Strategy to add common JSON:API query parameters to GET routes

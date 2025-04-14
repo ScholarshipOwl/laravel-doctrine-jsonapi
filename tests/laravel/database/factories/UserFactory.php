@@ -13,7 +13,7 @@ $factory->define(User::class, function (Faker\Generator $faker) use ($factory) {
         'name' => $faker->name,
         'email' => $faker->email,
         'password' => 'secret',
-        'status' => entity(UserStatus::class, 'active')->create(),
+        'status' => fn () => entity(UserStatus::class, 'active')->make(),
 //        'roles' => new ArrayCollection([
 //            $factory->makeAs(Role::class, Role::USER_NAME)
 //        ]),
@@ -26,7 +26,7 @@ $factory->defineAs(User::class, 'user', function (Faker\Generator $faker) {
         'name' => 'testing user1',
         'email' => 'test1email@test.com',
         'password' => 'secret',
-        'status' => entity(UserStatus::class, 'active')->create(),
+        'status' => fn () => entity(UserStatus::class, 'active')->make(),
         'roles' => new ArrayCollection([
             Role::user(),
         ]),
@@ -39,7 +39,7 @@ $factory->defineAs(User::class, 'root', function () {
         'name' => 'testing user2',
         'email' => 'test2email@gmail.com',
         'password' => 'secret',
-        'status' => entity(UserStatus::class, 'active')->create(),
+        'status' => fn () => entity(UserStatus::class, 'active')->make(),
         'roles' => new ArrayCollection([
             Role::user(),
             Role::root(),
@@ -53,7 +53,7 @@ $factory->defineAs(User::class, 'moderator', function () {
         'name' => 'testing user3',
         'email' => 'test3email@test.com',
         'password' => 'secret',
-        'status' => entity(UserStatus::class, 'active')->create(),
+        'status' => fn () => entity(UserStatus::class, 'active')->make(),
         'roles' => new ArrayCollection([
             Role::user(),
             Role::moderator(),

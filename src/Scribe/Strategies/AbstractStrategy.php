@@ -1,6 +1,6 @@
 <?php
 
-namespace Sowl\JsonApi\Scribe;
+namespace Sowl\JsonApi\Scribe\Strategies;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Extracting\Strategies\Strategy;
@@ -8,6 +8,7 @@ use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\ResourceManipulator;
 use Sowl\JsonApi\Routing\RelationshipNameExtractor;
 use Sowl\JsonApi\Routing\ResourceTypeExtractor;
+use Sowl\JsonApi\Scribe\JsonApiEndpointData;
 
 /**
  * Abstract base strategy for JSON:API documentation.

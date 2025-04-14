@@ -28,6 +28,11 @@ trait RelationshipTrait
         return $this->property;
     }
 
+    public function resourceType(): string
+    {
+        return $this->rm()->resourceType($this->class());
+    }
+
     public function rm(): ResourceManager
     {
         return app(ResourceManager::class);

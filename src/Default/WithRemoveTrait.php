@@ -16,6 +16,7 @@ use Sowl\JsonApi\Response;
  */
 trait WithRemoveTrait
 {
+    #[\Knuckles\Scribe\Attributes\Response(null, 204)]
     public function remove(Request $request): Response
     {
         return RemoveResourceAction::create()

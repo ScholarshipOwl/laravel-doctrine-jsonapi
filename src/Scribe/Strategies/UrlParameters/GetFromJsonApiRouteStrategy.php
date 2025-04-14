@@ -1,9 +1,9 @@
 <?php
 
-namespace Sowl\JsonApi\Scribe\UrlParameters;
+namespace Sowl\JsonApi\Scribe\Strategies\UrlParameters;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
-use Sowl\JsonApi\Scribe\AbstractStrategy;
+use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 
 /**
  * Strategy to extract URL parameters from JSON:API routes

@@ -1,6 +1,6 @@
 <?php
 
-namespace Sowl\JsonApi\Scribe;
+namespace Sowl\JsonApi\Scribe\Strategies;
 
 use Doctrine\ORM\EntityManager;
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;

@@ -4,6 +4,11 @@
 
 use Tests\App\Entities\Role;
 
+$factory->define(Role::class, fn () => [
+    'id' => Role::USER,
+    'name' => Role::USER_NAME
+]);
+
 $roles = [
     Role::ROOT => Role::ROOT_NAME,
     Role::USER => Role::USER_NAME,
@@ -11,8 +16,5 @@ $roles = [
 ];
 
 foreach ($roles as $id => $name) {
-    $factory->defineAs(Role::class, $name, fn () => [
-        'id' => $id,
-        'name' => $name,
-    ]);
+    $factory->defineAs(Role::class, $name, fn () => (new Role())->setId($id)->setName($name));
 }

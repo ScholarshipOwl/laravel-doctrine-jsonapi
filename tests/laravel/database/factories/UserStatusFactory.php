@@ -4,23 +4,25 @@
 
 use Tests\App\Entities\UserStatus;
 
+$factory->define(UserStatus::class, fn () => [
+    'id' => UserStatus::ACTIVE,
+    'name' => 'Active',
+]);
+
 $factory->defineAs(UserStatus::class, 'active', function () {
-    return [
-        'id' => UserStatus::ACTIVE,
-        'name' => 'Active',
-    ];
+    return (new UserStatus())
+        ->setId(UserStatus::ACTIVE)
+        ->setName('Active');
 });
 
 $factory->defineAs(UserStatus::class, 'inactive', function () {
-    return [
-        'id' => UserStatus::INACTIVE,
-        'name' => 'Inactive',
-    ];
+    return (new UserStatus())
+        ->setId(UserStatus::INACTIVE)
+        ->setName('Inactive');
 });
 
 $factory->defineAs(UserStatus::class, 'deleted', function () {
-    return [
-        'id' => UserStatus::DELETED,
-        'name' => 'Deleted',
-    ];
+    return (new UserStatus())
+        ->setId(UserStatus::DELETED)
+        ->setName('Deleted');
 });

@@ -212,25 +212,25 @@ INTRO
         'metadata' => [
             Strategies\Metadata\GetFromDocBlocks::class,
             Strategies\Metadata\GetFromMetadataAttributes::class,
-            \Sowl\JsonApi\Scribe\Metadata\GetFromJsonApiRouteStrategy::class,
+            \Sowl\JsonApi\Scribe\Strategies\Metadata\GetFromJsonApiRouteStrategy::class,
         ],
         'urlParameters' => [
             Strategies\UrlParameters\GetFromLaravelAPI::class,
             Strategies\UrlParameters\GetFromUrlParamAttribute::class,
             Strategies\UrlParameters\GetFromUrlParamTag::class,
-            \Sowl\JsonApi\Scribe\UrlParameters\GetFromJsonApiRouteStrategy::class,
+            \Sowl\JsonApi\Scribe\Strategies\UrlParameters\GetFromJsonApiRouteStrategy::class,
         ],
         'queryParameters' => [
             Strategies\QueryParameters\GetFromFormRequest::class,
             Strategies\QueryParameters\GetFromInlineValidator::class,
             Strategies\QueryParameters\GetFromQueryParamAttribute::class,
             Strategies\QueryParameters\GetFromQueryParamTag::class,
-            \Sowl\JsonApi\Scribe\QueryParameters\AddJsonApiQueryParametersStrategy::class,
+            \Sowl\JsonApi\Scribe\Strategies\QueryParameters\AddJsonApiQueryParametersStrategy::class,
         ],
         'headers' => [
             Strategies\Headers\GetFromHeaderAttribute::class,
             Strategies\Headers\GetFromHeaderTag::class,
-            \Sowl\JsonApi\Scribe\Headers\AddJsonApiHeadersStrategy::class,
+            \Sowl\JsonApi\Scribe\Strategies\Headers\AddJsonApiHeadersStrategy::class,
         ],
         'bodyParameters' => [
             Strategies\BodyParameters\GetFromFormRequest::class,
@@ -244,7 +244,8 @@ INTRO
             Strategies\Responses\UseApiResourceTags::class,
             Strategies\Responses\UseResponseTag::class,
             Strategies\Responses\UseResponseFileTag::class,
-            Sowl\JsonApi\Scribe\Responses\UseJsonApiResourceResponseStrategy::class,
+            \Sowl\JsonApi\Scribe\Strategies\Responses\UseResourceResponseAttributes::class,
+            // Sowl\JsonApi\Scribe\Responses\UseJsonApiResourceResponseStrategy::class,
             [
                 Strategies\Responses\ResponseCalls::class,
                 ['only' => ['GET *']]

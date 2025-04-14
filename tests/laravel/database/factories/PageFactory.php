@@ -4,12 +4,13 @@
 
 use Tests\App\Entities\Page;
 use Tests\App\Entities\User;
-use Faker\Generator;
 
-$factory->define(Page::class, function (Generator $faker, array $attributes) use ($factory) {
-    return [
-        'user' => $attributes['user'] ?? $factory->of(User::class)->create(),
-        'title' => $attributes['title'] ?? $faker->sentence(),
-        'content' => $attributes['content'] ?? join("\n", $faker->paragraphs()),
-    ];
+$factory->define(Page::class, function (Faker\Generator $faker, array $attributes) use ($factory) {
+    /** @var User $author */
+    $author = $attributes['user'] ?? $factory->of(User::class)->create();
+
+    return (new Page())
+        ->setTitle($attributes['title'] ??$faker->sentence())
+        ->setContent($attributes['content'] ?? join("\n", $faker->paragraphs()))
+        ->setUser($author);
 });

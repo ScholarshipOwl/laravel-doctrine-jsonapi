@@ -10,6 +10,7 @@ use Knuckles\Scribe\Tools\ErrorHandlingUtils as e;
 use Sowl\JsonApi\Fractal\FractalOptions;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceManager;
+use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
 
 class JsonApiSpecGenerator extends OpenApiGenerator
 {
@@ -170,8 +171,6 @@ class JsonApiSpecGenerator extends OpenApiGenerator
     {
         $spec = [];
 
-        $this->startDbTransaction();
-
         try {
             $transformer = $this->rm()->transformerByResourceType($resourceType);
             $response = $this->fetchTransformedResponse($resourceType, new FractalOptions(meta: [
@@ -196,8 +195,6 @@ class JsonApiSpecGenerator extends OpenApiGenerator
             c::warn("Couldn't generate attributes for '{$resourceType}'.");
             e::dumpExceptionIfVerbose($e, true);
         }
-
-        $this->endDbTransaction();
 
         return $spec;
     }

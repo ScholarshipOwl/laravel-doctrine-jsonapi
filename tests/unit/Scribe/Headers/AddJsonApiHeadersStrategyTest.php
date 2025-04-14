@@ -9,7 +9,7 @@ use Mockery;
 use Mockery\MockInterface;
 use Tests\TestCase;
 use Sowl\JsonApi\ResourceManager;
-use Sowl\JsonApi\Scribe\Headers\AddJsonApiHeadersStrategy;
+use Sowl\JsonApi\Scribe\Strategies\Headers\AddJsonApiHeadersStrategy;
 
 class AddJsonApiHeadersStrategyTest extends TestCase
 {

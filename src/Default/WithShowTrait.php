@@ -2,9 +2,11 @@
 
 namespace Sowl\JsonApi\Default;
 
+use Knuckles\Scribe\Attributes\ResponseFromTransformer;
 use Sowl\JsonApi\Action\Resource\ShowResourceAction;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 
 /**
  * Provides a show method for handling the retrieval of a single resource.
@@ -16,6 +18,7 @@ use Sowl\JsonApi\Response;
  */
 trait WithShowTrait
 {
+    #[ResourceResponse]
     public function show(Request $request): Response
     {
         return (new ShowResourceAction())

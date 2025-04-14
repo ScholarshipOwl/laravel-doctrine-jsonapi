@@ -16,6 +16,18 @@ class FractalOptions
         public readonly string $baseUrl = ''
     ) {}
 
+
+    public static function fromArray(array $data): self
+    {
+        return new static(
+            includes: $data['includes'] ?? null,
+            excludes: $data['excludes'] ?? null,
+            fields: $data['fields'] ?? null,
+            meta: $data['meta'] ?? null,
+            baseUrl: $data['baseUrl'] ?? ''
+        );
+    }
+
     public static function fromRequest(Request $request): self
     {
         return new self(
