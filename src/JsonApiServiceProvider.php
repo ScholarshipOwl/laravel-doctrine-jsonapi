@@ -6,6 +6,8 @@ use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
+use Knuckles\Camel\Extraction\ExtractedEndpointData;
+use Knuckles\Scribe\Scribe;
 
 /**
  * JsonApi package Laravel service provider.
@@ -107,10 +109,42 @@ class JsonApiServiceProvider extends ServiceProvider
      */
     protected function registerDocumentation(): void
     {
-        // Register documentation services only if Scribe is available
-        // if (class_exists('Knuckles\Scribe\ScribeServiceProvider')) {
-        //     $this->app->register(Scribe\ScribeServiceProvider::class);
-        // }
+        if ($this->isScribeInstalled()) {
+            /**
+             * Fix the Scribe beforeResponseCall hook.
+             *
+             * We generate deepObject param names that is not working in the requests.
+             * Example: `fields[pageComments]=content` instead of `["fields"]["pageComments"] = "content"`
+             *
+             * We need to convert deepObjects into the php array format.
+             *
+             * @see \Knuckles\Scribe\Extracting\Strategies\Responses\ResponseCalls
+             */
+            Scribe::beforeResponseCall(function (
+                \Illuminate\Http\Request $request,
+                ExtractedEndpointData $endpointData
+            ) {
+                foreach ($request->query->all() as $key => $value) {
+                    $parts = explode('[', $key);
+
+                    if (count($parts) === 2) {
+                        $param = $parts[0];
+                        $deepKey = $parts[1] ? trim($parts[1], ']') : null;
+
+                        if ($param && $deepKey) {
+                            $request->query->set($param, array_merge(
+                                (array) $request->query->get($param) ?: [],
+                                [$deepKey => $value]
+                            ));
+                        }
+                    }
+
+                    if (is_null($value)) {
+                        $request->query->remove($key);
+                    }
+                }
+            });
+        }
     }
 
     private function isScribeInstalled(): bool
