@@ -8,6 +8,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Scribe;
+use Sowl\JsonApi\Scribe\DeepObjectQueryHelper;
 
 /**
  * JsonApi package Laravel service provider.
@@ -124,25 +125,8 @@ class JsonApiServiceProvider extends ServiceProvider
                 \Illuminate\Http\Request $request,
                 ExtractedEndpointData $endpointData
             ) {
-                foreach ($request->query->all() as $key => $value) {
-                    $parts = explode('[', $key);
-
-                    if (count($parts) === 2) {
-                        $param = $parts[0];
-                        $deepKey = $parts[1] ? trim($parts[1], ']') : null;
-
-                        if ($param && $deepKey) {
-                            $request->query->set($param, array_merge(
-                                (array) $request->query->get($param) ?: [],
-                                [$deepKey => $value]
-                            ));
-                        }
-                    }
-
-                    if (is_null($value)) {
-                        $request->query->remove($key);
-                    }
-                }
+                $newQuery = DeepObjectQueryHelper::convert($request->query->all());
+                $request->query->replace($newQuery);
             });
         }
     }

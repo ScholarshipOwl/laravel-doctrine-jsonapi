@@ -59,6 +59,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
     {
         // $pathItem = $this->appendDeepObjectStyle($pathItem);
         // $pathItem = $this->extendPageParamSchema($pathItem);
+        $pathItem = $this->removeNulExamplesFromQueryParams($pathItem);
 
         return $pathItem;
     }
@@ -303,5 +304,19 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                 'enum' => [$resourceType],
             ],
         ];
+    }
+
+    protected function removeNulExamplesFromQueryParams(array $pathItem)
+    {
+        foreach ($pathItem['parameters'] ?? [] as $i => $param) {
+            if (is_null($param['example'])) {
+                unset($pathItem['parameters'][$i]['example']);
+            }
+            if (is_null($param['schema']['example'])) {
+                unset($pathItem['parameters'][$i]['schema']['example']);
+            }
+        }
+
+        return $pathItem;
     }
 }

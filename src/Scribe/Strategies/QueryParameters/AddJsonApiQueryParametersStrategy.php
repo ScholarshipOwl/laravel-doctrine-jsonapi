@@ -86,8 +86,11 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
             'type' => 'string',
             'required' => false,
             'description' => $description,
-            'example' => implode(',', $fields)
         ];
+
+        // if (!empty($fields)) {
+        //     $fieldsParameter['example'] = implode(',', $fields);
+        // }
 
         // In order to support nested fields, we need to use a custom name
         // ( Scalar does not support nested parameters )
@@ -162,7 +165,6 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
         $excludeParameter = [
             'description' => $excludeDescription,
             'required' => false,
-            'example' => '', // Provide a meaningful example if possible
         ];
 
         return ['exclude' => $excludeParameter];
@@ -264,7 +266,6 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
         $sortParam = [
             'description' => $description,
             'required' => false,
-            'example' => implode(',', array_slice($fields, 0, 2))
         ];
 
         return ['sort' => $sortParam];
@@ -281,7 +282,6 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
             'type' => 'string',
             'required' => false,
             'description' => $description,
-            'example' => 'TODO',
         ];
 
         return ['filter' => $filterParam];
