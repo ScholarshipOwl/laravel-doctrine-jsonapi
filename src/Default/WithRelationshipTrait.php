@@ -9,6 +9,7 @@ use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRelationshipsResponse;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 
 /**
  * Provides a showRelationships method for handling the retrieval of relationships between resources.
@@ -26,6 +27,7 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceRelationshipsResponse;
  */
 trait WithRelationshipTrait
 {
+    #[ResourceRequest]
     #[ResourceRelationshipsResponse]
     public function showRelationships(Request $request): Response
     {

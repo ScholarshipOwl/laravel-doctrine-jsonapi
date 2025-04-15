@@ -123,11 +123,11 @@ class RouteMatcherTest extends TestCase
         $this->assertRouteExists('PATCH', 'roles/{id}');
         $this->assertRouteExists('DELETE', 'roles/{id}');
 
-        $this->assertRouteExists('GET', 'user-statuses');
-        $this->assertRouteExists('POST', 'user-statuses');
-        $this->assertRouteExists('GET', 'user-statuses/{id}');
-        $this->assertRouteExists('PATCH', 'user-statuses/{id}');
-        $this->assertRouteExists('DELETE', 'user-statuses/{id}');
+        $this->assertRouteExists('GET', 'userStatuses');
+        $this->assertRouteExists('POST', 'userStatuses');
+        $this->assertRouteExists('GET', 'userStatuses/{id}');
+        $this->assertRouteExists('PATCH', 'userStatuses/{id}');
+        $this->assertRouteExists('DELETE', 'userStatuses/{id}');
 
         // Related resource endpoints
         $this->assertRouteExists('GET', 'pages/{id}/user');

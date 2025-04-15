@@ -7,6 +7,7 @@ use Sowl\JsonApi\Default\Request\CreateToManyRelationshipsRequest;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Response;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRelationshipsResponse;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 
 /**
  * Provides a createRelationships method for creating relationships between resources.
@@ -22,6 +23,7 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceRelationshipsResponse;
  */
 trait WithCreateRelationshipsTrait
 {
+    #[ResourceRequest]
     #[ResourceRelationshipsResponse(status: 201)]
     public function createRelationships(CreateToManyRelationshipsRequest $request): Response
     {

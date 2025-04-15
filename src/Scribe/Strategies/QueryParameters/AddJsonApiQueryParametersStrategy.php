@@ -222,22 +222,22 @@ class AddJsonApiQueryParametersStrategy extends AbstractStrategy
                 'type' => 'integer',
                 'example' => 10,
             ],
-            'page[limit]' => [
-                'description' => __('jsonapi::query_params.page.limit_description', [
-                    'specUrl' => self::SPEC_URL_PAGINATION
-                ]),
-                'required' => false,
-                'type' => 'integer',
-                'example' => 10,
-            ],
-            'page[offset]' => [
-                'description' => __('jsonapi::query_params.page.offset_description', [
-                    'specUrl' => self::SPEC_URL_PAGINATION
-                ]),
-                'required' => false,
-                'type' => 'integer',
-                'example' => 0,
-            ],
+            // 'page[limit]' => [
+            //     'description' => __('jsonapi::query_params.page.limit_description', [
+            //         'specUrl' => self::SPEC_URL_PAGINATION
+            //     ]),
+            //     'required' => false,
+            //     'type' => 'integer',
+            //     'example' => 10,
+            // ],
+            // 'page[offset]' => [
+            //     'description' => __('jsonapi::query_params.page.offset_description', [
+            //         'specUrl' => self::SPEC_URL_PAGINATION
+            //     ]),
+            //    'required' => false,
+            //    'type' => 'integer',
+            //    'example' => 0,
+            //],
         ];
     }
 

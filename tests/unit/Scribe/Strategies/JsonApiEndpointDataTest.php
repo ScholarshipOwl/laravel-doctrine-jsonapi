@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Scribe\Extraction;
+namespace Tests\Scribe\Strategies;
 
 use Illuminate\Routing\Route;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;

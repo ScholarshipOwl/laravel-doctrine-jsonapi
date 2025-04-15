@@ -89,7 +89,7 @@ class UserConfig implements ResourceInterface
 
     public static function getResourceType(): string
     {
-        return 'user-configs';
+        return 'userConfigs';
     }
 
     public static function relationships(): RelationshipsCollection

@@ -4,10 +4,11 @@ declare(strict_types=1);
 
 namespace Tests\App\Transformers;
 
-use League\Fractal\TransformerAbstract;
+use Sowl\JsonApi\AbstractTransformer;
+use Tests\App\Entities\User;
 use Tests\App\Entities\UserConfig;
 
-class UserConfigTransformer extends TransformerAbstract
+class UserConfigTransformer extends AbstractTransformer
 {
     protected array $availableIncludes = ['user'];
 
@@ -29,6 +30,6 @@ class UserConfigTransformer extends TransformerAbstract
      */
     public function includeUser(UserConfig $userConfig): \League\Fractal\Resource\Item
     {
-        return $this->item($userConfig->getUser(), new UserTransformer(), 'users');
+        return $this->resource($userConfig->getUser());
     }
 }

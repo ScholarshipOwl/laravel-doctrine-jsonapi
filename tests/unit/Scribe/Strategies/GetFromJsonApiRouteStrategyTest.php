@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Scribe\Metadata;
+namespace Tests\Scribe\Strategies;
 
 use Illuminate\Routing\Route;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;

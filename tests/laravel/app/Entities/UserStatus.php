@@ -35,7 +35,7 @@ class UserStatus implements ResourceInterface
 
     public static function getResourceType(): string
     {
-        return 'user-statuses';
+        return 'userStatuses';
     }
 
     public static function transformer(): AbstractTransformer

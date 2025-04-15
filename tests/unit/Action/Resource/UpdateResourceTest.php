@@ -114,12 +114,12 @@ class UpdateResourceTest extends TestCase
             'included' => [
                 [
                     'id' => UserStatus::INACTIVE,
-                    'type' => 'user-statuses',
+                    'type' => 'userStatuses',
                     'attributes' => [
                         'name' => 'Inactive',
                     ],
                     'links' => [
-                        'self' => '/user-statuses/' . UserStatus::INACTIVE
+                        'self' => '/userStatuses/' . UserStatus::INACTIVE
                     ]
                 ]
             ]

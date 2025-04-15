@@ -3,17 +3,13 @@
 namespace Sowl\JsonApi\Scribe\Strategies\Responses;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
-use Knuckles\Scribe\Extracting\Strategies\PhpAttributeStrategy;
 use Sowl\JsonApi\Fractal\FractalOptions;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
-use Sowl\JsonApi\ResourceManager;
-use Sowl\JsonApi\ResourceManipulator;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRelatedResponse;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRelationshipsResponse;
 use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
-use Sowl\JsonApi\Scribe\Strategies\InstantiatesExampleResources;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
 

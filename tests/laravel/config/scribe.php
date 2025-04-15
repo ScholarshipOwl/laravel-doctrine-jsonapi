@@ -218,7 +218,7 @@ INTRO
             Strategies\UrlParameters\GetFromLaravelAPI::class,
             Strategies\UrlParameters\GetFromUrlParamAttribute::class,
             Strategies\UrlParameters\GetFromUrlParamTag::class,
-            \Sowl\JsonApi\Scribe\Strategies\UrlParameters\GetFromJsonApiRouteStrategy::class,
+            \Sowl\JsonApi\Scribe\Strategies\UrlParameters\GetFromResourceRequestAttributes::class
         ],
         'queryParameters' => [
             Strategies\QueryParameters\GetFromFormRequest::class,

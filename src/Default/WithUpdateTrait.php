@@ -5,6 +5,7 @@ namespace Sowl\JsonApi\Default;
 use Sowl\JsonApi\Action\Resource\UpdateResourceAction;
 use Sowl\JsonApi\Default\Request\UpdateResourceRequest;
 use Sowl\JsonApi\Response;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 
 /**
@@ -17,6 +18,7 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
  */
 trait WithUpdateTrait
 {
+    #[ResourceRequest]
     #[ResourceResponse(description: 'The updated resource.')]
     public function update(UpdateResourceRequest $request): Response
     {

@@ -6,6 +6,7 @@ use Knuckles\Scribe\Attributes\ResponseFromTransformer;
 use Sowl\JsonApi\Action\Resource\ShowResourceAction;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 
 /**
@@ -18,6 +19,7 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
  */
 trait WithShowTrait
 {
+    #[ResourceRequest]
     #[ResourceResponse]
     public function show(Request $request): Response
     {
