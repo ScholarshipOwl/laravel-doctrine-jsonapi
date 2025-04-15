@@ -7,5 +7,6 @@ return [
         \Tests\App\Entities\User::class,
         \Tests\App\Entities\UserStatus::class,
         \Tests\App\Entities\Role::class,
+        \Tests\App\Entities\UserConfig::class,
     ]
 ];

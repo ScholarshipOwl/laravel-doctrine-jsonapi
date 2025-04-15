@@ -15,9 +15,10 @@ use LaravelDoctrine\ORM\Auth\Authenticatable;
  * @ORM\Entity()
  * @ORM\Table()
  */
-class User implements AuthorizableContract,
-                      AuthenticatableContract,
-                      CanResetPasswordContract
+class User implements
+    AuthorizableContract,
+    AuthenticatableContract,
+    CanResetPasswordContract
 {
     use CanResetPassword;
     use Authorizable;

@@ -19,10 +19,13 @@ php artisan ...
 ## Database
 We are using SQLite in memory database. Each time we start the tests we apply migrations from the [./database/migrations](./database/migrations) folder. After change in the entities metadata we need to create a new schema in our migration folder.
 
-Because we use in memory database for migrations command that generates new migrations looking into entities metadata.
+Because we use in memory database for migrations only single file must stay in the migrations folder.
+
 ```shell
-docker compose run php tests/artisan doctrine:migrations:diff --no-interaction
+docker compose run -T --rm -u $(id -u) php rm -rf tests/laravel/database/migrations/Version*.php
+docker compose run -T --rm -u $(id -u) php tests/artisan doctrine:migrations:diff --no-interaction
 ```
+
 Command will generate full schema migration file please create an old one.
 
 Congrats you can run your tests with a new schema.

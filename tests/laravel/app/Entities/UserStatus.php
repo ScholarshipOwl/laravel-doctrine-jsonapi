@@ -7,6 +7,7 @@ use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Tests\App\Transformers\UserStatusTransformer;
 use Doctrine\ORM\Mapping as ORM;
+use LaravelDoctrine\ORM\Facades\EntityManager;
 
 /**
  * @ORM\Entity
@@ -16,6 +17,21 @@ class UserStatus implements ResourceInterface
     const ACTIVE = '1';
     const INACTIVE = '2';
     const DELETED = '3';
+
+    public static function active(): self
+    {
+        return EntityManager::getReference(self::class, self::ACTIVE);
+    }
+
+    public static function inactive(): self
+    {
+        return EntityManager::getReference(self::class, self::INACTIVE);
+    }
+
+    public static function deleted(): self
+    {
+        return EntityManager::getReference(self::class, self::DELETED);
+    }
 
     public static function getResourceType(): string
     {

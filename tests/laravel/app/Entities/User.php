@@ -40,9 +40,9 @@ class User implements
     use Timestamps;
     use WithFilterParsersTrait;
 
-    const USER_ID = '8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b';
-    const ROOT_ID = 'f1d2f365-e9aa-4844-8eb7-36e0df7a396d';
-    const MODERATOR_ID = 'ccf660b9-3cf7-4f58-a5f7-22e53ad836f8';
+    public const USER_ID = '8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b';
+    public const ROOT_ID = 'f1d2f365-e9aa-4844-8eb7-36e0df7a396d';
+    public const MODERATOR_ID = 'ccf660b9-3cf7-4f58-a5f7-22e53ad836f8';
 
     public static function getResourceType(): string
     {
@@ -133,6 +133,11 @@ class User implements
     protected Collection $pageComments;
 
     /**
+     * @ORM\OneToOne(targetEntity="UserConfig", mappedBy="user", cascade={"persist", "remove"})
+     */
+    protected ?UserConfig $config = null;
+
+    /**
      * User constructor.
      */
     public function __construct()
@@ -217,7 +222,6 @@ class User implements
         return $this->hasRoleByName(Role::ROOT_NAME);
     }
 
-
     public function hasRole(Role $role): bool
     {
         return $this->roles->contains($role);
@@ -226,5 +230,15 @@ class User implements
     public function hasRoleByName(string $name): bool
     {
         return $this->roles->exists(fn(int $_, Role $role) => $role->getName() === $name);
+    }
+
+    public function getConfig(): ?UserConfig
+    {
+        return $this->config;
+    }
+
+    public function setConfig(UserConfig $config): void
+    {
+        $this->config = $config;
     }
 }

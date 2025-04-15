@@ -8,6 +8,7 @@ use Sowl\JsonApi\Response;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 use Tests\App\Entities\UserStatus;
+use Tests\App\Entities\UserConfig;
 
 class CreateUserAction extends AbstractAction
 {
@@ -20,6 +21,15 @@ class CreateUserAction extends AbstractAction
         $user->setStatus($this->em()->getReference(UserStatus::class, UserStatus::ACTIVE));
 
         $this->em()->persist($user);
+
+        // Create default UserConfig for the new user
+        $userConfig = new UserConfig();
+        $userConfig->setUser($user);
+        $userConfig->setTheme('light');
+        $userConfig->setNotificationsEnabled(true);
+        $userConfig->setLanguage('en');
+        $this->em()->persist($userConfig);
+
         $this->em()->flush();
 
         return response()->created($user);

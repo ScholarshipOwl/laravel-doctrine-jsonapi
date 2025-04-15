@@ -9,11 +9,17 @@ use League\Fractal\Resource\Collection;
 use Sowl\JsonApi\AbstractTransformer;
 use Tests\App\Entities\Role;
 use Tests\App\Transformers\RoleTransformer;
+use Tests\App\Transformers\UserConfigTransformer;
 
 class UserTransformer extends AbstractTransformer
 {
     protected array $availableIncludes = [
-        'roles'
+        'roles',
+        'config',
+    ];
+
+    protected array $defaultIncludes = [
+        'config',
     ];
 
     protected array $availableMetas = [
@@ -39,5 +45,11 @@ class UserTransformer extends AbstractTransformer
     public function metaRandom(User $user): string
     {
         return $user->getName() . Str::random(8);
+    }
+
+    public function includeConfig(User $user)
+    {
+        // Assuming User has getUserConfig method
+        return $this->item($user->getUserConfig(), new UserConfigTransformer(), 'user-configs');
     }
 }
