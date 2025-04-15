@@ -76,7 +76,7 @@ trait InstantiatesExampleResources
     {
         $entityManager = $this->rm()->em();
         $repository = $entityManager->getRepository($resourceClass);
-        return $times > 1 ? $repository->findOneBy([]) : $repository->findBy([], [], $times);
+        return $times > 1 ? $repository->findBy([], [], $times) : $repository->findOneBy([]);
     }
 
     /**
