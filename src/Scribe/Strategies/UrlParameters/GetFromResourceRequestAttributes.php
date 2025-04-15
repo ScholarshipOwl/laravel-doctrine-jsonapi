@@ -2,6 +2,7 @@
 
 namespace Sowl\JsonApi\Scribe\Strategies\UrlParameters;
 
+use Knuckles\Scribe\Tools\ConsoleOutputUtils as c;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
@@ -13,14 +14,12 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
 
     public function __invoke(ExtractedEndpointData $endpointData, array $settings = []): array
     {
-        if (!$this->initJsonApiEndpointData($endpointData)) {
-            return [];
-        }
+        $this->initJsonApiEndpointData($endpointData);
 
         [$attributesOnMethod, $attributesOnFormRequest, $attributesOnController] =
             $this->getAttributes($endpointData->method, $endpointData->controller);
 
-        return $this->extractFromAttributes($endpointData, $attributesOnMethod, $attributesOnFormRequest, $attributesOnController);
+        return $this->extractFromAttributes($attributesOnMethod, $attributesOnFormRequest, $attributesOnController);
     }
 
     protected static function readAttributes(): array
@@ -31,7 +30,6 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
     }
 
     protected function extractFromAttributes(
-        ExtractedEndpointData $endpointData,
         array $attributesOnMethod,
         array $attributesOnFormRequest = [],
         array $attributesOnController = []
@@ -43,32 +41,44 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
             ...$attributesOnMethod
         ];
 
-        foreach ($allAttributes as $attributeInstance) {
-            if ($attributeInstance instanceof ResourceRequest) {
-                $paramName = $attributeInstance->idParam ?? 'id';
-                $parameterNames = $endpointData->route->parameterNames();
-                if (in_array($paramName, $parameterNames)) {
-                    $parameters[$paramName] = $this->generateIdParameterInfo($attributeInstance);
-                }
-            }
+        foreach ($allAttributes as $attribute) {
+            $routeParameters = match (true) {
+                $attribute instanceof ResourceRequest =>
+                    $this->getParametersFromResourceRequest($attribute),
+            };
+
+            $parameters = array_merge($parameters, $routeParameters);
         }
+
         return $parameters;
     }
 
-    protected function generateIdParameterInfo(ResourceRequest $attribute): array
+    protected function getParametersFromResourceRequest(ResourceRequest $attribute): array
     {
         $resourceType = $attribute->resourceType ?? $this->jsonApiEndpointData->resourceType;
-        $resourceClass = $this->rm()->classByResourceType($resourceType);
+        if (empty($resourceType)) {
+            return [];
+        }
+
+        $paramName = $attribute->idParam ?? 'id';
+        $parameterNames = $this->endpointData->route->parameterNames();
+        if (!in_array($paramName, $parameterNames)) {
+            c::warn("Parameter [$paramName] not found on route [{$this->endpointData->route->uri()}]");
+            return [];
+        }
 
         // Use idType from attribute or extract if not provided
+        $resourceClass = $this->rm()->classByResourceType($resourceType);
         $idType = $attribute->idType ?? $this->extractIdType($resourceClass);
         $example = $attribute->idExample ?? $this->generateExampleForIdType($idType);
 
         return [
-            'description' => "The unique identifier of the '{$resourceType}' resource",
-            'required' => true,
-            'example' => $example,
-            'type' => $idType,
+            $paramName => [
+                'description' => "The unique identifier of the '{$resourceType}' resource",
+                'required' => true,
+                'example' => $example,
+                'type' => $idType,
+            ]
         ];
     }
 

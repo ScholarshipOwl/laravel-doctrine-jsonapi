@@ -56,7 +56,7 @@ To use the JSON:API custom strategies, you need to add them to your Scribe confi
     ],
     'responses' => [
         // ...existing strategies
-        \Sowl\JsonApi\Scribe\Strategies\Responses\UseResourceResponseAttributes::class,
+        \Sowl\JsonApi\Scribe\Strategies\Responses\GetFromResourceResponseAttributes::class,
     ],
 ],
 ```

@@ -19,7 +19,7 @@ return [
     ],
     'fields' => [
         'description' => 'Sparse fieldsets - specify which fields to include in the response for each resource type. ([Spec](:specUrl))',
-        'available' => '**Available fields for :resourceType:** :fields',
+        'available' => '**Available fields:** :fields',
     ],
     'exclude' => [
         'description' => 'Exclude fieldsets - exclude specific fields for each resource type.',
@@ -27,7 +27,7 @@ return [
     ],
     'meta' => [
         'description' => 'Additional metadata to be included with the response by resource type.',
-        'available' => '**Available meta fields for :resourceType:** :metas',
+        'available' => '**Available meta fields:** :metas',
     ],
     'filter' => [
         'description' => 'Filter the resources by attributes. ([Spec](:specUrl))',
@@ -40,6 +40,6 @@ return [
     ],
     'sort' => [
         'description' => 'Sort the results by attributes. Prefix with `-` for descending order. ([Spec](:specUrl))',
-        'available' => '**Available sort fields for :resourceType:** :fields',
+        'available' => '**Available sort fields:** :fields',
     ],
 ];

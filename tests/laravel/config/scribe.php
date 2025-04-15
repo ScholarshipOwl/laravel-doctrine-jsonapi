@@ -244,7 +244,7 @@ INTRO
             Strategies\Responses\UseApiResourceTags::class,
             Strategies\Responses\UseResponseTag::class,
             Strategies\Responses\UseResponseFileTag::class,
-            \Sowl\JsonApi\Scribe\Strategies\Responses\UseResourceResponseAttributes::class,
+            \Sowl\JsonApi\Scribe\Strategies\Responses\GetFromResourceResponseAttributes::class,
             // Sowl\JsonApi\Scribe\Responses\UseJsonApiResourceResponseStrategy::class,
             [
                 Strategies\Responses\ResponseCalls::class,

@@ -13,17 +13,14 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
 
-class UseResourceResponseAttributes extends AbstractStrategy
+class GetFromResourceResponseAttributes extends AbstractStrategy
 {
     use ReadsPhpAttributes;
     use TransformerHelper;
 
     public function __invoke(ExtractedEndpointData $endpointData, array $settings = []): ?array
     {
-        if (!$this->initJsonApiEndpointData($endpointData)) {
-            // Not a JSON:API route, skip
-            return [];
-        }
+        $this->initJsonApiEndpointData($endpointData);
 
         [$attributesOnMethod, $attributesOnFormRequest, $attributesOnController] =
             $this->getAttributes($endpointData->method, $endpointData->controller);
@@ -54,16 +51,17 @@ class UseResourceResponseAttributes extends AbstractStrategy
         ];
 
         foreach ($allAttributes as $attributeInstance) {
-            $responses[] = match (true) {
-
+            $response = match (true) {
                 $attributeInstance instanceof ResourceResponse =>
                     $this->getResourceResponse($attributeInstance),
-
                 $attributeInstance instanceof ResourceRelatedResponse,
                 $attributeInstance instanceof ResourceRelationshipsResponse =>
                     $this->getResourceRelationshipOrRelatedResponse($attributeInstance),
-
             };
+
+            if (!empty($response)) {
+                $responses[] = $response;
+            }
         }
 
         return $responses;
@@ -72,8 +70,11 @@ class UseResourceResponseAttributes extends AbstractStrategy
     protected function getResourceResponse(ResourceResponse $attributeInstance): array
     {
         $resourceType = $attributeInstance->resourceType ?? $this->jsonApiEndpointData->resourceType;
-        $fractalOptions = FractalOptions::fromArray($attributeInstance->fractalOptions);
+        if (empty($resourceType)) {
+            return [];
+        }
 
+        $fractalOptions = FractalOptions::fromArray($attributeInstance->fractalOptions);
         $response = $attributeInstance->collection
             ? $this->fetchTransformedCollectionResponse(
                 $resourceType,
@@ -95,6 +96,10 @@ class UseResourceResponseAttributes extends AbstractStrategy
     ): array
     {
         $resourceType = $attributeInstance->resourceType ?? $this->jsonApiEndpointData->resourceType;
+        if (empty($resourceType)) {
+            return [];
+        }
+
         $resourceClass = $this->rm()->classByResourceType($resourceType);
         $relationshipName = $attributeInstance->relationshipName ??$this->jsonApiEndpointData->relationshipName;
         $relationship = $this->rm()->relationshipsByClass($resourceClass)->get($relationshipName);

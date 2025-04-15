@@ -59,8 +59,7 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
             'description' =>
                 'Sparse fieldsets - specify which fields to include in the response for each resource type.'
                 . " ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n"
-                . '**Available fields for users:** `name`, `email`',
-            'example' => 'name,email'
+                . '**Available fields:** `name`, `email`',
         ], $result['fields[users]']);
 
         // Verify include parameter structure if available
@@ -148,9 +147,8 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         $this->assertEquals([
             'description' => 'Sort the results by attributes. Prefix with `-` for descending order.'
                            . " ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
-                           . '**Available sort fields for users:** `name`, `email`',
+                           . '**Available sort fields:** `name`, `email`',
             'required' => false,
-            'example' => 'name,email'
         ], $result['sort']);
     }
 
@@ -214,9 +212,8 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         $this->assertEquals([
             'description' => 'Sort the results by attributes. Prefix with `-` for descending order.'
                            . " ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
-                           . '**Available sort fields for users:** `name`, `email`',
+                           . '**Available sort fields:** `name`, `email`',
             'required' => false,
-            'example' => 'name,email'
         ], $result['sort']);
     }
 
@@ -360,9 +357,8 @@ class AddJsonApiQueryParametersStrategyTest extends TestCase
         $this->assertEquals([
             'description' => 'Sort the results by attributes. Prefix with `-` for descending order.'
                            . " ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
-                           . '**Available sort fields for users:** `name`, `email`',
+                           . '**Available sort fields:** `name`, `email`',
             'required' => false,
-            'example' => 'name,email'
         ], $result['sort']);
     }
 
