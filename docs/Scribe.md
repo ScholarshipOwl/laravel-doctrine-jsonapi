@@ -52,7 +52,7 @@ To use the JSON:API custom strategies, you need to add them to your Scribe confi
     ],
     'headers' => [
         // ...existing strategies
-        \Sowl\JsonApi\Scribe\Strategies\Headers\AddJsonApiHeadersStrategy::class,
+        \Sowl\JsonApi\Scribe\Strategies\Headers\GetFromResourceAttributes::class,
     ],
     'responses' => [
         // ...existing strategies
@@ -139,8 +139,8 @@ Adds standard JSON:API query parameters for GET endpoints:
 - `include`: Include related resources (comma-separated)
 - `fields[type]`: Sparse fieldsets to select specific fields
 
-### AddJsonApiHeadersStrategy
-[Source: [`src/Scribe/Headers/AddJsonApiHeadersStrategy.php`](../src/Scribe/Headers/AddJsonApiHeadersStrategy.php)]
+### GetFromAttributes
+[Source: [`src/Scribe/Headers/GetFromAttributes.php`](../src/Scribe/Headers/GetFromAttributes.php)]
 
 Adds required JSON:API headers to all endpoints:
 - `Accept: application/vnd.api+json`: Required for all requests

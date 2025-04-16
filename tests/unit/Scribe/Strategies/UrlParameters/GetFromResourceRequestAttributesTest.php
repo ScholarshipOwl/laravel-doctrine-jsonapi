@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Tests\Scribe\Strategies;
+namespace Tests\Scribe\Strategies\UrlParameters;
 
 use Illuminate\Routing\Route;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
@@ -11,7 +11,7 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Strategies\UrlParameters\GetFromResourceRequestAttributes;
 use Tests\TestCase;
 
-class UseResourceRequestAttributesTest extends TestCase
+class GetFromResourceRequestAttributesTest extends TestCase
 {
     protected GetFromResourceRequestAttributes $strategy;
 

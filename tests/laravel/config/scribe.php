@@ -230,7 +230,7 @@ INTRO
         'headers' => [
             Strategies\Headers\GetFromHeaderAttribute::class,
             Strategies\Headers\GetFromHeaderTag::class,
-            \Sowl\JsonApi\Scribe\Strategies\Headers\AddJsonApiHeadersStrategy::class,
+            \Sowl\JsonApi\Scribe\Strategies\Headers\GetFromResourceAttributes::class,
         ],
         'bodyParameters' => [
             Strategies\BodyParameters\GetFromFormRequest::class,

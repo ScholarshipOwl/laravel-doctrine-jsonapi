@@ -9,6 +9,7 @@ final class ResourceCreateRequest
 {
     public function __construct(
         public ?string $resourceType = null,
+        public array $acceptHeaders = ['application/vnd.api+json']
     ) {
     }
 }

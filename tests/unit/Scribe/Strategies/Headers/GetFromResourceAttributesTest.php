@@ -1,36 +1,29 @@
 <?php
 
-namespace Tests\Scribe\Strategies;
+declare(strict_types=1);
 
-use Knuckles\Camel\Extraction\ExtractedEndpointData;
+namespace Tests\Scribe\Strategies\Headers;
+
 use Illuminate\Routing\Route;
+use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Tools\DocumentationConfig;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
+use Sowl\JsonApi\Scribe\Strategies\Headers\GetFromResourceAttributes;
 use Mockery;
-use Mockery\MockInterface;
 use Tests\TestCase;
-use Sowl\JsonApi\ResourceManager;
-use Sowl\JsonApi\Scribe\Strategies\Headers\AddJsonApiHeadersStrategy;
 
-class AddJsonApiHeadersStrategyTest extends TestCase
+class GetFromResourceAttributesTest extends TestCase
 {
-    private ResourceManager|MockInterface $mockResourceManager;
-
-    private AddJsonApiHeadersStrategy $strategy;
-
-    private DocumentationConfig|MockInterface $mockConfig;
-
+    protected $strategy;
+    protected $mockConfig;
+    protected $mockResourceManager;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->mockResourceManager = Mockery::mock(ResourceManager::class);
-
-        // Create a mock for DocumentationConfig
-        $this->mockConfig = Mockery::mock(DocumentationConfig::class);
-
-        // Create the strategy with the mocked config
-        $this->strategy = new AddJsonApiHeadersStrategy($this->mockConfig, $this->mockResourceManager);
+        $this->strategy = new GetFromResourceAttributes(new DocumentationConfig());
     }
 
     protected function tearDown(): void
@@ -41,16 +34,23 @@ class AddJsonApiHeadersStrategyTest extends TestCase
 
     public function testReturnsJsonApiHeadersForJsonApiRoutes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
+        $endpointData = ExtractedEndpointData::fromRoute(new Route([
+            'GET'
+        ], 'users', [
             'as' => 'jsonapi.users.list',
-            'uses' => fn () => null,
+            'uses' => new class {
+                #[ResourceRequest]
+                #[ResourceResponse]
+                public function __invoke()
+                {
+                    return null;
+                }
+            },
             ['prefix' => '/api']
         ]));
 
-        // Execute the strategy
         $result = $this->strategy->__invoke($endpointData);
 
-        // Assert that the correct headers are returned
         $this->assertEquals([
             'Accept' => 'application/vnd.api+json',
             'Content-Type' => 'application/vnd.api+json',
@@ -59,15 +59,20 @@ class AddJsonApiHeadersStrategyTest extends TestCase
 
     public function testReturnsEmptyArrayForNonJsonApiRoutes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
+        $endpointData = ExtractedEndpointData::fromRoute(new Route([
+            'GET'
+        ], 'users', [
             'as' => 'api.users.list',
-            'uses' => fn () => null
+            'uses' => new class {
+                public function __invoke()
+                {
+                    return null;
+                }
+            }
         ]));
 
-        // Execute the strategy
         $result = $this->strategy->__invoke($endpointData);
 
-        // Assert that an empty array is returned for non-JSON:API routes
         $this->assertEquals([], $result);
     }
 
@@ -87,15 +92,22 @@ class AddJsonApiHeadersStrategyTest extends TestCase
         ];
 
         foreach ($jsonApiRouteNames as $routeName) {
-            $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
+            $endpointData = ExtractedEndpointData::fromRoute(new Route([
+                'GET'
+            ], 'users', [
                 'as' => $routeName,
-                'uses' => fn () => null
+                'uses' => new class {
+                    #[ResourceRequest]
+                    #[ResourceResponse]
+                    public function __invoke()
+                    {
+                        return null;
+                    }
+                },
             ]));
 
-            // Execute the strategy
             $result = $this->strategy->__invoke($endpointData);
 
-            // Assert that the correct headers are returned for all JSON:API routes
             $this->assertEquals([
                 'Accept' => 'application/vnd.api+json',
                 'Content-Type' => 'application/vnd.api+json',
@@ -105,17 +117,24 @@ class AddJsonApiHeadersStrategyTest extends TestCase
 
     public function testHandlesSettingsParameter()
     {
-        // Execute the strategy with custom settings
         $customSettings = ['custom' => 'setting'];
 
-        $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
+        $endpointData = ExtractedEndpointData::fromRoute(new Route([
+            'GET'
+        ], 'users', [
             'as' => 'jsonapi.users.list',
-            'uses' => fn () => null,
+            'uses' => new class {
+                #[ResourceRequest]
+                #[ResourceResponse]
+                public function __invoke()
+                {
+                    return null;
+                }
+            },
         ]));
 
         $result = $this->strategy->__invoke($endpointData, $customSettings);
 
-        // Assert that the correct headers are returned regardless of settings
         $this->assertEquals([
             'Accept' => 'application/vnd.api+json',
             'Content-Type' => 'application/vnd.api+json',
