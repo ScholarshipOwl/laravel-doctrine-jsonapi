@@ -4,7 +4,7 @@ namespace Sowl\JsonApi\Scribe\Attributes;
 
 use Attribute;
 
-#[Attribute(Attribute::IS_REPEATABLE | Attribute::TARGET_FUNCTION | Attribute::TARGET_METHOD | Attribute::TARGET_CLASS)]
+#[Attribute(Attribute::TARGET_METHOD)]
 class ResourceResponseRelated extends ResourceResponse
 {
     public function __construct(

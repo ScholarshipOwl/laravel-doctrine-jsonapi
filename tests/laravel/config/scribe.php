@@ -212,7 +212,7 @@ INTRO
         'metadata' => [
             Strategies\Metadata\GetFromDocBlocks::class,
             Strategies\Metadata\GetFromMetadataAttributes::class,
-            \Sowl\JsonApi\Scribe\Strategies\Metadata\GetFromJsonApiRouteStrategy::class,
+            \Sowl\JsonApi\Scribe\Strategies\Metadata\GetFromResourceMetadataAttribute::class,
         ],
         'urlParameters' => [
             Strategies\UrlParameters\GetFromLaravelAPI::class,

@@ -2,34 +2,41 @@
 
 declare(strict_types=1);
 
-namespace Tests\Scribe\Strategies;
+namespace Tests\Scribe\Strategies\Metadata;
 
 use Illuminate\Routing\Route;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Tools\DocumentationConfig;
-use Sowl\JsonApi\Scribe\Strategies\Metadata\GetFromJsonApiRouteStrategy;
+use Sowl\JsonApi\Scribe\Attributes\ResourceMetadata;
+use Sowl\JsonApi\Scribe\Strategies\Metadata\GetFromResourceMetadataAttribute;
 use Tests\TestCase;
 
 /**
  * @group Scribe
  * @group ScribeMetadata
  */
-final class GetFromJsonApiRouteStrategyTest extends TestCase
+final class GetFromResourceMetadataAttributeTest extends TestCase
 {
-    private GetFromJsonApiRouteStrategy $strategy;
+    private GetFromResourceMetadataAttribute $strategy;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->strategy = new GetFromJsonApiRouteStrategy(new DocumentationConfig([]));
+        $this->strategy = new GetFromResourceMetadataAttribute(new DocumentationConfig([]));
     }
 
     public function testGeneratesMetadataForListAction(): void
     {
         $endpointData = ExtractedEndpointData::fromRoute(new Route(['GET'], 'users', [
             'as' => 'jsonapi.users.list',
-            'uses' => fn () => null,
+            'uses' => new class {
+                #[ResourceMetadata]
+                public function __invoke()
+                {
+                    return null;
+                }
+            },
             ['prefix' => '/api']
         ]));
 

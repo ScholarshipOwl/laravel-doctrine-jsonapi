@@ -3,44 +3,139 @@
 namespace Sowl\JsonApi\Scribe\Strategies\Metadata;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
+use Knuckles\Camel\Extraction\Metadata;
+use Sowl\JsonApi\Scribe\Attributes\ResourceMetadata;
 use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\DisplayHelper;
 use Sowl\JsonApi\Scribe\JsonApiEndpointData;
+use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 
 /**
  * Strategy to extract metadata from JSON:API routes
  */
-class GetFromJsonApiRouteStrategy extends AbstractStrategy
+class GetFromResourceMetadataAttribute extends AbstractStrategy
 {
     use DisplayHelper;
+    use ReadsPhpAttributes;
 
     protected array $transParams;
+
+    protected static function readAttributes(): array
+    {
+        return [
+            ResourceMetadata::class,
+        ];
+    }
 
     /**
      * @inheritDoc
      */
     public function __invoke(ExtractedEndpointData $endpointData, array $settings = []): array
     {
-        if (!$this->initJsonApiEndpointData($endpointData)) {
-            // Not a JSON:API route, skip
-            return [];
-        }
+        $this->initJsonApiEndpointData($endpointData);
 
         $this->transParams = $this->defaultTransParams();
 
-        // Group all JSON:API routes together under the resource type
-        return [
-            'title'         => $endpointData->metadata->title       ?: $this->generateActionTitle(),
-            'description'   => $endpointData->metadata->description ?: $this->generateActionDescription(),
-            'groupName'     => $endpointData->metadata->groupName   ?: $this->generateGroupName(),
-            'subgroup'      => $endpointData->metadata->subgroup    ?: $this->generateSubgroupName(),
+        [$attributesOnMethod, $attributesOnFormRequest, $attributesOnController] =
+            $this->getAttributes($endpointData->method, $endpointData->controller);
+
+        return $this->extractFromAttributes($attributesOnMethod, $attributesOnFormRequest, $attributesOnController);
+    }
+
+    protected function extractFromAttributes(
+        array $attributesOnMethod,
+        array $attributesOnFormRequest = [],
+        array $attributesOnController = []
+    ): ?array
+    {
+        $attributesMetadata = [];
+
+        $allAttributes = [
+            ...$attributesOnController,
+            ...$attributesOnFormRequest,
+            ...$attributesOnMethod
         ];
+
+        foreach ($allAttributes as $attribute) {
+            if ($attribute instanceof ResourceMetadata) {
+                $attributesMetadata = array_merge($attributesMetadata, $this->getFromResourceMetadata($attribute));
+            }
+        }
+
+        return $this->mergeWithEndpointMetadata($this->endpointData->metadata, $attributesMetadata);
+    }
+
+
+    protected function mergeWithEndpointMetadata(Metadata $endpointMetadata, array $attributesMetadata): array
+    {
+        return [
+            'groupName' => $endpointMetadata->groupName ?:
+                $attributesMetadata['groupName'] ??
+                $this->generateGroupName(),
+            'groupDescription' =>
+                $endpointMetadata->groupDescription ?:
+                $attributesMetadata['groupDescription'] ?? '',
+            'subgroup' =>
+                $endpointMetadata->subgroup ?:
+                $attributesMetadata['subgroup'] ??
+                $this->generateSubgroupName(),
+            'subgroupDescription' =>
+                $endpointMetadata->subgroupDescription ?:
+                $attributesMetadata['subgroupDescription'] ?? '',
+            'title' =>
+                $endpointMetadata->title ?:
+                $attributesMetadata['title'] ??
+                $this->generateTitle(),
+            'description' =>
+                $endpointMetadata->description ?:
+                $attributesMetadata['description'] ??
+                $this->generateDescription(),
+            'authenticated' =>
+                $endpointMetadata->authenticated ?:
+                $attributesMetadata['authenticated'] ?? false,
+        ];
+    }
+
+    protected function getFromResourceMetadata(ResourceMetadata $attribute): array
+    {
+        $metadata = [];
+
+        if ($attribute->title) {
+            $metadata['title'] = $attribute->title;
+        }
+
+
+        if ($attribute->description) {
+            $metadata['description'] = $attribute->description;
+        }
+
+        if ($attribute->groupName) {
+            $metadata['groupName'] = $attribute->groupName;
+        }
+
+        if ($attribute->groupDescription) {
+            $metadata['groupDescription'] = $attribute->groupDescription;
+        }
+
+        if ($attribute->subgroup) {
+            $metadata['subgroup'] = $attribute->subgroup;
+        }
+
+        if ($attribute->subgroupDescription) {
+            $metadata['subgroupDescription'] = $attribute->subgroupDescription;
+        }
+
+        if ($attribute->authenticated) {
+            $metadata['authenticated'] = $attribute->authenticated;
+        }
+
+        return $metadata;
     }
 
     /**
      * Generate a title for the action based on its type, resource, and relationship.
      */
-    protected function generateActionTitle(): string
+    protected function generateTitle(): string
     {
         return match ($this->jsonApiEndpointData->actionType) {
             JsonApiEndpointData::ACTION_LIST =>
@@ -77,7 +172,7 @@ class GetFromJsonApiRouteStrategy extends AbstractStrategy
     /**
      * Generate a description for the action based on its type, resource, and relationship.
      */
-    protected function generateActionDescription(): string
+    protected function generateDescription(): string
     {
         return match ($this->jsonApiEndpointData->actionType) {
             JsonApiEndpointData::ACTION_LIST =>

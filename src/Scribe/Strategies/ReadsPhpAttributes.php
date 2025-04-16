@@ -32,4 +32,16 @@ trait ReadsPhpAttributes
 
         return [$attributesOnMethod, $attributesOnFormRequest ?? [], $attributesOnController ?? [], ];
     }
+
+    protected function getAllAttributes(\ReflectionFunctionAbstract $method, ?\ReflectionClass $class = null): array
+    {
+        [$attributesOnMethod, $attributesOnFormRequest, $attributesOnController] =
+            $this->getAttributes($method, $class);
+
+        return [
+            ...$attributesOnController,
+            ...$attributesOnFormRequest,
+            ...$attributesOnMethod
+        ];
+    }
 }

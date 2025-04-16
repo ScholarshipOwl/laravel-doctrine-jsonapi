@@ -2,6 +2,8 @@
 
 namespace Sowl\JsonApi\Default;
 
+use Sowl\JsonApi\Scribe\Attributes\ResourceMetadata;
+
 /**
  * Class is a default implementation of a JSON:API controller.
  *
@@ -11,6 +13,7 @@ namespace Sowl\JsonApi\Default;
  * Controller class can handle most common JSON:API operations and relationship management tasks.
  * You can extend this class and override methods as needed to customize the behavior of your JSON:API controller.
  */
+#[ResourceMetadata]
 final class Controller extends \Sowl\JsonApi\Controller
 {
     use WithShowTrait;
