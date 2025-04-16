@@ -6,6 +6,7 @@ use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestCreate;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequestRelationships;
 use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 use Sowl\JsonApi\Scribe\JsonApiEndpointData;
@@ -94,7 +95,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
 
     private function buildFieldsQueryParameter(ResourceRequest $attribute): array
     {
-        if (!$this->isDataWillBeReturned()) {
+        if ($this->isRelationships($attribute)) {
             return [];
         }
 
@@ -139,7 +140,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
 
     private function buildMetaQueryParameter(ResourceRequest $attribute): array
     {
-        if (!$this->isDataWillBeReturned()) {
+        if ($this->isRelationships($attribute)) {
             return [];
         }
 
@@ -176,7 +177,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
 
     private function buildIncludeQueryParameter(ResourceRequest $attribute): array
     {
-        if (!$this->isDataWillBeReturned()) {
+        if ($this->isRelationships($attribute)) {
             return [];
         }
 
@@ -225,7 +226,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
 
     private function buildExcludeQueryParameter(ResourceRequest $attribute): array
     {
-        if (!$this->isDataWillBeReturned()) {
+        if ($this->isRelationships($attribute)) {
             return [];
         }
 
@@ -343,16 +344,9 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
         ]];
     }
 
-    protected function isDataWillBeReturned(): bool
+    protected function isRelationships(ResourceRequest $attribute): bool
     {
-        return in_array($this->jsonApiEndpointData->actionType, [
-            JsonApiEndpointData::ACTION_LIST,
-            JsonApiEndpointData::ACTION_SHOW,
-            JsonApiEndpointData::ACTION_CREATE,
-            JsonApiEndpointData::ACTION_UPDATE,
-            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_ONE,
-            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_MANY,
-        ]);
+        return $attribute instanceof ResourceRequestRelationships;
     }
 
     protected function allowedMethods(): array

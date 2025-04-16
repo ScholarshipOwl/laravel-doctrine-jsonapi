@@ -110,27 +110,6 @@ class JsonApiEndpointData
     }
 
     /**
-     * Determine if the route is a list route (returns multiple resources)
-     */
-    public function isCollectionRoute(): bool
-    {
-        // Routes explicitly marked as list routes
-        if ($this->actionType === self::ACTION_LIST) {
-            return true;
-        }
-
-        if ($this->resourceType && $this->relationshipName) {
-            $relationship = $this->rm
-                ->relationshipsByResourceType($this->resourceType)
-                ->get($this->relationshipName);
-
-            return $relationship instanceof ToManyRelationship;
-        }
-
-        return false;
-    }
-
-    /**
      * Get the transformer for the resource type.
      */
     public function resourceTransformer(): AbstractTransformer

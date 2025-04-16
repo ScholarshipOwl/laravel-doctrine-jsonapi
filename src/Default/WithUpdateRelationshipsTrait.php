@@ -8,8 +8,8 @@ use Sowl\JsonApi\Default\Request\UpdateToManyRelationshipsRequest;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Response;
-use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelatinships;
-use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequestRelationships;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelationships;
 
 /**
  * Provides an updateRelationships method for updating the relationships between resources.
@@ -27,8 +27,8 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
  */
 trait WithUpdateRelationshipsTrait
 {
-    #[ResourceRequest]
-    #[ResourceResponseRelatinships]
+    #[ResourceRequestRelationships]
+    #[ResourceResponseRelationships]
     public function updateRelationships(UpdateToManyRelationshipsRequest $request): Response
     {
         $relationship = $request->relationship();

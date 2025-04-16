@@ -6,9 +6,10 @@ use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestCreate;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequestRelationships;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelated;
-use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelatinships;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelationships;
 use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 
@@ -46,9 +47,10 @@ class GetFromResourceAttributes extends AbstractStrategy
             ResourceRequest::class,
             ResourceRequestList::class,
             ResourceRequestCreate::class,
+            ResourceRequestRelationships::class,
             ResourceResponse::class,
             ResourceResponseRelated::class,
-            ResourceResponseRelatinships::class,
+            ResourceResponseRelationships::class,
         ];
     }
 
@@ -59,15 +61,11 @@ class GetFromResourceAttributes extends AbstractStrategy
     {
         $headers = [];
         foreach ($attributes as $attribute) {
-            $headers = array_merge($headers,match (true) {
-                $attribute instanceof ResourceRequest,
-                $attribute instanceof ResourceRequestList,
-                $attribute instanceof ResourceRequestCreate =>
-                    !empty($attribute->acceptHeaders)
-                        ? ['Accept' => implode(', ', $attribute->acceptHeaders)]
-                        : [],
-                default => [],
-            });
+            if ($attribute instanceof ResourceRequest && !empty($attribute->acceptHeaders)) {
+                $headers = array_merge($headers, [
+                    'Accept' => implode(', ', $attribute->acceptHeaders)
+                ]);
+            }
         }
 
         return $headers;
@@ -80,15 +78,11 @@ class GetFromResourceAttributes extends AbstractStrategy
     {
         $headers = [];
         foreach ($attributes as $attribute) {
-            $headers = array_merge($headers, match (true) {
-                $attribute instanceof ResourceResponse,
-                $attribute instanceof ResourceResponseRelated,
-                $attribute instanceof ResourceResponseRelatinships =>
-                    !empty($attribute->contentTypeHeaders)
-                        ? ['Content-Type' => implode(', ', $attribute->contentTypeHeaders)]
-                        : [],
-                default => [],
-            });
+            if ($attribute instanceof ResourceResponse && !empty($attribute->contentTypeHeaders)) {
+                $headers = array_merge($headers, [
+                    'Content-Type' => implode(', ', $attribute->contentTypeHeaders)
+                ]);
+            }
         }
 
         return $headers;

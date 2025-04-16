@@ -6,8 +6,8 @@ use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationshipsAction;
 use Sowl\JsonApi\Default\Request\RemoveToManyRelationshipsRequest;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Response;
-use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelatinships;
-use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequestRelationships;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelationships;
 
 /**
  * Provides a removeRelationships method for removing relationships between resources.
@@ -23,8 +23,8 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
  */
 trait WithRemoveRelationshipsTrait
 {
-    #[ResourceRequest]
-    #[ResourceResponseRelatinships(status: 204)]
+    #[ResourceRequestRelationships]
+    #[ResourceResponseRelationships(status: 204)]
     public function removeRelationships(RemoveToManyRelationshipsRequest $request): Response
     {
         $relationship = $request->relationship();

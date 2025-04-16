@@ -145,7 +145,6 @@ class GetFromJsonApiRouteStrategy extends AbstractStrategy
             'displayTypePlural' => $displayTypePlural,
             'displayRelationshipSingular' => $displayRelationshipSingular,
             'displayRelationshipPlural' => $displayRelationshipPlural,
-            'actionType' => $endpoint->actionType,
         ];
     }
 }

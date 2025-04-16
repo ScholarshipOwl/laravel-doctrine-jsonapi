@@ -375,7 +375,16 @@ class GetFromResourceRequestAttributesTest extends TestCase
             new Route(
                 [$postMethod],
                 $routePath,
-                $routeInfo
+                [
+                    'as' => 'jsonapi.users.show',
+                    'uses' => new class
+                    {
+                        public function __invoke()
+                        {
+                            return [];
+                        }
+                    },
+                ]
             )
         );
         $resultPost = $this->strategy->__invoke($endpointDataPost);
