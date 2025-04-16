@@ -16,17 +16,12 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceRequestCreate;
 class GetFromResourceRequestAttributesTest extends TestCase
 {
     private GetFromResourceRequestAttributes $strategy;
-    private DocumentationConfig $config;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->config = new DocumentationConfig([]);
-        $this->strategy = new GetFromResourceRequestAttributes(
-            $this->config,
-            app(ResourceManager::class)
-        );
+        $this->strategy = new GetFromResourceRequestAttributes(new DocumentationConfig([]));
     }
 
     protected function tearDown(): void
@@ -236,7 +231,6 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $result = $this->strategy->__invoke($endpointData);
 
         // Assert that only list-specific parameters applicable to relationships are returned
-        $this->assertArrayHasKey('filter', $result);
         $this->assertArrayHasKey('sort', $result);
         $this->assertArrayHasKey('page[number]', $result);
         $this->assertArrayHasKey('page[size]', $result);
@@ -289,8 +283,6 @@ class GetFromResourceRequestAttributesTest extends TestCase
 //        );
 
         // Assert filter parameter structure
-        $this->assertArrayHasKey('filter', $result);
-        $this->assertIsArray($result['filter']);
 
         // Assert sort parameter structure
         $this->assertIsArray($result['sort']);

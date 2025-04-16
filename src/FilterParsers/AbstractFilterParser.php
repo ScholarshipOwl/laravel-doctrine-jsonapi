@@ -38,4 +38,12 @@ abstract class AbstractFilterParser implements MemberInterface
     {
         return $this->applyFilter($object);
     }
+
+    /**
+     * We can provide Scribe query parametter documentation for the filter.
+     */
+    public function docSpec(): ?array
+    {
+        return null;
+    }
 }

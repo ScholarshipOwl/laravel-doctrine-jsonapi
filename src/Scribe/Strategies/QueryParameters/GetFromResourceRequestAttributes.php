@@ -3,13 +3,15 @@
 namespace Sowl\JsonApi\Scribe\Strategies\QueryParameters;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
+use Sowl\JsonApi\FilterParsers\AbstractFilterParser;
+use Sowl\JsonApi\Request;
+use Sowl\JsonApi\Resource\FilterableInterface;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestCreate;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestRelationships;
 use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
-use Sowl\JsonApi\Scribe\JsonApiEndpointData;
 use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
 
 /**
@@ -333,15 +335,28 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
 
     private function buildFilterQueryParameter(ResourceRequestList $attribute): array
     {
-        $description = __(
-            'jsonapi::query_params.filter.description',
-            ['specUrl' => self::SPEC_URL_FILTERING]
-        );
-        return ['filter' => [
-            'type' => 'object',
-            'required' => false,
-            'description' => $description,
-        ]];
+        $resourceType = $attribute->resourceType ?? $this->jsonApiEndpointData->resourceType;
+        if (empty($resourceType)) {
+            return [];
+        }
+
+        /** @var class-string<FilterableInterface> $resourceClass */
+        $resourceClass = $this->rm()->classByResourceType($resourceType);
+        $filterParsers = in_array(FilterableInterface::class, class_implements($resourceClass))
+            ? $resourceClass::filterParsers(new Request())
+            : [];
+
+        $params = [];
+        foreach ($filterParsers as $filterParser) {
+            if ($filterParser instanceof AbstractFilterParser) {
+                $spec = $filterParser->docSpec();
+                if (!empty($spec)) {
+                    $params = array_merge($params, $spec);
+                }
+            }
+        }
+
+        return $params;
     }
 
     protected function isRelationships(ResourceRequest $attribute): bool

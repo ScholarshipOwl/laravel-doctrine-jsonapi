@@ -17,7 +17,7 @@ use Sowl\JsonApi\Request;
  */
 class ArrayFilterParser extends AbstractFilterParser
 {
-    const OPERATORS = [
+    public const OPERATORS = [
         'eq',
         'gt',
         'gte',
@@ -35,7 +35,9 @@ class ArrayFilterParser extends AbstractFilterParser
      * The constructor accepts a Request object and an array of filterable fields. It calls the parent constructor
      * to store the Request object.
      */
-    public function __construct(Request $request, protected array $filterable)
+    public function __construct(
+        Request $request,
+        readonly public array $filterable)
     {
         parent::__construct($request);
     }
@@ -159,5 +161,25 @@ class ArrayFilterParser extends AbstractFilterParser
         }
 
         return $this;
+    }
+
+    public function docSpec(): ?array
+    {
+        $spec = [];
+        foreach ($this->filterable as $field) {
+            $operators = array_map(fn($op) => "`$op`", self::OPERATORS);
+            $spec["filter[$field]"] = [
+                'required' => false,
+                'type' => 'string',
+                'description' => __(
+                    'jsonapi::query_params.filter.array.description',
+                    [
+                        'field' => $field,
+                        'operators' => implode(', ', $operators),
+                    ]
+                ),
+            ];
+        }
+        return $spec;
     }
 }

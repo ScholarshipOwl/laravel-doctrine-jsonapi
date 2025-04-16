@@ -30,7 +30,29 @@ return [
         'available' => '**Available meta fields:** :metas',
     ],
     'filter' => [
-        'description' => 'Filter the resources by attributes. ([Spec](:specUrl))',
+        'search' => [
+            'description' => <<<TEXT
+Search filter uses `contains` operator on `:property` attribute.
+
+If you want to use search filter and other filters at the same time, use `filter[search]=text`
+TEXT
+        ],
+        'array' => [
+            'description' => <<<TEXT
+Filter by `:field` attribute.
+
+<details>
+<summary>Full details</summary>
+
+- Equal: `filter[:field]=example`
+- Between: `filter[:field][start]=10&filter[:field][end]=20`
+- Operator: `filter[:field][operator]=gt&filter[:field][value]=100`
+
+**Operators:** :operators
+
+</details>
+TEXT
+        ],
     ],
     'page' => [
         'number_description' => 'Page number. ([Spec](:specUrl))',

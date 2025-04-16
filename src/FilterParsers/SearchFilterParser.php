@@ -30,8 +30,8 @@ class SearchFilterParser extends AbstractFilterParser
      */
     public function __construct(
         Request $request,
-        protected ?string $property,
-        protected string $searchKey = self::SEARCH_KEY
+        readonly public ?string $property,
+        readonly public string $searchKey = self::SEARCH_KEY
     ) {
         parent::__construct($request);
     }
@@ -57,5 +57,18 @@ class SearchFilterParser extends AbstractFilterParser
         }
 
         return $criteria;
+    }
+
+    public function docSpec(): ?array
+    {
+        return [
+            'filter' => [
+                'required' => false,
+                'type' => 'string',
+                'description' => __('jsonapi::query_params.filter.search.description', [
+                    'property' => $this->property
+                ]),
+            ],
+        ];
     }
 }
