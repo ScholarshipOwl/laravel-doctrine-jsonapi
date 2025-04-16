@@ -9,5 +9,6 @@ final class ResourceListRequest
 {
     public function __construct(
         public ?string $resourceType = null,
-    ) {}
+    ) {
+    }
 }

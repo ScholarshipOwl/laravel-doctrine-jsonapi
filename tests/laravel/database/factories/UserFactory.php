@@ -17,10 +17,16 @@ $factory->define(User::class, function (Faker\Generator $faker) use ($factory) {
         'email' => $faker->email,
         'password' => 'secret',
         'status' => UserStatus::active(),
-//        'roles' => new ArrayCollection([
-//            $factory->makeAs(Role::class, Role::USER_NAME)
-//        ]),
     ];
+});
+
+$factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
+    $config = new UserConfig();
+    $config->setUser($user);
+    $config->setTheme('light');
+    $config->setNotificationsEnabled(true);
+    $config->setLanguage('en');
+    $user->setConfig($config);
 });
 
 $factory->defineAs(User::class, 'user', function (Faker\Generator $faker) {
@@ -36,6 +42,15 @@ $factory->defineAs(User::class, 'user', function (Faker\Generator $faker) {
     ];
 });
 
+$factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
+    $config = new UserConfig();
+    $config->setUser($user);
+    $config->setTheme('light');
+    $config->setNotificationsEnabled(true);
+    $config->setLanguage('en');
+    $user->setConfig($config);
+}, 'user');
+
 $factory->defineAs(User::class, 'root', function () {
     return [
         'id' => User::ROOT_ID,
@@ -49,6 +64,15 @@ $factory->defineAs(User::class, 'root', function () {
         ])
     ];
 });
+
+$factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
+    $config = new UserConfig();
+    $config->setUser($user);
+    $config->setTheme('light');
+    $config->setNotificationsEnabled(true);
+    $config->setLanguage('en');
+    $user->setConfig($config);
+}, 'root');
 
 $factory->defineAs(User::class, 'moderator', function () {
     return [
@@ -64,11 +88,11 @@ $factory->defineAs(User::class, 'moderator', function () {
     ];
 });
 
-$factory->afterMaking(User::class, function (User $user, \Faker\Generator $faker) {
+$factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
     $config = new UserConfig();
     $config->setUser($user);
     $config->setTheme('light');
     $config->setNotificationsEnabled(true);
     $config->setLanguage('en');
     $user->setConfig($config);
-});
+}, 'moderator');

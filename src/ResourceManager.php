@@ -2,9 +2,9 @@
 
 namespace Sowl\JsonApi;
 
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadata;
+use \Doctrine\Persistence\Mapping\ClassMetadata;
 use InvalidArgumentException;
+use LaravelDoctrine\ORM\IlluminateRegistry;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use UnexpectedValueException;
@@ -21,19 +21,16 @@ class ResourceManager
     /** @var array<string, class-string<ResourceInterface>>  */
     protected array $resources;
 
-    public function __construct(protected EntityManager $em, array $resources = [])
+    public function __construct(protected IlluminateRegistry $registry, array $resources = [])
     {
         foreach ($resources as $resource) {
             $this->registerResource($resource);
         }
     }
 
-    /**
-     * Returns the EntityManager object.
-     */
-    public function em(): EntityManager
+    public function registry(): IlluminateRegistry
     {
-        return $this->em;
+        return $this->registry;
     }
 
     /**
@@ -114,10 +111,11 @@ class ResourceManager
      */
     public function repositoryByClass(string $class): ResourceRepository
     {
-        $metadata = $this->em->getClassMetadata($class);
+        $em = $this->registry->getManagerForClass($class);
+        $metadata = $em->getClassMetadata($class);
         $repositoryClass = $this->resourceRepositoryClass($metadata);
 
-        return new $repositoryClass($this->em, $metadata);
+        return new $repositoryClass($em, $metadata);
     }
 
     /**

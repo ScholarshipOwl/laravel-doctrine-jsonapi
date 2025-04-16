@@ -85,7 +85,8 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
     protected function extractIdType(string $class): string
     {
         $type = 'guid';
-        $metadata = $this->rm()->em()->getClassMetadata($class);
+        $em = $this->rm()->registry()->getManagerForClass($class);
+        $metadata = $em->getClassMetadata($class);
         $idFieldName = $metadata->identifier[0] ?? 'id';
 
         if (isset($metadata->fieldMappings[$idFieldName])) {

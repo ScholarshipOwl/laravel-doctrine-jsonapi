@@ -57,7 +57,7 @@ trait TransformerHelper
             $resourceClass = $this->rm()->classByResourceType($resourceType);
             $transformer = $this->rm()->transformerByResourceType($resourceType);
 
-            if (!$isRelationship) {
+            if ($isRelationship) {
                 $transformer = new RelationshipsTransformer($transformer);
             }
 

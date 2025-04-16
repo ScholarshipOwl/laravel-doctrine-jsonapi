@@ -4,10 +4,10 @@ declare(strict_types=1);
 
 namespace Sowl\JsonApi\Scribe\Strategies;
 
+use Doctrine\ORM\EntityManager;
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Knuckles\Scribe\Tools\ConsoleOutputUtils as c;
 use Knuckles\Scribe\Tools\ErrorHandlingUtils as e;
-use LaravelDoctrine\ORM\Testing\Factory;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceManager;
 use Throwable;
@@ -52,7 +52,8 @@ trait InstantiatesExampleResources
 
         foreach ($configuredStrategies as $strategy) {
             try {
-                if ($model = $this->wrapInTransaction(fn () => $strategies[$strategy]())) {
+                $em = $this->rm()->registry()->getManagerForClass($resourceClass);
+                if ($model = $this->wrapInTransaction($em, fn () => $strategies[$strategy]())) {
                     return $model;
                 }
             } catch (Throwable $e) {
@@ -74,8 +75,8 @@ trait InstantiatesExampleResources
      */
     protected function getFromDatabaseFirst(string $resourceClass, int $times): mixed
     {
-        $entityManager = $this->rm()->em();
-        $repository = $entityManager->getRepository($resourceClass);
+        $em = $this->rm()->registry()->getManagerForClass($resourceClass);
+        $repository = $em->getRepository($resourceClass);
         return $times > 1 ? $repository->findBy([], [], $times) : $repository->findOneBy([]);
     }
 
@@ -84,10 +85,7 @@ trait InstantiatesExampleResources
      */
     protected function getFromDoctrineFactoryMake(string $resourceClass, int $times): mixed
     {
-        $factory = $this->factory()->of($resourceClass);
-        if ($times > 1) {
-            $factory = $factory->times($times);
-        }
+        $factory = $times > 1 ? entity($resourceClass, $times) : entity($resourceClass);
 
         return $factory->make();
     }
@@ -97,19 +95,10 @@ trait InstantiatesExampleResources
      */
     protected function getFromDoctrineFactoryCreate(string $resourceClass, int $times): mixed
     {
-        $factory = $this->factory()->of($resourceClass);
-        if ($times > 1) {
-            $factory = $factory->times($times);
-        }
+        $factory = $times > 1 ? entity($resourceClass, $times) : entity($resourceClass);
 
         return $factory->create();
     }
-
-    protected function factory(): Factory
-    {
-        return app(Factory::class);
-    }
-
 
     /**
      * Wrap a callback in a database transaction
@@ -118,18 +107,15 @@ trait InstantiatesExampleResources
      * @param callable(): T $callback
      * @return T|null
      */
-    private function wrapInTransaction(callable $callback)
+    private function wrapInTransaction(EntityManager $em, callable $callback)
     {
-        $em = $this->rm()->em();
-
         try {
             $em->beginTransaction();
             $result = $callback();
             return $result;
         } catch (\Throwable $e) {
             c::warn(sprintf(
-                'Fail to instantiate resource %s: %s',
-                $this->jsonApiEndpointData->resourceType,
+                'Failed in transaction wrapper: %s',
                 $e->getMessage()
             ));
 
@@ -138,8 +124,6 @@ trait InstantiatesExampleResources
             if ($em->getConnection()->isTransactionActive()) {
                 $em->rollback();
             }
-
-            $em->clear();
         }
     }
 }

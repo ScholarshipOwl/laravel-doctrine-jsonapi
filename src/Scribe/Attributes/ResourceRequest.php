@@ -12,5 +12,6 @@ final class ResourceRequest
         public ?string $idType = null,
         public $idExample = null,
         public string $idParam = 'id'
-    ) {}
+    ) {
+    }
 }

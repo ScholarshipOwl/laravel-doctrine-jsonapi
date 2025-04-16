@@ -92,7 +92,7 @@ class JsonApiServiceProvider extends ServiceProvider
     public function registerResourceManager(): void
     {
         $this->app->singleton(ResourceManager::class, function (Application $app) {
-            return new ResourceManager($app['em'], config('jsonapi.resources'));
+            return new ResourceManager($app['registry'], config('jsonapi.resources'));
         });
     }
 
