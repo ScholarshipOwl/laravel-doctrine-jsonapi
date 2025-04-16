@@ -6,7 +6,7 @@ use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationshipsAction;
 use Sowl\JsonApi\Default\Request\RemoveToManyRelationshipsRequest;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Response;
-use Sowl\JsonApi\Scribe\Attributes\ResourceRelationshipsResponse;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelatinships;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 
 /**
@@ -24,7 +24,7 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 trait WithRemoveRelationshipsTrait
 {
     #[ResourceRequest]
-    #[ResourceRelationshipsResponse(status: 204)]
+    #[ResourceResponseRelatinships(status: 204)]
     public function removeRelationships(RemoveToManyRelationshipsRequest $request): Response
     {
         $relationship = $request->relationship();

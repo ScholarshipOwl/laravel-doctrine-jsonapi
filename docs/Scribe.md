@@ -48,7 +48,7 @@ To use the JSON:API custom strategies, you need to add them to your Scribe confi
     ],
     'queryParameters' => [
         // ...existing strategies
-        \Sowl\JsonApi\Scribe\Strategies\QueryParameters\AddJsonApiQueryParametersStrategy::class,
+        \Sowl\JsonApi\Scribe\Strategies\QueryParameters\GetFromResourceRequestAttributes::class,
     ],
     'headers' => [
         // ...existing strategies

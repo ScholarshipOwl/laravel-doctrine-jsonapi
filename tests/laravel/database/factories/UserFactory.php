@@ -7,7 +7,6 @@ use Tests\App\Entities\UserStatus;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\UserConfig;
 use Doctrine\Common\Collections\ArrayCollection;
-
 use LaravelDoctrine\ORM\Facades\EntityManager;
 
 $factory->define(User::class, function (Faker\Generator $faker) use ($factory) {

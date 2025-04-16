@@ -5,7 +5,7 @@ namespace Sowl\JsonApi\Default;
 use Sowl\JsonApi\Action\Resource\ListResourcesAction;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
-use Sowl\JsonApi\Scribe\Attributes\ResourceListRequest;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 
 /**
@@ -18,7 +18,7 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
  */
 trait WithListTrait
 {
-    #[ResourceListRequest]
+    #[ResourceRequestList]
     #[ResourceResponse(collection: true)]
     public function list(Request $request): Response
     {

@@ -5,7 +5,7 @@ namespace Sowl\JsonApi\Default;
 use Sowl\JsonApi\Action\Resource\CreateResourceAction;
 use Sowl\JsonApi\Default\Request\CreateResourceRequest;
 use Sowl\JsonApi\Response;
-use Sowl\JsonApi\Scribe\Attributes\ResourceCreateRequest;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequestCreate;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 
 /**
@@ -18,7 +18,7 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
  */
 trait WithCreateTrait
 {
-    #[ResourceCreateRequest]
+    #[ResourceRequestCreate]
     #[ResourceResponse(status: 201, description: 'Created resource.')]
     public function create(CreateResourceRequest $request): Response
     {

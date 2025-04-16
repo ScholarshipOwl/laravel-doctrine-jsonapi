@@ -6,8 +6,8 @@ use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Sowl\JsonApi\Fractal\FractalOptions;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
-use Sowl\JsonApi\Scribe\Attributes\ResourceRelatedResponse;
-use Sowl\JsonApi\Scribe\Attributes\ResourceRelationshipsResponse;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelated;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelatinships;
 use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
@@ -32,8 +32,8 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
     {
         return [
             ResourceResponse::class,
-            ResourceRelatedResponse::class,
-            ResourceRelationshipsResponse::class,
+            ResourceResponseRelated::class,
+            ResourceResponseRelatinships::class,
         ];
     }
 
@@ -54,8 +54,8 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
             $response = match (true) {
                 $attributeInstance instanceof ResourceResponse =>
                     $this->getResourceResponse($attributeInstance),
-                $attributeInstance instanceof ResourceRelatedResponse,
-                $attributeInstance instanceof ResourceRelationshipsResponse =>
+                $attributeInstance instanceof ResourceResponseRelated,
+                $attributeInstance instanceof ResourceResponseRelatinships =>
                     $this->getResourceRelationshipOrRelatedResponse($attributeInstance),
             };
 
@@ -92,7 +92,7 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
     }
 
     protected function getResourceRelationshipOrRelatedResponse(
-        ResourceRelatedResponse|ResourceRelationshipsResponse $attributeInstance
+        ResourceResponseRelated|ResourceResponseRelatinships $attributeInstance
     ): array
     {
         $resourceType = $attributeInstance->resourceType ?? $this->jsonApiEndpointData->resourceType;
@@ -103,7 +103,7 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
         $resourceClass = $this->rm()->classByResourceType($resourceType);
         $relationshipName = $attributeInstance->relationshipName ??$this->jsonApiEndpointData->relationshipName;
         $relationship = $this->rm()->relationshipsByClass($resourceClass)->get($relationshipName);
-        $isRelationships = $attributeInstance instanceof ResourceRelationshipsResponse;
+        $isRelationships = $attributeInstance instanceof ResourceResponseRelatinships;
 
         if (!$relationship) {
             throw new \InvalidArgumentException(

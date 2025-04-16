@@ -225,7 +225,7 @@ INTRO
             Strategies\QueryParameters\GetFromInlineValidator::class,
             Strategies\QueryParameters\GetFromQueryParamAttribute::class,
             Strategies\QueryParameters\GetFromQueryParamTag::class,
-            \Sowl\JsonApi\Scribe\Strategies\QueryParameters\AddJsonApiQueryParametersStrategy::class,
+            \Sowl\JsonApi\Scribe\Strategies\QueryParameters\GetFromResourceRequestAttributes::class,
         ],
         'headers' => [
             Strategies\Headers\GetFromHeaderAttribute::class,

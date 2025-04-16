@@ -53,7 +53,7 @@ When using the "Step-by-Step" approach:
     - The test would be too complex to set up with real classes
     - assign mocks to variables with prefix `$mock...`
   - Use Laravel's testing helpers
-  - Use this command to run tests `docker compose run php phpunit`
+  - Use this command to run tests `docker compose run -T -u $(id -u) --rm --remove-orphans php phpunit`
   - Use options `--stop-on-failure --stop-on-error` when running all tests to verify regression.
   - Use `--coverage-text` to extract code coverage and use it to improve the tests
   - Don't mock ResourceManager, use existing instances instead. app(ResourceManager::class)
