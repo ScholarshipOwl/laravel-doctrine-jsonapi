@@ -37,8 +37,8 @@ class ArrayFilterParser extends AbstractFilterParser
      */
     public function __construct(
         Request $request,
-        readonly public array $filterable)
-    {
+        readonly public array $filterable
+    ) {
         parent::__construct($request);
     }
 

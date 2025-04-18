@@ -32,8 +32,7 @@ trait InstantiatesExampleResources
     protected function instantiateExampleResource(
         string $resourceClass,
         int $times = 1
-    ): mixed
-    {
+    ): mixed {
         $strategies = [
             'doctrineFactoryMake' => fn() => $this->getFromDoctrineFactoryMake($resourceClass, $times),
             'doctrineFactoryCreate' => fn() => $this->getFromDoctrineFactoryCreate($resourceClass, $times),

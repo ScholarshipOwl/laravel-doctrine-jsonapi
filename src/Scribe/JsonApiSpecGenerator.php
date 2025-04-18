@@ -26,8 +26,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
     public function __construct(
         protected DocumentationConfig $config,
         protected ResourceManager $rm,
-    )
-    {
+    ) {
         parent::__construct($config);
     }
 
@@ -191,7 +190,6 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                     'properties' => $this->convertToOpenApiSchema($meta)
                 ];
             }
-
         } catch (\Throwable $e) {
             c::warn("Couldn't generate attributes for '{$resourceType}'.");
             e::dumpExceptionIfVerbose($e, true);
@@ -248,11 +246,21 @@ class JsonApiSpecGenerator extends OpenApiGenerator
      */
     protected function getOpenApiType($value): string
     {
-        if (is_null($value)) return 'null';
-        if (is_int($value)) return 'integer';
-        if (is_float($value)) return 'number';
-        if (is_bool($value)) return 'boolean';
-        if (is_string($value)) return 'string';
+        if (is_null($value)) {
+            return 'null';
+        }
+        if (is_int($value)) {
+            return 'integer';
+        }
+        if (is_float($value)) {
+            return 'number';
+        }
+        if (is_bool($value)) {
+            return 'boolean';
+        }
+        if (is_string($value)) {
+            return 'string';
+        }
         if (is_array($value)) {
             return array_is_list($value) ? 'array' : 'object';
         }

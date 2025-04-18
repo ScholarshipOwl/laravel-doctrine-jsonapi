@@ -41,8 +41,7 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
         array $attributesOnMethod,
         array $attributesOnFormRequest = [],
         array $attributesOnController = []
-    ): ?array
-    {
+    ): ?array {
         $responses = [];
         $allAttributes = [
             ...$attributesOnController,
@@ -94,15 +93,14 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
 
     protected function getResourceRelationshipOrRelatedResponse(
         ResourceResponseRelated|ResourceResponseRelationships $attributeInstance
-    ): array
-    {
+    ): array {
         $resourceType = $attributeInstance->resourceType ?? $this->jsonApiEndpointData->resourceType;
         if (empty($resourceType)) {
             return [];
         }
 
         $resourceClass = $this->rm()->classByResourceType($resourceType);
-        $relationshipName = $attributeInstance->relationshipName ??$this->jsonApiEndpointData->relationshipName;
+        $relationshipName = $attributeInstance->relationshipName ?? $this->jsonApiEndpointData->relationshipName;
         $relationship = $this->rm()->relationshipsByClass($resourceClass)->get($relationshipName);
         $isRelationships = $attributeInstance instanceof ResourceResponseRelationships;
 

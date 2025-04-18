@@ -14,7 +14,8 @@ class FractalOptions
         public readonly ?array $fields = null,
         public readonly ?array $meta = null,
         public readonly string $baseUrl = ''
-    ) {}
+    ) {
+    }
 
 
     public static function fromArray(array $data): self

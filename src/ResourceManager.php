@@ -2,7 +2,7 @@
 
 namespace Sowl\JsonApi;
 
-use \Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\Persistence\Mapping\ClassMetadata;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\IlluminateRegistry;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;

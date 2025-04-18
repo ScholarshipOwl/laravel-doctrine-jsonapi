@@ -46,8 +46,7 @@ class GetFromResourceMetadataAttribute extends AbstractStrategy
         array $attributesOnMethod,
         array $attributesOnFormRequest = [],
         array $attributesOnController = []
-    ): ?array
-    {
+    ): ?array {
         $attributesMetadata = [];
 
         $allAttributes = [

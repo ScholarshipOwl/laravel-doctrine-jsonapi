@@ -9,7 +9,7 @@ trait ReadsPhpAttributes
 {
     use FindsFormRequestForMethod;
 
-    abstract static protected function readAttributes(): array;
+    abstract protected static function readAttributes(): array;
 
     protected function getAttributes(\ReflectionFunctionAbstract $method, ?\ReflectionClass $class = null): array
     {

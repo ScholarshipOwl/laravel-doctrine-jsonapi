@@ -1,12 +1,12 @@
-# Laravel Doctrine JSON:API Documentation with Scribe
-
-This package provides custom [Scribe](https://scribe.knuckles.wtf/laravel/) strategies to document your JSON:API endpoints automatically.
+# Documentation with Scribe
 
 API documentation is an essential part of any API. It provides a clear understanding of the endpoints,
 their parameters, expected responses and errors. With this documentation, developers can easily consume
 the API, without having to contact the API developers directly. It also helps to
 reduce the number of support requests, since the documentation answers many of the questions that
 developers may have.
+
+This package provides custom [Scribe](https://scribe.knuckles.wtf/laravel/) strategies to document your JSON:API endpoints automatically.
 
 ## Installation
 
