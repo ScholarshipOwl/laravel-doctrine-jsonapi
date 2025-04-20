@@ -7,3 +7,5 @@ services:
       - .:/opt/project
     user: '1000'
     command: ['composer', 'install']
+    environment:
+      - XDEBUG_MODE=coverage

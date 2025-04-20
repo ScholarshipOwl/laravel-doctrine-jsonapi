@@ -29,20 +29,21 @@
         "laravel-doctrine/orm": "^2.0",
         "laravel-doctrine/migrations": "^3.1",
         "doctrine/annotations": "^2",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^10.5.1",
         "mockery/mockery": "^1.5",
         "laravel-doctrine/extensions": "^1.6",
         "gedmo/doctrine-extensions": "^3.11",
         "fakerphp/faker": "^1.24",
-        "squizlabs/php_codesniffer": "^3.12"
+        "squizlabs/php_codesniffer": "^3.12",
+        "nunomaduro/collision": "^8.0"
     },
     "require": {
         "league/fractal": "^0.20.1",
         "doctrine/orm": "^2.14",
-        "laravel/framework": "^10.0",
-        "php": "^8.1",
+        "php": ">=8.2",
         "ramsey/uuid": "^4.7",
-        "knuckleswtf/scribe": "^5.1"
+        "knuckleswtf/scribe": "^5.1",
+        "laravel/framework": "^11.0"
     },
     "extra": {
         "laravel": {
