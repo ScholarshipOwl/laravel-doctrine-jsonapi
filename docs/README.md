@@ -6,11 +6,11 @@ in your [Laravel](https://laravel.com/) applications using [Doctrine ORM](https:
 Follow this guide to install this package in a new or existing laravel project.
 
 ### Laravel Installation
-This package requires Laravel `>=9.0.0`.
+This package requires Laravel `>=9.0.0` but works with Laravel `^12.0`.
 
 Install Laravel:
 ```shell
-composer create-project laravel/laravel:^10.0 laravel-jsonapi
+composer create-project laravel/laravel:^12.0 laravel-jsonapi
 ```
 
 ### Laravel Doctrine Installation
@@ -48,24 +48,33 @@ protected $middlewareGroups = [
 ```
 
 #### Route
-Add a route configuration in the `app/Providers/RouteServiceProvider.php` file:
-```php
-public function boot()
-{
-    $this->routes(function () {
-        Route::middleware('jsonapi')
-            ->prefix('jsonapi')
-            ->group(base_path('routes/jsonapi.php'));
 
-        Route::middleware('web')
-            ->group(base_path('routes/web.php'));
-    });
-}
+This package publishes a ready-to-use route file at `routes/jsonapi.php`.
+
+You are encouraged to add your own custom routes directly to this file. All default JSON:API routes are also defined here and handled by the package's controllers.
+
+To enable JSON:API endpoints, register this file in your application's routing configuration. With Laravel 12.x, use the `withRouting` method in `bootstrap/app.php`:
+
+```php
+use Illuminate\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+
+return Application::configure(basePath: dirname(__DIR__))
+    ->withRouting(
+        web: __DIR__.'/../routes/web.php',
+        commands: __DIR__.'/../routes/console.php',
+        health: '/up',
+        then: function () {
+            Route::prefix(config('jsonapi.routing.rootPathPrefix', 'jsonapi'))
+                ->group(base_path('routes/jsonapi.php'));
+        },
+    )->create();
 ```
 
-Run `php artisan route:list` to get the list of available routes.
+- You may add or customize routes in `routes/jsonapi.php` as needed for your application.
+- The route prefix is configurable via `config/jsonapi.php` using the `routing.rootPathPrefix` key.
 
-JSON:API routes should be included.
+Run `php artisan route:list` to view available JSON:API endpoints.
 
 ## Usage
 
@@ -115,4 +124,3 @@ public function test_view_user()
             ]
         ]);
 }
-```

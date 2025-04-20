@@ -151,7 +151,6 @@ return [
          */
         Tests\App\Providers\AuthServiceProvider::class,
         Tests\App\Providers\AppServiceProvider::class,
-        Tests\App\Providers\RouteServiceProvider::class,
 
         LaravelDoctrine\ORM\DoctrineServiceProvider::class,
         LaravelDoctrine\ORM\Queue\FailedJobsServiceProvider::class,
