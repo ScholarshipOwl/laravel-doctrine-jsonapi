@@ -3,7 +3,6 @@
 namespace Sowl\JsonApi\Action\Resource;
 
 use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\Response;
 
 class CreateResourceAction extends AbstractAction

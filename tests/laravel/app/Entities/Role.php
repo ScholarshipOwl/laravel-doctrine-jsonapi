@@ -10,10 +10,8 @@ use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\ResourceInterface;
 use Tests\App\Transformers\RoleTransformer;
 
-/**
- * @ORM\Entity(repositoryClass="Tests\App\Repositories\RolesRepository")
- * @ORM\Table(name="role")
- */
+#[ORM\Entity(repositoryClass: "Tests\\App\\Repositories\\RolesRepository")]
+#[ORM\Table(name: "role")]
 class Role implements ResourceInterface
 {
     const ROOT = 1;
@@ -25,26 +23,16 @@ class Role implements ResourceInterface
     const MODERATOR = 3;
     const MODERATOR_NAME = 'Moderator';
 
-    /**
-     * @ORM\Id();
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
+    #[ORM\Id, ORM\Column(name: "id", type: "integer"), ORM\GeneratedValue(strategy: "AUTO")]
     protected ?int $id;
 
-    /**
-     * @ORM\Column(name="name", type="string", length=255)
-     */
+    #[ORM\Column(name: "name", type: "string", length: 255)]
     protected ?string $name;
 
-    /**
-     * @ORM\Column(name="permissions", type="json")
-     */
+    #[ORM\Column(name: "permissions", type: "json")]
     protected array $permissions = [];
 
-    /**
-     * @ORM\ManyToMany(targetEntity="User", mappedBy="roles", fetch="EXTRA_LAZY")
-     */
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: "roles", fetch: "EXTRA_LAZY")]
     protected Collection $users;
 
     public static function getResourceType(): string

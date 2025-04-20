@@ -12,22 +12,6 @@ It is using Doctrine ORM for database interactions, instead of Eloquent.
   - Don't duplicate code
   - Follow step-by-step approach only if you was asked for it.
 
-### Step-by-Step approach
-
-When using the "Step-by-Step" approach:
-
-1. **Analyze**: First analyze the problem or task at hand
-2. **Propose**: Propose a single, specific action to take
-  2.1 Add to proposition some pseudocode or code snippet
-  2.2 Be short and concise
-3. **Wait**: Wait for explicit confirmation before proceeding
-  3.1 If proposed action exactly what you suggest to do you can proceed.
-  3.2 When encounting errors in tests, report them and ask for help.
-4. **Execute**: Only after receiving confirmation, execute the agreed-upon action
-5. **Report**: Report the results of the action
-  5.1 Be short and concise
-6. **Repeat**: Return to step 2 for the next action
-
 ## Code Style
   - Write human readable code
   - Use 4 spaces for indentation

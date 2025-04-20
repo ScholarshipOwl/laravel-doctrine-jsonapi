@@ -36,7 +36,7 @@ class RelationshipNameExtractorTest extends TestCase
      *
      * @return array<string, array{string, string|null, array}>
      */
-    public function provideRouteData(): array
+    static public function provideRouteData(): array
     {
         return [
             'resource without relationship' => [
@@ -149,7 +149,7 @@ class RelationshipNameExtractorTest extends TestCase
         $this->assertEquals($expected, $this->extractor->isRelationships($route));
     }
 
-    public function provideRelationshipRoutes(): array
+    static public function provideRelationshipRoutes(): array
     {
         return [
             'relationships route' => ['users/{user}/relationships/roles', true],

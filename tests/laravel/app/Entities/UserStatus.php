@@ -9,9 +9,7 @@ use Tests\App\Transformers\UserStatusTransformer;
 use Doctrine\ORM\Mapping as ORM;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class UserStatus implements ResourceInterface
 {
     const ACTIVE = '1';
@@ -48,15 +46,10 @@ class UserStatus implements ResourceInterface
         return new RelationshipsCollection();
     }
 
-    /**
-     * @ORM\Id()
-     * @ORM\Column(type="string", length=2)
-     */
+    #[ORM\Id, ORM\Column(type: "string", length: 2)]
     private ?string $id;
 
-    /**
-     * @ORM\Column(type="string", length=16)
-     */
+    #[ORM\Column(type: "string", length: 16)]
     private ?string $name;
 
     public function getId(): string

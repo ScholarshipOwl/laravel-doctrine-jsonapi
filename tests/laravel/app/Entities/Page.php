@@ -12,39 +12,23 @@ use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\ResourceInterface;
 use Tests\App\Transformers\PagesTransformer;
 
-/**
- * @ORM\Entity(repositoryClass="Tests\App\Repositories\PagesRepository")
- * @ORM\Table()
- */
+#[ORM\Entity(repositoryClass: "Tests\App\Repositories\PagesRepository")]
+#[ORM\Table]
 class Page implements ResourceInterface
 {
-    /**
-     * @ORM\Id()
-     * @ORM\Column(name="id", type="integer")
-     * @ORM\GeneratedValue(strategy="AUTO")
-     */
-    #[ORM\Id, ORM\Column]
+    #[ORM\Id, ORM\Column(name: "id", type: "integer"), ORM\GeneratedValue(strategy: "AUTO")]
     protected ?int $id;
 
-    /**
-     * @ORM\Column(type="string", length=255, nullable=false)
-     */
+    #[ORM\Column(type: "string", length: 255, nullable: false)]
     protected ?string $title;
 
-    /**
-     * @ORM\Column(name="content", type="text", nullable=true)
-     */
+    #[ORM\Column(name: "content", type: "text", nullable: true)]
     protected ?string $content;
 
-    /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="pages")
-     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
-     */
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: "pages"), ORM\JoinColumn(nullable: false, onDelete: "CASCADE")]
     protected ?User $user;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PageComment", mappedBy="page", fetch="LAZY")
-     */
+    #[ORM\OneToMany(targetEntity: PageComment::class, mappedBy: "page", fetch: "LAZY")]
     protected Collection $comments;
 
     public function __construct()

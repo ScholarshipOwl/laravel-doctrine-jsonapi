@@ -11,10 +11,8 @@ use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Tests\App\Transformers\UserConfigTransformer;
 use Sowl\JsonApi\AbstractTransformer;
 
-/**
- * @ORM\Entity()
- * @ORM\Table(name="user_configs")
- */
+#[ORM\Entity]
+#[ORM\Table(name: "user_configs")]
 class UserConfig implements ResourceInterface
 {
     /**
@@ -24,6 +22,7 @@ class UserConfig implements ResourceInterface
      * @ORM\OneToOne(targetEntity="User", inversedBy="config")
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
+    #[ORM\Id, ORM\OneToOne(targetEntity: User::class, inversedBy: "config"), ORM\JoinColumn(name: "user_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
     protected ?User $user = null;
 
     /**
@@ -31,6 +30,7 @@ class UserConfig implements ResourceInterface
      *
      * @ORM\Column(type="string", length=50, nullable=true)
      */
+    #[ORM\Column(type: "string", length: 50, nullable: true)]
     private ?string $theme = null;
 
     /**
@@ -38,6 +38,7 @@ class UserConfig implements ResourceInterface
      *
      * @ORM\Column(type="boolean", options={"default": true})
      */
+    #[ORM\Column(type: "boolean", options: ["default" => true])]
     private bool $notificationsEnabled = true;
 
     /**
@@ -45,6 +46,7 @@ class UserConfig implements ResourceInterface
      *
      * @ORM\Column(type="string", length=10, nullable=true)
      */
+    #[ORM\Column(type: "string", length: 10, nullable: true)]
     private ?string $language = null;
 
     public function getUser(): User

@@ -2,6 +2,7 @@
 
 namespace Sowl\JsonApi\Default\Request;
 
+use Doctrine\ORM\Mapping\FieldMapping;
 use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\ResourceRepository;
 
@@ -67,7 +68,7 @@ trait ResourceDataRulesTrait
      * @param array $fieldMapping The field mapping information from Doctrine metadata
      * @return array List of Laravel validation rules for the field
      */
-    private function getFieldTypeRules(array $fieldMapping): array
+    private function getFieldTypeRules(FieldMapping $fieldMapping): array
     {
         $rules = [];
 

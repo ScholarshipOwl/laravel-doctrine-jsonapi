@@ -36,7 +36,7 @@ class ResourceTypeExtractorTest extends TestCase
      *
      * @return array<string, array{string, string|null, array}>
      */
-    public function provideRouteData(): array
+    static public function provideRouteData(): array
     {
         return [
             'special route case' => [

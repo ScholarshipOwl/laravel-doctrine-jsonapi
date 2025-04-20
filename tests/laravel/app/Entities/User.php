@@ -10,9 +10,9 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Foundation\Auth\Access\Authorizable;
-use LaravelDoctrine\Extensions\Timestamps\Timestamps;
 use LaravelDoctrine\ORM\Auth\Authenticatable;
 use Sowl\JsonApi\AbstractTransformer;
+use Sowl\JsonApi\Concerns\HasTimestamps;
 use Sowl\JsonApi\Default\Resource\WithFilterParsersTrait;
 use Sowl\JsonApi\Relationships\MemoizeRelationshipsTrait;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
@@ -22,10 +22,8 @@ use Sowl\JsonApi\Resource\FilterableInterface;
 use Sowl\JsonApi\ResourceInterface;
 use Tests\App\Transformers\UserTransformer;
 
-/**
- * @ORM\Entity(repositoryClass="Tests\App\Repositories\UsersRepository")
- * @ORM\Table(name="users")
- */
+#[ORM\Entity(repositoryClass: "Tests\\App\\Repositories\\UsersRepository")]
+#[ORM\Table(name: "users")]
 class User implements
     AuthenticatableContract,
     AuthorizableContract,
@@ -33,11 +31,12 @@ class User implements
     ResourceInterface,
     FilterableInterface
 {
+    use HasTimestamps;
     use CanResetPassword;
     use Authenticatable;
     use Authorizable;
+
     use MemoizeRelationshipsTrait;
-    use Timestamps;
     use WithFilterParsersTrait;
 
     public const USER_ID = '8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b';
@@ -72,69 +71,48 @@ class User implements
         return ['id', 'email', 'name'];
     }
 
-    /**
-     * @ORM\Id()
-     * @ORM\Column(type="guid")
-     */
+    #[ORM\Id]
+    #[ORM\Column(type: "guid")]
     protected ?string $id;
 
-    /**
-     * @ORM\Column(name="email", type="string", unique=true, nullable=false)
-     */
+    #[ORM\Column(name: "email", type: "string", unique: true, nullable: false)]
     protected ?string $email;
 
-    /**
-     * @ORM\Column(name="name", type="string", unique=false, nullable=false)
-     */
+    #[ORM\Column(name: "name", type: "string", unique: false, nullable: false)]
     protected ?string $name;
 
-    /**
-     * @ORM\Column(name="password", type="string", nullable=false)
-     */
-    protected $password;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="UserStatus")
-     * @ORM\JoinColumn(nullable=false)
-     */
+    #[ORM\ManyToOne(targetEntity: "UserStatus")]
+    #[ORM\JoinColumn(nullable: false)]
     protected ?UserStatus $status;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Role")
-     * @ORM\JoinTable(
-     *     joinColumns={
-     *         @ORM\JoinColumn(
-     *             name="user_id",
-     *             referencedColumnName="id",
-     *             nullable=false
-     *         )
-     *     },
-     *     inverseJoinColumns={
-     *         @ORM\JoinColumn(
-     *             name="role_id",
-     *             referencedColumnName="id",
-     *             nullable=false
-     *         )
-     *     }
-     * )
-     */
+    #[ORM\ManyToMany(targetEntity: "Role")]
+    #[ORM\JoinTable(
+        joinColumns: array(
+            new ORM\JoinColumn(
+                name: "user_id",
+                referencedColumnName: "id",
+                nullable: false
+            )
+        ),
+        inverseJoinColumns: array(
+            new ORM\JoinColumn(
+                name: "role_id",
+                referencedColumnName: "id",
+                nullable: false
+            )
+        )
+    )]
     protected Collection $roles;
 
-    /**
-     * @ORM\OneToMany(targetEntity="Page", mappedBy="user", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\OneToMany(targetEntity: "Page", mappedBy: "user", fetch: "EXTRA_LAZY")]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     protected Collection $pages;
 
-    /**
-     * @ORM\OneToMany(targetEntity="PageComment", mappedBy="user", fetch="EXTRA_LAZY")
-     * @ORM\JoinColumn(onDelete="CASCADE")
-     */
+    #[ORM\OneToMany(targetEntity: "PageComment", mappedBy: "user", fetch: "EXTRA_LAZY")]
+    #[ORM\JoinColumn(onDelete: "CASCADE")]
     protected Collection $pageComments;
 
-    /**
-     * @ORM\OneToOne(targetEntity="UserConfig", mappedBy="user", cascade={"persist", "remove"})
-     */
+    #[ORM\OneToOne(targetEntity: "UserConfig", mappedBy: "user", cascade: ["persist", "remove"])]
     protected ?UserConfig $config = null;
 
     /**

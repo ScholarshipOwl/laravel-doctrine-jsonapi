@@ -8,4 +8,4 @@ services:
     user: '1000'
     command: ['composer', 'install']
     environment:
-      - XDEBUG_MODE=coverage
+      - XDEBUG_MODE=debug

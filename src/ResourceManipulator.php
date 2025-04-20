@@ -4,9 +4,8 @@ namespace Sowl\JsonApi;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use Illuminate\Support\Str;
 use Ramsey\Uuid\Uuid;
 use Sowl\JsonApi\Exceptions\BadRequestException;
@@ -38,7 +37,7 @@ class ResourceManipulator
 
         if (is_null($id)) {
             $classMetadata = $this->em->getClassMetadata($class);
-            if ($classMetadata->generatorType === ClassMetadataInfo::GENERATOR_TYPE_NONE) {
+            if ($classMetadata->generatorType === ClassMetadata::GENERATOR_TYPE_NONE) {
                 $id = Uuid::uuid4()->toString();
             }
         }
@@ -272,7 +271,7 @@ class ResourceManipulator
         if (!method_exists($resource, $setter)) {
             throw (new BadRequestException())->error(
                 400,
-                ['setter' => sprintf('%s::%s', ClassUtils::getClass($resource), $setter)],
+                ['setter' => sprintf('%s::%s', get_class($resource), $setter)],
                 'Missing property setter.'
             );
         }
