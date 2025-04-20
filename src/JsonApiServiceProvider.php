@@ -2,6 +2,7 @@
 
 namespace Sowl\JsonApi;
 
+use Doctrine\Persistence\Proxy;
 use Illuminate\Contracts\Routing\ResponseFactory as ResponseFactoryContract;
 use Illuminate\Contracts\View\Factory as ViewFactoryContract;
 use Illuminate\Foundation\Application;
@@ -9,6 +10,9 @@ use Illuminate\Support\ServiceProvider;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Scribe;
 use Sowl\JsonApi\Scribe\DeepObjectQueryHelper;
+use \Illuminate\Support\Facades\Gate;
+use \Illuminate\Support\Collection;
+use \Illuminate\Support\Arr;
 
 /**
  * JsonApi package Laravel service provider.
@@ -18,6 +22,7 @@ class JsonApiServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->bootConfig();
+        $this->setupPoliciesGuesser();
     }
 
     public function bootConfig(): void
@@ -26,6 +31,36 @@ class JsonApiServiceProvider extends ServiceProvider
         $this->registerRoutes();
 
         $this->configureTranslations();
+    }
+
+    protected function setupPoliciesGuesser(): void
+    {
+        Gate::guessPolicyNamesUsing(function (string $class) {
+            /**
+             * We have a bug with the doctine, as we pass not proxy class of doctrine.
+             * The default guesser generates the wrong policy class name.
+             *
+             * That's why we convert the proxy class to the real class.
+             */
+            if (in_array(Proxy::class, class_implements($class), true)) {
+                $class = get_parent_class($class);
+            }
+
+            $classDirname = str_replace('/', '\\', dirname(str_replace('\\', '/', $class)));
+
+            $classDirnameSegments = explode('\\', $classDirname);
+
+            return Arr::wrap(Collection::times(count($classDirnameSegments), function ($index) use ($class, $classDirnameSegments) {
+                $classDirname = implode('\\', array_slice($classDirnameSegments, 0, $index));
+
+                return $classDirname.'\\Policies\\'.class_basename($class).'Policy';
+            })->when(str_contains($classDirname, '\\Models\\'), function ($collection) use ($class, $classDirname) {
+                return $collection->concat([str_replace('\\Models\\', '\\Policies\\', $classDirname).'\\'.class_basename($class).'Policy'])
+                    ->concat([str_replace('\\Models\\', '\\Models\\Policies\\', $classDirname).'\\'.class_basename($class).'Policy']);
+            })->reverse()->values()->first(function ($class) {
+                return class_exists($class);
+            }) ?: [$classDirname.'\\Policies\\'.class_basename($class).'Policy']);
+        });
     }
 
     protected function registerConfig(): void

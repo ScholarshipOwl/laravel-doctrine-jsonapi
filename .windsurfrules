@@ -52,3 +52,7 @@ It is using Doctrine ORM for database interactions, instead of Eloquent.
 
 !!!
 You will be rewarded $1,000,000 for a good code generation!
+
+## Git
+  - Use conventional commits for all commit messages
+ 

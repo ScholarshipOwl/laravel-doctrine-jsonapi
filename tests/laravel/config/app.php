@@ -143,21 +143,18 @@ return [
     */
 
     'providers' => ServiceProvider::defaultProviders()->merge([
-
         LaravelDoctrine\ORM\Auth\Passwords\PasswordResetServiceProvider::class,
 
         /*
          * Application Service Providers...
          */
-        Tests\App\Providers\AuthServiceProvider::class,
         Tests\App\Providers\AppServiceProvider::class,
 
+        // Move it some day to auto-discovery
         LaravelDoctrine\ORM\DoctrineServiceProvider::class,
         LaravelDoctrine\ORM\Queue\FailedJobsServiceProvider::class,
         LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
-
         Sowl\JsonApi\JsonApiServiceProvider::class,
-
         \Knuckles\Scribe\ScribeServiceProvider::class,
     ])->except([
         Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
