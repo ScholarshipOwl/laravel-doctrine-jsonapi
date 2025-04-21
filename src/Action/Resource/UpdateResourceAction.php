@@ -14,6 +14,6 @@ class UpdateResourceAction extends AbstractAction
 
         $this->em()->flush();
 
-        return response()->item($resource);
+        return $this->response()->item($resource);
     }
 }

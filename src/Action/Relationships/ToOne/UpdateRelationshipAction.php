@@ -22,12 +22,12 @@ class UpdateRelationshipAction extends AbstractAction
             $this->manipulator()->setProperty($resource, $property, $relationshipResource);
             $this->em()->flush();
 
-            return response()->item($relationshipResource, relationship: true);
+            return $this->response()->item($relationshipResource, relationship: true);
         }
 
         $this->manipulator()->setProperty($resource, $property, null);
         $this->em()->flush();
 
-        return response()->null();
+        return $this->response()->null();
     }
 }

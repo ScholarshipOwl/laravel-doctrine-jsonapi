@@ -37,16 +37,6 @@ Publish the config files:
 php artisan vendor:publish --provider="Sowl\JsonApi\JsonApiServiceProvider"
 ```
 
-#### Middleware
-Add a new application middleware group in the `app/Http/Kernel.php` file:
-```php
-protected $middlewareGroups = [
-    'jsonapi' => [
-        'throttle',
-    ],
-];
-```
-
 #### Route
 
 This package publishes a ready-to-use route file at `routes/jsonapi.php`.

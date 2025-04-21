@@ -11,7 +11,8 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
-            Route::prefix(config('jsonapi.routing.rootPathPrefix', 'jsonapi'))
+            Route::prefix(config('jsonapi.routing.rootPathPrefix' ))
+                ->name(config('jsonapi.routing.rootNamePrefix', 'jsonapi.'))
                 ->group(base_path('routes/jsonapi.php'));
         },
     )

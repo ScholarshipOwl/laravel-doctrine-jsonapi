@@ -6,6 +6,7 @@ use Doctrine\ORM\EntityManager;
 use Illuminate\Auth\Access\AuthorizationException;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
+use Sowl\JsonApi\ResponseFactory;
 
 /**
  * Any JSON:API endpoint handler should inherit this class.
@@ -31,6 +32,11 @@ abstract class AbstractAction
         return new static(...$args);
     }
 
+    public static function createDispatch(Request $request, ...$args): Response
+    {
+        return (new static(...$args))->dispatch($request);
+    }
+
     /**
      * The dispatch method must be called with provided request.
      * Dispatch method will call the handle method injecting its dependencies and will return JsonApiResponse.
@@ -43,11 +49,11 @@ abstract class AbstractAction
         try {
             return app()->call([$this, 'handle']);
         } catch (AuthorizationException $e) {
-            return response()->exception(new ForbiddenException(
+            return $this->response()->exception(new ForbiddenException(
                 previous: $e
             ));
         } catch (JsonApiException $e) {
-            return response()->exception($e);
+            return $this->response()->exception($e);
         }
     }
 
@@ -89,5 +95,10 @@ abstract class AbstractAction
     protected function manipulator(): ResourceManipulator
     {
         return app(ResourceManipulator::class);
+    }
+
+    protected function response(): ResponseFactory
+    {
+        return app(ResponseFactory::class);
     }
 }

@@ -32,7 +32,7 @@ class UpdateRelationshipsAction extends AbstractAction
         $this->manipulator()->replaceResourceCollection($resource, $property, $replaceRelationships);
         $this->em()->flush();
 
-        return response()->collection(
+        return $this->response()->collection(
             $this->manipulator()->getProperty($resource, $property),
             $relationshipRepository->getResourceType(),
             $relationshipRepository->transformer(),

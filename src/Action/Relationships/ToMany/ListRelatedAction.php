@@ -35,7 +35,7 @@ class ListRelatedAction extends AbstractAction
 
         $resourceType = $repository->getResourceType();
         $transformer = $repository->transformer();
-        return response()->query($qb, $resourceType, $transformer);
+        return $this->response()->query($qb, $resourceType, $transformer);
     }
 
     /**

@@ -20,6 +20,6 @@ class CreateResourceAction extends AbstractAction
         $this->em()->persist($resource);
         $this->em()->flush();
 
-        return response()->created($resource);
+        return $this->response()->created($resource);
     }
 }

@@ -11,6 +11,6 @@ class ShowResourceAction extends AbstractAction
     {
         $resource = $this->request()->resource();
 
-        return response()->item($resource);
+        return $this->response()->item($resource);
     }
 }

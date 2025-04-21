@@ -116,12 +116,14 @@ class JsonApiServiceProvider extends ServiceProvider
 
     public function registerResponseFactory(): void
     {
-        $this->app->singleton(ResponseFactoryContract::class, function (Application $app) {
+        $this->app->singleton(ResponseFactory::class, function (Application $app) {
             return new ResponseFactory(
                 $app[ViewFactoryContract::class],
                 $app['redirect']
             );
         });
+
+        $this->app->alias(ResponseFactory::class, ResponseFactoryContract::class);
     }
 
     public function registerResourceManager(): void

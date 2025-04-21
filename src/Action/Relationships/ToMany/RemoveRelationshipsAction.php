@@ -28,6 +28,6 @@ class RemoveRelationshipsAction extends AbstractAction
 
         $this->em()->flush();
 
-        return response()->noContent();
+        return $this->response()->noContent();
     }
 }

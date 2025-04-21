@@ -143,8 +143,6 @@ return [
     */
 
     'providers' => ServiceProvider::defaultProviders()->merge([
-        LaravelDoctrine\ORM\Auth\Passwords\PasswordResetServiceProvider::class,
-
         /*
          * Application Service Providers...
          */
@@ -156,8 +154,9 @@ return [
         LaravelDoctrine\Migrations\MigrationsServiceProvider::class,
         Sowl\JsonApi\JsonApiServiceProvider::class,
         \Knuckles\Scribe\ScribeServiceProvider::class,
-    ])->except([
-        Illuminate\Auth\Passwords\PasswordResetServiceProvider::class,
+    ])->replace([
+        Illuminate\Auth\Passwords\PasswordResetServiceProvider::class
+            => LaravelDoctrine\ORM\Auth\Passwords\PasswordResetServiceProvider::class,
     ])->toArray(),
 
     /*

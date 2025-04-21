@@ -32,7 +32,7 @@ class CreateRelationshipsAction extends AbstractAction
 
         $this->em()->flush();
 
-        return response()->collection(
+        return $this->response()->collection(
             $this->manipulator()->getProperty($resource, $property),
             $relationshipRepository->getResourceType(),
             $relationshipRepository->transformer(),

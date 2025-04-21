@@ -18,9 +18,9 @@ class ShowRelationshipAction extends AbstractAction
         $field = $this->relationship->name();
 
         if ($relation = $this->manipulator()->getProperty($resource, $field)) {
-            return response()->item($relation, relationship: true);
+            return $this->response()->item($relation, relationship: true);
         }
 
-        return response()->null();
+        return $this->response()->null();
     }
 }

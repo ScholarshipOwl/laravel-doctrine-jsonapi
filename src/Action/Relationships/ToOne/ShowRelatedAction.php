@@ -22,9 +22,9 @@ class ShowRelatedAction extends AbstractAction
         $property = $this->relationship->property();
 
         if ($relation = $this->manipulator()->getProperty($resource, $property)) {
-            return response()->item($relation);
+            return $this->response()->item($relation);
         }
 
-        return response()->null();
+        return $this->response()->null();
     }
 }

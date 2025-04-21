@@ -32,7 +32,7 @@ class ListRelationshipsAction extends AbstractAction
 
         $resourceType = $relationshipRepository->getResourceType();
         $transformer = $relationshipRepository->transformer();
-        return response()->query($qb, $resourceType, $transformer, relationship: true);
+        return $this->response()->query($qb, $resourceType, $transformer, relationship: true);
     }
 
     /**
