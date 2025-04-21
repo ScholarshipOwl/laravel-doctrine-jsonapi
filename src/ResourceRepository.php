@@ -13,6 +13,9 @@ use Sowl\JsonApi\Exceptions\NotFoundException;
 
 /**
  * ResourceRepository class is used for managing resources in a JSON:API context.
+ *
+ * @template TResource of ResourceInterface
+ * @extends EntityRepository<TResource>
  */
 class ResourceRepository extends EntityRepository
 {
@@ -73,6 +76,8 @@ class ResourceRepository extends EntityRepository
     /**
      * Finds and returns a resource object by its ID.
      * Throws a ResourceNotFoundException if the resource is not found.
+     *
+     * @return TResource
      */
     public function findById(string|int $id): ResourceInterface
     {
@@ -88,6 +93,8 @@ class ResourceRepository extends EntityRepository
     /**
      * Gets a reference to a resource object by its ID.
      * It's not making a queries just creates an object attached to Entity Manager.
+     *
+     * @return TResource
      */
     public function getReference(string|int $id): ResourceInterface
     {
@@ -121,6 +128,8 @@ class ResourceRepository extends EntityRepository
      * Finds and returns a resource object using the provided object identifier data.
      * Throws a BadRequestException if the data is incomplete or incorrect,
      * or a JsonApiException if the resource is not found.
+     *
+     * @return TResource
      */
     public function findByObjectIdentifier(array $data, string $scope = "/data"): ResourceInterface
     {

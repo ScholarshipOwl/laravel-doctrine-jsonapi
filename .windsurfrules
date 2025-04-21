@@ -56,6 +56,7 @@ You will be rewarded $1,000,000 for a good code generation!
 ## Git
   - Use conventional commits for all commit messages
   - When doing commits relay on the client to add files to the commit.
+  - Use `git diff --cached` for generation of commit messages.
 
 
 ## Documentation

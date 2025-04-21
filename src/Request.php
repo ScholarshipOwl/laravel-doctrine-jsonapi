@@ -19,6 +19,9 @@ use Sowl\JsonApi\Routing\ResourceTypeExtractor;
  * Class Request
  *
  * A class for handling JSON:API requests, including data validation, path, query parameters, and relationships.
+ *
+ * @template TResource of ResourceInterface
+ * @method ResourceRepository<TResource> repository()
  */
 class Request extends FormRequest
 {
@@ -28,10 +31,12 @@ class Request extends FormRequest
     use WithFieldsParamsTrait;
     use WithPaginationParamsTrait;
 
+    /** @var TResource */
     protected ResourceInterface $resource;
     protected ?string $resourceType = null;
     protected ?string $relationshipName = null;
     protected RelationshipInterface $relationship;
+    protected ?ResourceRepository $repository;
 
     const JSONAPI_CONTENT_TYPE = 'application/vnd.api+json';
 
@@ -83,6 +88,8 @@ class Request extends FormRequest
     /**
      * Gets the resource instance associated with the identifier.
      * NotFoundException will be thrown if resource is not found.
+     *
+     * @return TResource
      */
     public function resource(): ResourceInterface
     {
@@ -174,6 +181,8 @@ class Request extends FormRequest
 
     /**
      * Gets the resource repository associated with the resource type.
+     *
+     * @return ResourceRepository<TResource
      */
     public function repository(): ResourceRepository
     {
