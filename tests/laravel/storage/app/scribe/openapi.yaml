@@ -187,7 +187,7 @@ components:
               properties:
                 random:
                   type: string
-                  example: 'testing user1JXff8OtL'
+                  example: 'testing user1vytx6lSZ'
             relationships:
               type: object
               properties:
@@ -3894,12 +3894,12 @@ paths:
                         notificationsEnabled:
                           type: boolean
                           description: ''
-                          example: true
+                          example: false
                           nullable: false
                         language:
                           type: string
                           description: 'Must not be greater than 10 characters.'
-                          example: mniihfqco
+                          example: amniihfqc
                           nullable: true
                     relationships:
                       type: object
@@ -4104,7 +4104,7 @@ paths:
                         language:
                           type: string
                           description: 'Must not be greater than 10 characters.'
-                          example: mniihfqco
+                          example: amniihfqc
                           nullable: true
                     relationships:
                       type: object
@@ -4857,9 +4857,7 @@ paths:
                             data:
                               type: object
                               description: 'The resource identifier for a User statuses.'
-                              example:
-                                id: '1'
-                                type: userStatuses
+                              example: []
                               nullable: false
                               properties: {  }
                           required:

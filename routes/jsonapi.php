@@ -11,18 +11,20 @@ Route::group(['as' => config('jsonapi.routing.rootNamePrefix', 'jsonapi.')], fun
     /* ---------------------------------------------------------
      * Default routes will be handled by the default controller.
      * --------------------------------------------------------- */
-    Route::group(['as' => 'default.'], function () {
-        Route::get('/{resourceType}', [DefaultController::class, 'list'])->name('list')->fallback();
-        Route::post('/{resourceType}', [DefaultController::class, 'create'])->name('create')->fallback();
+    Route::prefix('{resourceType}')->name('default.')->group(function () {
+        Route::get('/', [DefaultController::class, 'list'])->name('list')->fallback();
+        Route::post('/', [DefaultController::class, 'create'])->name('create')->fallback();
 
-        Route::get('/{resourceType}/{id}', [DefaultController::class, 'show'])->name('show')->fallback();
-        Route::patch('/{resourceType}/{id}', [DefaultController::class, 'update'])->name('update')->fallback();
-        Route::delete('/{resourceType}/{id}', [DefaultController::class, 'remove'])->name('remove')->fallback();
+        Route::get('{id}', [DefaultController::class, 'show'])->name('show')->fallback();
+        Route::patch('{id}', [DefaultController::class, 'update'])->name('update')->fallback();
+        Route::delete('{id}', [DefaultController::class, 'remove'])->name('remove')->fallback();
 
-        Route::get('/{resourceType}/{id}/{relationship}', [DefaultController::class, 'showRelated'])->name('showRelated')->fallback();
-        Route::get('/{resourceType}/{id}/relationships/{relationship}', [DefaultController::class, 'showRelationships'])->name('showRelationships')->fallback();
-        Route::post('/{resourceType}/{id}/relationships/{relationship}', [DefaultController::class, 'createRelationships'])->name('createRelationships')->fallback();
-        Route::patch('/{resourceType}/{id}/relationships/{relationship}', [DefaultController::class, 'updateRelationships'])->name('updateRelationships')->fallback();
-        Route::delete('/{resourceType}/{id}/relationships/{relationship}', [DefaultController::class, 'removeRelationships'])->name('removeRelationships')->fallback();
+        Route::get('{id}/{relationship}', [DefaultController::class, 'showRelated'])->name('showRelated')->fallback();
+        Route::prefix('{id}/relationships/{relationship}')->group(function () {
+            Route::get('/', [DefaultController::class, 'showRelationships'])->name('showRelationships')->fallback();
+            Route::post('/', [DefaultController::class, 'createRelationships'])->name('createRelationships')->fallback();
+            Route::patch('/', [DefaultController::class, 'updateRelationships'])->name('updateRelationships')->fallback();
+            Route::delete('/', [DefaultController::class, 'removeRelationships'])->name('removeRelationships')->fallback();
+        });
     });
 });
