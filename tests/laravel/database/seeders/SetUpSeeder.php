@@ -2,16 +2,16 @@
 
 namespace Database\Seeders;
 
-use Doctrine\ORM\EntityManager;
+use Illuminate\Database\Seeder;
 use Tests\App\Entities\Page;
 use Tests\App\Entities\PageComment;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 use Tests\App\Entities\UserStatus;
 
-class SetUpSeeder
+class SetUpSeeder extends Seeder
 {
-    public function run(EntityManager $em): void
+    public function run(): void
     {
         entity(UserStatus::class, 'active')->create();
         entity(UserStatus::class, 'inactive')->create();

@@ -14,13 +14,13 @@ use Tests\App\Transformers\RoleTransformer;
 #[ORM\Table(name: "role")]
 class Role implements ResourceInterface
 {
-    const ROOT = 1;
+    const ROOT = '1';
     const ROOT_NAME = 'Root';
 
-    const USER = 2;
+    const USER = '2';
     const USER_NAME = 'User';
 
-    const MODERATOR = 3;
+    const MODERATOR = '3';
     const MODERATOR_NAME = 'Moderator';
 
     #[ORM\Id, ORM\Column(name: "id", type: "integer"), ORM\GeneratedValue(strategy: "AUTO")]

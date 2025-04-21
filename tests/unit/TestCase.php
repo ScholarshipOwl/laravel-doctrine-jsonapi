@@ -9,12 +9,16 @@ use Illuminate\Foundation\Console\Kernel;
 use Illuminate\Foundation\Testing\TestCase as LaravelTestCase;
 use LaravelDoctrine\Migrations\MigrationsServiceProvider;
 use LaravelDoctrine\ORM\DoctrineServiceProvider;
+use Sowl\JsonApi\Testing\DoctrineRefreshDatabase;
+use Sowl\JsonApi\Testing\InteractWithDoctrineDatabase;
 use Tests\App\Entities\User;
 use Tests\Helpers\WithEntityManagerTrait;
 
 class TestCase extends LaravelTestCase
 {
     use WithEntityManagerTrait;
+    use DoctrineRefreshDatabase;
+    use InteractWithDoctrineDatabase;
 
     protected Kernel $kernel;
 
@@ -42,26 +46,13 @@ class TestCase extends LaravelTestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->seed(SetUpSeeder::class);
-        $this->em()->clear();
+        $this->refreshDoctrineDatabase();
+        $this->interactsWithDoctrineDatabase();
     }
 
-    public function seed($class = 'Database\\Seeders\\DatabaseSeeder')
+    protected function afterRefreshingDoctrineDatabase(): void
     {
-        if (!class_exists($class)) {
-            throw new \Exception(sprintf("Seeder not found: %s", $class));
-        }
-
-        if (!method_exists($class, 'run')) {
-            throw new \Exception(sprintf("Seeder missing '%s::run' method.", $class));
-        }
-
-        $this->em()->clear();
-        $seeder = new $class();
-        $seeder->run($this->em);
-        $this->em()->clear();
-
-        return $this;
+        $this->seed(SetUpSeeder::class);
     }
 
     protected function actingAsRoot(): User

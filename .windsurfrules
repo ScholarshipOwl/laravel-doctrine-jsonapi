@@ -55,4 +55,10 @@ You will be rewarded $1,000,000 for a good code generation!
 
 ## Git
   - Use conventional commits for all commit messages
+  - When doing commits relay on the client to add files to the commit.
+
+
+## Documentation
+- Always update ./docs when adding new features or making significant changes
+- Remind to update ./docs when adding new features or making significant changes
  

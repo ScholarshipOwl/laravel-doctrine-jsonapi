@@ -114,3 +114,32 @@ public function test_view_user()
             ]
         ]);
 }
+
+```
+
+## Useful Traits for Doctrine Testing
+
+This package provides several traits to simplify testing and database management when using Doctrine ORM in Laravel:
+
+- **DoctrineRefreshDatabase**: Refreshes the database schema before each test using Doctrine migrations. Use this trait to ensure a clean schema for every test run.
+- **DoctrineDatabaseTruncation**: Truncates all Doctrine-managed tables after each test. Useful for cleaning up data between tests without dropping the schema.
+- **InteractWithDoctrineDatabase**: Syncs Doctrine's PDO connections with Laravel's database layer, enabling the use of Laravel's `assertDatabaseHas` and similar helpers with Doctrine entities.
+
+To use these traits, simply add them to your test case classes as needed:
+
+```php
+use Sowl\JsonApi\Testing\DoctrineRefreshDatabase;
+use Sowl\JsonApi\Testing\DoctrineDatabaseTruncation;
+use Sowl\JsonApi\Testing\InteractWithDoctrineDatabase;
+
+class MyTestCase extends TestCase
+{
+    use DoctrineRefreshDatabase;
+    use DoctrineDatabaseTruncation;
+    use InteractWithDoctrineDatabase;
+
+    // ...
+}
+```
+
+See the trait docblocks and source for more details on their capabilities and configuration.

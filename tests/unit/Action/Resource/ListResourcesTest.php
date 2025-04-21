@@ -3,6 +3,7 @@
 namespace Tests\Action\Resource;
 
 use Sowl\JsonApi\Response;
+use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 use Tests\TestCase;
 
@@ -90,7 +91,7 @@ class ListResourcesTest extends TestCase
                         'relationships' => [
                             'roles' => [
                                 'data' => [
-                                    ['type' => 'roles', 'id' => '2'],
+                                    ['type' => 'roles', 'id' => Role::USER],
                                 ],
                                 'links' => [
                                     'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
@@ -112,8 +113,8 @@ class ListResourcesTest extends TestCase
                         'relationships' => [
                             'roles' => [
                                 'data' => [
-                                    ['type' => 'roles', 'id' => '1'],
-                                    ['type' => 'roles', 'id' => '2'],
+                                    ['type' => 'roles', 'id' => Role::USER],
+                                    ['type' => 'roles', 'id' => Role::ROOT],
                                 ],
                                 'links' => [
                                     'related' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/roles',
