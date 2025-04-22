@@ -15,7 +15,14 @@ use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
 
 /**
- * Strategy to add common JSON:API query parameters to GET routes using attributes.
+ * Scribe strategy to extract query parameters for JSON:API endpoints from resource request attributes.
+ *
+ * Scans for ResourceRequest, ResourceRequestList, and ResourceRequestCreate attributes to document query parameters
+ * like include, fields, sort, page, and filter for GET/list endpoints in JSON:API.
+ *
+ * Used by Scribe to generate accurate query parameter documentation for compliant JSON:API endpoints.
+ *
+ * @see docs/Scribe.md for attribute usage and integration details
  */
 class GetFromResourceRequestAttributes extends AbstractStrategy
 {

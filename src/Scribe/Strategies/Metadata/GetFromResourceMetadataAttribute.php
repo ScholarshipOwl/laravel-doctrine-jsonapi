@@ -11,7 +11,14 @@ use Sowl\JsonApi\Scribe\JsonApiEndpointData;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 
 /**
- * Strategy to extract metadata from JSON:API routes
+ * Scribe strategy to extract endpoint/group metadata from ResourceMetadata attributes.
+ *
+ * Reads ResourceMetadata annotations on controllers and methods to generate grouping, titles, and descriptions
+ * for JSON:API endpoints in the generated documentation.
+ *
+ * Used by Scribe to organize and describe endpoint groups, subgroups, and resource metadata in API docs.
+ *
+ * @see docs/Scribe.md for attribute usage and integration details
  */
 class GetFromResourceMetadataAttribute extends AbstractStrategy
 {

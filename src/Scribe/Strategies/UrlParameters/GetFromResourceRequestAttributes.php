@@ -8,6 +8,16 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 
+/**
+ * Scribe strategy to extract URL/route parameters for JSON:API endpoints from ResourceRequest attributes.
+ *
+ * Reads ResourceRequest attributes on controller methods to document route parameters (such as resource IDs)
+ * for JSON:API endpoints in the generated documentation.
+ *
+ * Used by Scribe to ensure all route parameters are accurately documented in API docs.
+ *
+ * @see docs/Scribe.md for attribute usage and integration details
+ */
 class GetFromResourceRequestAttributes extends AbstractStrategy
 {
     use ReadsPhpAttributes;

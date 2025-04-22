@@ -12,8 +12,13 @@ use Sowl\JsonApi\Routing\ResourceTypeExtractor;
 use Sowl\JsonApi\Scribe\JsonApiEndpointData;
 
 /**
- * Abstract base strategy for JSON:API documentation.
- * Provides common utilities for other JSON:API Scribe strategies.
+ * Abstract base strategy for JSON:API documentation in Scribe.
+ *
+ * Provides common utilities and helpers for all custom Scribe strategies in this package.
+ * Handles detection of JSON:API endpoints, resource and relationship extraction, and shared configuration logic.
+ *
+ * @see https://github.com/knuckleswtf/scribe for Scribe documentation
+ * @see docs/Scribe.md for package integration details and attribute usage
  */
 abstract class AbstractStrategy extends Strategy
 {

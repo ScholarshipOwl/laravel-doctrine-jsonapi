@@ -2,8 +2,6 @@
 
 This document provides comprehensive documentation for all Scribe attribute classes used in the Laravel Doctrine JSON:API package. These attributes enable automatic, detailed, and accurate API documentation generation with [Scribe](https://scribe.knuckles.wtf/laravel/). Each section includes a description, usage guidelines, property details, and direct links to the class source files.
 
----
-
 ## Table of Contents
 
 - [Overview](#overview)
@@ -19,8 +17,6 @@ This document provides comprehensive documentation for all Scribe attribute clas
   - [ResourceResponseRelationships](#resourceresponserelationships)
 - [Best Practices](#best-practices)
 - [See Also](#see-also)
-
----
 
 ## Overview
 
@@ -48,8 +44,6 @@ class UserController
 }
 ```
 
----
-
 ## Attributes
 
 ### [ResourceMetadata](../src/Scribe/Attributes/ResourceMetadata.php)
@@ -69,8 +63,6 @@ Provides grouping and descriptive metadata for endpoints or resource classes. Us
 - `description: string|null` — Description of the endpoint or resource.
 - `authenticated: bool` — Whether the endpoint requires authentication.
 
----
-
 ### [ResourceRequest](../src/Scribe/Attributes/ResourceRequest.php)
 
 **Purpose:**
@@ -86,8 +78,6 @@ Marks a controller method as handling a single resource request (show, update, d
 - `idParam: string` — Name of the route parameter for the resource ID (default: 'id').
 - `acceptHeaders: array` — List of accepted content types (default: ['application/vnd.api+json']).
 
----
-
 ### [ResourceRequestList](../src/Scribe/Attributes/ResourceRequestList.php)
 
 **Purpose:**
@@ -100,8 +90,6 @@ Marks a controller method as handling a resource collection (list) request for J
 - `resourceType: string|null` — JSON:API resource type.
 - `acceptHeaders: array` — List of accepted content types (default: ['application/vnd.api+json']).
 
----
-
 ### [ResourceRequestCreate](../src/Scribe/Attributes/ResourceRequestCreate.php)
 
 **Purpose:**
@@ -113,8 +101,6 @@ Marks a controller method as handling resource creation for JSON:API.
 **Properties:**
 - `resourceType: string|null` — JSON:API resource type.
 - `acceptHeaders: array` — List of accepted content types (default: ['application/vnd.api+json']).
-
----
 
 ### [ResourceRequestRelationships](../src/Scribe/Attributes/ResourceRequestRelationships.php)
 
@@ -130,8 +116,6 @@ Marks a controller method as handling relationship requests for a resource (e.g.
 - `idExample: mixed` — Example value for the resource ID.
 - `idParam: string` — Name of the route parameter for the resource ID (default: 'id').
 - `acceptHeaders: array` — List of accepted content types (default: ['application/vnd.api+json']).
-
----
 
 ### [ResourceResponse](../src/Scribe/Attributes/ResourceResponse.php)
 
@@ -150,8 +134,6 @@ Describes the response for a resource endpoint in JSON:API.
 - `pageNumber: int` — Example page number for paginated responses.
 - `pageSize: int` — Example page size for paginated responses.
 - `contentTypeHeaders: array` — List of content-type headers (default: ['application/vnd.api+json']).
-
----
 
 ### [ResourceResponseRelated](../src/Scribe/Attributes/ResourceResponseRelated.php)
 
@@ -172,8 +154,6 @@ Describes the response for a related resource endpoint (e.g., `/users/{id}/roles
 - `pageSize: int` — Example page size.
 - `contentTypeHeaders: array` — List of content-type headers (default: ['application/vnd.api+json']).
 
----
-
 ### [ResourceResponseRelationships](../src/Scribe/Attributes/ResourceResponseRelationships.php)
 
 **Purpose:**
@@ -192,8 +172,6 @@ Describes the response for a relationships endpoint (e.g., `/users/{id}/relation
 - `pageNumber: int` — Example page number.
 - `pageSize: int` — Example page size.
 - `contentTypeHeaders: array` — List of content-type headers (default: ['application/vnd.api+json']).
-
----
 
 ## Best Practices
 

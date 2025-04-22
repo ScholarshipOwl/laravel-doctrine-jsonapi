@@ -13,6 +13,16 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
 
+/**
+ * Scribe strategy to extract response examples and schemas for JSON:API endpoints from resource response attributes.
+ *
+ * Scans for ResourceResponse, ResourceResponseRelated, and ResourceResponseRelationships attributes on controllers/methods
+ * to generate response documentation, including example data and schemas for JSON:API endpoints.
+ *
+ * Used by Scribe to provide detailed response documentation for each endpoint in the generated API docs.
+ *
+ * @see docs/Scribe.md for attribute usage and integration details
+ */
 class GetFromResourceResponseAttributes extends AbstractStrategy
 {
     use ReadsPhpAttributes;
