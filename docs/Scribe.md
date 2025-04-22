@@ -65,6 +65,8 @@ This integration with factories and validation rules ensures that your API docum
 
 ## Strategies Overview
 
+> A **strategy** in Scribe is a way to customize or extend how Scribe generates API documentation. Strategies are plugins that allow you to control how different parts of your API (like query parameters, responses, headers, etc.) are documented. You can use the built-in strategies, extend them, or write your own to fit your needs. For more details, see the official Scribe documentation: [Creating a Strategy](https://scribe.knuckles.wtf/laravel/advanced/plugins#creating-a-strategy).
+
 The following PHP attributes are used by the strategies to extract documentation details. Click to view their definitions:
 
 - [#[ResourceRequest]](ScribeAttributes.md#resourcerequest)
@@ -147,52 +149,41 @@ You can combine multiple attributes on a single method to describe all aspects o
 
 For a full reference of the strategies, see [Scribe JSON:API Strategies](ScribeStrategies.md).
 
-## Example Usage
+## Routes Matcher
 
-Here's how these strategies work together to document a typical JSON:API endpoint:
+Routes matcher is a custom implementation of the Scribe route matcher that extends the default behavior to handle JSON:API specific routes and this library dynamic routes.
 
-```php
-// Route definition
-Route::get('/{resourceType}/{id}/relationships/{relationship}', 'JsonApiController@showRelationship');
-
-// Generated documentation will include:
-// - URL parameters: resourceType, id, relationship
-// - Query parameters: include, fields, sort, page, filter, etc.
-// - Headers: Accept, Content-Type
-// - Response format: JSON:API compliant structure
-// - Realistic examples using your entities and transformers
-```
-
-When processing these routes, the strategies will:
-
-1. Convert dynamic placeholders like `{resourceType}` and `{relationship}` into actual registered resources and relationships
-2. Generate documentation for each registered resource type (e.g., `users`, `articles`, `comments`)
-3. Include real relationship examples based on the entity relationships defined in your application
-4. Group endpoints by resource type, making the documentation more organized and intuitive
-5. Use proper JSON:API structure in request and response examples, with real data from your entities
+Convert dynamic placeholders like `{resourceType}` and `{relationship}` into actual registered resources and relationships
 
 For example, a route like `/{resourceType}/{id}` might be documented as multiple concrete endpoints:
 - `/users/{id}` - Get a specific user
 - `/articles/{id}` - Get a specific article
 - `/comments/{id}` - Get a specific comment
+- `/users/{id}/relationships/roles` - Get a user roles relationship
+- `/users/{id}/roles` - Get related roles for a user
 
-Similarly, relationship endpoints will be documented with actual relationship names from your entities.
-
-## Response Documentation
+## Examples Factory
 
 The package generates realistic JSON:API compliant response examples for your API documentation using a combination of entity factories and transformers:
 
 ```php
 $entity = entity($resourceClass)->create();
-
 $transformer = $this->getTransformerForResource($resourceType);
-
 $response = $this->response()->item($entity, $transformer);
 ```
+
+When generatin documentation Scribe needs to have connection to the database to generate realistic response examples. Generation runs in a transaction to avoid affecting your development database. We recommend using an SQLite in-memory database for documentation generation if possible also you can have a separate environment configuration for documentation generation.
+
+Strategy provides 3 types of example sourcing (see config: `scribe.examples.models_source`):
+- `doctrineFactoryCreate` - Use the model's factory to create an instance
+- `doctrineRepositoryFirst` - Use the first instance from the database
+- `doctrineFactoryMake` - Use the model's factory to make an instance but not persist it (not working well with JSON:API)
+
 
 This process ensures:
 - Response examples contain realistic data that matches your entity structure
 - Relationships between entities are properly represented
+- Query parameters options included in documentation (fields, sort, etc.)
 - All required fields are populated with sensible values
 - Proper JSON:API structure with resource identifiers, attributes, and relationships
 - Validation error responses with appropriate error codes and messages
@@ -236,21 +227,6 @@ Scribe automatically wraps all database operations in transactions. You can conf
 ```
 
 This ensures that any entities created during documentation generation are rolled back after the process completes.
-
-## Body Parameters Documentation
-
-The package uses Laravel's validation rules to generate appropriate request body examples for your JSON:API endpoints.
-
-### Validation Rules for Body Parameters
-
-Body parameters are documented based on the validation rules defined in your application:
-
-1. For POST/PATCH endpoints, validation rules determine required and optional fields
-2. Field types (string, integer, boolean, etc.) are inferred from validation rules
-3. Format constraints (email, date, URL, etc.) are respected in the examples
-4. Relationship validation rules are used to structure relationship data correctly
-
-For detailed information about validation rules, see our [Validation Documentation](./Validation.md) and [Scribe's documentation on validation rules](https://scribe.knuckles.wtf/laravel/documenting/query-body-parameters#validation-rules).
 
 ## Additional Resources
 

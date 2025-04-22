@@ -10,7 +10,6 @@ It is using Doctrine ORM for database interactions, instead of Eloquent.
   - Use existing patterns and conventions
   - Use existing code when possible
   - Don't duplicate code
-  - Follow step-by-step approach only if you was asked for it.
 
 ## Code Style
   - Write human readable code
