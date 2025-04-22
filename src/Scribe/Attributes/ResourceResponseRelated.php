@@ -4,6 +4,23 @@ namespace Sowl\JsonApi\Scribe\Attributes;
 
 use Attribute;
 
+/**
+ * Attribute to describe the response for a related resource endpoint (e.g., /users/{id}/roles) in JSON:API.
+ *
+ * Usage:
+ *   - Place on methods returning related resources.
+ *
+ * Properties:
+ *   - resourceType: string|null - JSON:API resource type.
+ *   - relationshipName: string|null - Name of the relationship.
+ *   - status: int - HTTP status code.
+ *   - description: string|null - Description of the response.
+ *   - fractalOptions: array - Options for Fractal transformation.
+ *   - collection: bool - Whether the response is a collection.
+ *   - pageNumber: int - Example page number.
+ *   - pageSize: int - Example page size.
+ *   - contentTypeHeaders: array - List of content-type headers (default: ['application/vnd.api+json']).
+ */
 #[Attribute(Attribute::TARGET_METHOD)]
 class ResourceResponseRelated extends ResourceResponse
 {

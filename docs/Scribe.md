@@ -205,13 +205,14 @@ This integration with factories and validation rules ensures that your API docum
 
 The following PHP attributes are used by the strategies to extract documentation details. Click to view their definitions:
 
-- [#[ResourceRequest]](src/Scribe/Attributes/ResourceRequest.php)
-- [#[ResourceRequestList]](src/Scribe/Attributes/ResourceRequestList.php)
-- [#[ResourceRequestCreate]](src/Scribe/Attributes/ResourceRequestCreate.php)
-- [#[ResourceRequestRelationships]](src/Scribe/Attributes/ResourceRequestRelationships.php)
-- [#[ResourceResponse]](src/Scribe/Attributes/ResourceResponse.php)
-- [#[ResourceResponseRelated]](src/Scribe/Attributes/ResourceResponseRelated.php)
-- [#[ResourceResponseRelationships]](src/Scribe/Attributes/ResourceResponseRelationships.php)
+- [#[ResourceRequest]](ScribeAttributes.md#resourcerequest)
+- [#[ResourceRequestList]](ScribeAttributes.md#resourcerequestlist)
+- [#[ResourceRequestCreate]](ScribeAttributes.md#resourcerequestcreate)
+- [#[ResourceRequestRelationships]](ScribeAttributes.md#resourcerequestrelationships)
+- [#[ResourceResponse]](ScribeAttributes.md#resourceresponse)
+- [#[ResourceResponseRelated]](ScribeAttributes.md#resourceresponserelated)
+- [#[ResourceResponseRelationships]](ScribeAttributes.md#resourceresponserelationships)
+- [#[ResourceMetadata]](ScribeAttributes.md#resourcemetadata)
 
 These attributes are placed on controller methods to describe resource types, request/response structure, relationships, and headers for JSON:API endpoints. The strategies use them to generate accurate and detailed documentation.
 
@@ -219,24 +220,64 @@ These attributes are placed on controller methods to describe resource types, re
 
 To enable the strategies to extract documentation, you must assign the appropriate PHP attributes to your controller methods. Each attribute provides metadata about the request or response for that specific endpoint.
 
-**Example:**
+---
+
+<details>
+<summary>Show full example of using all Scribe JSON:API attributes</summary>
 
 ```php
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequestCreate;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequestRelationships;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelated;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelationships;
 use Sowl\JsonApi\Scribe\Attributes\ResourceMetadata;
 
 #[ResourceMetadata(groupName: 'Users', groupDescription: 'Operations related to user resources.')]
 class UserController
 {
-    #[ResourceRequest(resourceType: 'users')]
+    #[ResourceRequest(resourceType: 'users', idType: 'string', idExample: 'abc123')]
     #[ResourceResponse(resourceType: 'users', status: 200, description: 'Get a user by ID')]
     public function show($id)
     {
         // ... your controller logic ...
     }
+
+    #[ResourceRequestList(resourceType: 'users')]
+    #[ResourceResponse(resourceType: 'users', collection: true, description: 'Get a list of users')]
+    public function index()
+    {
+        // ... your controller logic ...
+    }
+
+    #[ResourceRequestCreate(resourceType: 'users')]
+    #[ResourceResponse(resourceType: 'users', status: 201, description: 'Create a new user')]
+    public function store($request)
+    {
+        // ... your controller logic ...
+    }
+
+    #[ResourceRequestRelationships(resourceType: 'users', idType: 'string', idExample: 'abc123', idParam: 'id')]
+    #[ResourceResponseRelationships(resourceType: 'users', relationshipName: 'roles', collection: true, description: 'Get user roles relationship')]
+    public function relationships($id, $relationship)
+    {
+        // ... your controller logic ...
+    }
+
+    #[ResourceRequest(resourceType: 'users', idType: 'string', idExample: 'abc123', idParam: 'id')]
+    #[ResourceResponseRelated(resourceType: 'users', relationshipName: 'roles', collection: true, description: 'Get related roles for a user')]
+    public function related($id, $relationship)
+    {
+        // ... your controller logic ...
+    }
 }
 ```
+
+</details>
+
+---
 
 You can combine multiple attributes on a single method to describe all aspects of the endpoint. This approach allows the documentation generator to produce accurate and detailed API docs based on your code annotations.
 
