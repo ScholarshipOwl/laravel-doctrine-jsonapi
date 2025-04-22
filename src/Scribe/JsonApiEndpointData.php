@@ -2,11 +2,9 @@
 
 namespace Sowl\JsonApi\Scribe;
 
-use Illuminate\Routing\Route;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\RelationshipInterface;
-use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\Routing\RelationshipNameExtractor;
 use Sowl\JsonApi\Routing\ResourceTypeExtractor;

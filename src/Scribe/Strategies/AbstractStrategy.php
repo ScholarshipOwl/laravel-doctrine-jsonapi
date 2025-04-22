@@ -2,10 +2,11 @@
 
 namespace Sowl\JsonApi\Scribe\Strategies;
 
+use Illuminate\Container\Container;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Extracting\Strategies\Strategy;
+use Illuminate\Support\Str;
 use Sowl\JsonApi\ResourceManager;
-use Sowl\JsonApi\ResourceManipulator;
 use Sowl\JsonApi\Routing\RelationshipNameExtractor;
 use Sowl\JsonApi\Routing\ResourceTypeExtractor;
 use Sowl\JsonApi\Scribe\JsonApiEndpointData;
@@ -19,8 +20,9 @@ abstract class AbstractStrategy extends Strategy
     protected ResourceManager $resourceManager;
     protected ResourceTypeExtractor $resourceTypeExtractor;
     protected RelationshipNameExtractor $relationshipNameExtractor;
-    protected JsonApiEndpointData $jsonApiEndpointData;
+    protected ?JsonApiEndpointData $jsonApiEndpointData = null;
     private string $jsonapiPrefix;
+    private string $rootMiddleware;
 
     /**
      * Constructor
@@ -36,15 +38,19 @@ abstract class AbstractStrategy extends Strategy
         $this->resourceManager = $resourceManager ?? app(ResourceManager::class);
         $this->resourceTypeExtractor = new ResourceTypeExtractor();
         $this->relationshipNameExtractor = new RelationshipNameExtractor();
+        $this->rootMiddleware = config('jsonapi.routing.rootMiddleware');
         $this->jsonapiPrefix = config('jsonapi.routing.rootNamePrefix', 'jsonapi.');
     }
 
     public function initJsonApiEndpointData(ExtractedEndpointData $endpointData): bool
     {
         $this->endpointData = $endpointData;
-        $this->jsonApiEndpointData = JsonApiEndpointData::fromEndpointData($endpointData);
 
-        return $this->isJsonApi();
+        if ($isJsonApi = $this->isJsonApi()) {
+            $this->jsonApiEndpointData = JsonApiEndpointData::fromEndpointData($endpointData);
+        }
+
+        return $isJsonApi;
     }
 
     /**
@@ -52,8 +58,22 @@ abstract class AbstractStrategy extends Strategy
      */
     public function isJsonApi(): bool
     {
-        $routeName = $this->endpointData->route->getName();
-        return \Str::startsWith($routeName, $this->jsonapiPrefix);
+        if ($this->rootMiddleware) {
+            // hack: We need to set container for getting the middleware.
+            //       Cloning because don't want to change the real route container, as it may affect future behavior.
+            $routeMiddleware = (clone $this->endpointData->route)
+                ->setContainer(new Container())
+                ->gatherMiddleware();
+
+            return in_array($this->rootMiddleware, $routeMiddleware);
+        }
+
+        if ($this->jsonapiPrefix) {
+            $routeName = $this->endpointData->route->getName();
+            return Str::startsWith($routeName, $this->jsonapiPrefix);
+        }
+
+        return false;
     }
 
     protected function rm(): ResourceManager

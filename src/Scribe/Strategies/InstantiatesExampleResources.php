@@ -123,6 +123,8 @@ trait InstantiatesExampleResources
             if ($em->getConnection()->isTransactionActive()) {
                 $em->rollback();
             }
+
+            $em->clear();
         }
     }
 }

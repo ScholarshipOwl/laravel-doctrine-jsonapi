@@ -26,6 +26,11 @@ return [
     'routing' => [
 
         /**
+         * Middleware to apply to all JSON:API routes.
+         */
+        'rootMiddleware' => 'jsonapi',
+
+        /**
          * Prefix for all the JSON:API route names.
          */
         'rootNamePrefix' => 'jsonapi.',

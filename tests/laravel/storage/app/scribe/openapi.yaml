@@ -187,7 +187,7 @@ components:
               properties:
                 random:
                   type: string
-                  example: 'testing user1vytx6lSZ'
+                  example: 'testing user1v4jC6OdU'
             relationships:
               type: object
               properties:
@@ -4099,7 +4099,7 @@ paths:
                         notificationsEnabled:
                           type: boolean
                           description: ''
-                          example: true
+                          example: false
                           nullable: false
                         language:
                           type: string

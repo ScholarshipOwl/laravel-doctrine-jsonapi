@@ -32,7 +32,9 @@ class GetFromResourceMetadataAttribute extends AbstractStrategy
      */
     public function __invoke(ExtractedEndpointData $endpointData, array $settings = []): array
     {
-        $this->initJsonApiEndpointData($endpointData);
+        if (!$this->initJsonApiEndpointData($endpointData)) {
+            return [];
+        }
 
         $this->transParams = $this->defaultTransParams();
 

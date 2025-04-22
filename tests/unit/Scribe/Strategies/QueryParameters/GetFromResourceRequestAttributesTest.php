@@ -2,19 +2,18 @@
 
 namespace Tests\Scribe\Strategies\QueryParameters;
 
-use Knuckles\Camel\Extraction\ExtractedEndpointData;
-use Illuminate\Routing\Route;
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Mockery;
 use Tests\TestCase;
-use Sowl\JsonApi\ResourceManager;
+use Tests\ExtractedEndpointDataBuilder;
 use Sowl\JsonApi\Scribe\Strategies\QueryParameters\GetFromResourceRequestAttributes;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
-use Sowl\JsonApi\Scribe\Attributes\ResourceRequestCreate;
 
 class GetFromResourceRequestAttributesTest extends TestCase
 {
+    use ExtractedEndpointDataBuilder;
+
     private GetFromResourceRequestAttributes $strategy;
 
     protected function setUp(): void
@@ -32,22 +31,20 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testReturnsCommonQueryParametersForJsonApiRoutes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(
-                ['GET'],
-                'users/{user}',
-                [
-                    'as' => 'jsonapi.users.show',
-                    'uses' => new class
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users/{user}',
+            [
+                'as' => 'jsonapi.users.show',
+                'uses' => new class
+                {
+                    #[ResourceRequest(resourceType: 'users')]
+                    public function __invoke()
                     {
-                        #[ResourceRequest(resourceType: 'users')]
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
 
         // Execute the strategy
@@ -86,21 +83,19 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testReturnsEmptyArrayForNonJsonApiRoutes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(
-                ['GET'],
-                'users',
-                [
-                    'as' => 'users.list',
-                    'uses' => new class
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users',
+            [
+                'as' => 'users.list',
+                'uses' => new class
+                {
+                    public function __invoke()
                     {
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
 
         // Execute the strategy
@@ -112,22 +107,20 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testAddsListParametersForListRoutes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(
-                ['GET'],
-                'users',
-                [
-                    'as' => 'jsonapi.users.list',
-                    'uses' => new class
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users',
+            [
+                'as' => 'jsonapi.users.list',
+                'uses' => new class
+                {
+                    #[ResourceRequestList(resourceType: 'users')]
+                    public function __invoke()
                     {
-                        #[ResourceRequestList(resourceType: 'users')]
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
 
         // Execute the strategy
@@ -156,7 +149,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
             $result['page[number]']
         );
 
-        $this->assertequals(
+        $this->assertEquals(
             [
                 'description' => 'Number of results per page.'
                                . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
@@ -209,22 +202,20 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testAddsListParametersForToManyRelationshipRoutes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(
-                ['GET'],
-                'users/{user}/relationships/roles',
-                [
-                    'as' => 'jsonapi.users.relationships.roles.list',
-                    'uses' => new class
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users/{user}/relationships/roles',
+            [
+                'as' => 'jsonapi.users.relationships.roles.list',
+                'uses' => new class
+                {
+                    #[ResourceRequestList(resourceType: 'roles')]
+                    public function __invoke()
                     {
-                        #[ResourceRequestList(resourceType: 'roles')]
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
 
         // Execute the strategy
@@ -300,21 +291,19 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testReturnsEmptyArrayForNonAllowedMethods()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(
-                ['DELETE'],
-                'users',
-                [
-                    'as' => 'jsonapi.users.list',
-                    'uses' => new class
+        $endpointData = $this->buildExtractedEndpointData(
+            'DELETE',
+            'users',
+            [
+                'as' => 'jsonapi.users.list',
+                'uses' => new class
+                {
+                    public function __invoke()
                     {
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
 
         // Execute the strategy
@@ -342,12 +331,10 @@ class GetFromResourceRequestAttributesTest extends TestCase
         // Test methods expected to have query parameters (GET, PATCH, PUT)
         $methodsWithParams = ['GET', 'PATCH', 'PUT'];
         foreach ($methodsWithParams as $method) {
-            $endpointData = ExtractedEndpointData::fromRoute(
-                new Route(
-                    [$method],
-                    $routePath,
-                    $routeInfo
-                )
+            $endpointData = $this->buildExtractedEndpointData(
+                $method,
+                $routePath,
+                $routeInfo
             );
             $result = $this->strategy->__invoke($endpointData);
             $this->assertNotEmpty($result, "Expected non-empty result for HTTP method: {$method}");
@@ -363,21 +350,19 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
         // Test custom action POST method - Expect empty result
         $postMethod = 'POST';
-        $endpointDataPost = ExtractedEndpointData::fromRoute(
-            new Route(
-                [$postMethod],
-                $routePath,
-                [
-                    'as' => 'jsonapi.users.show',
-                    'uses' => new class
+        $endpointDataPost = $this->buildExtractedEndpointData(
+            $postMethod,
+            $routePath,
+            [
+                'as' => 'jsonapi.users.show',
+                'uses' => new class
+                {
+                    public function __invoke()
                     {
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
         $resultPost = $this->strategy->__invoke($endpointDataPost);
         $this->assertEmpty($resultPost, "Expected empty result for custom action HTTP method: {$postMethod}");
@@ -385,22 +370,20 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testIncludeParameterWithAvailableIncludes()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(
-                ['GET'],
-                'users/{user}',
-                [
-                    'as' => 'jsonapi.users.show',
-                    'uses' => new class
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users/{user}',
+            [
+                'as' => 'jsonapi.users.show',
+                'uses' => new class
+                {
+                    #[ResourceRequest(resourceType: 'users')]
+                    public function __invoke()
                     {
-                        #[ResourceRequest(resourceType: 'users')]
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
 
         // Execute the strategy
@@ -421,22 +404,20 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testMetaParameterWithAvailableMetas()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(
-                ['GET'],
-                'users/{user}',
-                [
-                    'as' => 'jsonapi.users.show',
-                    'uses' => new class
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users/{user}',
+            [
+                'as' => 'jsonapi.users.show',
+                'uses' => new class
+                {
+                    #[ResourceRequest(resourceType: 'users')]
+                    public function __invoke()
                     {
-                        #[ResourceRequest(resourceType: 'users')]
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
 
         // Execute the strategy
@@ -454,22 +435,20 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testFieldsParameterStructure()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(
-                ['GET'],
-                'users/{user}',
-                [
-                    'as' => 'jsonapi.users.show',
-                    'uses' => new class
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users/{user}',
+            [
+                'as' => 'jsonapi.users.show',
+                'uses' => new class
+                {
+                    #[ResourceRequest(resourceType: 'users')]
+                    public function __invoke()
                     {
-                        #[ResourceRequest(resourceType: 'users')]
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
 
         // Execute the strategy
@@ -489,22 +468,20 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testFilterParameterForCollectionRoute()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(
-                ['GET'],
-                'users',
-                [
-                    'as' => 'jsonapi.users.index',
-                    'uses' => new class
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users',
+            [
+                'as' => 'jsonapi.users.index',
+                'uses' => new class
+                {
+                    #[ResourceRequestList(resourceType: 'users')]
+                    public function __invoke()
                     {
-                        #[ResourceRequestList(resourceType: 'users')]
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
 
         // Execute the strategy
@@ -517,22 +494,20 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testSortParameterForCollectionRoute()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(
-                ['GET'],
-                'users',
-                [
-                    'as' => 'jsonapi.users.index',
-                    'uses' => new class
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users',
+            [
+                'as' => 'jsonapi.users.index',
+                'uses' => new class
+                {
+                    #[ResourceRequestList(resourceType: 'users')]
+                    public function __invoke()
                     {
-                        #[ResourceRequestList(resourceType: 'users')]
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
 
         // Execute the strategy
@@ -554,22 +529,20 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testPageParameterForCollectionRoute()
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(
-                ['GET'],
-                'users',
-                [
-                    'as' => 'jsonapi.users.index',
-                    'uses' => new class
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users',
+            [
+                'as' => 'jsonapi.users.index',
+                'uses' => new class
+                {
+                    #[ResourceRequestList(resourceType: 'users')]
+                    public function __invoke()
                     {
-                        #[ResourceRequestList(resourceType: 'users')]
-                        public function __invoke()
-                        {
-                            return [];
-                        }
-                    },
-                ]
-            )
+                        return [];
+                    }
+                },
+            ]
         );
 
         // Execute the strategy

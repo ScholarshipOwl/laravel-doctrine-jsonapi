@@ -4,15 +4,16 @@ declare(strict_types=1);
 
 namespace Tests\Scribe\Strategies\UrlParameters;
 
-use Illuminate\Routing\Route;
-use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Strategies\UrlParameters\GetFromResourceRequestAttributes;
+use Tests\ExtractedEndpointDataBuilder;
 use Tests\TestCase;
 
 class GetFromResourceRequestAttributesTest extends TestCase
 {
+    use ExtractedEndpointDataBuilder;
+
     protected GetFromResourceRequestAttributes $strategy;
 
     protected function setUp(): void
@@ -23,8 +24,10 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testReturnsIdParamWithMetadataDefaults(): void
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(['GET'], 'users/{id}', [
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users/{id}',
+            [
                 'as' => 'jsonapi.users.show',
                 'uses' => new class {
                     #[ResourceRequest]
@@ -33,7 +36,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
                         return [];
                     }
                 },
-            ]),
+            ]
         );
         $params = $this->strategy->__invoke($endpointData);
         $expected = [
@@ -49,8 +52,10 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testReturnsCustomIdParam(): void
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(['GET'], 'users/{user}', [
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users/{user}',
+            [
                 'as' => 'jsonapi.users.show',
                 'uses' => new class {
                     #[ResourceRequest(idParam: 'user')]
@@ -59,7 +64,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
                         return [];
                     }
                 },
-            ]),
+            ]
         );
         $params = $this->strategy->__invoke($endpointData);
         $expected = [
@@ -75,8 +80,10 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testReturnsIdTypeOverride(): void
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(['GET'], 'users/{id}', [
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users/{id}',
+            [
                 'as' => 'jsonapi.users.show',
                 'uses' => new class {
                     #[ResourceRequest(idType: 'number', idExample: 123)]
@@ -85,7 +92,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
                         return [];
                     }
                 },
-            ]),
+            ]
         );
         $params = $this->strategy->__invoke($endpointData);
         $expected = [
@@ -101,8 +108,10 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testReturnsIdExampleOverride(): void
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(['GET'], 'users/{id}', [
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users/{id}',
+            [
                 'as' => 'jsonapi.users.show',
                 'uses' => new class {
                     #[ResourceRequest(idExample: 'abc-123')]
@@ -111,7 +120,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
                         return [];
                     }
                 },
-            ]),
+            ]
         );
         $params = $this->strategy->__invoke($endpointData);
         $expected = [
@@ -127,8 +136,10 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
     public function testReturnsEmptyWhenNoIdParam(): void
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(['GET'], 'users', [
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users',
+            [
                 'as' => 'jsonapi.users.index',
                 'uses' => new class {
                     #[ResourceRequest]
@@ -137,15 +148,18 @@ class GetFromResourceRequestAttributesTest extends TestCase
                         return [];
                     }
                 },
-            ]),
+            ]
         );
         $params = $this->strategy->__invoke($endpointData);
         $this->assertEquals([], $params);
     }
+
     public function testReturnsEmptyWhenNoAttribute(): void
     {
-        $endpointData = ExtractedEndpointData::fromRoute(
-            new Route(['GET'], 'users/{id}', [
+        $endpointData = $this->buildExtractedEndpointData(
+            'GET',
+            'users/{id}',
+            [
                 'as' => 'jsonapi.users.show',
                 'uses' => new class {
                     public function __invoke(): array
@@ -153,7 +167,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
                         return [];
                     }
                 },
-            ]),
+            ]
         );
         $params = $this->strategy->__invoke($endpointData);
         $this->assertEquals([], $params);

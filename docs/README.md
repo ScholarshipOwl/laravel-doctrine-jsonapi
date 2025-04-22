@@ -55,7 +55,9 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
         then: function () {
-            Route::prefix(config('jsonapi.routing.rootPathPrefix', 'jsonapi'))
+            Route::prefix(config('jsonapi.routing.rootPathPrefix', ''))
+                ->name(config('jsonapi.routing.rootNamePrefix', 'jsonapi.'))
+                ->middleware(config('jsonapi.routing.rootMiddleware'))
                 ->group(base_path('routes/jsonapi.php'));
         },
     )->create();
@@ -65,6 +67,27 @@ return Application::configure(basePath: dirname(__DIR__))
 - The route prefix is configurable via `config/jsonapi.php` using the `routing.rootPathPrefix` key.
 
 Run `php artisan route:list` to view available JSON:API endpoints.
+
+### Middleware Group
+
+You must register the JSON:API middleware group before loading routes:
+
+```php
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->group(
+        'jsonapi',
+        [
+            // \Illuminate\Cookie\Middleware\EncryptCookies::class,
+            // \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
+            // \Illuminate\Session\Middleware\StartSession::class,
+            // \Illuminate\View\Middleware\ShareErrorsFromSession::class,
+            // \Illuminate\Foundation\Http\Middleware\ValidateCsrfToken::class,
+            // \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            // 'auth.session',
+        ]
+    );
+})
+```
 
 ## Usage
 
