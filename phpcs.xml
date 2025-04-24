@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset name="LaravelDoctrineJsonApi">
+    <description>PHP Code Sniffer configuration for the ScholarshipOwl/laravel-doctrine-jsonapi package.</description>
+
+    <!-- Scan the 'src' and 'tests' directories -->
+    <file>src</file>
+    <file>tests</file>
+
+    <!-- Use the PSR12 standard -->
+    <rule ref="PSR12"/>
+
+    <!-- Exclude the specific PEAR file comment rule -->
+    <rule ref="PEAR.Commenting.FileComment.Missing">
+        <severity>0</severity> <!-- Setting severity to 0 effectively disables the rule -->
+    </rule>
+
+    <!-- Add other rule configurations below if needed -->
+
+</ruleset>

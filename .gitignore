@@ -1,6 +1,7 @@
 /vendor/
 .idea
 .DS_Store
+.scribe
 
 /tests/coverage
 
