@@ -1,0 +1,14 @@
+{
+    "php.validate.path": "/usr/bin/php8.2",
+    "php.validate.enable": true,
+    "terminal.integrated.linkProvider": {
+        "enableFileLinks": true
+    },
+    "terminal.integrated.pathMappings": [
+    {
+        "remote": "/opt/project",
+        "local": "${workspaceFolder}"
+    }
+    ],
+    "terminal.integrated.cursorBlinking": false
+}
