@@ -63,6 +63,12 @@ Provides grouping and descriptive metadata for endpoints or resource classes. Us
 - `description: string|null` — Description of the endpoint or resource.
 - `authenticated: bool` — Whether the endpoint requires authentication.
 
+**Example:**
+```php
+#[ResourceMetadata(groupName: 'Users', groupDescription: 'Operations related to user resources.')]
+class UserController {}
+```
+
 ### [ResourceRequest](../src/Scribe/Attributes/ResourceRequest.php)
 
 **Purpose:**
@@ -78,6 +84,12 @@ Marks a controller method as handling a single resource request (show, update, d
 - `idParam: string` — Name of the route parameter for the resource ID (default: 'id').
 - `acceptHeaders: array` — List of accepted content types (default: ['application/vnd.api+json']).
 
+**Example:**
+```php
+#[ResourceRequest(resourceType: 'users', idType: 'string', idExample: 'abc123')]
+public function show($id) {}
+```
+
 ### [ResourceRequestList](../src/Scribe/Attributes/ResourceRequestList.php)
 
 **Purpose:**
@@ -90,6 +102,12 @@ Marks a controller method as handling a resource collection (list) request for J
 - `resourceType: string|null` — JSON:API resource type.
 - `acceptHeaders: array` — List of accepted content types (default: ['application/vnd.api+json']).
 
+**Example:**
+```php
+#[ResourceRequestList(resourceType: 'users')]
+public function index() {}
+```
+
 ### [ResourceRequestCreate](../src/Scribe/Attributes/ResourceRequestCreate.php)
 
 **Purpose:**
@@ -101,6 +119,12 @@ Marks a controller method as handling resource creation for JSON:API.
 **Properties:**
 - `resourceType: string|null` — JSON:API resource type.
 - `acceptHeaders: array` — List of accepted content types (default: ['application/vnd.api+json']).
+
+**Example:**
+```php
+#[ResourceRequestCreate(resourceType: 'users')]
+public function store($request) {}
+```
 
 ### [ResourceRequestRelationships](../src/Scribe/Attributes/ResourceRequestRelationships.php)
 
@@ -116,6 +140,12 @@ Marks a controller method as handling relationship requests for a resource (e.g.
 - `idExample: mixed` — Example value for the resource ID.
 - `idParam: string` — Name of the route parameter for the resource ID (default: 'id').
 - `acceptHeaders: array` — List of accepted content types (default: ['application/vnd.api+json']).
+
+**Example:**
+```php
+#[ResourceRequestRelationships(resourceType: 'users', idType: 'string', idExample: 'abc123', idParam: 'id')]
+public function relationships($id, $relationship) {}
+```
 
 ### [ResourceResponse](../src/Scribe/Attributes/ResourceResponse.php)
 
@@ -134,6 +164,12 @@ Describes the response for a resource endpoint in JSON:API.
 - `pageNumber: int` — Example page number for paginated responses.
 - `pageSize: int` — Example page size for paginated responses.
 - `contentTypeHeaders: array` — List of content-type headers (default: ['application/vnd.api+json']).
+
+**Example:**
+```php
+#[ResourceResponse(resourceType: 'users', status: 200, description: 'Get a user by ID')]
+public function show($id) {}
+```
 
 ### [ResourceResponseRelated](../src/Scribe/Attributes/ResourceResponseRelated.php)
 
@@ -154,6 +190,12 @@ Describes the response for a related resource endpoint (e.g., `/users/{id}/roles
 - `pageSize: int` — Example page size.
 - `contentTypeHeaders: array` — List of content-type headers (default: ['application/vnd.api+json']).
 
+**Example:**
+```php
+#[ResourceResponseRelated(resourceType: 'users', relationshipName: 'roles', collection: true, description: 'Get related roles for a user')]
+public function related($id, $relationship) {}
+```
+
 ### [ResourceResponseRelationships](../src/Scribe/Attributes/ResourceResponseRelationships.php)
 
 **Purpose:**
@@ -172,6 +214,12 @@ Describes the response for a relationships endpoint (e.g., `/users/{id}/relation
 - `pageNumber: int` — Example page number.
 - `pageSize: int` — Example page size.
 - `contentTypeHeaders: array` — List of content-type headers (default: ['application/vnd.api+json']).
+
+**Example:**
+```php
+#[ResourceResponseRelationships(resourceType: 'users', relationshipName: 'roles', collection: true, description: 'Get user roles relationship')]
+public function relationships($id, $relationship) {}
+```
 
 ## Best Practices
 

@@ -6,7 +6,7 @@ the API, without having to contact the API developers directly. It also helps to
 reduce the number of support requests, since the documentation answers many of the questions that
 developers may have.
 
-This package provides custom [Scribe](https://scribe.knuckles.wtf/laravel/) strategies to document your JSON:API endpoints automatically.
+This package provides custom [Scribe](https://scribe.knuckles.wtf/laravel/) strategies to document your JSON:API endpoints automatically in [OpenAPI](https://www.openapis.org/) format.
 
 ## Installation
 
@@ -57,7 +57,7 @@ When documenting an endpoint:
 
 1. The strategy identifies the resource type and action (create, update, fetch, etc.)
 2. For request bodies, validation rules are extracted to determine the structure
-3. For responses, entity factories create sample entities
+3. For responses, entity factories create sample entities or select one from the database
 4. Transformers convert the entities to JSON:API format
 5. The documentation shows both valid request examples and expected responses
 
