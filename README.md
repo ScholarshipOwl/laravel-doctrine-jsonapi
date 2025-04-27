@@ -66,6 +66,7 @@ docker compose run php sh
 [Testing Documentation](./tests)
 
 ### Roadmap
+  - [ ] Remove the default request hydration from the package, as it may create security vulnerabilities. All the mutations should be handled by the application code, by the client.
   - [X] Integrate scribe into the package. Automatically generate Open API specs.
     - [ ] Add documentation for scribe integration
     - [X] Update metadata for each endpoint

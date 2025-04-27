@@ -30,6 +30,26 @@ class RelationshipsCollection
     }
 
     /**
+     * Adds a To-One relationship to the collection.
+     */
+    public function addToOne(string $name, string $class, ?string $property = null): self
+    {
+        $this->add(new ToOneRelationship($name, $class, $property));
+
+        return $this;
+    }
+
+    /**
+     * Adds a To-Many relationship to the collection.
+     */
+    public function addToMany(string $name, string $class, string $mappedBy, ?string $property = null): self
+    {
+        $this->add(new ToManyRelationship($name, $class, $mappedBy, $property));
+
+        return $this;
+    }
+
+    /**
      * Retrieves a relationship by name from the collection.
      */
     public function get(string $name): RelationshipInterface|null

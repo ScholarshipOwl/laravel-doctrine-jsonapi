@@ -23,10 +23,10 @@ trait MemoizeRelationshipsTrait
      * This method creates a new instance of the RelationshipsCollection class with the provided relationships array,
      * and stores it in a private static property named
      */
-    public static function memoizeRelationships(callable $cb): RelationshipsCollection
+    public static function memoizeRelationships(?callable $cb = null): RelationshipsCollection
     {
-        if (!isset(static::$memoizedRelationships)) {
-            static::$memoizedRelationships = new RelationshipsCollection($cb());
+        if (! isset(static::$memoizedRelationships)) {
+            static::$memoizedRelationships = new RelationshipsCollection($cb() ?? []);
         }
 
         return static::$memoizedRelationships;
