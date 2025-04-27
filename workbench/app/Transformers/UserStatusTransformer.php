@@ -2,8 +2,8 @@
 
 namespace App\Transformers;
 
-use Sowl\JsonApi\AbstractTransformer;
 use App\Entities\UserStatus;
+use Sowl\JsonApi\AbstractTransformer;
 
 class UserStatusTransformer extends AbstractTransformer
 {

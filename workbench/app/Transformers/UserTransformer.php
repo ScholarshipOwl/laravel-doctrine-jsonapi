@@ -2,14 +2,14 @@
 
 namespace App\Transformers;
 
+use App\Entities\Role;
+use App\Entities\User;
+use App\Entities\UserStatus;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\ResourceInterface;
 use Sowl\JsonApi\AbstractTransformer;
-use App\Entities\Role;
-use App\Entities\User;
-use App\Entities\UserStatus;
 
 class UserTransformer extends AbstractTransformer
 {

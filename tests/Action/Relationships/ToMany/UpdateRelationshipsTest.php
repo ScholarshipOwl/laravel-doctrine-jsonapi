@@ -2,8 +2,8 @@
 
 namespace Tests\Action\Relationships\ToMany;
 
-use Illuminate\Support\Facades\Route;
 use App\Entities\Role;
+use Illuminate\Support\Facades\Route;
 use Tests\TestCase;
 
 class UpdateRelationshipsTest extends TestCase

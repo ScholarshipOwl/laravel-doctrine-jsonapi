@@ -2,13 +2,13 @@
 
 namespace App\Http\Controller\Users;
 
-use Ramsey\Uuid\Uuid;
-use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\Response;
 use App\Entities\Role;
 use App\Entities\User;
 use App\Entities\UserConfig;
 use App\Entities\UserStatus;
+use Ramsey\Uuid\Uuid;
+use Sowl\JsonApi\AbstractAction;
+use Sowl\JsonApi\Response;
 
 class CreateUserAction extends AbstractAction
 {

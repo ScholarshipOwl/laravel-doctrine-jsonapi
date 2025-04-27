@@ -3,13 +3,13 @@
 namespace App\Entities;
 
 use App\Repositories\RolesRepository;
+use App\Transformers\RoleTransformer;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\ResourceInterface;
-use App\Transformers\RoleTransformer;
 
 #[ORM\Entity(repositoryClass: RolesRepository::class)]
 #[ORM\Table(name: 'role')]

@@ -2,12 +2,12 @@
 
 namespace App\Entities;
 
+use App\Transformers\UserStatusTransformer;
 use Doctrine\ORM\Mapping as ORM;
 use LaravelDoctrine\ORM\Facades\EntityManager;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\ResourceInterface;
-use App\Transformers\UserStatusTransformer;
 
 #[ORM\Entity]
 class UserStatus implements ResourceInterface

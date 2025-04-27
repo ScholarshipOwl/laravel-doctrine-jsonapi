@@ -2,12 +2,12 @@
 
 namespace App\Http\Controller\Users;
 
+use App\Entities\UserStatus;
+use App\Http\Controller\Users\Rules\AttachRoleToUserRule;
 use Illuminate\Support\Facades\Gate;
 use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Rules\ResourceIdentifierRule;
-use App\Entities\UserStatus;
-use App\Http\Controller\Users\Rules\AttachRoleToUserRule;
 
 class UpdateUserRequest extends Request
 {

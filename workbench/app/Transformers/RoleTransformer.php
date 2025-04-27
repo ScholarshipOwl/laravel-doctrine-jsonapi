@@ -2,8 +2,8 @@
 
 namespace App\Transformers;
 
-use Sowl\JsonApi\AbstractTransformer;
 use App\Entities\Role;
+use Sowl\JsonApi\AbstractTransformer;
 
 class RoleTransformer extends AbstractTransformer
 {

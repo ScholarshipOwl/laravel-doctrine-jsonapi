@@ -2,11 +2,11 @@
 
 namespace App\Http\Controller\Users\Rules;
 
+use App\Entities\Role;
+use App\Entities\User;
 use Illuminate\Support\Facades\Gate;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Rules\ResourceIdentifierRule;
-use App\Entities\Role;
-use App\Entities\User;
 
 /**
  * The rule will verify that authorized user have access to assign role on the user.

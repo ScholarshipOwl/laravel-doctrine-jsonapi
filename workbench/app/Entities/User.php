@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use App\Repositories\UsersRepository;
+use App\Transformers\UserTransformer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -21,7 +22,6 @@ use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Resource\FilterableInterface;
 use Sowl\JsonApi\ResourceInterface;
-use App\Transformers\UserTransformer;
 
 #[ORM\Entity(repositoryClass: UsersRepository::class)]
 #[ORM\Table(name: 'users')]

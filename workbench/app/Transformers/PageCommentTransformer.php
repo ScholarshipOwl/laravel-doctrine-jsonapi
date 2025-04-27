@@ -2,11 +2,11 @@
 
 namespace App\Transformers;
 
-use League\Fractal\Resource\Item;
-use Sowl\JsonApi\AbstractTransformer;
 use App\Entities\Page;
 use App\Entities\PageComment;
 use App\Entities\User;
+use League\Fractal\Resource\Item;
+use Sowl\JsonApi\AbstractTransformer;
 
 class PageCommentTransformer extends AbstractTransformer
 {

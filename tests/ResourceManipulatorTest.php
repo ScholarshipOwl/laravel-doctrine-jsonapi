@@ -2,10 +2,10 @@
 
 namespace Tests;
 
-use Sowl\JsonApi\Exceptions\JsonApiException;
-use Sowl\JsonApi\ResourceManipulator;
 use App\Entities\Role;
 use App\Entities\User;
+use Sowl\JsonApi\Exceptions\JsonApiException;
+use Sowl\JsonApi\ResourceManipulator;
 
 class ResourceManipulatorTest extends TestCase
 {

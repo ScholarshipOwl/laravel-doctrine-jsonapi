@@ -3,12 +3,12 @@
 namespace App\Entities;
 
 use App\Repositories\PageCommentsRepository;
+use App\Transformers\PageCommentTransformer;
 use Doctrine\ORM\Mapping as ORM;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\ResourceInterface;
-use App\Transformers\PageCommentTransformer;
 
 #[ORM\Entity(repositoryClass: PageCommentsRepository::class)]
 #[ORM\Table]

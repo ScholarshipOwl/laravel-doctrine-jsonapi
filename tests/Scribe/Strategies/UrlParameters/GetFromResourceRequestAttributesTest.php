@@ -4,11 +4,9 @@ declare(strict_types=1);
 
 namespace Tests\Scribe\Strategies\UrlParameters;
 
-use Knuckles\Scribe\Tools\ConsoleOutputUtils;
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Strategies\UrlParameters\GetFromResourceRequestAttributes;
-use Symfony\Component\Console\Output\NullOutput;
 use Tests\ExtractedEndpointDataBuilder;
 use Tests\TestCase;
 

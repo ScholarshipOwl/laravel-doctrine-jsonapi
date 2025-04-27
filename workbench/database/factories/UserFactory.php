@@ -2,11 +2,11 @@
 
 /** @var LaravelDoctrine\ORM\Testing\Factory $factory */
 
-use Doctrine\Common\Collections\ArrayCollection;
 use App\Entities\Role;
 use App\Entities\User;
 use App\Entities\UserConfig;
 use App\Entities\UserStatus;
+use Doctrine\Common\Collections\ArrayCollection;
 
 $factory->define(User::class, function (Faker\Generator $faker) {
     return [

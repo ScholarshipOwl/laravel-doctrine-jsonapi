@@ -2,6 +2,10 @@
 
 namespace App\Http\Controller\Users;
 
+use App\Entities\User;
+use App\Http\Controller\Users\Relationships\AttachRolesToUserRequest;
+use App\Http\Controller\Users\Relationships\DetachRolesFromUserRequest;
+use App\Http\Controller\Users\Relationships\UpdateUserRolesRequest;
 use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationshipsAction;
 use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationshipsAction;
 use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationshipsAction;
@@ -10,10 +14,6 @@ use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Default\WithListTrait;
 use Sowl\JsonApi\Response;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
-use App\Entities\User;
-use App\Http\Controller\Users\Relationships\AttachRolesToUserRequest;
-use App\Http\Controller\Users\Relationships\DetachRolesFromUserRequest;
-use App\Http\Controller\Users\Relationships\UpdateUserRolesRequest;
 
 class UsersController extends Controller
 {

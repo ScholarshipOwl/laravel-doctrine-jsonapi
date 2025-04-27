@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\Entities\User;
 use Database\Seeders\SetUpSeeder;
 use Knuckles\Scribe\Tools\ConsoleOutputUtils;
 use Orchestra\Testbench\Concerns\WithWorkbench;
@@ -10,15 +11,14 @@ use Sowl\JsonApi\Testing\DoctrineRefreshDatabase;
 use Sowl\JsonApi\Testing\InteractWithDoctrineDatabase;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\NullOutput;
-use App\Entities\User;
 use Tests\Helpers\WithEntityManagerTrait;
 
 class TestCase extends TestbenchTestCase
 {
-    use WithWorkbench;
-    use WithEntityManagerTrait;
     use DoctrineRefreshDatabase;
     use InteractWithDoctrineDatabase;
+    use WithEntityManagerTrait;
+    use WithWorkbench;
 
     protected function setUp(): void
     {
@@ -34,7 +34,7 @@ class TestCase extends TestbenchTestCase
         parent::tearDown();
 
         // Reset Scribe debug output
-        ConsoleOutputUtils::bootstrapOutput(new ConsoleOutput());
+        ConsoleOutputUtils::bootstrapOutput(new ConsoleOutput);
     }
 
     /**

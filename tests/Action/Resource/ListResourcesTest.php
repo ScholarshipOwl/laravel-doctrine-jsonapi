@@ -2,9 +2,9 @@
 
 namespace Tests\Action\Resource;
 
-use Sowl\JsonApi\Response;
 use App\Entities\Role;
 use App\Entities\User;
+use Sowl\JsonApi\Response;
 use Tests\TestCase;
 
 class ListResourcesTest extends TestCase

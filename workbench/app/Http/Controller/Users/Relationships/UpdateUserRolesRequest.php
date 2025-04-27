@@ -2,8 +2,8 @@
 
 namespace App\Http\Controller\Users\Relationships;
 
-use Sowl\JsonApi\Request;
 use App\Http\Controller\Users\Rules\AttachRoleToUserRule;
+use Sowl\JsonApi\Request;
 
 class UpdateUserRolesRequest extends Request
 {

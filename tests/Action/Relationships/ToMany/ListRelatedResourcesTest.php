@@ -2,8 +2,8 @@
 
 namespace Tests\Action\Relationships\ToMany;
 
-use Sowl\JsonApi\Response;
 use App\Entities\Role;
+use Sowl\JsonApi\Response;
 use Tests\TestCase;
 
 class ListRelatedResourcesTest extends TestCase

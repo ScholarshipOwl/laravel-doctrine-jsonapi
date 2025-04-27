@@ -3,6 +3,7 @@
 namespace App\Entities;
 
 use App\Repositories\PagesRepository;
+use App\Transformers\PagesTransformer;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,7 +12,6 @@ use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\ResourceInterface;
-use App\Transformers\PagesTransformer;
 
 #[ORM\Entity(repositoryClass: PagesRepository::class)]
 #[ORM\Table]

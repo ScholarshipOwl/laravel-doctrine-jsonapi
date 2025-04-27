@@ -2,10 +2,10 @@
 
 namespace Tests\Action\Resource;
 
-use Ramsey\Uuid\Uuid;
 use App\Entities\PageComment;
 use App\Entities\Role;
 use App\Entities\User;
+use Ramsey\Uuid\Uuid;
 use Tests\TestCase;
 
 class CreateResourceTest extends TestCase

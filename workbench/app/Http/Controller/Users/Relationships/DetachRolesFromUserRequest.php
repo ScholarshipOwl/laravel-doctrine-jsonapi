@@ -2,8 +2,8 @@
 
 namespace App\Http\Controller\Users\Relationships;
 
-use Sowl\JsonApi\Request;
 use App\Http\Controller\Users\Rules\DetachRoleFromUserRule;
+use Sowl\JsonApi\Request;
 
 class DetachRolesFromUserRequest extends Request
 {

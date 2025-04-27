@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace App\Entities;
 
+use App\Transformers\UserConfigTransformer;
 use Doctrine\ORM\Mapping as ORM;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\ResourceInterface;
-use App\Transformers\UserConfigTransformer;
 
 #[ORM\Entity]
 #[ORM\Table(name: 'user_configs')]

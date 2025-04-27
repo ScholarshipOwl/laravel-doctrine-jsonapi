@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Transformers;
 
-use Sowl\JsonApi\AbstractTransformer;
 use App\Entities\User;
 use App\Entities\UserConfig;
+use Sowl\JsonApi\AbstractTransformer;
 
 class UserConfigTransformer extends AbstractTransformer
 {

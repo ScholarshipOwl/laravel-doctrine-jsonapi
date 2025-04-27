@@ -2,12 +2,12 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Entities\Page;
 use App\Entities\PageComment;
 use App\Entities\Role;
 use App\Entities\User;
 use App\Entities\UserStatus;
+use Illuminate\Database\Seeder;
 
 class SetUpSeeder extends Seeder
 {

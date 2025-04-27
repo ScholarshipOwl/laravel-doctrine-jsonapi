@@ -2,10 +2,10 @@
 
 namespace App\Http\Controller\Users\Rules;
 
-use Sowl\JsonApi\Request;
-use Sowl\JsonApi\Rules\ResourceIdentifierRule;
 use App\Entities\Role;
 use App\Entities\User;
+use Sowl\JsonApi\Request;
+use Sowl\JsonApi\Rules\ResourceIdentifierRule;
 
 class DetachRoleFromUserRule extends ResourceIdentifierRule
 {

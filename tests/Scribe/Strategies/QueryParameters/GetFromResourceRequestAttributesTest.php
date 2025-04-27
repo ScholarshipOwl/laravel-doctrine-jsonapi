@@ -15,6 +15,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
     use ExtractedEndpointDataBuilder;
 
     private DocumentationConfig $documentationConfig;
+
     private GetFromResourceRequestAttributes $strategy;
 
     protected function setUp(): void

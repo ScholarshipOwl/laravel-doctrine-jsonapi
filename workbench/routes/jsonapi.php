@@ -1,11 +1,11 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use Sowl\JsonApi\Default\Controller as DefaultController;
 use App\Http\Controller\PageComment\PageCommentController;
 use App\Http\Controller\Pages\PageController;
 use App\Http\Controller\Roles\RolesController;
 use App\Http\Controller\Users\UsersController;
+use Illuminate\Support\Facades\Route;
+use Sowl\JsonApi\Default\Controller as DefaultController;
 
 Route::group(['as' => 'jsonapi.'], function () {
     /* ---------------------------------------------------------

@@ -2,10 +2,10 @@
 
 /** @var LaravelDoctrine\ORM\Testing\Factory $factory */
 
-use Faker\Generator;
 use App\Entities\Page;
 use App\Entities\PageComment;
 use App\Entities\User;
+use Faker\Generator;
 
 $factory->define(PageComment::class, function (Generator $faker, array $attributes) use ($factory) {
     $page = $attributes['page'] ?? $factory->create(Page::class);

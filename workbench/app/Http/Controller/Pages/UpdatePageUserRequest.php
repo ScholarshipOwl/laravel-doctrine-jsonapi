@@ -2,9 +2,9 @@
 
 namespace App\Http\Controller\Pages;
 
+use App\Entities\User;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Rules\ResourceIdentifierRule;
-use App\Entities\User;
 
 class UpdatePageUserRequest extends Request
 {

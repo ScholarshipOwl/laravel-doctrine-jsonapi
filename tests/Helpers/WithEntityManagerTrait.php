@@ -2,7 +2,6 @@
 
 namespace Tests\Helpers;
 
-use Doctrine\ORM\EntityManager;
 use App\Entities\Page;
 use App\Entities\PageComment;
 use App\Entities\Role;
@@ -10,6 +9,7 @@ use App\Entities\User;
 use App\Repositories\PageCommentsRepository;
 use App\Repositories\RolesRepository;
 use App\Repositories\UsersRepository;
+use Doctrine\ORM\EntityManager;
 
 trait WithEntityManagerTrait
 {

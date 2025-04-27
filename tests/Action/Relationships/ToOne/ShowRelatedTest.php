@@ -2,8 +2,8 @@
 
 namespace Tests\Action\Relationships\ToOne;
 
-use Sowl\JsonApi\Response;
 use App\Entities\User;
+use Sowl\JsonApi\Response;
 use Tests\TestCase;
 
 class ShowRelatedTest extends TestCase
