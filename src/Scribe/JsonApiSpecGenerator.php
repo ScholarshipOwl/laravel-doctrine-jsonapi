@@ -3,10 +3,10 @@
 namespace Sowl\JsonApi\Scribe;
 
 use Knuckles\Camel\Output\OutputEndpointData;
-use Knuckles\Scribe\Tools\DocumentationConfig;
-use Knuckles\Scribe\Writing\OpenApiSpecGenerators\OpenApiGenerator;
 use Knuckles\Scribe\Tools\ConsoleOutputUtils as c;
+use Knuckles\Scribe\Tools\DocumentationConfig;
 use Knuckles\Scribe\Tools\ErrorHandlingUtils as e;
+use Knuckles\Scribe\Writing\OpenApiSpecGenerators\OpenApiGenerator;
 use Sowl\JsonApi\Fractal\FractalOptions;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceManager;
@@ -81,7 +81,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                                             'jsonapi::query_params.page.number_description'
                                         ),
                                         'example' => 1,
-                                        'minimum' => 1
+                                        'minimum' => 1,
                                     ],
                                     'size' => [
                                         'type' => 'integer',
@@ -89,10 +89,10 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                                             'jsonapi::query_params.page.size_description'
                                         ),
                                         'example' => 10,
-                                        'minimum' => 1
+                                        'minimum' => 1,
                                     ],
                                 ],
-                                'required' => ['number', 'size']
+                                'required' => ['number', 'size'],
                             ],
                             [
                                 'properties' => [
@@ -102,7 +102,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                                             'jsonapi::query_params.page.limit_description'
                                         ),
                                         'example' => 10,
-                                        'minimum' => 1
+                                        'minimum' => 1,
                                     ],
                                     'offset' => [
                                         'type' => 'integer',
@@ -110,12 +110,12 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                                             'jsonapi::query_params.page.offset_description'
                                         ),
                                         'example' => 0,
-                                        'minimum' => 0
+                                        'minimum' => 0,
                                     ],
                                 ],
-                                'required' => ['limit', 'offset']
-                            ]
-                        ]
+                                'required' => ['limit', 'offset'],
+                            ],
+                        ],
                     ];
                 }
             }
@@ -158,9 +158,9 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                             $this->specObjectIdentifier($resourceType),
                             $this->specAttributes($resourceType),
                             $this->specRelationships($resourceClass),
-                        )
-                    ]
-                ]
+                        ),
+                    ],
+                ],
             ];
         }
 
@@ -174,25 +174,25 @@ class JsonApiSpecGenerator extends OpenApiGenerator
         try {
             $transformer = $this->rm()->transformerByResourceType($resourceType);
             $response = $this->fetchTransformedResponse($resourceType, new FractalOptions(meta: [
-                $resourceType => $transformer->getAvailableMetas()
+                $resourceType => $transformer->getAvailableMetas(),
             ]));
 
-            if (!empty($attributes = $response['data']['attributes'] ?? [])) {
+            if (! empty($attributes = $response['data']['attributes'] ?? [])) {
                 $spec['attributes'] = [
                     'type' => 'object',
-                    'properties' => $this->convertToOpenApiSchema($attributes)
+                    'properties' => $this->convertToOpenApiSchema($attributes),
                 ];
             }
 
-            if (!empty($meta = (array) ($response['data']['meta'] ?? []))) {
+            if (! empty($meta = (array) ($response['data']['meta'] ?? []))) {
                 $spec['meta'] = [
                     'type' => 'object',
-                    'properties' => $this->convertToOpenApiSchema($meta)
+                    'properties' => $this->convertToOpenApiSchema($meta),
                 ];
             }
         } catch (\Throwable $e) {
             c::warn("Couldn't generate attributes for '{$resourceType}'.");
-            e::dumpExceptionIfVerbose($e, true);
+            e::dumpExceptionIfVerbose($e);
         }
 
         return $spec;
@@ -213,15 +213,15 @@ class JsonApiSpecGenerator extends OpenApiGenerator
             if ($type === 'object' && is_array($value)) {
                 $schema[$key] = [
                     'type' => 'object',
-                    'properties' => $this->convertToOpenApiSchema($value)
+                    'properties' => $this->convertToOpenApiSchema($value),
                 ];
-            } elseif ($type === 'array' && !empty($value)) {
+            } elseif ($type === 'array' && ! empty($value)) {
                 $itemType = $this->getOpenApiType($value[0]);
                 $schema[$key] = [
                     'type' => 'array',
                     'items' => [
-                        'type' => $itemType
-                    ]
+                        'type' => $itemType,
+                    ],
                 ];
 
                 if ($value[0] !== null) {
@@ -229,7 +229,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                 }
             } else {
                 $schema[$key] = [
-                    'type' => $type
+                    'type' => $type,
                 ];
 
                 if ($value !== null) {
@@ -269,7 +269,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
     }
 
     /**
-     * @param class-string<ResourceInterface> $resourceClass
+     * @param  class-string<ResourceInterface>  $resourceClass
      */
     protected function specRelationships(string $resourceClass): array
     {
@@ -285,16 +285,16 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                     'data' => [
                         'type' => 'object',
                         'required' => ['id', 'type'],
-                        'properties' => $this->specObjectIdentifier($relationshipType)
-                    ]
-                ]
+                        'properties' => $this->specObjectIdentifier($relationshipType),
+                    ],
+                ],
             ];
         }
 
         return empty($relationshipsProperties) ? [] : [
             'relationships' => [
                 'type' => 'object',
-                'properties' => $relationshipsProperties
+                'properties' => $relationshipsProperties,
             ],
         ];
     }

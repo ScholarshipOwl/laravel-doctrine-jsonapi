@@ -2,7 +2,6 @@
 
 namespace Sowl\JsonApi\Default;
 
-use Knuckles\Scribe\Attributes\ResponseFromTransformer;
 use Sowl\JsonApi\Action\Resource\ShowResourceAction;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
@@ -23,7 +22,7 @@ trait WithShowTrait
     #[ResourceResponse]
     public function show(Request $request): Response
     {
-        return (new ShowResourceAction())
+        return (new ShowResourceAction)
             ->dispatch($request);
     }
 }

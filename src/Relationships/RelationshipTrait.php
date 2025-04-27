@@ -10,7 +10,9 @@ use Sowl\JsonApi\Rules\ResourceIdentifierRule;
 trait RelationshipTrait
 {
     protected string $name;
+
     protected string $class;
+
     protected string $property;
 
     public function name(): string

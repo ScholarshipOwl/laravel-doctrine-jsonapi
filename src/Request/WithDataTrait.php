@@ -33,7 +33,7 @@ trait WithDataTrait
     {
         $validated = $this->validated();
 
-        if (!isset($validated['data'])) {
+        if (! isset($validated['data'])) {
             throw JsonApiException::create('Not valid data', 400)
                 ->error(400, ['pointer' => '/data'], 'Not found validated data.');
         }

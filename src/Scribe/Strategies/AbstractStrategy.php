@@ -3,9 +3,9 @@
 namespace Sowl\JsonApi\Scribe\Strategies;
 
 use Illuminate\Container\Container;
+use Illuminate\Support\Str;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Scribe\Extracting\Strategies\Strategy;
-use Illuminate\Support\Str;
 use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\Routing\RelationshipNameExtractor;
 use Sowl\JsonApi\Routing\ResourceTypeExtractor;
@@ -23,17 +23,22 @@ use Sowl\JsonApi\Scribe\JsonApiEndpointData;
 abstract class AbstractStrategy extends Strategy
 {
     protected ResourceManager $resourceManager;
+
     protected ResourceTypeExtractor $resourceTypeExtractor;
+
     protected RelationshipNameExtractor $relationshipNameExtractor;
+
     protected ?JsonApiEndpointData $jsonApiEndpointData = null;
+
     private string $jsonapiPrefix;
+
     private string $rootMiddleware;
 
     /**
      * Constructor
      *
-     * @param mixed $config The strategy configuration
-     * @param ResourceManager|null $resourceManager Resource manager instance (will use app container if null)
+     * @param  mixed  $config  The strategy configuration
+     * @param  ResourceManager|null  $resourceManager  Resource manager instance (will use app container if null)
      */
     public function __construct(
         $config,
@@ -41,8 +46,8 @@ abstract class AbstractStrategy extends Strategy
     ) {
         parent::__construct($config);
         $this->resourceManager = $resourceManager ?? app(ResourceManager::class);
-        $this->resourceTypeExtractor = new ResourceTypeExtractor();
-        $this->relationshipNameExtractor = new RelationshipNameExtractor();
+        $this->resourceTypeExtractor = new ResourceTypeExtractor;
+        $this->relationshipNameExtractor = new RelationshipNameExtractor;
         $this->rootMiddleware = config('jsonapi.routing.rootMiddleware');
         $this->jsonapiPrefix = config('jsonapi.routing.rootNamePrefix', 'jsonapi.');
     }
@@ -67,7 +72,7 @@ abstract class AbstractStrategy extends Strategy
             // hack: We need to set container for getting the middleware.
             //       Cloning because don't want to change the real route container, as it may affect future behavior.
             $routeMiddleware = (clone $this->endpointData->route)
-                ->setContainer(new Container())
+                ->setContainer(new Container)
                 ->gatherMiddleware();
 
             return in_array($this->rootMiddleware, $routeMiddleware);
@@ -75,6 +80,7 @@ abstract class AbstractStrategy extends Strategy
 
         if ($this->jsonapiPrefix) {
             $routeName = $this->endpointData->route->getName();
+
             return Str::startsWith($routeName, $this->jsonapiPrefix);
         }
 

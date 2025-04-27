@@ -2,8 +2,8 @@
 
 namespace Sowl\JsonApi\Scribe\Strategies\UrlParameters;
 
-use Knuckles\Scribe\Tools\ConsoleOutputUtils as c;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
+use Knuckles\Scribe\Tools\ConsoleOutputUtils as c;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
@@ -48,13 +48,12 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
         $allAttributes = [
             ...$attributesOnController,
             ...$attributesOnFormRequest,
-            ...$attributesOnMethod
+            ...$attributesOnMethod,
         ];
 
         foreach ($allAttributes as $attribute) {
             $routeParameters = match (true) {
-                $attribute instanceof ResourceRequest =>
-                    $this->getParametersFromResourceRequest($attribute),
+                $attribute instanceof ResourceRequest => $this->getParametersFromResourceRequest($attribute),
             };
 
             $parameters = array_merge($parameters, $routeParameters);
@@ -72,8 +71,9 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
 
         $paramName = $attribute->idParam ?? 'id';
         $parameterNames = $this->endpointData->route->parameterNames();
-        if (!in_array($paramName, $parameterNames)) {
+        if (! in_array($paramName, $parameterNames)) {
             c::warn("Parameter [$paramName] not found on route [{$this->endpointData->route->uri()}]");
+
             return [];
         }
 
@@ -88,7 +88,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
                 'required' => true,
                 'example' => $example,
                 'type' => $idType,
-            ]
+            ],
         ];
     }
 
@@ -144,6 +144,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
             'json' => 'string',
             'json_array' => 'string',
         ];
+
         return $typeMap[$doctrineType] ?? 'string';
     }
 }

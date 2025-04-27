@@ -20,7 +20,7 @@ final class UpdateToOneRelationshipRequest extends Request
     public function dataRules(): array
     {
         return [
-            'data' => [$this->relationship()->objectIdentifierRule()]
+            'data' => [$this->relationship()->objectIdentifierRule()],
         ];
     }
 }

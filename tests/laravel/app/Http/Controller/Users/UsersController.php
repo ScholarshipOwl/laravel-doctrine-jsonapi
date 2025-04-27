@@ -2,21 +2,18 @@
 
 namespace Tests\App\Http\Controller\Users;
 
-use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationshipsAction;
 use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationshipsAction;
 use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationshipsAction;
 use Sowl\JsonApi\Action\Resource\UpdateResourceAction;
+use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Default\WithListTrait;
 use Sowl\JsonApi\Response;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
-use Tests\App\Http\Controller\Users\CreateUserAction;
-use Tests\App\Http\Controller\Users\CreateUserRequest;
+use Tests\App\Entities\User;
 use Tests\App\Http\Controller\Users\Relationships\AttachRolesToUserRequest;
 use Tests\App\Http\Controller\Users\Relationships\DetachRolesFromUserRequest;
 use Tests\App\Http\Controller\Users\Relationships\UpdateUserRolesRequest;
-use Tests\App\Http\Controller\Users\UpdateUserRequest;
-use Tests\App\Entities\User;
 
 class UsersController extends Controller
 {

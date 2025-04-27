@@ -2,8 +2,6 @@
 
 namespace Sowl\JsonApi\Testing;
 
-use Doctrine\ORM\EntityManager;
-
 /**
  * Refresh the database before each test.
  *
@@ -19,8 +17,6 @@ trait DoctrineRefreshDatabase
 {
     /**
      * Define hooks to migrate the database before and after each test.
-     *
-     * @return void
      */
     public function refreshDoctrineDatabase(): void
     {
@@ -43,7 +39,7 @@ trait DoctrineRefreshDatabase
         // so after rollback we keep migrations up to date and not running them again.
         $this->artisan('doctrine:migrations:migrate', [
             '--no-interaction' => true,
-            '--quiet' => true
+            '--quiet' => true,
         ]);
 
         // Start a Doctrine transaction before refreshing

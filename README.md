@@ -66,6 +66,7 @@ docker compose run php sh
 [Testing Documentation](./tests)
 
 ### Roadmap
+  - [ ] Provide QueryBuilder for the filter parsers, instead of criteria as it allows to apply any types of filters.
   - [ ] Remove the default request hydration from the package, as it may create security vulnerabilities. All the mutations should be handled by the application code, by the client.
   - [X] Integrate scribe into the package. Automatically generate Open API specs.
     - [ ] Add documentation for scribe integration

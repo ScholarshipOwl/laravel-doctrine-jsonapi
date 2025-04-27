@@ -12,9 +12,6 @@ class UserConfigTransformer extends AbstractTransformer
 {
     protected array $availableIncludes = ['user'];
 
-    /**
-     * @param UserConfig $userConfig
-     */
     public function transform(UserConfig $userConfig): array
     {
         return [
@@ -25,9 +22,6 @@ class UserConfigTransformer extends AbstractTransformer
         ];
     }
 
-    /**
-     * @param UserConfig $userConfig
-     */
     public function includeUser(UserConfig $userConfig): \League\Fractal\Resource\Item
     {
         return $this->resource($userConfig->getUser());

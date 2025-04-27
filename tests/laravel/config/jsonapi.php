@@ -8,5 +8,5 @@ return [
         \Tests\App\Entities\UserStatus::class,
         \Tests\App\Entities\Role::class,
         \Tests\App\Entities\UserConfig::class,
-    ]
+    ],
 ];

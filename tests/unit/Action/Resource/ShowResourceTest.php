@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class ShowResourceTest extends TestCase
 {
-    public function testAuthorizationPermissionsForNoLoggedIn()
+    public function test_authorization_permissions_for_no_logged_in()
     {
         $this->get('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')->assertStatus(Response::HTTP_FORBIDDEN);
         $this->get('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')->assertStatus(Response::HTTP_FORBIDDEN);
@@ -25,7 +25,7 @@ class ShowResourceTest extends TestCase
         $this->get('/pageComments/00000000-0000-0000-0000-000000000003')->assertStatus(Response::HTTP_OK);
     }
 
-    public function testAuthorizationPermissionsForUserRole()
+    public function test_authorization_permissions_for_user_role()
     {
         $this->actingAsUser();
 
@@ -43,7 +43,7 @@ class ShowResourceTest extends TestCase
         $this->get('/pageComments/00000000-0000-0000-0000-000000000003')->assertStatus(Response::HTTP_OK);
     }
 
-    public function testAuthorizationPermissionsForRootRole()
+    public function test_authorization_permissions_for_root_role()
     {
         $this->actingAsRoot();
 
@@ -61,7 +61,7 @@ class ShowResourceTest extends TestCase
         $this->get('/pageComments/00000000-0000-0000-0000-000000000003')->assertStatus(Response::HTTP_OK);
     }
 
-    public function testShowUserResponse()
+    public function test_show_user_response()
     {
         $this->actingAsRoot();
 
@@ -78,9 +78,9 @@ class ShowResourceTest extends TestCase
                         'name' => 'testing user1',
                     ],
                     'links' => [
-                        'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
-                    ]
-                ]
+                        'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                    ],
+                ],
             ]);
 
         $this->get('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')
@@ -94,9 +94,9 @@ class ShowResourceTest extends TestCase
                         'name' => 'testing user2',
                     ],
                     'links' => [
-                        'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d'
-                    ]
-                ]
+                        'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d',
+                    ],
+                ],
             ]);
 
         $this->get('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8')
@@ -110,26 +110,26 @@ class ShowResourceTest extends TestCase
                         'name' => 'testing user3',
                     ],
                     'links' => [
-                        'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8'
-                    ]
-                ]
+                        'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8',
+                    ],
+                ],
             ]);
     }
 
-    public function testShowUserSelf()
+    public function test_show_user_self()
     {
         $user = $this->actingAsUser();
 
-        $this->get('/users/' . $user->getId())
+        $this->get('/users/'.$user->getId())
             ->assertJson([
                 'data' => [
-                    'id' => '' . $user->getId(),
+                    'id' => ''.$user->getId(),
                     'type' => 'users',
-                ]
+                ],
             ]);
     }
 
-    public function testShowRoleResponse()
+    public function test_show_role_response()
     {
         $this->actingAsRoot();
 
@@ -145,9 +145,9 @@ class ShowResourceTest extends TestCase
                         'name' => 'Root',
                     ],
                     'links' => [
-                        'self' => '/roles/1'
-                    ]
-                ]
+                        'self' => '/roles/1',
+                    ],
+                ],
             ]);
 
         $this->actingAsUser();
@@ -161,9 +161,9 @@ class ShowResourceTest extends TestCase
                         'name' => 'User',
                     ],
                     'links' => [
-                        'self' => '/roles/2'
-                    ]
-                ]
+                        'self' => '/roles/2',
+                    ],
+                ],
             ]);
 
         $this->actingAsModerator();
@@ -177,13 +177,13 @@ class ShowResourceTest extends TestCase
                         'name' => 'Moderator',
                     ],
                     'links' => [
-                        'self' => '/roles/3'
-                    ]
-                ]
+                        'self' => '/roles/3',
+                    ],
+                ],
             ]);
     }
 
-    public function testShowPageResponse()
+    public function test_show_page_response()
     {
         $this->get('/pages/2232')->assertStatus(404);
 
@@ -195,16 +195,16 @@ class ShowResourceTest extends TestCase
                     'type' => 'pages',
                     'attributes' => [
                         'title' => 'JSON:API standard',
-                        'content' => '<strong>JSON:API</strong>'
+                        'content' => '<strong>JSON:API</strong>',
                     ],
                     'links' => [
-                        'self' => '/pages/1'
-                    ]
-                ]
+                        'self' => '/pages/1',
+                    ],
+                ],
             ]);
     }
 
-    public function testShowPageCommentsResponse()
+    public function test_show_page_comments_response()
     {
         $this->get('/pageComments/00000000-0000-0000-0000-000000000002232')->assertStatus(404);
 
@@ -215,12 +215,12 @@ class ShowResourceTest extends TestCase
                     'id' => '00000000-0000-0000-0000-000000000001',
                     'type' => 'pageComments',
                     'attributes' => [
-                        'content' => '<span>It is mine comment</span>'
+                        'content' => '<span>It is mine comment</span>',
                     ],
                     'links' => [
-                        'self' => '/pageComments/00000000-0000-0000-0000-000000000001'
-                    ]
-                ]
+                        'self' => '/pageComments/00000000-0000-0000-0000-000000000001',
+                    ],
+                ],
             ]);
         $this->get('/pageComments/00000000-0000-0000-0000-000000000002')
             ->assertStatus(200)
@@ -229,12 +229,12 @@ class ShowResourceTest extends TestCase
                     'id' => '00000000-0000-0000-0000-000000000002',
                     'type' => 'pageComments',
                     'attributes' => [
-                        'content' => '<span>I know better</span>'
+                        'content' => '<span>I know better</span>',
                     ],
                     'links' => [
-                        'self' => '/pageComments/00000000-0000-0000-0000-000000000002'
-                    ]
-                ]
+                        'self' => '/pageComments/00000000-0000-0000-0000-000000000002',
+                    ],
+                ],
             ]);
 
         $this->get('/pageComments/00000000-0000-0000-0000-000000000003')
@@ -244,16 +244,16 @@ class ShowResourceTest extends TestCase
                     'id' => '00000000-0000-0000-0000-000000000003',
                     'type' => 'pageComments',
                     'attributes' => [
-                        'content' => '<span>I think he is right</span>'
+                        'content' => '<span>I think he is right</span>',
                     ],
                     'links' => [
-                        'self' => '/pageComments/00000000-0000-0000-0000-000000000003'
-                    ]
-                ]
+                        'self' => '/pageComments/00000000-0000-0000-0000-000000000003',
+                    ],
+                ],
             ]);
     }
 
-    public function testIncludeUserRoles()
+    public function test_include_user_roles()
     {
         $user = $this->actingAsUser();
         $user->addRole(Role::moderator());
@@ -283,13 +283,13 @@ class ShowResourceTest extends TestCase
                             ],
                             'links' => [
                                 'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
-                                'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles'
-                            ]
-                        ]
+                                'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles',
+                            ],
+                        ],
                     ],
                     'links' => [
-                        'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
-                    ]
+                        'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                    ],
                 ],
                 'included' => [
                     [
@@ -300,7 +300,7 @@ class ShowResourceTest extends TestCase
                         ],
                         'links' => [
                             'self' => '/roles/2',
-                        ]
+                        ],
                     ],
                     [
                         'id' => '3',
@@ -310,19 +310,19 @@ class ShowResourceTest extends TestCase
                         ],
                         'links' => [
                             'self' => '/roles/3',
-                        ]
+                        ],
                     ],
-                ]
+                ],
             ]);
     }
 
-    public function testIncludePageUserAndUserRoles()
+    public function test_include_page_user_and_user_roles()
     {
         $this->actingAsModerator();
         $this->get('/pages/1?include=user,user.roles')
             ->assertStatus(403)
             ->assertExactJson([
-                'errors' => []
+                'errors' => [],
             ]);
 
         $this->actingAsUser();
@@ -334,23 +334,23 @@ class ShowResourceTest extends TestCase
                     'type' => 'pages',
                     'attributes' => [
                         'title' => 'JSON:API standard',
-                        'content' => '<strong>JSON:API</strong>'
+                        'content' => '<strong>JSON:API</strong>',
                     ],
                     'relationships' => [
                         'user' => [
                             'data' => [
                                 'id' => User::USER_ID,
-                                'type' => 'users'
+                                'type' => 'users',
                             ],
                             'links' => [
                                 'related' => '/pages/1/user',
-                                'self' => '/pages/1/relationships/user'
-                            ]
-                        ]
+                                'self' => '/pages/1/relationships/user',
+                            ],
+                        ],
                     ],
                     'links' => [
-                        'self' => '/pages/1'
-                    ]
+                        'self' => '/pages/1',
+                    ],
                 ],
                 'included' => [
                     [
@@ -361,48 +361,48 @@ class ShowResourceTest extends TestCase
                         ],
                         'links' => [
                             'self' => '/roles/2',
-                        ]
+                        ],
                     ],
                     [
-                       'id' => User::USER_ID,
-                       'type' => 'users',
-                       'attributes' => [
-                           'email' => 'test1email@test.com',
-                           'name' => 'testing user1',
-                       ],
-                       'relationships' => [
-                           'roles' => [
-                               'data' => [
-                                   [
-                                       'id' => '2',
-                                       'type' => 'roles',
-                                   ],
-                               ],
-                               'links' => [
-                                   'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
-                                   'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles'
-                               ]
-                           ]
-                       ],
-                       'links' => [
-                           'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
-                       ],
-                    ]
-                ]
+                        'id' => User::USER_ID,
+                        'type' => 'users',
+                        'attributes' => [
+                            'email' => 'test1email@test.com',
+                            'name' => 'testing user1',
+                        ],
+                        'relationships' => [
+                            'roles' => [
+                                'data' => [
+                                    [
+                                        'id' => '2',
+                                        'type' => 'roles',
+                                    ],
+                                ],
+                                'links' => [
+                                    'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
+                                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles',
+                                ],
+                            ],
+                        ],
+                        'links' => [
+                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                        ],
+                    ],
+                ],
             ]);
     }
 
-    public function testMetafieldInclude(): void
+    public function test_metafield_include(): void
     {
         $this->actingAsUser();
 
-        $this->get("/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b?meta[users]=random")
+        $this->get('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b?meta[users]=random')
             ->assertJsonStructure([
                 'data' => [
                     'meta' => [
-                        'random'
-                    ]
-                ]
+                        'random',
+                    ],
+                ],
             ]);
     }
 }

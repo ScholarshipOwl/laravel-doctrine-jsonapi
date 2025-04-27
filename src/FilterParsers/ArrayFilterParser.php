@@ -49,7 +49,7 @@ class ArrayFilterParser extends AbstractFilterParser
     {
         $filter = $this->request->getFilter();
 
-        if (!is_array($filter)) {
+        if (! is_array($filter)) {
             return $criteria;
         }
 
@@ -137,7 +137,6 @@ class ArrayFilterParser extends AbstractFilterParser
      *   filter[field][value] = notValue
      *
      *       --> "alias.field >= value AND alias.field != notValue"
-     *
      */
     protected function processOperatorFilter(Criteria $criteria, string $field, mixed $value): static
     {
@@ -145,13 +144,13 @@ class ArrayFilterParser extends AbstractFilterParser
             $operator = $value['operator'];
             $val = $value['value'];
 
-            if (!in_array($operator, static::OPERATORS)) {
+            if (! in_array($operator, static::OPERATORS)) {
                 throw (new BadRequestException('Unknown array filter operator.'))
                     ->detail('Unknown operator.', sprintf('filter/%s/operator/%s', $field, $operator), [
                         'source' => [
                             'operator' => $operator,
                             'field' => $field,
-                        ]
+                        ],
                     ]);
             }
 
@@ -167,7 +166,7 @@ class ArrayFilterParser extends AbstractFilterParser
     {
         $spec = [];
         foreach ($this->filterable as $field) {
-            $operators = array_map(fn($op) => "`$op`", self::OPERATORS);
+            $operators = array_map(fn ($op) => "`$op`", self::OPERATORS);
             $spec["filter[$field]"] = [
                 'required' => false,
                 'type' => 'string',
@@ -180,6 +179,7 @@ class ArrayFilterParser extends AbstractFilterParser
                 ),
             ];
         }
+
         return $spec;
     }
 }

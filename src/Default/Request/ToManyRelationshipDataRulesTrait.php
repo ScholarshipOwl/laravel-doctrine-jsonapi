@@ -26,7 +26,7 @@ trait ToManyRelationshipDataRulesTrait
     protected function prepareForValidation(): void
     {
         $relationship = $this->relationship();
-        if (!$relationship instanceof ToManyRelationship) {
+        if (! $relationship instanceof ToManyRelationship) {
             throw NotFoundException::create('Relationship is not to-many type.')
                 ->detail(sprintf(
                     'Requested relationship "%s" is not to-many type.',
@@ -49,7 +49,7 @@ trait ToManyRelationshipDataRulesTrait
     {
         return [
             'data' => 'required|array',
-            'data.*' => [$this->relationship()->objectIdentifierRule()]
+            'data.*' => [$this->relationship()->objectIdentifierRule()],
         ];
     }
 }

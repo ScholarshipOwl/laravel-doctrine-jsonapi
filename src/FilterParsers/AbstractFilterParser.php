@@ -26,9 +26,7 @@ abstract class AbstractFilterParser implements MemberInterface
     /**
      * The constructor accepts a Request object and stores it in the protected property $request.
      */
-    public function __construct(protected Request $request)
-    {
-    }
+    public function __construct(protected Request $request) {}
 
     /**
      * This method is the implementation of the MemberInterface's __invoke method. It simply calls the applyFilter

@@ -30,10 +30,10 @@ class ArrayParserTest extends TestCase
                     'code' => 400,
                     'source' => [
                         'field' => 'field1',
-                        'operator' => 'not'
+                        'operator' => 'not',
                     ],
                     'detail' => 'Unknown operator.',
-                ]
+                ],
             ], $e->errors());
         }
     }

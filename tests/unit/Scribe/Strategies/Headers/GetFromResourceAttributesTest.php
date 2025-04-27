@@ -5,12 +5,12 @@ declare(strict_types=1);
 namespace Tests\Scribe\Strategies\Headers;
 
 use Knuckles\Scribe\Tools\DocumentationConfig;
+use Mockery;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 use Sowl\JsonApi\Scribe\Strategies\Headers\GetFromResourceAttributes;
-use Mockery;
-use Tests\TestCase;
 use Tests\ExtractedEndpointDataBuilder;
+use Tests\TestCase;
 
 class GetFromResourceAttributesTest extends TestCase
 {
@@ -22,7 +22,7 @@ class GetFromResourceAttributesTest extends TestCase
     {
         parent::setUp();
 
-        $this->strategy = new GetFromResourceAttributes(new DocumentationConfig());
+        $this->strategy = new GetFromResourceAttributes(new DocumentationConfig);
     }
 
     protected function tearDown(): void
@@ -31,14 +31,15 @@ class GetFromResourceAttributesTest extends TestCase
         parent::tearDown();
     }
 
-    public function testReturnsJsonApiHeadersForJsonApiRoutes()
+    public function test_returns_json_api_headers_for_json_api_routes()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users',
             [
                 'as' => 'jsonapi.users.list',
-                'uses' => new class {
+                'uses' => new class
+                {
                     #[ResourceRequest]
                     #[ResourceResponse]
                     public function __invoke()
@@ -57,14 +58,15 @@ class GetFromResourceAttributesTest extends TestCase
         ], $result);
     }
 
-    public function testReturnsEmptyArrayForNonJsonApiRoutes()
+    public function test_returns_empty_array_for_non_json_api_routes()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users',
             [
                 'as' => 'api.users.list',
-                'uses' => new class {
+                'uses' => new class
+                {
                     public function __invoke()
                     {
                         return null;
@@ -79,7 +81,7 @@ class GetFromResourceAttributesTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function testHandlesVariousJsonApiRouteNames()
+    public function test_handles_various_json_api_route_names()
     {
         $jsonApiRouteNames = [
             'jsonapi.users.list',
@@ -100,7 +102,8 @@ class GetFromResourceAttributesTest extends TestCase
                 'users',
                 [
                     'as' => $routeName,
-                    'uses' => new class {
+                    'uses' => new class
+                    {
                         #[ResourceRequest]
                         #[ResourceResponse]
                         public function __invoke()
@@ -120,7 +123,7 @@ class GetFromResourceAttributesTest extends TestCase
         }
     }
 
-    public function testHandlesSettingsParameter()
+    public function test_handles_settings_parameter()
     {
         $customSettings = ['custom' => 'setting'];
 
@@ -129,7 +132,8 @@ class GetFromResourceAttributesTest extends TestCase
             'users',
             [
                 'as' => 'jsonapi.users.list',
-                'uses' => new class {
+                'uses' => new class
+                {
                     #[ResourceRequest]
                     #[ResourceResponse]
                     public function __invoke()

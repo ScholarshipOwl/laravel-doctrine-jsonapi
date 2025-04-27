@@ -3,10 +3,10 @@
 namespace Sowl\JsonApi;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Auth\Access\AuthorizationException;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
-use Sowl\JsonApi\ResponseFactory;
 
 /**
  * Any JSON:API endpoint handler should inherit this class.
@@ -29,12 +29,13 @@ abstract class AbstractAction
      */
     public static function create(...$args): static
     {
+        /** @phpstan-ignore new.static */
         return new static(...$args);
     }
 
     public static function createDispatch(Request $request, ...$args): Response
     {
-        return (new static(...$args))->dispatch($request);
+        return static::create(...$args)->dispatch($request);
     }
 
     /**
@@ -76,7 +77,7 @@ abstract class AbstractAction
     /**
      * Returns the entity manager for the current resource.
      */
-    protected function em(): EntityManager
+    protected function em(): EntityManagerInterface
     {
         return $this->repository()->em();
     }

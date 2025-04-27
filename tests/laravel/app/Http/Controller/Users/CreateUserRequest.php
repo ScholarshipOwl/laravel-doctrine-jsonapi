@@ -3,8 +3,6 @@
 namespace Tests\App\Http\Controller\Users;
 
 use Sowl\JsonApi\Request;
-use Sowl\JsonApi\Rules\ResourceIdentifierRule;
-use Tests\App\Entities\UserStatus;
 
 class CreateUserRequest extends Request
 {

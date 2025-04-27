@@ -11,7 +11,7 @@ class DetachRolesFromUserRequest extends Request
     {
         return [
             'data' => 'array|required',
-            'data.*' => [new DetachRoleFromUserRule($this)]
+            'data.*' => [new DetachRoleFromUserRule($this)],
         ];
     }
 }

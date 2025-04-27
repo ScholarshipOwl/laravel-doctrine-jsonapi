@@ -22,7 +22,7 @@ trait WithUpdateTrait
     #[ResourceResponse(description: 'The updated resource.')]
     public function update(UpdateResourceRequest $request): Response
     {
-        return (new UpdateResourceAction())
+        return (new UpdateResourceAction)
             ->dispatch($request);
     }
 }

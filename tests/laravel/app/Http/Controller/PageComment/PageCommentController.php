@@ -9,10 +9,9 @@ use Sowl\JsonApi\Default\WithShowTrait;
 
 class PageCommentController extends Controller
 {
-    use WithShowTrait;
-
     use WithRelatedTrait;
     use WithRelationshipTrait;
+    use WithShowTrait;
 
     protected function noAuthMethods(): array
     {

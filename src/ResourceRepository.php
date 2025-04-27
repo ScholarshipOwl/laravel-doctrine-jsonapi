@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\QueryBuilder;
+use Doctrine\Persistence\ManagerRegistry;
 use Sowl\JsonApi\Exceptions\BadRequestException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\Exceptions\NotFoundException;
@@ -15,6 +16,7 @@ use Sowl\JsonApi\Exceptions\NotFoundException;
  * ResourceRepository class is used for managing resources in a JSON:API context.
  *
  * @template TResource of ResourceInterface
+ *
  * @extends EntityRepository<TResource>
  */
 class ResourceRepository extends EntityRepository
@@ -25,7 +27,7 @@ class ResourceRepository extends EntityRepository
      * Constructor method that initializes the class with an EntityManagerInterface and a ClassMetadata object.
      * It also verifies if the class implements the ResourceInterface.
      */
-    public function __construct(EntityManagerInterface $em, ClassMetadata $class)
+    final public function __construct(EntityManagerInterface $em, ClassMetadata $class)
     {
         parent::__construct($em, $class);
         ResourceManager::verifyResourceInterface($this->getClassName());
@@ -33,16 +35,24 @@ class ResourceRepository extends EntityRepository
 
     /**
      * Static method that creates a new instance of the ResourceRepository with a specified class.
+     *
+     * @param  class-string<TResource>  $class
+     * @return static<TResource>
      */
-    public static function create(string $class): self
+    public static function create(string $class): static
     {
-        return new static(app('em'), app('em')->getClassMetadata($class));
+        if (! $em = app(ManagerRegistry::class)->getManagerForClass($class)) {
+            throw new \LogicException('No EntityManager found for class '.$class);
+        }
+
+        /** @phpstan-ignore return.type */
+        return new static($em, $em->getClassMetadata($class));
     }
 
     /**
      * Returns the EntityManager instance.
      */
-    public function em(): EntityManager
+    public function em(): EntityManagerInterface
     {
         return parent::getEntityManager();
     }
@@ -61,6 +71,7 @@ class ResourceRepository extends EntityRepository
     public function transformer(): AbstractTransformer
     {
         $class = $this->getClassName();
+
         return call_user_func("$class::transformer");
     }
 
@@ -70,6 +81,7 @@ class ResourceRepository extends EntityRepository
     public function getResourceType(): string
     {
         $class = $this->getClassName();
+
         return call_user_func("$class::getResourceType");
     }
 
@@ -131,9 +143,9 @@ class ResourceRepository extends EntityRepository
      *
      * @return TResource
      */
-    public function findByObjectIdentifier(array $data, string $scope = "/data"): ResourceInterface
+    public function findByObjectIdentifier(array $data, string $scope = '/data'): ResourceInterface
     {
-        if (!isset($data['id']) || !isset($data['type'])) {
+        if (! isset($data['id']) || ! isset($data['type'])) {
             throw BadRequestException::create('Relation item without identifiers.')
                 ->error(400, ['pointer' => $scope], 'Relation item without `id` or `type`.');
         }

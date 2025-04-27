@@ -8,8 +8,9 @@ use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
-use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelated;
+use Sowl\JsonApi\ResponseFactory;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelated;
 
 /**
  * Provides a showRelated method for handling the retrieval of related resources.
@@ -45,6 +46,6 @@ trait WithRelatedTrait
                 ->dispatch($request);
         }
 
-        return response()->notFound();
+        return app(ResponseFactory::class)->notFound();
     }
 }

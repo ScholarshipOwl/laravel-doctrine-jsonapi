@@ -32,6 +32,5 @@ class ResourceResponse
         public int $pageNumber = 1,
         public int $pageSize = 3,
         public array $contentTypeHeaders = ['application/vnd.api+json']
-    ) {
-    }
+    ) {}
 }

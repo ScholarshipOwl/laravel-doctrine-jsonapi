@@ -17,7 +17,7 @@ use Sowl\JsonApi\ResourceInterface;
  * By using the RelationshipsTransformer class, you can ensure that only relationship data is loaded
  * in /resource/relationships/* actions, which is beneficial for performance and adheres to the JSON:API specification.
  */
-class RelationshipsTransformer extends AbstractTransformer
+final class RelationshipsTransformer extends AbstractTransformer
 {
     /**
      * A constant representing the relationships attribute key.
@@ -27,9 +27,7 @@ class RelationshipsTransformer extends AbstractTransformer
     /**
      * The constructor takes a TransformerAbstract instance as an argument and sets it as the $parent property.
      */
-    public function __construct(protected TransformerAbstract $parent)
-    {
-    }
+    public function __construct(protected TransformerAbstract $parent) {}
 
     /**
      * This method takes a ResourceInterface object and returns an array containing only the resource's ID and
@@ -83,7 +81,7 @@ class RelationshipsTransformer extends AbstractTransformer
      */
     protected function item($data, $transformer, $resourceKey = null): Item
     {
-        return new Item($data, new static($transformer), $resourceKey);
+        return new Item($data, new self($transformer), $resourceKey);
     }
 
     /**
@@ -92,6 +90,6 @@ class RelationshipsTransformer extends AbstractTransformer
      */
     protected function collection($data, $transformer, $resourceKey = null): Collection
     {
-        return new Collection($data, new static($transformer), $resourceKey);
+        return new Collection($data, new self($transformer), $resourceKey);
     }
 }

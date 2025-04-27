@@ -22,7 +22,7 @@ trait WithListTrait
     #[ResourceResponse(collection: true)]
     public function list(Request $request): Response
     {
-        return (new ListResourcesAction())
+        return (new ListResourcesAction)
             ->dispatch($request);
     }
 }

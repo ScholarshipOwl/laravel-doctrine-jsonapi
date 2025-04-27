@@ -2,7 +2,7 @@
 
 namespace App\Entities;
 
-use Doctrine\ORM\Mapping AS ORM;
+use Doctrine\ORM\Mapping as ORM;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -13,21 +13,21 @@ use LaravelDoctrine\ORM\Auth\Authenticatable;
 
 /**
  * @ORM\Entity()
+ *
  * @ORM\Table()
  */
-class User implements
-    AuthorizableContract,
-    AuthenticatableContract,
-    CanResetPasswordContract
+class User implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract
 {
-    use CanResetPassword;
-    use Authorizable;
     use Authenticatable;
+    use Authorizable;
+    use CanResetPassword;
     use Timestamps;
 
     /**
      * @ORM\Id
+     *
      * @ORM\GeneratedValue
+     *
      * @ORM\Column(type="integer")
      */
     protected int $id;
@@ -47,9 +47,6 @@ class User implements
      */
     protected $password;
 
-    /**
-     * @return int
-     */
     public function getId(): int
     {
         return $this->id;
@@ -58,6 +55,7 @@ class User implements
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -69,6 +67,7 @@ class User implements
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -80,6 +79,7 @@ class User implements
     public function setPassword(string $password): static
     {
         $this->password = bcrypt($password);
+
         return $this;
     }
 

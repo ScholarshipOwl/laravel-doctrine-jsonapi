@@ -25,7 +25,7 @@ class Chain
     /**
      * The constructor accepts an array of members and adds them to the chain using the add() method.
      */
-    public function __construct(array $members = [])
+    final public function __construct(array $members = [])
     {
         $this->add($members);
     }

@@ -2,8 +2,8 @@
 
 namespace Tests\App\Http\Controller\Pages;
 
-use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Action\Relationships\ToOne\UpdateRelationshipAction;
+use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Default\WithShowTrait;
 use Sowl\JsonApi\Response;
 

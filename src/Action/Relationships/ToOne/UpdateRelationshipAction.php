@@ -2,15 +2,13 @@
 
 namespace Sowl\JsonApi\Action\Relationships\ToOne;
 
+use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Response;
-use Sowl\JsonApi\AbstractAction;
 
 class UpdateRelationshipAction extends AbstractAction
 {
-    public function __construct(protected ToOneRelationship $relationship)
-    {
-    }
+    public function __construct(protected ToOneRelationship $relationship) {}
 
     public function handle(): Response
     {

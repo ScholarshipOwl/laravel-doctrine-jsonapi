@@ -9,10 +9,7 @@ use Tests\TestCase;
 
 class JsonApiEndpointDataTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function testDeterminesActionTypeCorrectly()
+    public function test_determines_action_type_correctly()
     {
         // Standard resource endpoints
         // List action
@@ -250,10 +247,7 @@ class JsonApiEndpointDataTest extends TestCase
         );
     }
 
-    /**
-     * @test
-     */
-    public function testEmptyUriThrowsException()
+    public function test_empty_uri_throws_exception()
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('No resource type found, are you sure this is a JSON:API endpoint?');
@@ -264,7 +258,7 @@ class JsonApiEndpointDataTest extends TestCase
             '',
             [
                 'as' => 'api.root',
-                'uses' => fn () => null
+                'uses' => fn () => null,
             ]
         );
 
@@ -275,10 +269,7 @@ class JsonApiEndpointDataTest extends TestCase
         JsonApiEndpointData::fromEndpointData($endpointData);
     }
 
-    /**
-     * @test
-     */
-    public function testNonJsonApiRouteThrowsException()
+    public function test_non_json_api_route_throws_exception()
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Resource type "non-jsonapi-route" is not registered in the ResourceManager.');
@@ -289,7 +280,7 @@ class JsonApiEndpointDataTest extends TestCase
             'non-jsonapi-route',
             [
                 'as' => 'api.non-jsonapi',
-                'uses' => fn () => null
+                'uses' => fn () => null,
             ]
         );
 

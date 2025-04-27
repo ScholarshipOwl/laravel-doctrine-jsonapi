@@ -20,7 +20,7 @@ class ForbiddenException extends JsonApiException
     public function __construct(
         $message = 'This action is unauthorized.',
         $httpStatus = self::HTTP_FORBIDDEN,
-        \Throwable $previous = null
+        ?\Throwable $previous = null
     ) {
         parent::__construct($message, $httpStatus, $previous);
     }

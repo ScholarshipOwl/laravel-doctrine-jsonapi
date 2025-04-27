@@ -15,7 +15,7 @@ class UserTransformer extends AbstractTransformer
 {
     protected array $availableIncludes = [
         'status',
-        'roles'
+        'roles',
     ];
 
     protected array $availableMetas = [
@@ -35,16 +35,16 @@ class UserTransformer extends AbstractTransformer
     {
         Gate::authorize('viewAnyRoles', $user);
 
-        return $this->collection($user->getRoles(), new RoleTransformer(), Role::getResourceType());
+        return $this->collection($user->getRoles(), new RoleTransformer, Role::getResourceType());
     }
 
     public function metaRandom(User $user): string
     {
-        return $user->getName() . Str::random(8);
+        return $user->getName().Str::random(8);
     }
 
     public function includeStatus(User $user): ResourceInterface
     {
-        return $this->item($user->getStatus(), new UserStatusTransformer(), UserStatus::getResourceType());
+        return $this->item($user->getStatus(), new UserStatusTransformer, UserStatus::getResourceType());
     }
 }

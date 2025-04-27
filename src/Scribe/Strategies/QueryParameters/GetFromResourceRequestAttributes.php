@@ -7,8 +7,8 @@ use Sowl\JsonApi\FilterParsers\AbstractFilterParser;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Resource\FilterableInterface;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
-use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestCreate;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestRelationships;
 use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
@@ -30,9 +30,13 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
     use TransformerHelper;
 
     private const SPEC_URL_INCLUDES = 'https://jsonapi.org/format/#fetching-includes';
+
     private const SPEC_URL_SPARSE_FIELDSETS = 'https://jsonapi.org/format/#fetching-sparse-fieldsets';
+
     private const SPEC_URL_SORTING = 'https://jsonapi.org/format/#fetching-sorting';
+
     private const SPEC_URL_PAGINATION = 'https://jsonapi.org/format/#fetching-pagination';
+
     private const SPEC_URL_FILTERING = 'https://jsonapi.org/format/#fetching-filtering';
 
     protected static function readAttributes(): array
@@ -62,7 +66,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
         $allAttributes = [
             ...$attributesOnController,
             ...$attributesOnFormRequest,
-            ...$attributesOnMethod
+            ...$attributesOnMethod,
         ];
 
         if (empty(array_intersect($this->endpointData->httpMethods, $this->allowedMethods()))) {
@@ -121,12 +125,12 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
             ['specUrl' => self::SPEC_URL_SPARSE_FIELDSETS]
         );
 
-        if (!empty($fields)) {
-            $description .= "\n\n" . __(
+        if (! empty($fields)) {
+            $description .= "\n\n".__(
                 'jsonapi::query_params.fields.available',
                 [
                     'resourceType' => $resourceType,
-                    'fields' => implode(', ', array_map(fn($field) => "`$field`", $fields))
+                    'fields' => implode(', ', array_map(fn ($field) => "`$field`", $fields)),
                 ]
             );
         }
@@ -166,11 +170,11 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
         }
 
         $description = __('jsonapi::query_params.meta.description');
-        $description .= "\n\n" . __(
+        $description .= "\n\n".__(
             'jsonapi::query_params.meta.available',
             [
                 'resourceType' => $resourceType,
-                'metas' => implode(', ', array_map(fn($meta) => "`$meta`", $metas))
+                'metas' => implode(', ', array_map(fn ($meta) => "`$meta`", $metas)),
             ]
         );
 
@@ -178,7 +182,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
             'type' => 'string',
             'required' => false,
             'description' => $description,
-            'example' => implode(',', $metas)
+            'example' => implode(',', $metas),
         ];
 
         return ["meta[$resourceType]" => $metaParameter];
@@ -206,7 +210,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
         $includeDescription = __(
             'jsonapi::query_params.include.description',
             ['specUrl' => self::SPEC_URL_INCLUDES]
-        ) . "\n\n";
+        )."\n\n";
 
         $availableIncludesText = implode(', ', array_map(fn ($include) => "`$include`", $includes));
         $includeDescription .= __(
@@ -216,7 +220,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
 
         if ($default) {
             $defaultIncludesText = implode(', ', array_map(fn ($include) => "`$include`", $default));
-            $includeDescription .= "\n\n" . __(
+            $includeDescription .= "\n\n".__(
                 'jsonapi::query_params.include.defaults_title',
                 ['defaults' => $defaultIncludesText]
             );
@@ -275,7 +279,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
                 'type' => 'number',
                 'required' => false,
                 'description' => __('jsonapi::query_params.page.number_description', [
-                    'specUrl' => self::SPEC_URL_PAGINATION
+                    'specUrl' => self::SPEC_URL_PAGINATION,
                 ]),
                 'example' => 1,
             ],
@@ -283,7 +287,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
                 'type' => 'number',
                 'required' => false,
                 'description' => __('jsonapi::query_params.page.size_description', [
-                    'specUrl' => self::SPEC_URL_PAGINATION
+                    'specUrl' => self::SPEC_URL_PAGINATION,
                 ]),
                 'example' => 10,
             ],
@@ -302,7 +306,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
             //    'required' => false,
             //    'type' => 'integer',
             //    'example' => 0,
-            //],
+            // ],
         ];
     }
 
@@ -321,12 +325,12 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
             ['specUrl' => self::SPEC_URL_SORTING]
         );
 
-        if (!empty($fields)) {
-            $description .= "\n\n" . __(
+        if (! empty($fields)) {
+            $description .= "\n\n".__(
                 'jsonapi::query_params.sort.available',
                 [
                     'resourceType' => $resourceType,
-                    'fields' => implode(', ', array_map(fn($field) => "`$field`", $fields))
+                    'fields' => implode(', ', array_map(fn ($field) => "`$field`", $fields)),
                 ]
             );
         }
@@ -350,14 +354,14 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
         /** @var class-string<FilterableInterface> $resourceClass */
         $resourceClass = $this->rm()->classByResourceType($resourceType);
         $filterParsers = in_array(FilterableInterface::class, class_implements($resourceClass))
-            ? $resourceClass::filterParsers(new Request())
+            ? $resourceClass::filterParsers(new Request)
             : [];
 
         $params = [];
         foreach ($filterParsers as $filterParser) {
             if ($filterParser instanceof AbstractFilterParser) {
                 $spec = $filterParser->docSpec();
-                if (!empty($spec)) {
+                if (! empty($spec)) {
                     $params = array_merge($params, $spec);
                 }
             }
@@ -377,7 +381,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
             'GET',
             'POST',
             'PATCH',
-            'PUT'
+            'PUT',
         ];
     }
 }

@@ -10,7 +10,7 @@ use Sowl\JsonApi\Request;
 
 class FilterStringParserTest extends TestCase
 {
-    public function testArrayKeySearch()
+    public function test_array_key_search()
     {
         $request = new Request(['filter' => ['search' => 'queryString']]);
         $parser = new SearchFilterParser($request, 'testField');
@@ -26,7 +26,7 @@ class FilterStringParserTest extends TestCase
         $this->assertEquals('queryString', $where->getValue()->getValue());
     }
 
-    public function testPropertyQueryParser()
+    public function test_property_query_parser()
     {
         $request = new Request(['filter' => ['search' => 'queryString']]);
         $parser = new SearchFilterParser($request, 'testField');

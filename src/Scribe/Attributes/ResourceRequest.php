@@ -26,6 +26,5 @@ class ResourceRequest
         public $idExample = null,
         public string $idParam = 'id',
         public array $acceptHeaders = ['application/vnd.api+json']
-    ) {
-    }
+    ) {}
 }

@@ -23,6 +23,7 @@ abstract class AbstractTransformer extends TransformerAbstract
      */
     public static function create(...$args): static
     {
+        /** @phpstan-ignore new.static */
         return new static(...$args);
     }
 
@@ -40,6 +41,7 @@ abstract class AbstractTransformer extends TransformerAbstract
     public function setAvailableMetas(array $availableMetas): static
     {
         $this->availableMetas = $availableMetas;
+
         return $this;
     }
 
@@ -59,7 +61,7 @@ abstract class AbstractTransformer extends TransformerAbstract
 
         $meta = [];
         foreach ($filteredMeta as $metaField) {
-            $methodName = 'meta' . str_replace(
+            $methodName = 'meta'.str_replace(
                 ' ',
                 '',
                 ucwords(str_replace(
@@ -73,7 +75,7 @@ abstract class AbstractTransformer extends TransformerAbstract
                 ))
             );
 
-            if (!method_exists($this, $methodName)) {
+            if (! method_exists($this, $methodName)) {
                 throw new \RuntimeException(sprintf(
                     "Method '%s::%s' must be implemented to support '%s'.",
                     static::class,
@@ -93,7 +95,7 @@ abstract class AbstractTransformer extends TransformerAbstract
         return parent::item($resource, $resource->transformer(), $resource->getResourceType());
     }
 
-    protected function nullable(?ResourceInterface $resource): Item | NullResource
+    protected function nullable(?ResourceInterface $resource): Item|NullResource
     {
         return $resource ? $this->resource($resource) : $this->null();
     }

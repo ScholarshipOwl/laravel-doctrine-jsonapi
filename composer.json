@@ -6,11 +6,16 @@
     "type": "library",
     "license": "MIT",
     "scripts": {
-        "test": "./vendor/bin/phpunit --config phpunit.xml",
-        "test:coverage": "XDEBUG_MODE=coverage ./vendor/bin/phpunit --config phpunit.xml --coverage-html ./tests/coverage",
+        "test": [
+            "docker compose run --rm -T -u $(id -u) php vendor/bin/pint",
+            "docker compose run --rm -T -u $(id -u) php vendor/bin/phpunit",
+            "docker compose run --rm -T -u $(id -u) php vendor/bin/phpstan analyze src"
+        ],
+        "test:coverage": "XDEBUG_MODE=coverage docker compose run --rm -T -u $(id -u) php vendor/bin/phpunit phpunit.xml --coverage-html /coverage",
         "test:scribe:generate": "docker compose run --rm -T -u $(id -u) php tests/artisan scribe:generate --no-upgrade-check --force",
         "dev:migration:diff": "docker compose run --rm -T -u $(id -u) php tests/artisan doctrine:migrations:diff --no-interaction",
-        "dc:composer": "docker compose run --rm -T -u $(id -u) php composer"
+        "dc:composer": "docker compose run --rm -T -u $(id -u) php composer",
+        "phpstan": "docker compose run --rm -T -u $(id -u) php vendor/bin/phpstan analyze src"
     },
     "autoload": {
         "psr-4": {
@@ -32,7 +37,9 @@
         "gedmo/doctrine-extensions": "^3.20",
         "knuckleswtf/scribe": "^5.2",
         "phpunit/phpunit": "^11.4",
-        "mockery/mockery": "^1.6"
+        "mockery/mockery": "^1.6",
+        "laravel/pint": "^1.22",
+        "phpstan/phpstan": "^2.1"
     },
     "require": {
         "php": ">=8.2",
@@ -44,6 +51,11 @@
             "providers": [
                 "Sowl\\JsonApi\\JsonApiServiceProvider"
             ]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
         }
     }
 }

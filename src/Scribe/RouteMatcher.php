@@ -2,24 +2,26 @@
 
 namespace Sowl\JsonApi\Scribe;
 
-use Sowl\JsonApi\Relationships\RelationshipInterface;
-use Sowl\JsonApi\ResourceManager;
 use Illuminate\Routing\Route;
+use Illuminate\Support\Str;
 use Knuckles\Scribe\Matching\MatchedRoute;
 use Knuckles\Scribe\Matching\RouteMatcher as ScribeRouteMatcher;
+use Sowl\JsonApi\Relationships\RelationshipInterface;
+use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\Routing\ResourceTypeExtractor;
 
 class RouteMatcher extends ScribeRouteMatcher
 {
     protected ResourceTypeExtractor $resourceTypeExtractor;
+
     public function __construct(protected ResourceManager $rm)
     {
-        $this->resourceTypeExtractor = new ResourceTypeExtractor();
+        $this->resourceTypeExtractor = new ResourceTypeExtractor;
     }
 
-    public function getRoutes(array $routeRules = [], string $router = 'laravel'): array
+    public function getRoutes(array $routeRules = []): array
     {
-        $routes = parent::getRoutes($routeRules, $router);
+        $routes = parent::getRoutes($routeRules);
 
         // Extend a resource type with resources
         foreach ($routes as $index => $route) {
@@ -46,18 +48,18 @@ class RouteMatcher extends ScribeRouteMatcher
         $uri = $route->getRoute()->uri();
         $routes = [];
 
-        if (\Str::contains($uri, '{resourceType}')) {
+        if (Str::contains($uri, '{resourceType}')) {
             foreach ($this->rm->resources() as $resourceType => $resourceClass) {
                 $resourceRoute = new MatchedRoute(
                     new Route(
                         $route->getRoute()->methods(),
-                        \Str::replace('{resourceType}', $resourceType, $uri),
+                        Str::replace('{resourceType}', $resourceType, $uri),
                         $route->getRoute()->getAction()
                     ),
                     $route->getRules(),
                 );
 
-                if (\Str::contains($uri, '{relationship}')) {
+                if (Str::contains($uri, '{relationship}')) {
                     $relationshipsRoutes = $this->buildRelationshipsRoutes($resourceType, $resourceRoute);
 
                     // It's empty only if we have no relationships.
@@ -67,14 +69,13 @@ class RouteMatcher extends ScribeRouteMatcher
                     }
                 }
 
-
                 // In case we build relationship routes we should use this list, otherwise singe resource route.
                 $routes = array_merge(
                     $routes,
                     empty($relationshipsRoutes) ? [$resourceRoute] : $relationshipsRoutes
                 );
             }
-        } elseif (\Str::contains($uri, '{relationship}')) {
+        } elseif (Str::contains($uri, '{relationship}')) {
             $routes = $this->buildRelationshipsRoutes(
                 $this->resourceTypeExtractor->extract($route->getRoute()),
                 $route
@@ -96,7 +97,7 @@ class RouteMatcher extends ScribeRouteMatcher
         $relationshipsRoutes = $this->rm->relationshipsByResourceType($resourceType)
             ->map(function ($relationship) use ($route, $uri, $method) {
                 if ($this->isRelationshipsRoute($route)) {
-                    if (!$this->isAllowedRelationshipsMethod($relationship, $method)) {
+                    if (! $this->isAllowedRelationshipsMethod($relationship, $method)) {
                         return null;
                     }
                 }
@@ -104,7 +105,7 @@ class RouteMatcher extends ScribeRouteMatcher
                 return new MatchedRoute(
                     new Route(
                         $route->getRoute()->methods(),
-                        \Str::replace('{relationship}', $relationship->name(), $uri),
+                        Str::replace('{relationship}', $relationship->name(), $uri),
                         $route->getRoute()->getAction()
                     ),
                     $route->getRules(),
@@ -119,9 +120,8 @@ class RouteMatcher extends ScribeRouteMatcher
     /**
      * We exclude existing routes to avoid duplicates.
      *
-     * @param MatchedRoute[] $routes
-     * @param MatchedRoute[] $dynamicToResourceTypeRoutes
-     * @return array
+     * @param  MatchedRoute[]  $routes
+     * @param  MatchedRoute[]  $dynamicToResourceTypeRoutes
      */
     protected function excludeExistingRoutes(array $routes, array $dynamicToResourceTypeRoutes): array
     {
@@ -165,12 +165,12 @@ class RouteMatcher extends ScribeRouteMatcher
 
     protected function isRelationshipsRoute(MatchedRoute $route): bool
     {
-        return \Str::contains($route->getRoute()->uri(), '/relationships/');
+        return Str::contains($route->getRoute()->uri(), '/relationships/');
     }
 
     protected function isDynamicRoute(MatchedRoute $route): bool
     {
-        return \Str::contains($route->getRoute()->uri(), '{resourceType}') ||
-            \Str::contains($route->getRoute()->uri(), '{relationship}');
+        return Str::contains($route->getRoute()->uri(), '{resourceType}') ||
+            Str::contains($route->getRoute()->uri(), '{relationship}');
     }
 }

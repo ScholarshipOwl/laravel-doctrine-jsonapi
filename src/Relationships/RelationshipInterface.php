@@ -10,12 +10,22 @@ use Sowl\JsonApi\Rules\ResourceIdentifierRule;
 interface RelationshipInterface
 {
     public function isToOne(): bool;
+
     public function isToMany(): bool;
+
     public function name(): string;
+
     public function class(): string;
+
+    public function resourceType(): string;
+
     public function property(): string;
+
     public function rm(): ResourceManager;
+
     public function repository(): ResourceRepository;
+
     public function transformer(): AbstractTransformer;
+
     public function objectIdentifierRule(): ResourceIdentifierRule;
 }

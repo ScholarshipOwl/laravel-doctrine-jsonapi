@@ -16,15 +16,14 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceMetadata;
 #[ResourceMetadata]
 final class Controller extends \Sowl\JsonApi\Controller
 {
-    use WithShowTrait;
+    use WithCreateRelationshipsTrait;
     use WithCreateTrait;
-    use WithUpdateTrait;
-    use WithRemoveTrait;
     use WithListTrait;
-
     use WithRelatedTrait;
     use WithRelationshipTrait;
-    use WithUpdateRelationshipsTrait;
-    use WithCreateRelationshipsTrait;
     use WithRemoveRelationshipsTrait;
+    use WithRemoveTrait;
+    use WithShowTrait;
+    use WithUpdateRelationshipsTrait;
+    use WithUpdateTrait;
 }

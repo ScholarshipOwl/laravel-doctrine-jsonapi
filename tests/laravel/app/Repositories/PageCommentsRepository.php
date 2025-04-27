@@ -4,6 +4,4 @@ namespace Tests\App\Repositories;
 
 use Sowl\JsonApi\ResourceRepository;
 
-class PageCommentsRepository extends ResourceRepository
-{
-}
+class PageCommentsRepository extends ResourceRepository {}

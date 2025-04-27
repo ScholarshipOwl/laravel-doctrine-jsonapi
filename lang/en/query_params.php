@@ -31,14 +31,14 @@ return [
     ],
     'filter' => [
         'search' => [
-            'description' => <<<TEXT
+            'description' => <<<'TEXT'
 Search filter uses `contains` operator on `:property` attribute.
 
 If you want to use search filter and other filters at the same time, use `filter[search]=text`
 TEXT
         ],
         'array' => [
-            'description' => <<<TEXT
+            'description' => <<<'TEXT'
 Filter by `:field` attribute.
 
 <details>

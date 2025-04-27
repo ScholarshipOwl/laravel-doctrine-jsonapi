@@ -25,6 +25,74 @@
                 "reveal": "always"
             }
 
+        },
+        {
+            "label": "Run Current Test File",
+            "type": "shell",
+            "command": "./vendor/bin/phpunit ${relativeFile}",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Run Current Test Method",
+            "type": "shell",
+            "command": "./vendor/bin/phpunit ${relativeFile} --filter ${selectedText}",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Debug PHPUnit Tests",
+            "type": "shell",
+            "command": "XDEBUG_TRIGGER=yes ./vendor/bin/phpunit",
+            "group": {
+                "kind": "test",
+            },
+            "presentation": {
+                "reveal": "always",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Debug Current Test File",
+            "type": "shell",
+            "command": "XDEBUG_TRIGGER=yes ./vendor/bin/phpunit ${relativeFile}",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Debug Current Test Method",
+            "type": "shell",
+            "command": "XDEBUG_TRIGGER=yes ./vendor/bin/phpunit ${relativeFile} --filter ${selectedText}",
+            "group": "test",
+            "presentation": {
+                "reveal": "always",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Generate JSON:API OpenAPI spec",
+            "type": "shell",
+            "command": "php artisan scribe:generate",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "clear": true
+            },
+            "problemMatcher": []
         }
     ]
 }

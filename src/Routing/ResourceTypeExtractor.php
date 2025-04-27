@@ -19,7 +19,7 @@ class ResourceTypeExtractor
     /**
      * Extract resource type from route.
      *
-     * @param Route $route The route to extract from.
+     * @param  Route  $route  The route to extract from.
      * @return string|null The extracted resource type or null if not found.
      */
     public function extract(Route $route): ?string
@@ -48,7 +48,7 @@ class ResourceTypeExtractor
         }
 
         // Handle dot notation (e.g., api.v1.users)
-        if (!Str::contains($uri, '/') && Str::contains($uri, '.')) {
+        if (! Str::contains($uri, '/') && Str::contains($uri, '.')) {
             return $uri;
         }
 

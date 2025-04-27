@@ -38,15 +38,14 @@ class Scope extends \League\Fractal\Scope
      *
      * It returns the transformed data and included data as an array.
      *
-     * @param AbstractTransformer $transformer
-     * @param mixed $data
-     * @return array
+     * @param  AbstractTransformer  $transformer
+     * @param  mixed  $data
      */
     protected function fireTransformer($transformer, $data): array
     {
-        list($transformedData, $includedData) = parent::fireTransformer($transformer, $data);
+        [$transformedData, $includedData] = parent::fireTransformer($transformer, $data);
 
-        if (!empty($transformer->getAvailableMetas())) {
+        if (! empty($transformer->getAvailableMetas())) {
             if (null !== ($meta = $transformer->processMetasets($this, $data))) {
                 $transformedData['meta'] = (object) array_merge(
                     $transformedData['meta'] ?? [],
@@ -63,6 +62,7 @@ class Scope extends \League\Fractal\Scope
      */
     public function getManager(): Fractal
     {
+        /** @phpstan-ignore return.type */
         return $this->manager;
     }
 }

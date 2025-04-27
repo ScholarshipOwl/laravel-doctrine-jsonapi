@@ -10,8 +10,7 @@ class RemoveRelationshipsAction extends AbstractAction
 {
     public function __construct(
         protected ToManyRelationship $relationship,
-    ) {
-    }
+    ) {}
 
     public function handle(): Response
     {
@@ -28,6 +27,6 @@ class RemoveRelationshipsAction extends AbstractAction
 
         $this->em()->flush();
 
-        return $this->response()->noContent();
+        return $this->response()->emptyContent();
     }
 }

@@ -155,8 +155,7 @@ return [
         Sowl\JsonApi\JsonApiServiceProvider::class,
         \Knuckles\Scribe\ScribeServiceProvider::class,
     ])->replace([
-        Illuminate\Auth\Passwords\PasswordResetServiceProvider::class
-            => LaravelDoctrine\ORM\Auth\Passwords\PasswordResetServiceProvider::class,
+        Illuminate\Auth\Passwords\PasswordResetServiceProvider::class => LaravelDoctrine\ORM\Auth\Passwords\PasswordResetServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -172,6 +171,6 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'EntityManager' => LaravelDoctrine\ORM\Facades\EntityManager::class,
-    ])->toArray()
+    ])->toArray(),
 
 ];

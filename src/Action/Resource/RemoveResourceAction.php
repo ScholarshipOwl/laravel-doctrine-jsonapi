@@ -12,8 +12,8 @@ class RemoveResourceAction extends AbstractAction
         $resource = $this->request()->resource();
 
         $this->em()->remove($resource);
-        $this->em()->flush($resource);
+        $this->em()->flush();
 
-        return $this->response()->noContent();
+        return $this->response()->emptyContent();
     }
 }

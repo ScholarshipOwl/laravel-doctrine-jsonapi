@@ -52,11 +52,12 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
         $item = (new Item($resource, $transformer, $resource->getResourceType()));
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $item->setMeta($meta);
         }
 
         $body = $this->fractal()->createData($item)->toArray();
+
         return $this->buildResponse($body, $status, $headers);
     }
 
@@ -105,11 +106,12 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
         $collection = (new Collection($collection, $transformer, $resourceType));
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $collection->setMeta($meta);
         }
 
         $body = $this->fractal()->createData($collection)->toArray();
+
         return $this->buildResponse($body, $status, $headers);
     }
 
@@ -138,7 +140,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
         $collection = (new Collection($data, $transformer, $resourceType));
 
-        if (!empty($meta)) {
+        if (! empty($meta)) {
             $collection->setMeta($meta);
         }
 
@@ -148,11 +150,12 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
             $collection->setPaginator(new DoctrinePaginatorAdapter(
                 $data,
-                fn (int $page) => $basePath . '?' . http_build_query(['page' => ['number' => $page, 'size' => $size]]),
+                fn (int $page) => $basePath.'?'.http_build_query(['page' => ['number' => $page, 'size' => $size]]),
             ));
         }
 
         $body = $this->fractal()->createData($collection)->toArray();
+
         return $this->buildResponse($body, $status, $headers);
     }
 
@@ -175,7 +178,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
     /**
      * Method returns No Body response with 204 status code.
      */
-    public function noContent($status = Response::HTTP_NO_CONTENT, array $headers = []): Response
+    public function emptyContent(int $status = Response::HTTP_NO_CONTENT, array $headers = []): Response
     {
         return $this->buildResponse(null, $status, $headers);
     }
@@ -183,7 +186,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
     /**
      * Method returns Not Found response with 404 status code.
      */
-    public function notFound($status = Response::HTTP_NOT_FOUND, array $headers = []): Response
+    public function notFound(int $status = Response::HTTP_NOT_FOUND, array $headers = []): Response
     {
         return $this->buildResponse(null, $status, $headers);
     }

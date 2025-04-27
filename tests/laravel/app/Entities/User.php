@@ -6,8 +6,8 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Illuminate\Auth\Passwords\CanResetPassword;
-use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
+use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Illuminate\Foundation\Auth\Access\Authorizable;
 use LaravelDoctrine\ORM\Auth\Authenticatable;
@@ -22,25 +22,21 @@ use Sowl\JsonApi\Resource\FilterableInterface;
 use Sowl\JsonApi\ResourceInterface;
 use Tests\App\Transformers\UserTransformer;
 
-#[ORM\Entity(repositoryClass: "Tests\\App\\Repositories\\UsersRepository")]
-#[ORM\Table(name: "users")]
-class User implements
-    AuthenticatableContract,
-    AuthorizableContract,
-    CanResetPasswordContract,
-    ResourceInterface,
-    FilterableInterface
+#[ORM\Entity(repositoryClass: 'Tests\\App\\Repositories\\UsersRepository')]
+#[ORM\Table(name: 'users')]
+class User implements AuthenticatableContract, AuthorizableContract, CanResetPasswordContract, FilterableInterface, ResourceInterface
 {
-    use HasTimestamps;
-    use CanResetPassword;
     use Authenticatable;
     use Authorizable;
-
+    use CanResetPassword;
+    use HasTimestamps;
     use MemoizeRelationshipsTrait;
     use WithFilterParsersTrait;
 
     public const USER_ID = '8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b';
+
     public const ROOT_ID = 'f1d2f365-e9aa-4844-8eb7-36e0df7a396d';
+
     public const MODERATOR_ID = 'ccf660b9-3cf7-4f58-a5f7-22e53ad836f8';
 
     public static function getResourceType(): string
@@ -50,14 +46,14 @@ class User implements
 
     public static function transformer(): AbstractTransformer
     {
-        return new UserTransformer();
+        return new UserTransformer;
     }
 
     public static function relationships(): RelationshipsCollection
     {
         return static::memoizeRelationships(fn () => [
             ToOneRelationship::create('status', UserStatus::class, 'status'),
-            ToManyRelationship::create('roles', Role::class, 'users')
+            ToManyRelationship::create('roles', Role::class, 'users'),
         ]);
     }
 
@@ -72,47 +68,47 @@ class User implements
     }
 
     #[ORM\Id]
-    #[ORM\Column(type: "guid")]
+    #[ORM\Column(type: 'guid')]
     protected ?string $id;
 
-    #[ORM\Column(name: "email", type: "string", unique: true, nullable: false)]
+    #[ORM\Column(name: 'email', type: 'string', unique: true, nullable: false)]
     protected ?string $email;
 
-    #[ORM\Column(name: "name", type: "string", unique: false, nullable: false)]
+    #[ORM\Column(name: 'name', type: 'string', unique: false, nullable: false)]
     protected ?string $name;
 
-    #[ORM\ManyToOne(targetEntity: "UserStatus")]
+    #[ORM\ManyToOne(targetEntity: 'UserStatus')]
     #[ORM\JoinColumn(nullable: false)]
     protected ?UserStatus $status;
 
-    #[ORM\ManyToMany(targetEntity: "Role")]
+    #[ORM\ManyToMany(targetEntity: 'Role')]
     #[ORM\JoinTable(
-        joinColumns: array(
+        joinColumns: [
             new ORM\JoinColumn(
-                name: "user_id",
-                referencedColumnName: "id",
+                name: 'user_id',
+                referencedColumnName: 'id',
                 nullable: false
-            )
-        ),
-        inverseJoinColumns: array(
+            ),
+        ],
+        inverseJoinColumns: [
             new ORM\JoinColumn(
-                name: "role_id",
-                referencedColumnName: "id",
+                name: 'role_id',
+                referencedColumnName: 'id',
                 nullable: false
-            )
-        )
+            ),
+        ]
     )]
     protected Collection $roles;
 
-    #[ORM\OneToMany(targetEntity: "Page", mappedBy: "user", fetch: "EXTRA_LAZY")]
-    #[ORM\JoinColumn(onDelete: "CASCADE")]
+    #[ORM\OneToMany(targetEntity: 'Page', mappedBy: 'user', fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     protected Collection $pages;
 
-    #[ORM\OneToMany(targetEntity: "PageComment", mappedBy: "user", fetch: "EXTRA_LAZY")]
-    #[ORM\JoinColumn(onDelete: "CASCADE")]
+    #[ORM\OneToMany(targetEntity: 'PageComment', mappedBy: 'user', fetch: 'EXTRA_LAZY')]
+    #[ORM\JoinColumn(onDelete: 'CASCADE')]
     protected Collection $pageComments;
 
-    #[ORM\OneToOne(targetEntity: "UserConfig", mappedBy: "user", cascade: ["persist", "remove"])]
+    #[ORM\OneToOne(targetEntity: 'UserConfig', mappedBy: 'user', cascade: ['persist', 'remove'])]
     protected ?UserConfig $config = null;
 
     /**
@@ -120,7 +116,7 @@ class User implements
      */
     public function __construct()
     {
-        $this->roles = new ArrayCollection();
+        $this->roles = new ArrayCollection;
     }
 
     public function __toString(): string
@@ -131,6 +127,7 @@ class User implements
     public function setId(string $id): static
     {
         $this->id = $id;
+
         return $this;
     }
 
@@ -142,6 +139,7 @@ class User implements
     public function setEmail(string $email): static
     {
         $this->email = $email;
+
         return $this;
     }
 
@@ -153,6 +151,7 @@ class User implements
     public function setName(string $name): static
     {
         $this->name = $name;
+
         return $this;
     }
 
@@ -164,6 +163,7 @@ class User implements
     public function setStatus(UserStatus $status): static
     {
         $this->status = $status;
+
         return $this;
     }
 
@@ -179,7 +179,7 @@ class User implements
 
     public function addRole(Role $role): static
     {
-        if (!$this->roles->contains($role)) {
+        if (! $this->roles->contains($role)) {
             $this->roles->add($role);
         }
 
@@ -207,7 +207,7 @@ class User implements
 
     public function hasRoleByName(string $name): bool
     {
-        return $this->roles->exists(fn(int $_, Role $role) => $role->getName() === $name);
+        return $this->roles->exists(fn (int $_, Role $role) => $role->getName() === $name);
     }
 
     public function getConfig(): ?UserConfig

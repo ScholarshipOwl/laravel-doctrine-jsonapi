@@ -7,7 +7,7 @@ use Sowl\JsonApi\ResourceManager;
 /**
  * Class represents a to-many relationship between resources in a JSON:API implementation.
  */
-class ToManyRelationship implements RelationshipInterface
+final class ToManyRelationship implements RelationshipInterface
 {
     use RelationshipTrait;
 
@@ -26,7 +26,7 @@ class ToManyRelationship implements RelationshipInterface
      */
     public static function create(string $name, string $class, string $mappedBy, ?string $property = null): static
     {
-        return new static($name, $class, $mappedBy, $property);
+        return new self($name, $class, $mappedBy, $property);
     }
 
     /**

@@ -21,21 +21,26 @@ use Sowl\JsonApi\Routing\ResourceTypeExtractor;
  * A class for handling JSON:API requests, including data validation, path, query parameters, and relationships.
  *
  * @template TResource of ResourceInterface
+ *
  * @method ResourceRepository<TResource> repository()
  */
 class Request extends FormRequest
 {
     use WithDataTrait;
-    use WithIncludeParamsTrait;
-    use WithFilterParamsTrait;
     use WithFieldsParamsTrait;
+    use WithFilterParamsTrait;
+    use WithIncludeParamsTrait;
     use WithPaginationParamsTrait;
 
     /** @var TResource */
     protected ResourceInterface $resource;
+
     protected ?string $resourceType = null;
+
     protected ?string $relationshipName = null;
+
     protected RelationshipInterface $relationship;
+
     protected ?ResourceRepository $repository;
 
     const JSONAPI_CONTENT_TYPE = 'application/vnd.api+json';
@@ -93,7 +98,7 @@ class Request extends FormRequest
      */
     public function resource(): ResourceInterface
     {
-        if (!isset($this->resource)) {
+        if (! isset($this->resource)) {
             $this->resource = $this->repository()->findById($this->getId());
         }
 
@@ -108,17 +113,17 @@ class Request extends FormRequest
      */
     public function resourceType(): string
     {
-        if (!isset($this->resourceType)) {
+        if (! isset($this->resourceType)) {
             // Try to get from route parameter first
             $resourceType = $this->route('resourceType');
 
             // If not found in route parameter, use ResourceTypeExtractor
             if (is_null($resourceType)) {
-                $extractor = new ResourceTypeExtractor();
+                $extractor = new ResourceTypeExtractor;
                 $resourceType = $extractor->extract($this->route());
             }
 
-            if (is_null($resourceType) || !$this->rm()->hasResourceType($resourceType)) {
+            if (is_null($resourceType) || ! $this->rm()->hasResourceType($resourceType)) {
                 throw NotFoundException::create()->detail('No resource type found for the request');
             }
 
@@ -136,13 +141,13 @@ class Request extends FormRequest
      */
     public function relationshipName(): ?string
     {
-        if (!isset($this->relationshipName)) {
+        if (! isset($this->relationshipName)) {
             // Try to get from route parameter first
             $relationshipName = $this->route('relationship');
 
             // If not found in route parameter, use RelationshipNameExtractor
             if (is_null($relationshipName)) {
-                $extractor = new RelationshipNameExtractor();
+                $extractor = new RelationshipNameExtractor;
                 $relationshipName = $extractor->extract($this->route());
             }
 
@@ -158,11 +163,11 @@ class Request extends FormRequest
      */
     public function relationship(): RelationshipInterface
     {
-        if (!isset($this->relationship)) {
+        if (! isset($this->relationship)) {
             $relationshipName = $this->relationshipName();
 
             if (is_null($relationshipName)) {
-                throw new NotFoundException();
+                throw new NotFoundException;
             }
 
             $relationship = $this->rm()
@@ -170,7 +175,7 @@ class Request extends FormRequest
                 ->get($relationshipName);
 
             if (is_null($relationship)) {
-                throw new NotFoundException();
+                throw new NotFoundException;
             }
 
             $this->relationship = $relationship;
@@ -182,11 +187,11 @@ class Request extends FormRequest
     /**
      * Gets the resource repository associated with the resource type.
      *
-     * @return ResourceRepository<TResource
+     * @return ResourceRepository<TResource>
      */
     public function repository(): ResourceRepository
     {
-        if (!isset($this->repository)) {
+        if (! isset($this->repository)) {
             $type = $this->resourceType();
             $class = $this->rm()->classByResourceType($type);
             $repository = $this->rm()->repositoryByClass($class);
@@ -215,13 +220,14 @@ class Request extends FormRequest
 
     /**
      * Converts validation exception into JSON:API response when request validation fails on resolve.
+     *
      * @throws ValidationException
      */
     protected function failedValidation(Validator $validator): void
     {
-        $exception = new Exceptions\ValidationException();
+        $exception = new Exceptions\ValidationException;
         foreach ($validator->errors()->getMessages() as $attribute => $messages) {
-            $pointer = "/" . str_replace('.', '/', $attribute);
+            $pointer = '/'.str_replace('.', '/', $attribute);
             array_map(fn ($message) => $exception->detail($message, $pointer), $messages);
         }
 

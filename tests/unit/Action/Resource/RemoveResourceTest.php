@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class RemoveResourceTest extends TestCase
 {
-    public function testAuthorizationPermissionsForNoLoggedIn()
+    public function test_authorization_permissions_for_no_logged_in()
     {
         $this->delete('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')->assertStatus(Response::HTTP_FORBIDDEN);
         $this->delete('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')->assertStatus(Response::HTTP_FORBIDDEN);
@@ -19,7 +19,7 @@ class RemoveResourceTest extends TestCase
         $this->assertDatabaseHas('users', ['id' => User::MODERATOR_ID]);
     }
 
-    public function testAuthorizationPermissionsForUserRole()
+    public function test_authorization_permissions_for_user_role()
     {
         $this->actingAsUser();
 
@@ -32,7 +32,7 @@ class RemoveResourceTest extends TestCase
         $this->assertDatabaseHas('users', ['id' => User::MODERATOR_ID]);
     }
 
-    public function testAuthorizationPermissionsForModeratorRole()
+    public function test_authorization_permissions_for_moderator_role()
     {
         $this->actingAsModerator();
 
@@ -45,7 +45,7 @@ class RemoveResourceTest extends TestCase
         $this->assertDatabaseMissing('users', ['id' => User::MODERATOR_ID]);
     }
 
-    public function testAuthorizationPermissionsForRootRole()
+    public function test_authorization_permissions_for_root_role()
     {
         $this->actingAsRoot();
 

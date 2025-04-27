@@ -4,8 +4,8 @@ namespace Sowl\JsonApi\Scribe\Strategies\Headers;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
-use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestCreate;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestRelationships;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelated;
@@ -37,7 +37,7 @@ class GetFromResourceAttributes extends AbstractStrategy
         $allAttributes = [
             ...$attributesOnController,
             ...$attributesOnFormRequest,
-            ...$attributesOnMethod
+            ...$attributesOnMethod,
         ];
 
         $headers = array_merge(
@@ -68,9 +68,9 @@ class GetFromResourceAttributes extends AbstractStrategy
     {
         $headers = [];
         foreach ($attributes as $attribute) {
-            if ($attribute instanceof ResourceRequest && !empty($attribute->acceptHeaders)) {
+            if ($attribute instanceof ResourceRequest && ! empty($attribute->acceptHeaders)) {
                 $headers = array_merge($headers, [
-                    'Accept' => implode(', ', $attribute->acceptHeaders)
+                    'Accept' => implode(', ', $attribute->acceptHeaders),
                 ]);
             }
         }
@@ -85,9 +85,9 @@ class GetFromResourceAttributes extends AbstractStrategy
     {
         $headers = [];
         foreach ($attributes as $attribute) {
-            if ($attribute instanceof ResourceResponse && !empty($attribute->contentTypeHeaders)) {
+            if ($attribute instanceof ResourceResponse && ! empty($attribute->contentTypeHeaders)) {
                 $headers = array_merge($headers, [
-                    'Content-Type' => implode(', ', $attribute->contentTypeHeaders)
+                    'Content-Type' => implode(', ', $attribute->contentTypeHeaders),
                 ]);
             }
         }

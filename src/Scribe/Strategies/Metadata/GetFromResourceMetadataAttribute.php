@@ -5,9 +5,9 @@ namespace Sowl\JsonApi\Scribe\Strategies\Metadata;
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Knuckles\Camel\Extraction\Metadata;
 use Sowl\JsonApi\Scribe\Attributes\ResourceMetadata;
-use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\DisplayHelper;
 use Sowl\JsonApi\Scribe\JsonApiEndpointData;
+use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 
 /**
@@ -35,11 +35,11 @@ class GetFromResourceMetadataAttribute extends AbstractStrategy
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function __invoke(ExtractedEndpointData $endpointData, array $settings = []): array
     {
-        if (!$this->initJsonApiEndpointData($endpointData)) {
+        if (! $this->initJsonApiEndpointData($endpointData)) {
             return [];
         }
 
@@ -61,7 +61,7 @@ class GetFromResourceMetadataAttribute extends AbstractStrategy
         $allAttributes = [
             ...$attributesOnController,
             ...$attributesOnFormRequest,
-            ...$attributesOnMethod
+            ...$attributesOnMethod,
         ];
 
         foreach ($allAttributes as $attribute) {
@@ -73,33 +73,26 @@ class GetFromResourceMetadataAttribute extends AbstractStrategy
         return $this->mergeWithEndpointMetadata($this->endpointData->metadata, $attributesMetadata);
     }
 
-
     protected function mergeWithEndpointMetadata(Metadata $endpointMetadata, array $attributesMetadata): array
     {
         return [
             'groupName' => $endpointMetadata->groupName ?:
                 $attributesMetadata['groupName'] ??
                 $this->generateGroupName(),
-            'groupDescription' =>
-                $endpointMetadata->groupDescription ?:
+            'groupDescription' => $endpointMetadata->groupDescription ?:
                 $attributesMetadata['groupDescription'] ?? '',
-            'subgroup' =>
-                $endpointMetadata->subgroup ?:
+            'subgroup' => $endpointMetadata->subgroup ?:
                 $attributesMetadata['subgroup'] ??
                 $this->generateSubgroupName(),
-            'subgroupDescription' =>
-                $endpointMetadata->subgroupDescription ?:
+            'subgroupDescription' => $endpointMetadata->subgroupDescription ?:
                 $attributesMetadata['subgroupDescription'] ?? '',
-            'title' =>
-                $endpointMetadata->title ?:
+            'title' => $endpointMetadata->title ?:
                 $attributesMetadata['title'] ??
                 $this->generateTitle(),
-            'description' =>
-                $endpointMetadata->description ?:
+            'description' => $endpointMetadata->description ?:
                 $attributesMetadata['description'] ??
                 $this->generateDescription(),
-            'authenticated' =>
-                $endpointMetadata->authenticated ?:
+            'authenticated' => $endpointMetadata->authenticated ?:
                 $attributesMetadata['authenticated'] ?? false,
         ];
     }
@@ -111,7 +104,6 @@ class GetFromResourceMetadataAttribute extends AbstractStrategy
         if ($attribute->title) {
             $metadata['title'] = $attribute->title;
         }
-
 
         if ($attribute->description) {
             $metadata['description'] = $attribute->description;
@@ -146,34 +138,20 @@ class GetFromResourceMetadataAttribute extends AbstractStrategy
     protected function generateTitle(): string
     {
         return match ($this->jsonApiEndpointData->actionType) {
-            JsonApiEndpointData::ACTION_LIST =>
-                __('jsonapi::metadata.list', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW =>
-                __('jsonapi::metadata.show', $this->transParams),
-            JsonApiEndpointData::ACTION_CREATE =>
-                __('jsonapi::metadata.create', $this->transParams),
-            JsonApiEndpointData::ACTION_UPDATE =>
-                __('jsonapi::metadata.update', $this->transParams),
-            JsonApiEndpointData::ACTION_DELETE =>
-                __('jsonapi::metadata.delete', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_ONE =>
-                __('jsonapi::metadata.show_related_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_MANY =>
-                __('jsonapi::metadata.show_related_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_ONE =>
-                __('jsonapi::metadata.show_relationship_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_ONE =>
-                __('jsonapi::metadata.update_relationship_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_MANY =>
-                __('jsonapi::metadata.show_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_ADD_RELATIONSHIP_TO_MANY =>
-                __('jsonapi::metadata.add_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_MANY =>
-                __('jsonapi::metadata.update_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_REMOVE_RELATIONSHIP_TO_MANY =>
-                __('jsonapi::metadata.remove_relationship_to_many', $this->transParams),
-            default =>
-                __('jsonapi::metadata.default_title', $this->transParams)
+            JsonApiEndpointData::ACTION_LIST => __('jsonapi::metadata.list', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW => __('jsonapi::metadata.show', $this->transParams),
+            JsonApiEndpointData::ACTION_CREATE => __('jsonapi::metadata.create', $this->transParams),
+            JsonApiEndpointData::ACTION_UPDATE => __('jsonapi::metadata.update', $this->transParams),
+            JsonApiEndpointData::ACTION_DELETE => __('jsonapi::metadata.delete', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_ONE => __('jsonapi::metadata.show_related_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_MANY => __('jsonapi::metadata.show_related_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_ONE => __('jsonapi::metadata.show_relationship_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_ONE => __('jsonapi::metadata.update_relationship_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.show_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_ADD_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.add_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.update_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_REMOVE_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.remove_relationship_to_many', $this->transParams),
+            default => __('jsonapi::metadata.default_title', $this->transParams)
         };
     }
 
@@ -183,39 +161,26 @@ class GetFromResourceMetadataAttribute extends AbstractStrategy
     protected function generateDescription(): string
     {
         return match ($this->jsonApiEndpointData->actionType) {
-            JsonApiEndpointData::ACTION_LIST =>
-                __('jsonapi::metadata.description.list', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW =>
-                __('jsonapi::metadata.description.show', $this->transParams),
-            JsonApiEndpointData::ACTION_CREATE =>
-                __('jsonapi::metadata.description.create', $this->transParams),
-            JsonApiEndpointData::ACTION_UPDATE =>
-                __('jsonapi::metadata.description.update', $this->transParams),
-            JsonApiEndpointData::ACTION_DELETE =>
-                __('jsonapi::metadata.description.delete', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_ONE =>
-                __('jsonapi::metadata.description.show_related_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_MANY =>
-                __('jsonapi::metadata.description.show_related_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_ONE =>
-                __('jsonapi::metadata.description.show_relationship_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_ONE =>
-                __('jsonapi::metadata.description.update_relationship_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_MANY =>
-                __('jsonapi::metadata.description.show_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_ADD_RELATIONSHIP_TO_MANY =>
-                __('jsonapi::metadata.description.add_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_MANY =>
-                __('jsonapi::metadata.description.update_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_REMOVE_RELATIONSHIP_TO_MANY =>
-                __('jsonapi::metadata.description.remove_relationship_to_many', $this->transParams),
-            default =>
-                __('jsonapi::metadata.description.default_description', $this->transParams),
+            JsonApiEndpointData::ACTION_LIST => __('jsonapi::metadata.description.list', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW => __('jsonapi::metadata.description.show', $this->transParams),
+            JsonApiEndpointData::ACTION_CREATE => __('jsonapi::metadata.description.create', $this->transParams),
+            JsonApiEndpointData::ACTION_UPDATE => __('jsonapi::metadata.description.update', $this->transParams),
+            JsonApiEndpointData::ACTION_DELETE => __('jsonapi::metadata.description.delete', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_ONE => __('jsonapi::metadata.description.show_related_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_MANY => __('jsonapi::metadata.description.show_related_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_ONE => __('jsonapi::metadata.description.show_relationship_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_ONE => __('jsonapi::metadata.description.update_relationship_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.description.show_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_ADD_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.description.add_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.description.update_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_REMOVE_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.description.remove_relationship_to_many', $this->transParams),
+            default => __('jsonapi::metadata.description.default_description', $this->transParams),
         };
     }
+
     protected function generateGroupName(): ?string
     {
-        return  $this->displayResourceType($this->jsonApiEndpointData->resourceType);
+        return $this->displayResourceType($this->jsonApiEndpointData->resourceType);
     }
 
     protected function generateSubgroupName(): ?string

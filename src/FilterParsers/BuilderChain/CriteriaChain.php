@@ -23,12 +23,12 @@ class CriteriaChain extends Chain
      * Then it calls the parent process() method to apply each member of the chain sequentially.
      * Once all members have been applied, the method returns the final processed Criteria object.
      *
-     * @param Criteria|null $object
+     * @param  Criteria|null  $object
      */
     public function process(mixed $object = null): Criteria
     {
         if ($object === null) {
-            $object = new Criteria();
+            $object = new Criteria;
         }
 
         return parent::process($object);

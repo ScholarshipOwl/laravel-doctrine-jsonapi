@@ -8,9 +8,6 @@ class DeepObjectQueryHelper
 {
     /**
      * Converts deepObject style query keys (e.g. fields[pageComments]) into PHP array format.
-     *
-     * @param array $query
-     * @return array
      */
     public static function convert(array $query): array
     {
@@ -26,6 +23,7 @@ class DeepObjectQueryHelper
                 }
             }
         }
+
         return $query;
     }
 }

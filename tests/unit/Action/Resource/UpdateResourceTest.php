@@ -10,14 +10,14 @@ use Tests\TestCase;
 
 class UpdateResourceTest extends TestCase
 {
-    public function testAuthorizationPermissionsForNoLoggedIn()
+    public function test_authorization_permissions_for_no_logged_in()
     {
         $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')->assertStatus(Response::HTTP_FORBIDDEN);
         $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')->assertStatus(Response::HTTP_FORBIDDEN);
         $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8')->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function testAuthorizationPermissionsForUserRole()
+    public function test_authorization_permissions_for_user_role()
     {
         $this->actingAsUser();
         $data = [
@@ -31,7 +31,7 @@ class UpdateResourceTest extends TestCase
         $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8', ['data' => $data])->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function testAuthorizationPermissionsForRootRole()
+    public function test_authorization_permissions_for_root_role()
     {
         $this->actingAsRoot();
         $data = [
@@ -40,13 +40,12 @@ class UpdateResourceTest extends TestCase
             ],
         ];
 
-
         $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b', ['data' => $data])->assertStatus(Response::HTTP_OK);
         $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d', ['data' => $data])->assertStatus(Response::HTTP_OK);
         $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8', ['data' => $data])->assertStatus(Response::HTTP_OK);
     }
 
-    public function testUpdateUser()
+    public function test_update_user()
     {
         $this->actingAsUser();
 
@@ -56,8 +55,8 @@ class UpdateResourceTest extends TestCase
                     'email' => 'newemail@gmail.com',
                     'name' => 'newname',
                     'password' => 'newsecret',
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $response->assertExactJson([
@@ -69,9 +68,9 @@ class UpdateResourceTest extends TestCase
                     'name' => 'newname',
                 ],
                 'links' => [
-                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
-                ]
-            ]
+                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                ],
+            ],
         ]);
 
         $response = $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b?include=status', [
@@ -81,10 +80,10 @@ class UpdateResourceTest extends TestCase
                         'data' => [
                             'type' => UserStatus::getResourceType(),
                             'id' => UserStatus::INACTIVE,
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $response->assertExactJson([
@@ -103,13 +102,13 @@ class UpdateResourceTest extends TestCase
                         ],
                         'links' => [
                             'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/status',
-                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/status'
-                        ]
-                    ]
+                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/status',
+                        ],
+                    ],
                 ],
                 'links' => [
-                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
-                ]
+                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                ],
             ],
             'included' => [
                 [
@@ -119,14 +118,14 @@ class UpdateResourceTest extends TestCase
                         'name' => 'Inactive',
                     ],
                     'links' => [
-                        'self' => '/userStatuses/' . UserStatus::INACTIVE
-                    ]
-                ]
-            ]
+                        'self' => '/userStatuses/'.UserStatus::INACTIVE,
+                    ],
+                ],
+            ],
         ]);
     }
 
-    public function testUpdateUserRoleRelationship()
+    public function test_update_user_role_relationship()
     {
         $this->actingAsRoot();
 
@@ -134,10 +133,10 @@ class UpdateResourceTest extends TestCase
             'data' => [
                 'relationships' => [
                     'roles' => [
-                        'data' => []
-                    ]
-                ]
-            ]
+                        'data' => [],
+                    ],
+                ],
+            ],
         ]);
 
         $response->assertExactJson([
@@ -155,26 +154,26 @@ class UpdateResourceTest extends TestCase
                         ],
                         'links' => [
                             'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
-                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles'
-                        ]
-                    ]
+                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles',
+                        ],
+                    ],
                 ],
                 'links' => [
-                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
-                ]
+                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                ],
             ],
             'included' => [
                 [
                     'id' => '2',
                     'type' => 'roles',
                     'attributes' => [
-                        'name' => 'User'
+                        'name' => 'User',
                     ],
                     'links' => [
-                        'self' => '/roles/2'
-                    ]
-                ]
-            ]
+                        'self' => '/roles/2',
+                    ],
+                ],
+            ],
         ]);
 
         $this->em()->clear();
@@ -191,10 +190,10 @@ class UpdateResourceTest extends TestCase
                         'data' => [
                             ['type' => Role::getResourceType(), 'id' => Role::user()->getId()],
                             ['type' => Role::getResourceType(), 'id' => Role::moderator()->getId()],
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $response->assertExactJson([
@@ -213,13 +212,13 @@ class UpdateResourceTest extends TestCase
                         ],
                         'links' => [
                             'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
-                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles'
-                        ]
-                    ]
+                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles',
+                        ],
+                    ],
                 ],
                 'links' => [
-                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
-                ]
+                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                ],
             ],
             'included' => [
                 [
@@ -229,8 +228,8 @@ class UpdateResourceTest extends TestCase
                         'name' => 'User',
                     ],
                     'links' => [
-                        'self' => '/roles/2'
-                    ]
+                        'self' => '/roles/2',
+                    ],
                 ],
                 [
                     'id' => '3',
@@ -239,10 +238,10 @@ class UpdateResourceTest extends TestCase
                         'name' => 'Moderator',
                     ],
                     'links' => [
-                        'self' => '/roles/3'
-                    ]
-                ]
-            ]
+                        'self' => '/roles/3',
+                    ],
+                ],
+            ],
         ]);
 
         $this->em()->clear();
@@ -252,7 +251,7 @@ class UpdateResourceTest extends TestCase
         $this->assertTrue($user->hasRole(Role::moderator()));
     }
 
-    public function testUpdateUserValidation()
+    public function test_update_user_validation()
     {
         $this->actingAsUser();
 
@@ -260,8 +259,8 @@ class UpdateResourceTest extends TestCase
             'data' => [
                 'attributes' => [
                     'email' => 'wrongemail',
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $response->assertExactJson([
@@ -270,10 +269,10 @@ class UpdateResourceTest extends TestCase
                     'code' => 422,
                     'detail' => 'The email field must be a valid email address.',
                     'source' => [
-                        'pointer' => '/data/attributes/email'
+                        'pointer' => '/data/attributes/email',
                     ],
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 }

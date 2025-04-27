@@ -4,15 +4,15 @@ namespace Tests;
 
 use Sowl\JsonApi\Exceptions\JsonApiException;
 use Sowl\JsonApi\ResourceManipulator;
-use Tests\App\Entities\User;
 use Tests\App\Entities\Role;
+use Tests\App\Entities\User;
 
 class ResourceManipulatorTest extends TestCase
 {
-    public function testHydrateAttributesAndRelationships()
+    public function test_hydrate_attributes_and_relationships()
     {
         /** @var User $user */
-        $user = $this->manipulator()->hydrateResource(new User(), [
+        $user = $this->manipulator()->hydrateResource(new User, [
             'attributes' => [
                 'name' => 'TestName',
                 'email' => 'test@test.com',
@@ -21,9 +21,9 @@ class ResourceManipulatorTest extends TestCase
                 'roles' => [
                     'data' => [
                         ['type' => 'roles', 'id' => 2],
-                    ]
+                    ],
                 ],
-            ]
+            ],
         ]);
 
         $this->assertInstanceOf(User::class, $user);
@@ -32,10 +32,10 @@ class ResourceManipulatorTest extends TestCase
         $this->assertTrue($user->hasRoleByName(Role::USER_NAME));
     }
 
-    public function testHydrateExceptions()
+    public function test_hydrate_exceptions()
     {
         try {
-            $this->manipulator()->hydrateResource(new User(), ['attributes' => ['not_exists' => 1 ]]);
+            $this->manipulator()->hydrateResource(new User, ['attributes' => ['not_exists' => 1]]);
             $this->fail('Exception should be thrown.');
         } catch (JsonApiException $e) {
             $this->assertEquals([
@@ -47,13 +47,13 @@ class ResourceManipulatorTest extends TestCase
                 [
                     'code' => 400,
                     'source' => ['setter' => 'Tests\App\Entities\User::setNot_exists'],
-                    'detail' => 'Missing property setter.'
-                ]
+                    'detail' => 'Missing property setter.',
+                ],
             ], $e->errors());
         }
 
         try {
-            $this->manipulator()->hydrateResource(new User(), ['relationships' => ['not_exists' => 1 ]]);
+            $this->manipulator()->hydrateResource(new User, ['relationships' => ['not_exists' => 1]]);
             $this->fail('Exception should be thrown.');
         } catch (JsonApiException $e) {
             $this->assertEquals([
@@ -61,12 +61,12 @@ class ResourceManipulatorTest extends TestCase
                     'code' => '400',
                     'source' => ['pointer' => '/data/relationships/not_exists'],
                     'detail' => 'Unknown relationship.',
-                ]
+                ],
             ], $e->errors());
         }
 
         try {
-            $this->manipulator()->hydrateResource(new User(), ['relationships' => ['roles' => 1 ]]);
+            $this->manipulator()->hydrateResource(new User, ['relationships' => ['roles' => 1]]);
             $this->fail('Exception should be thrown.');
         } catch (JsonApiException $e) {
             $this->assertEquals([
@@ -74,27 +74,27 @@ class ResourceManipulatorTest extends TestCase
                     'code' => 400,
                     'source' => ['pointer' => '/data/relationships/roles'],
                     'detail' => 'Data is missing or not an array.',
-                ]
+                ],
             ], $e->errors());
         }
 
         try {
-            $this->manipulator()->setProperty(new User(), 'not_exists', 'test');
+            $this->manipulator()->setProperty(new User, 'not_exists', 'test');
             $this->fail('Exception should be thrown.');
         } catch (JsonApiException $e) {
             $this->assertEquals([
                 [
                     'code' => '400',
                     'source' => [
-                        'setter' => User::class . '::setNot_exists',
+                        'setter' => User::class.'::setNot_exists',
                     ],
                     'detail' => 'Missing property setter.',
-                ]
+                ],
             ], $e->errors());
         }
     }
 
-    public function testCreateResource(): void
+    public function test_create_resource(): void
     {
         $user = $this->manipulator()->createResource('users');
 

@@ -2,10 +2,10 @@
 
 namespace Sowl\JsonApi\Action;
 
-use Sowl\JsonApi\Request;
 use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\Query\QueryException;
 use Doctrine\ORM\QueryBuilder;
+use Sowl\JsonApi\Request;
 
 trait PaginatesResourceTrait
 {
@@ -13,6 +13,7 @@ trait PaginatesResourceTrait
 
     /**
      * Apply pagination criteria to the query builder.
+     *
      * @throws QueryException
      */
     protected function applyPagination(QueryBuilder $qb): static

@@ -2,17 +2,17 @@
 
 namespace Tests\FilterParsers;
 
+use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Sowl\JsonApi\FilterParsers\BuilderChain\Chain;
 use Sowl\JsonApi\FilterParsers\BuilderChain\MemberInterface;
 use stdClass;
-use Mockery as m;
 
 class ChainTest extends TestCase
 {
-    public function testChainProcess()
+    public function test_chain_process()
     {
-        $object = new stdClass();
+        $object = new stdClass;
 
         $member1 = m::mock(MemberInterface::class)
             ->shouldReceive('__invoke')->with($object)->andReturn($object)

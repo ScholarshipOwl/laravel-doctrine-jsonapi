@@ -2,11 +2,10 @@
 
 namespace Sowl\JsonApi;
 
-use Doctrine\Persistence\Mapping\ClassMetadata;
+use Doctrine\ORM\Mapping\ClassMetadata;
 use InvalidArgumentException;
 use LaravelDoctrine\ORM\IlluminateRegistry;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
-use Sowl\JsonApi\Relationships\ToOneRelationship;
 use UnexpectedValueException;
 
 /**
@@ -18,7 +17,7 @@ use UnexpectedValueException;
  */
 class ResourceManager
 {
-    /** @var array<string, class-string<ResourceInterface>>  */
+    /** @var array<string, class-string<ResourceInterface>> */
     protected array $resources;
 
     public function __construct(protected IlluminateRegistry $registry, array $resources = [])
@@ -35,6 +34,7 @@ class ResourceManager
 
     /**
      * Returns an array of all registered resources.
+     *
      * @return array<string, class-string<ResourceInterface>>
      */
     public function resources(): array
@@ -48,11 +48,11 @@ class ResourceManager
      */
     public static function verifyResourceInterface(string $class): void
     {
-        if (!class_exists($class)) {
+        if (! class_exists($class)) {
             throw new InvalidArgumentException(sprintf('%s - is not a class', $class));
         }
 
-        if (!isset(class_implements($class)[ResourceInterface::class])) {
+        if (! isset(class_implements($class)[ResourceInterface::class])) {
             throw new UnexpectedValueException(sprintf(
                 '%s - not implements %s',
                 $class,
@@ -80,6 +80,7 @@ class ResourceManager
     public static function resourceType(string $class): string
     {
         static::verifyResourceInterface($class);
+
         return call_user_func("$class::getResourceType");
     }
 
@@ -93,11 +94,12 @@ class ResourceManager
 
     /**
      * Method takes a string that represents a resource type and returns the name of the corresponding resource class.
+     *
      * @throws InvalidArgumentException
      */
     public function classByResourceType(string $resourceType): string
     {
-        if (!$this->hasResourceType($resourceType)) {
+        if (! $this->hasResourceType($resourceType)) {
             throw new InvalidArgumentException(sprintf('%s - is not registered resource key', $resourceType));
         }
 
@@ -123,22 +125,23 @@ class ResourceManager
      * the expected class of the resource. It returns the corresponding resource by finding it
      * in the repository using the object identifier.
      *
-     * @param array{type: string, id: string} $data Object identifier object
+     * @param  array{type: string, id: string}  $data  Object identifier object
+     *
      * @link https://jsonapi.org/format/#document-resource-object-identification
      */
-    public function objectIdentifierToResource(array $data, string $expectedClass = null): ResourceInterface
+    public function objectIdentifierToResource(array $data, ?string $expectedClass = null): ResourceInterface
     {
-        if (!isset($data['id'])) {
+        if (! isset($data['id'])) {
             throw new InvalidArgumentException('Object identifier missing "id" field.');
         }
 
-        if (!isset($data['type'])) {
+        if (! isset($data['type'])) {
             throw new InvalidArgumentException('Object identifier missing "type" field.');
         }
 
         $class = $this->classByResourceType($data['type']);
 
-        if (!is_null($expectedClass)) {
+        if (! is_null($expectedClass)) {
             $expectedType = static::resourceType($expectedClass);
 
             if ($data['type'] !== $expectedType) {
@@ -170,6 +173,7 @@ class ResourceManager
     public function transformerByResourceType(string $resourceType): AbstractTransformer
     {
         $class = $this->classByResourceType($resourceType);
+
         return call_user_func("$class::transformer");
     }
 
@@ -180,9 +184,9 @@ class ResourceManager
     public function relationshipsByResourceType(string $resourceType): RelationshipsCollection
     {
         $class = $this->classByResourceType($resourceType);
+
         return call_user_func("$class::relationships");
     }
-
 
     /**
      * Method takes a string that represents the name of a resource class and returns the corresponding
@@ -191,6 +195,7 @@ class ResourceManager
     public function relationshipsByClass(string $class): RelationshipsCollection
     {
         static::verifyResourceInterface($class);
+
         return call_user_func("$class::relationships");
     }
 

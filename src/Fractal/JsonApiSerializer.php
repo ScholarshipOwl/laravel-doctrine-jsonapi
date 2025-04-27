@@ -35,7 +35,7 @@ class JsonApiSerializer extends \League\Fractal\Serializer\JsonApiSerializer
      */
     public function injectAvailableIncludeData(array $data, array $availableIncludes): array
     {
-        if (!$this->shouldIncludeLinks()) {
+        if (! $this->shouldIncludeLinks()) {
             return $data;
         }
 
@@ -44,6 +44,7 @@ class JsonApiSerializer extends \League\Fractal\Serializer\JsonApiSerializer
                 foreach ($availableIncludes as $relationshipKey) {
                     $resource = $this->addRelationshipLinks($resource, $relationshipKey);
                 }
+
                 return $resource;
             }, $data['data']);
         } else {
@@ -58,8 +59,8 @@ class JsonApiSerializer extends \League\Fractal\Serializer\JsonApiSerializer
     /**
      * Adds links for all available includes to a single resource.
      *
-     * @param array $resource         The resource to add relationship links to
-     * @param string $relationshipKey The resource key of the relationship
+     * @param  array  $resource  The resource to add relationship links to
+     * @param  string  $relationshipKey  The resource key of the relationship
      */
     private function addRelationshipLinks(array $resource, string $relationshipKey): array
     {
@@ -69,7 +70,7 @@ class JsonApiSerializer extends \League\Fractal\Serializer\JsonApiSerializer
                     'links' => [
                         'self' => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/relationships/{$relationshipKey}",
                         'related' => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/{$relationshipKey}",
-                    ]
+                    ],
                 ],
                 $resource['relationships'][$relationshipKey]
             );

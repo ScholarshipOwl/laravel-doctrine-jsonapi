@@ -8,7 +8,7 @@ use Tests\TestCase;
 
 class ShowRelatedTest extends TestCase
 {
-    public function testAuthorizationPermissionsAnyOneCanAccess()
+    public function test_authorization_permissions_any_one_can_access()
     {
         $this->actingAsUser();
         $this->get('/pageComments/00000000-0000-0000-0000-000000000001/user')->assertStatus(Response::HTTP_OK);
@@ -19,12 +19,12 @@ class ShowRelatedTest extends TestCase
         $this->get('/pageComments/00000000-0000-0000-0000-000000000003/page')->assertStatus(Response::HTTP_OK);
     }
 
-    public function testNotFoundRelationship(): void
+    public function test_not_found_relationship(): void
     {
         $this->get('/pageComments/00000000-0000-0000-0000-000000000001/notexists')->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function testShowPageCommentsRelatedUserResponse()
+    public function test_show_page_comments_related_user_response()
     {
         $this->actingAsUser();
         $this->get('/pageComments/00000000-0000-0000-0000-000000000001/user')
@@ -38,9 +38,9 @@ class ShowRelatedTest extends TestCase
                         'name' => 'testing user1',
                     ],
                     'links' => [
-                        'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
-                    ]
-                ]
+                        'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                    ],
+                ],
             ]);
 
         $this->get('/pageComments/00000000-0000-0000-0000-000000000002/user')
@@ -54,9 +54,9 @@ class ShowRelatedTest extends TestCase
                         'name' => 'testing user2',
                     ],
                     'links' => [
-                        'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d'
-                    ]
-                ]
+                        'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d',
+                    ],
+                ],
             ]);
 
         $this->get('/pageComments/00000000-0000-0000-0000-000000000003/user')
@@ -70,13 +70,13 @@ class ShowRelatedTest extends TestCase
                         'name' => 'testing user3',
                     ],
                     'links' => [
-                        'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8'
-                    ]
-                ]
+                        'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8',
+                    ],
+                ],
             ]);
     }
 
-    public function testShowPageCommentsRelatedPage()
+    public function test_show_page_comments_related_page()
     {
         $this->actingAsUser();
         $page1response = [
@@ -85,12 +85,12 @@ class ShowRelatedTest extends TestCase
                 'type' => 'pages',
                 'attributes' => [
                     'title' => 'JSON:API standard',
-                    'content' => '<strong>JSON:API</strong>'
+                    'content' => '<strong>JSON:API</strong>',
                 ],
                 'links' => [
-                    'self' => '/pages/1'
-                ]
-            ]
+                    'self' => '/pages/1',
+                ],
+            ],
         ];
 
         $this->get('/pageComments/00000000-0000-0000-0000-000000000001/page')

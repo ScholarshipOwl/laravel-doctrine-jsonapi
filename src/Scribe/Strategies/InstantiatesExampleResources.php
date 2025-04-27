@@ -5,8 +5,8 @@ declare(strict_types=1);
 namespace Sowl\JsonApi\Scribe\Strategies;
 
 use Doctrine\ORM\EntityManager;
-use Knuckles\Scribe\Tools\DocumentationConfig;
 use Knuckles\Scribe\Tools\ConsoleOutputUtils as c;
+use Knuckles\Scribe\Tools\DocumentationConfig;
 use Knuckles\Scribe\Tools\ErrorHandlingUtils as e;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceManager;
@@ -26,28 +26,30 @@ trait InstantiatesExampleResources
      * Attempt to instantiate an example Doctrine entity for documentation using multiple strategies.
      *
      * @template T of ResourceInterface
-     * @param class-string<T> $resourceClass The FQCN of the Doctrine entity.
-     * @return T|array<T>
+     *
+     * @param  class-string<T>  $resourceClass  The FQCN of the Doctrine entity.
+     * @return null|T|array<T>
      */
     protected function instantiateExampleResource(
         string $resourceClass,
         int $times = 1
     ): mixed {
         $strategies = [
-            'doctrineFactoryMake' => fn() => $this->getFromDoctrineFactoryMake($resourceClass, $times),
-            'doctrineFactoryCreate' => fn() => $this->getFromDoctrineFactoryCreate($resourceClass, $times),
-            'doctrineRepositoryFirst' => fn() => $this->getFromDatabaseFirst($resourceClass, $times),
+            'doctrineFactoryMake' => fn () => $this->getFromDoctrineFactoryMake($resourceClass, $times),
+            'doctrineFactoryCreate' => fn () => $this->getFromDoctrineFactoryCreate($resourceClass, $times),
+            'doctrineRepositoryFirst' => fn () => $this->getFromDatabaseFirst($resourceClass, $times),
         ];
 
+        $strategiesFromConfig = $this->getConfig()->get('examples.models_source', [
+            'doctrineFactoryCreate',
+            'doctrineFactoryMake',
+            'doctrineRepositoryFirst',
+        ]);
+
         $configuredStrategies = array_intersect(
-            $this->getConfig()->get('examples.models_source', [
-                'doctrineFactoryCreate',
-                'doctrineFactoryMake',
-                'doctrineRepositoryFirst',
-            ]),
+            $strategiesFromConfig,
             array_keys($strategies)
         );
-
 
         foreach ($configuredStrategies as $strategy) {
             try {
@@ -57,12 +59,12 @@ trait InstantiatesExampleResources
                 }
             } catch (Throwable $e) {
                 c::warn(sprintf(
-                    "Failed to instantiate resource %s via %s: %s",
+                    'Failed to instantiate resource %s via %s: %s',
                     $resourceClass,
                     $strategy,
                     $e->getMessage()
                 ));
-                e::dumpExceptionIfVerbose($e, true);
+                e::dumpExceptionIfVerbose($e);
             }
         }
 
@@ -76,6 +78,7 @@ trait InstantiatesExampleResources
     {
         $em = $this->rm()->registry()->getManagerForClass($resourceClass);
         $repository = $em->getRepository($resourceClass);
+
         return $times > 1 ? $repository->findBy([], [], $times) : $repository->findOneBy([]);
     }
 
@@ -103,7 +106,8 @@ trait InstantiatesExampleResources
      * Wrap a callback in a database transaction
      *
      * @template T
-     * @param callable(): T $callback
+     *
+     * @param  callable(): T  $callback
      * @return T|null
      */
     private function wrapInTransaction(EntityManager $em, callable $callback)
@@ -111,6 +115,7 @@ trait InstantiatesExampleResources
         try {
             $em->beginTransaction();
             $result = $callback();
+
             return $result;
         } catch (\Throwable $e) {
             c::warn(sprintf(

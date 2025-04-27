@@ -3,13 +3,10 @@
 namespace Tests\App\Entities;
 
 use Tests\TestCase;
-use Tests\App\Entities\User;
-use Tests\App\Entities\UserConfig;
-use Illuminate\Support\Facades\App;
 
 class UserConfigTest extends TestCase
 {
-    public function testUserConfigPropertiesCanBeSetAndRetrieved(): void
+    public function test_user_config_properties_can_be_set_and_retrieved(): void
     {
         $user = entity(User::class)->make();
         $config = $user->getConfig();
@@ -19,7 +16,7 @@ class UserConfigTest extends TestCase
         $this->assertEquals('en', $config->getLanguage());
     }
 
-    public function testUserConfigResourceTypeAndId(): void
+    public function test_user_config_resource_type_and_id(): void
     {
         $user = entity(User::class)->make(['id' => 'abc-123']);
         $config = $user->getConfig();

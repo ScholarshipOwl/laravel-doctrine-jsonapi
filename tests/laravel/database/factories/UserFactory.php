@@ -2,14 +2,13 @@
 
 /** @var LaravelDoctrine\ORM\Testing\Factory $factory */
 
-use Tests\App\Entities\User;
-use Tests\App\Entities\UserStatus;
-use Tests\App\Entities\Role;
-use Tests\App\Entities\UserConfig;
 use Doctrine\Common\Collections\ArrayCollection;
-use LaravelDoctrine\ORM\Facades\EntityManager;
+use Tests\App\Entities\Role;
+use Tests\App\Entities\User;
+use Tests\App\Entities\UserConfig;
+use Tests\App\Entities\UserStatus;
 
-$factory->define(User::class, function (Faker\Generator $faker) use ($factory) {
+$factory->define(User::class, function (Faker\Generator $faker) {
     return [
         'id' => $faker->uuid,
         'name' => $faker->name,
@@ -20,7 +19,7 @@ $factory->define(User::class, function (Faker\Generator $faker) use ($factory) {
 });
 
 $factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
-    $config = new UserConfig();
+    $config = new UserConfig;
     $config->setUser($user);
     $config->setTheme('light');
     $config->setNotificationsEnabled(true);
@@ -42,7 +41,7 @@ $factory->defineAs(User::class, 'user', function (Faker\Generator $faker) {
 });
 
 $factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
-    $config = new UserConfig();
+    $config = new UserConfig;
     $config->setUser($user);
     $config->setTheme('light');
     $config->setNotificationsEnabled(true);
@@ -60,12 +59,12 @@ $factory->defineAs(User::class, 'root', function () {
         'roles' => new ArrayCollection([
             Role::user(),
             Role::root(),
-        ])
+        ]),
     ];
 });
 
 $factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
-    $config = new UserConfig();
+    $config = new UserConfig;
     $config->setUser($user);
     $config->setTheme('light');
     $config->setNotificationsEnabled(true);
@@ -83,12 +82,12 @@ $factory->defineAs(User::class, 'moderator', function () {
         'roles' => new ArrayCollection([
             Role::user(),
             Role::moderator(),
-        ])
+        ]),
     ];
 });
 
 $factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
-    $config = new UserConfig();
+    $config = new UserConfig;
     $config->setUser($user);
     $config->setTheme('light');
     $config->setNotificationsEnabled(true);

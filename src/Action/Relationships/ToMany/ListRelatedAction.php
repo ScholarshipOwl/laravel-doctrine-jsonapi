@@ -2,18 +2,17 @@
 
 namespace Sowl\JsonApi\Action\Relationships\ToMany;
 
-use Doctrine\Common\Collections\Criteria;
 use Doctrine\ORM\QueryBuilder;
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Action\FiltersResourceTrait;
 use Sowl\JsonApi\Action\PaginatesResourceTrait;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
-use Sowl\JsonApi\Response;
 use Sowl\JsonApi\ResourceInterface;
+use Sowl\JsonApi\Response;
 
 /**
-* Action for providing collection (list or array) of data with API.
-*/
+ * Action for providing collection (list or array) of data with API.
+ */
 class ListRelatedAction extends AbstractAction
 {
     use FiltersResourceTrait;
@@ -21,8 +20,7 @@ class ListRelatedAction extends AbstractAction
 
     public function __construct(
         protected ToManyRelationship $relationship,
-    ) {
-    }
+    ) {}
 
     public function handle(): Response
     {
@@ -35,6 +33,7 @@ class ListRelatedAction extends AbstractAction
 
         $resourceType = $repository->getResourceType();
         $transformer = $repository->transformer();
+
         return $this->response()->query($qb, $resourceType, $transformer);
     }
 
@@ -45,9 +44,9 @@ class ListRelatedAction extends AbstractAction
     {
         $mappedBy = $this->relationship->mappedBy();
         $relatedRepo = $this->relationship->repository();
-        $mappedByAlias = $mappedBy . 'relation';
+        $mappedByAlias = $mappedBy.'relation';
 
-        $relationshipField = $this->isIdentityMustBeUsed() ? 'identity(' . $mappedByAlias . ')' : $mappedByAlias;
+        $relationshipField = $this->isIdentityMustBeUsed() ? 'identity('.$mappedByAlias.')' : $mappedByAlias;
 
         return $relatedRepo->resourceQueryBuilder()
             ->innerJoin(sprintf('%s.%s', $relatedRepo->alias(), $mappedBy), $mappedByAlias)

@@ -6,9 +6,9 @@ use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\RelationshipInterface;
 use Sowl\JsonApi\ResourceManager;
+use Sowl\JsonApi\Routing\Concerns\HandlesRoutePrefixes;
 use Sowl\JsonApi\Routing\RelationshipNameExtractor;
 use Sowl\JsonApi\Routing\ResourceTypeExtractor;
-use Sowl\JsonApi\Routing\Concerns\HandlesRoutePrefixes;
 
 /**
  * Wraps ExtractedEndpointData with JSON:API specific data.
@@ -23,23 +23,32 @@ class JsonApiEndpointData
 
     // Resource actions
     public const ACTION_LIST = 'list';
+
     public const ACTION_SHOW = 'show';
+
     public const ACTION_CREATE = 'create';
+
     public const ACTION_UPDATE = 'update';
+
     public const ACTION_DELETE = 'delete';
 
     // Related resource actions
     public const ACTION_SHOW_RELATED_TO_ONE = 'show-related-to-one';
+
     public const ACTION_SHOW_RELATED_TO_MANY = 'show-related-to-many';
 
     // To-One relationship actions
     public const ACTION_SHOW_RELATIONSHIP_TO_ONE = 'show-relationship-to-one';
+
     public const ACTION_UPDATE_RELATIONSHIP_TO_ONE = 'update-relationship-to-one';
 
     // To-Many relationship actions
     public const ACTION_SHOW_RELATIONSHIP_TO_MANY = 'show-relationship-to-many';
+
     public const ACTION_ADD_RELATIONSHIP_TO_MANY = 'add-relationship-to-many';
+
     public const ACTION_UPDATE_RELATIONSHIP_TO_MANY = 'update-relationship-to-many';
+
     public const ACTION_REMOVE_RELATIONSHIP_TO_MANY = 'remove-relationship-to-many';
 
     // Custom action implemented by user
@@ -47,22 +56,16 @@ class JsonApiEndpointData
 
     /**
      * The base endpoint data
-     *
-     * @var ExtractedEndpointData
      */
     public ExtractedEndpointData $endpointData;
 
     /**
      * The JSON:API resource type for this endpoint
-     *
-     * @var string|null
      */
     public ?string $resourceType = null;
 
     /**
      * The JSON:API relationship name for this endpoint (if it's a relationship endpoint)
-     *
-     * @var string|null
      */
     public ?string $relationshipName = null;
 
@@ -70,8 +73,6 @@ class JsonApiEndpointData
 
     /**
      * Whether this endpoint is a relationships endpoint (e.g. /articles/1/relationships/comments)
-     *
-     * @var bool
      */
     public bool $isRelationships = false;
 
@@ -85,7 +86,7 @@ class JsonApiEndpointData
     /**
      * Create a new instance from an existing ExtractedEndpointData.
      *
-     * @param ExtractedEndpointData $endpointData The base endpoint data
+     * @param  ExtractedEndpointData  $endpointData  The base endpoint data
      */
     private function __construct(ExtractedEndpointData $endpointData)
     {
@@ -98,9 +99,7 @@ class JsonApiEndpointData
     /**
      * Create a new instance from an existing ExtractedEndpointData.
      *
-     * @param ExtractedEndpointData $endpointData The base endpoint data
-     *
-     * @return self
+     * @param  ExtractedEndpointData  $endpointData  The base endpoint data
      */
     public static function fromEndpointData(ExtractedEndpointData $endpointData): self
     {
@@ -124,8 +123,8 @@ class JsonApiEndpointData
         $route = $this->endpointData->route;
 
         // Create extractors
-        $resourceTypeExtractor = new ResourceTypeExtractor();
-        $relationshipExtractor = new RelationshipNameExtractor();
+        $resourceTypeExtractor = new ResourceTypeExtractor;
+        $relationshipExtractor = new RelationshipNameExtractor;
 
         // Extract JSON:API specific data
         if (empty($resourceType = $resourceTypeExtractor->extract($route))) {
@@ -134,7 +133,7 @@ class JsonApiEndpointData
             );
         }
 
-        if (!$this->rm->hasResourceType($resourceType)) {
+        if (! $this->rm->hasResourceType($resourceType)) {
             throw new \RuntimeException(
                 sprintf(
                     'Resource type "%s" is not registered in the ResourceManager.',
@@ -198,7 +197,7 @@ class JsonApiEndpointData
      */
     private function isRootResourceUri(string $uri): bool
     {
-        return preg_match('/^' . $this->resourceType . '\/?$/', $uri);
+        return preg_match('/^'.$this->resourceType.'\/?$/', $uri);
     }
 
     /**
@@ -207,7 +206,7 @@ class JsonApiEndpointData
     private function isResourceInstanceUri(string $uri): bool
     {
         // Matches patterns like: 'users/{user_id}', 'pages/{id}', 'comments/{comment}'
-        return preg_match('/^' . $this->resourceType . '\/\{[^\/}]+\}$/', $uri);
+        return preg_match('/^'.$this->resourceType.'\/\{[^\/}]+\}$/', $uri);
     }
 
     private function determineRelationshipAction(string $httpMethod): string

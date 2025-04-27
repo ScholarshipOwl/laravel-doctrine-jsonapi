@@ -22,7 +22,7 @@ class AttachRoleToUserRule extends ResourceIdentifierRule
     {
         $user = $this->em()->getReference(User::class, $this->request->getId());
 
-        if (!Gate::allows('assignRole', [$user, $role])) {
+        if (! Gate::allows('assignRole', [$user, $role])) {
             $fail('User not allowed to assign new roles to the user.');
         }
     }

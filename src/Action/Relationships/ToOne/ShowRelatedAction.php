@@ -9,9 +9,7 @@ use Sowl\JsonApi\Response;
 
 class ShowRelatedAction extends AbstractAction
 {
-    public function __construct(protected ToOneRelationship $relationship)
-    {
-    }
+    public function __construct(protected ToOneRelationship $relationship) {}
 
     /**
      * @throws BadRequestException

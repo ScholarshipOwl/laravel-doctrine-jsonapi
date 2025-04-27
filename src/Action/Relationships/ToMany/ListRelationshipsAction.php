@@ -8,8 +8,8 @@ use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Action\FiltersResourceTrait;
 use Sowl\JsonApi\Action\PaginatesResourceTrait;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
-use Sowl\JsonApi\Response;
 use Sowl\JsonApi\ResourceInterface;
+use Sowl\JsonApi\Response;
 
 class ListRelationshipsAction extends AbstractAction
 {
@@ -18,8 +18,7 @@ class ListRelationshipsAction extends AbstractAction
 
     public function __construct(
         protected ToManyRelationship $relationship,
-    ) {
-    }
+    ) {}
 
     public function handle(): Response
     {
@@ -32,6 +31,7 @@ class ListRelationshipsAction extends AbstractAction
 
         $resourceType = $relationshipRepository->getResourceType();
         $transformer = $relationshipRepository->transformer();
+
         return $this->response()->query($qb, $resourceType, $transformer, relationship: true);
     }
 
@@ -42,7 +42,7 @@ class ListRelationshipsAction extends AbstractAction
     {
         $mappedBy = $this->relationship->mappedBy();
         $relatedRepo = $this->relationship->repository();
-        $mappedByAlias = $mappedBy . 'relation';
+        $mappedByAlias = $mappedBy.'relation';
 
         return $relatedRepo->resourceQueryBuilder()
             ->innerJoin(sprintf('%s.%s', $relatedRepo->alias(), $mappedBy), $mappedByAlias)

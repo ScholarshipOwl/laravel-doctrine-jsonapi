@@ -5,48 +5,42 @@ declare(strict_types=1);
 namespace Tests\App\Entities;
 
 use Doctrine\ORM\Mapping as ORM;
-use Sowl\JsonApi\ResourceInterface;
+use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
+use Sowl\JsonApi\ResourceInterface;
 use Tests\App\Transformers\UserConfigTransformer;
-use Sowl\JsonApi\AbstractTransformer;
 
 #[ORM\Entity]
-#[ORM\Table(name: "user_configs")]
+#[ORM\Table(name: 'user_configs')]
 class UserConfig implements ResourceInterface
 {
     /**
-     * @var User
-     *
      * @ORM\Id()
+     *
      * @ORM\OneToOne(targetEntity="User", inversedBy="config")
+     *
      * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
-    #[ORM\Id, ORM\OneToOne(targetEntity: User::class, inversedBy: "config"), ORM\JoinColumn(name: "user_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+    #[ORM\Id, ORM\OneToOne(targetEntity: User::class, inversedBy: 'config'), ORM\JoinColumn(name: 'user_id', referencedColumnName: 'id', nullable: false, onDelete: 'CASCADE')]
     protected ?User $user = null;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=50, nullable=true)
      */
-    #[ORM\Column(type: "string", length: 50, nullable: true)]
+    #[ORM\Column(type: 'string', length: 50, nullable: true)]
     private ?string $theme = null;
 
     /**
-     * @var bool
-     *
      * @ORM\Column(type="boolean", options={"default": true})
      */
-    #[ORM\Column(type: "boolean", options: ["default" => true])]
+    #[ORM\Column(type: 'boolean', options: ['default' => true])]
     private bool $notificationsEnabled = true;
 
     /**
-     * @var string
-     *
      * @ORM\Column(type="string", length=10, nullable=true)
      */
-    #[ORM\Column(type: "string", length: 10, nullable: true)]
+    #[ORM\Column(type: 'string', length: 10, nullable: true)]
     private ?string $language = null;
 
     public function getUser(): User
@@ -103,7 +97,7 @@ class UserConfig implements ResourceInterface
 
     public static function transformer(): AbstractTransformer
     {
-        return new UserConfigTransformer();
+        return new UserConfigTransformer;
     }
 
     public function getId(): null|string|int

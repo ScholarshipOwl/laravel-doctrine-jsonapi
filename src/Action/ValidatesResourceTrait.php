@@ -9,6 +9,7 @@ use Symfony\Component\Validator\Validation;
 
 /**
  * If we want to enable and use this trait we need to install  "symfony/validator"
+ *
  * @deprecated
  */
 trait ValidatesResourceTrait

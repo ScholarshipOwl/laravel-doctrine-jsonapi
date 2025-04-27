@@ -16,7 +16,7 @@ trait WithFieldsParamsTrait
     {
         return [
             'fields' => 'sometimes|required|array',
-            'meta'   => 'sometimes|required|array',
+            'meta' => 'sometimes|required|array',
         ];
     }
 

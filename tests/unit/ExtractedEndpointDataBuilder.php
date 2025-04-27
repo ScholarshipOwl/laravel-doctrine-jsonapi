@@ -14,13 +14,13 @@ trait ExtractedEndpointDataBuilder
         string $uri,
         array $routeAction,
         bool $isJsonApiRoute = true
-    ): ExtractedEndpointData
-    {
+    ): ExtractedEndpointData {
         if ($isJsonApiRoute) {
             $routeAction['middleware'] = array_merge($routeAction['middleware'] ?? [], ['jsonapi']);
         }
 
         $route = new Route([$method], $uri, $routeAction);
+
         return ExtractedEndpointData::fromRoute($route);
     }
 }

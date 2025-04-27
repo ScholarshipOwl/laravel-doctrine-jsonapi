@@ -11,7 +11,7 @@ class AttachRolesToUserRequest extends Request
     {
         return [
             'data' => 'array|required',
-            'data.*' => [new AttachRoleToUserRule($this)]
+            'data.*' => [new AttachRoleToUserRule($this)],
         ];
     }
 }

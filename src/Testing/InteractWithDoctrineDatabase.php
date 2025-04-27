@@ -2,10 +2,9 @@
 
 namespace Sowl\JsonApi\Testing;
 
-use Illuminate\Database\Connection;
 use Doctrine\ORM\EntityManagerInterface;
+use Illuminate\Database\Connection;
 use LaravelDoctrine\ORM\IlluminateRegistry;
-use Sowl\JsonApi\ResourceInterface;
 
 /**
  * Allow interacting with the Doctrine database.
@@ -27,7 +26,7 @@ trait InteractWithDoctrineDatabase
 
         /** @var EntityManagerInterface $manager */
         foreach ($registry->getManagers() as $managerName => $manager) {
-            $connectionName = config('doctrine.managers.' . $managerName . '.connection');
+            $connectionName = config('doctrine.managers.'.$managerName.'.connection');
             $connection = $this->app['db']->connection($connectionName);
             $emConnection = $manager->getConnection()->getNativeConnection();
 
@@ -35,7 +34,8 @@ trait InteractWithDoctrineDatabase
                 if ($connection instanceof Connection && $emConnection instanceof \PDO) {
                     $connection->setPdo($emConnection);
                 }
-            } catch (\Throwable $e) {}
+            } catch (\Throwable $e) {
+            }
         }
     }
 }

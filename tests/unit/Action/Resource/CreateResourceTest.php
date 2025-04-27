@@ -2,15 +2,15 @@
 
 namespace Tests\Action\Resource;
 
+use Ramsey\Uuid\Uuid;
 use Tests\App\Entities\PageComment;
 use Tests\App\Entities\Role;
 use Tests\App\Entities\User;
 use Tests\TestCase;
-use Ramsey\Uuid\Uuid;
 
 class CreateResourceTest extends TestCase
 {
-    public function testCreateNewUser()
+    public function test_create_new_user()
     {
         $response = $this->post('/users', [
             'data' => [
@@ -20,8 +20,8 @@ class CreateResourceTest extends TestCase
                     'name' => 'New user',
                     'email' => 'newuser@gmail.com',
                     'password' => 'secret',
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $response->assertCreated();
@@ -32,7 +32,7 @@ class CreateResourceTest extends TestCase
         $this->assertTrue($newUser->hasRole(Role::user()));
     }
 
-    public function testCantCreateUserWithRootRole()
+    public function test_cant_create_user_with_root_role()
     {
         $response = $this->post('/users', [
             'data' => [
@@ -45,10 +45,10 @@ class CreateResourceTest extends TestCase
                     'roles' => [
                         'data' => [
                             ['type' => 'roles', 'id' => (string) Role::root()->getId()],
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $response->assertCreated();
@@ -60,7 +60,7 @@ class CreateResourceTest extends TestCase
         $this->assertFalse($newUser->hasRole(Role::root()));
     }
 
-    public function testUserCreateValidation(): void
+    public function test_user_create_validation(): void
     {
         $response = $this->post('/users');
         $response->assertExactJson([
@@ -69,24 +69,24 @@ class CreateResourceTest extends TestCase
                     'code' => 422,
                     'detail' => 'The name field is required.',
                     'source' => [
-                        'pointer' => '/data/attributes/name'
+                        'pointer' => '/data/attributes/name',
                     ],
                 ],
                 [
                     'code' => 422,
                     'detail' => 'The password field is required.',
                     'source' => [
-                        'pointer' => '/data/attributes/password'
+                        'pointer' => '/data/attributes/password',
                     ],
                 ],
                 [
                     'code' => 422,
                     'detail' => 'The email field is required.',
                     'source' => [
-                        'pointer' => '/data/attributes/email'
+                        'pointer' => '/data/attributes/email',
                     ],
                 ],
-            ]
+            ],
         ]);
 
         $response = $this->post('/users', [
@@ -95,8 +95,8 @@ class CreateResourceTest extends TestCase
                     'name' => 'New user',
                     'password' => 'secret',
                     'email' => 'not email',
-                ]
-            ]
+                ],
+            ],
         ]);
 
         $response->assertExactJson([
@@ -105,14 +105,14 @@ class CreateResourceTest extends TestCase
                     'code' => 422,
                     'detail' => 'The email field must be a valid email address.',
                     'source' => [
-                        'pointer' => '/data/attributes/email'
+                        'pointer' => '/data/attributes/email',
                     ],
-                ]
-            ]
+                ],
+            ],
         ]);
     }
 
-    public function testCreatePageCommentWithUserProvidedId()
+    public function test_create_page_comment_with_user_provided_id()
     {
         $user = $this->actingAsUser();
 
@@ -128,16 +128,16 @@ class CreateResourceTest extends TestCase
                         'data' => [
                             'type' => 'pages',
                             'id' => '1',
-                        ]
+                        ],
                     ],
                     'user' => [
                         'data' => [
                             'type' => 'users',
                             'id' => $user->getId(),
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $response->assertCreated();
@@ -150,7 +150,7 @@ class CreateResourceTest extends TestCase
         $this->assertEquals($user->getId(), $newComment->getUser()->getId());
     }
 
-    public function testCreatePageComment()
+    public function test_create_page_comment()
     {
         $user = $this->actingAsUser();
 
@@ -165,16 +165,16 @@ class CreateResourceTest extends TestCase
                         'data' => [
                             'type' => 'pages',
                             'id' => '1',
-                        ]
+                        ],
                     ],
                     'user' => [
                         'data' => [
                             'type' => 'users',
                             'id' => $user->getId(),
-                        ]
-                    ]
-                ]
-            ]
+                        ],
+                    ],
+                ],
+            ],
         ]);
 
         $response->assertCreated();

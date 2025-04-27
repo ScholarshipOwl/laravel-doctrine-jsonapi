@@ -9,13 +9,13 @@ use Tests\TestCase;
 
 class ListResourcesTest extends TestCase
 {
-    public function testAuthorizationPermissionsForNoLogedIn()
+    public function test_authorization_permissions_for_no_loged_in()
     {
         $this->get('/roles')->assertStatus(Response::HTTP_FORBIDDEN);
         $this->get('/users')->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function testAuthorizationPermissionsForUserRole()
+    public function test_authorization_permissions_for_user_role()
     {
         $this->actingAsUser();
 
@@ -23,7 +23,7 @@ class ListResourcesTest extends TestCase
         $this->get('/users')->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function testAuthorizationPermissionsForRootRole()
+    public function test_authorization_permissions_for_root_role()
     {
         $this->actingAsRoot();
 
@@ -31,7 +31,7 @@ class ListResourcesTest extends TestCase
         $this->get('/users')->assertStatus(Response::HTTP_OK);
     }
 
-    public function testListRoleResponse()
+    public function test_list_role_response()
     {
         $this->actingAsRoot();
 
@@ -46,8 +46,8 @@ class ListResourcesTest extends TestCase
                             'name' => 'Root',
                         ],
                         'links' => [
-                            'self' => '/roles/1'
-                        ]
+                            'self' => '/roles/1',
+                        ],
                     ],
                     [
                         'id' => '2',
@@ -56,8 +56,8 @@ class ListResourcesTest extends TestCase
                             'name' => 'User',
                         ],
                         'links' => [
-                            'self' => '/roles/2'
-                        ]
+                            'self' => '/roles/2',
+                        ],
                     ],
                     [
                         'id' => '3',
@@ -66,14 +66,14 @@ class ListResourcesTest extends TestCase
                             'name' => 'Moderator',
                         ],
                         'links' => [
-                            'self' => '/roles/3'
-                        ]
+                            'self' => '/roles/3',
+                        ],
                     ],
-                ]
+                ],
             ]);
     }
 
-    public function testListUsersResponse()
+    public function test_list_users_response()
     {
         $this->actingAsRoot();
 
@@ -95,12 +95,12 @@ class ListResourcesTest extends TestCase
                                 ],
                                 'links' => [
                                     'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
-                                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles'
-                                ]
-                            ]
+                                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles',
+                                ],
+                            ],
                         ],
                         'links' => [
-                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b'
+                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
                         ],
                     ],
                     [
@@ -118,12 +118,12 @@ class ListResourcesTest extends TestCase
                                 ],
                                 'links' => [
                                     'related' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/roles',
-                                    'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles'
-                                ]
-                            ]
+                                    'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles',
+                                ],
+                            ],
                         ],
                         'links' => [
-                            'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d'
+                            'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d',
                         ],
                     ],
                     [
@@ -141,12 +141,12 @@ class ListResourcesTest extends TestCase
                                 ],
                                 'links' => [
                                     'related' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/roles',
-                                    'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles'
-                                ]
-                            ]
+                                    'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles',
+                                ],
+                            ],
                         ],
                         'links' => [
-                            'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8'
+                            'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8',
                         ],
                     ],
                 ],
@@ -158,8 +158,8 @@ class ListResourcesTest extends TestCase
                             'name' => 'User',
                         ],
                         'links' => [
-                            'self' => '/roles/2'
-                        ]
+                            'self' => '/roles/2',
+                        ],
                     ],
                     [
                         'id' => '1',
@@ -168,8 +168,8 @@ class ListResourcesTest extends TestCase
                             'name' => 'Root',
                         ],
                         'links' => [
-                            'self' => '/roles/1'
-                        ]
+                            'self' => '/roles/1',
+                        ],
                     ],
                     [
                         'id' => '3',
@@ -178,14 +178,14 @@ class ListResourcesTest extends TestCase
                             'name' => 'Moderator',
                         ],
                         'links' => [
-                            'self' => '/roles/3'
-                        ]
+                            'self' => '/roles/3',
+                        ],
                     ],
-                ]
+                ],
             ]);
     }
 
-    public function testListUsersPaginationAndSorting()
+    public function test_list_users_pagination_and_sorting()
     {
         $this->actingAsRoot();
 
@@ -202,7 +202,7 @@ class ListResourcesTest extends TestCase
             ->assertSuccessful()
             ->assertJson([
                 'data' => [
-                    ['id' => User::MODERATOR_ID]
+                    ['id' => User::MODERATOR_ID],
                 ],
                 'meta' => [
                     'pagination' => [
@@ -224,8 +224,8 @@ class ListResourcesTest extends TestCase
                         'attributes' => [
                             'name' => 'testing user3',
                             'email' => 'test3email@test.com',
-                        ]
-                    ]
+                        ],
+                    ],
                 ],
                 'meta' => [
                     'pagination' => [
@@ -244,7 +244,7 @@ class ListResourcesTest extends TestCase
                 'data' => [
                     ['id' => User::ROOT_ID],
                     ['id' => User::MODERATOR_ID],
-                    ['id' => User::USER_ID]
+                    ['id' => User::USER_ID],
                 ],
             ]);
 
@@ -254,7 +254,7 @@ class ListResourcesTest extends TestCase
             ->assertJson([
                 'data' => [
                     ['id' => User::USER_ID],
-                    ['id' => User::MODERATOR_ID]
+                    ['id' => User::MODERATOR_ID],
                 ],
             ]);
 
@@ -262,7 +262,7 @@ class ListResourcesTest extends TestCase
             ->assertSuccessful()
             ->assertJson([
                 'data' => [
-                    ['id' => User::USER_ID]
+                    ['id' => User::USER_ID],
                 ],
                 'meta' => [
                     'pagination' => [

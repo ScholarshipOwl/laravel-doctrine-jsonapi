@@ -7,13 +7,9 @@ namespace Tests\Scribe\Strategies\Metadata;
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Sowl\JsonApi\Scribe\Attributes\ResourceMetadata;
 use Sowl\JsonApi\Scribe\Strategies\Metadata\GetFromResourceMetadataAttribute;
-use Tests\TestCase;
 use Tests\ExtractedEndpointDataBuilder;
+use Tests\TestCase;
 
-/**
- * @group Scribe
- * @group ScribeMetadata
- */
 final class GetFromResourceMetadataAttributeTest extends TestCase
 {
     use ExtractedEndpointDataBuilder;
@@ -27,14 +23,15 @@ final class GetFromResourceMetadataAttributeTest extends TestCase
         $this->strategy = new GetFromResourceMetadataAttribute(new DocumentationConfig([]));
     }
 
-    public function testGeneratesMetadataForListAction(): void
+    public function test_generates_metadata_for_list_action(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users',
             [
                 'as' => 'jsonapi.users.list',
-                'uses' => new class {
+                'uses' => new class
+                {
                     #[ResourceMetadata]
                     public function __invoke()
                     {

@@ -11,7 +11,7 @@ class UpdatePageUserRequest extends Request
     public function dataRules(): array
     {
         return [
-            'data' => [new ResourceIdentifierRule(User::class)]
+            'data' => [new ResourceIdentifierRule(User::class)],
         ];
     }
 }

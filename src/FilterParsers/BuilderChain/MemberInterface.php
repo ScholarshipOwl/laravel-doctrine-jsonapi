@@ -21,7 +21,8 @@ interface MemberInterface
      * transformation or processing on the input object before returning it.
      *
      * @template Member
-     * @param Member $object
+     *
+     * @param  Member  $object
      * @return Member
      */
     public function __invoke($object);

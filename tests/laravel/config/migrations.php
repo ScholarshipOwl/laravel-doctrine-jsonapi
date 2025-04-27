@@ -39,11 +39,11 @@ return [
             | filter all tables.
             |
             */
-            'schema_filter' => '/^(?!password_resets|failed_jobs).*$/'
+            'schema_filter' => '/^(?!password_resets|failed_jobs).*$/',
         ],
 
         'migrations_paths' => [
-            'Database\\Migrations' => realpath(__DIR__) . '/../database/migrations'
+            'Database\\Migrations' => realpath(__DIR__).'/../database/migrations',
         ],
 
         /*

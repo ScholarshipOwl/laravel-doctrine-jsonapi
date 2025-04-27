@@ -22,18 +22,17 @@ class ResourceManipulator
     public function __construct(
         protected EntityManager $em,
         protected ResourceManager $rm,
-    ) {
-    }
+    ) {}
 
     /**
      * Method takes a string that represents a resource type and an optional string that represents
      * the object identifier. It returns a new resource entity.
      */
-    public function createResource(string $resourceType, string $id = null): ResourceInterface
+    public function createResource(string $resourceType, ?string $id = null): ResourceInterface
     {
         $class = $this->rm->classByResourceType($resourceType);
 
-        $resource = new $class();
+        $resource = new $class;
 
         if (is_null($id)) {
             $classMetadata = $this->em->getClassMetadata($class);
@@ -42,7 +41,7 @@ class ResourceManipulator
             }
         }
 
-        if (!is_null($id)) {
+        if (! is_null($id)) {
             $this->setProperty($resource, 'id', $id);
         }
 
@@ -61,11 +60,11 @@ class ResourceManipulator
     public function hydrateResource(
         ResourceInterface $resource,
         array $data,
-        string $pointer = "/data",
+        string $pointer = '/data',
         bool $throwOnMissing = false,
     ): ResourceInterface {
-        if ($throwOnMissing && !isset($data['attributes']) && !isset($data['relationships'])) {
-            throw (new BadRequestException())
+        if ($throwOnMissing && ! isset($data['attributes']) && ! isset($data['relationships'])) {
+            throw (new BadRequestException)
                 ->detail('Missing or not array `/data/attributes` or `/data/relationships.', $pointer);
         }
 
@@ -124,7 +123,7 @@ class ResourceManipulator
                     ->detail('Unknown relationship.', $relationPointer);
             }
 
-            if (!is_array($data) || !array_key_exists('data', $data)) {
+            if (! is_array($data) || ! array_key_exists('data', $data)) {
                 throw (new BadRequestException('Wrong data.'))
                     ->detail('Data is missing or not an array.', $relationPointer);
             }
@@ -168,8 +167,8 @@ class ResourceManipulator
         mixed $data,
         string $pointer
     ): ResourceInterface {
-        if (!is_array($data)) {
-            throw (new BadRequestException())
+        if (! is_array($data)) {
+            throw (new BadRequestException)
                 ->detail('Data is not an array', $pointer);
         }
 
@@ -203,14 +202,14 @@ class ResourceManipulator
 
         // Remove relationships that not exists anymore
         foreach ($current as $currentResource) {
-            if (!$replace->contains($currentResource)) {
+            if (! $replace->contains($currentResource)) {
                 $this->removeRelationItem($resource, $property, $currentResource);
             }
         }
 
         // Add new relationships
         foreach ($replace as $replaceResource) {
-            if (!$current->contains($replaceResource)) {
+            if (! $current->contains($replaceResource)) {
                 $this->addRelationItem($resource, $property, $replaceResource);
             }
         }
@@ -224,7 +223,7 @@ class ResourceManipulator
     public function objectIdentifierToResource(
         mixed $data,
         string $pointer,
-        string $expectedClass = null
+        ?string $expectedClass = null
     ): ?ResourceInterface {
         if (is_null($data)) {
             return null;
@@ -248,12 +247,12 @@ class ResourceManipulator
      */
     public function getProperty(ResourceInterface $resource, string $property): mixed
     {
-        $getter = 'get' . ucfirst($property);
+        $getter = 'get'.ucfirst($property);
 
-        if (!method_exists($resource, $getter)) {
-            throw (new BadRequestException())->error(
+        if (! method_exists($resource, $getter)) {
+            throw (new BadRequestException)->error(
                 'missing-getter',
-                ['getter' => sprintf('%s::%s', ClassUtils::getClass($resource), $getter)],
+                ['getter' => sprintf('%s::%s', get_class($resource), $getter)],
                 'Missing property getter.'
             );
         }
@@ -266,10 +265,10 @@ class ResourceManipulator
      */
     public function setProperty(ResourceInterface $resource, string $property, mixed $value): ResourceInterface
     {
-        $setter = 'set' . ucfirst($property);
+        $setter = 'set'.ucfirst($property);
 
-        if (!method_exists($resource, $setter)) {
-            throw (new BadRequestException())->error(
+        if (! method_exists($resource, $setter)) {
+            throw (new BadRequestException)->error(
                 400,
                 ['setter' => sprintf('%s::%s', get_class($resource), $setter)],
                 'Missing property setter.'
@@ -280,7 +279,6 @@ class ResourceManipulator
 
         return $resource;
     }
-
 
     /**
      * Gets the value of a specified relationship from a resource object.
@@ -297,12 +295,12 @@ class ResourceManipulator
      */
     public function addRelationItem(ResourceInterface $resource, string $property, mixed $item): ResourceInterface
     {
-        $adder = 'add' . ucfirst(Str::singular($property));
+        $adder = 'add'.ucfirst(Str::singular($property));
 
-        if (!method_exists($resource, $adder)) {
-            throw (new BadRequestException())->error(
+        if (! method_exists($resource, $adder)) {
+            throw (new BadRequestException)->error(
                 'missing-adder',
-                ['adder' => sprintf('%s::%s', ClassUtils::getClass($resource), $adder)],
+                ['adder' => sprintf('%s::%s', get_class($resource), $adder)],
                 'Missing collection adder.'
             );
         }
@@ -317,12 +315,12 @@ class ResourceManipulator
      */
     public function removeRelationItem(ResourceInterface $resource, string $property, mixed $item): ResourceInterface
     {
-        $remover = 'remove' . ucfirst(Str::singular($property));
+        $remover = 'remove'.ucfirst(Str::singular($property));
 
-        if (!method_exists($resource, $remover)) {
-            throw (new BadRequestException())->error(
+        if (! method_exists($resource, $remover)) {
+            throw (new BadRequestException)->error(
                 'missing-remover',
-                ['remover' => sprintf('%s::%s', ClassUtils::getClass($resource), $remover)],
+                ['remover' => sprintf('%s::%s', get_class($resource), $remover)],
                 'Missing collection remover.'
             );
         }

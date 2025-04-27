@@ -86,7 +86,7 @@ trait ResponseGenerationHelper
             $resource = $this->factory()->of($resourceClass)->create();
             $relationship = $this->rm()->relationshipsByClass($resourceClass)->get($relationshipName);
 
-            if (!$relationship) {
+            if (! $relationship) {
                 throw new \InvalidArgumentException(
                     "Relationship $relationshipName on resource $resourceClass does not exist"
                 );
@@ -121,7 +121,8 @@ trait ResponseGenerationHelper
      * Generate a single resource instance for the given resource class
      *
      * @template T of object
-     * @param class-string<T> $resourceClass
+     *
+     * @param  class-string<T>  $resourceClass
      * @return T
      */
     protected function createSingleResource(
@@ -155,7 +156,8 @@ trait ResponseGenerationHelper
      * Wrap a callback in a database transaction
      *
      * @template T
-     * @param callable(): T $callback
+     *
+     * @param  callable(): T  $callback
      * @return T|null
      */
     private function wrapInTransaction(callable $callback)
@@ -163,6 +165,7 @@ trait ResponseGenerationHelper
         try {
             $this->em()->beginTransaction();
             $result = $callback();
+
             return $result;
         } catch (\Throwable $e) {
             c::warn(sprintf(
@@ -170,6 +173,7 @@ trait ResponseGenerationHelper
                 $this->jsonApiEndpointData->endpointData->route->uri,
                 $e->getMessage()
             ));
+
             return null;
         } finally {
             if ($this->em()->getConnection()->isTransactionActive()) {

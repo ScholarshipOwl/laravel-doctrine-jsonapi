@@ -7,7 +7,7 @@ use Sowl\JsonApi\ResourceManager;
 /**
  * Class represents a to-one relationship between resources in a JSON:API implementation.
  */
-class ToOneRelationship implements RelationshipInterface
+final class ToOneRelationship implements RelationshipInterface
 {
     use RelationshipTrait;
 
@@ -25,7 +25,7 @@ class ToOneRelationship implements RelationshipInterface
      */
     public static function create(string $name, string $class, ?string $property = null): static
     {
-        return new static($name, $class, $property);
+        return new self($name, $class, $property);
     }
 
     public function isToOne(): bool

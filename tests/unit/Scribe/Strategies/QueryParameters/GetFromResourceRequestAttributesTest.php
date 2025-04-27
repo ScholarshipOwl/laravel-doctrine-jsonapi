@@ -4,23 +4,25 @@ namespace Tests\Scribe\Strategies\QueryParameters;
 
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Mockery;
-use Tests\TestCase;
-use Tests\ExtractedEndpointDataBuilder;
-use Sowl\JsonApi\Scribe\Strategies\QueryParameters\GetFromResourceRequestAttributes;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
+use Sowl\JsonApi\Scribe\Strategies\QueryParameters\GetFromResourceRequestAttributes;
+use Tests\ExtractedEndpointDataBuilder;
+use Tests\TestCase;
 
 class GetFromResourceRequestAttributesTest extends TestCase
 {
     use ExtractedEndpointDataBuilder;
 
+    private DocumentationConfig $documentationConfig;
     private GetFromResourceRequestAttributes $strategy;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->strategy = new GetFromResourceRequestAttributes(new DocumentationConfig([]));
+        $this->documentationConfig = new DocumentationConfig(config('scribe'));
+        $this->strategy = new GetFromResourceRequestAttributes($this->documentationConfig);
     }
 
     protected function tearDown(): void
@@ -29,7 +31,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         parent::tearDown();
     }
 
-    public function testReturnsCommonQueryParametersForJsonApiRoutes()
+    public function test_returns_common_query_parameters_for_json_api_routes()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
@@ -65,10 +67,9 @@ class GetFromResourceRequestAttributesTest extends TestCase
             [
                 'type' => 'string',
                 'required' => false,
-                'description' =>
-                    'Sparse fieldsets - specify which fields to include in the response for each resource type.'
-                    . " ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n"
-                    . '**Available fields:** `name`, `email`',
+                'description' => 'Sparse fieldsets - specify which fields to include in the response for each resource type.'
+                    ." ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n"
+                    .'**Available fields:** `name`, `email`',
             ],
             $result['fields[users]']
         );
@@ -81,7 +82,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertFalse($result['include']['required']);
     }
 
-    public function testReturnsEmptyArrayForNonJsonApiRoutes()
+    public function test_returns_empty_array_for_non_json_api_routes()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
@@ -105,7 +106,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function testAddsListParametersForListRoutes()
+    public function test_adds_list_parameters_for_list_routes()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
@@ -141,7 +142,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Page number.'
-                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 1,
@@ -152,7 +153,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Number of results per page.'
-                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 10,
@@ -160,27 +161,27 @@ class GetFromResourceRequestAttributesTest extends TestCase
             $result['page[size]']
         );
 
-//        $this->assertEquals(
-//            [
-//                'description' => 'Maximum number of results to return.'
-//                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
-//                'required' => false,
-//                'type' => 'number',
-//                'example' => 10,
-//            ],
-//            $result['page[limit]']
-//        );
-//
-//        $this->assertEquals(
-//            [
-//                'description' => 'Number of results to skip.'
-//                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
-//                'required' => false,
-//                'type' => 'number',
-//                'example' => 0,
-//            ],
-//            $result['page[offset]']
-//        );
+        //        $this->assertEquals(
+        //            [
+        //                'description' => 'Maximum number of results to return.'
+        //                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+        //                'required' => false,
+        //                'type' => 'number',
+        //                'example' => 10,
+        //            ],
+        //            $result['page[limit]']
+        //        );
+        //
+        //        $this->assertEquals(
+        //            [
+        //                'description' => 'Number of results to skip.'
+        //                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+        //                'required' => false,
+        //                'type' => 'number',
+        //                'example' => 0,
+        //            ],
+        //            $result['page[offset]']
+        //        );
 
         // Assert filter parameter structure
         $this->assertArrayHasKey('filter', $result);
@@ -191,8 +192,8 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Sort the results by attributes. Prefix with `-` for descending order.'
-                               . " ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
-                               . '**Available sort fields:** `name`, `email`',
+                               ." ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
+                               .'**Available sort fields:** `name`, `email`',
                 'required' => false,
                 'type' => 'string',
             ],
@@ -200,7 +201,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         );
     }
 
-    public function testAddsListParametersForToManyRelationshipRoutes()
+    public function test_adds_list_parameters_for_to_many_relationship_routes()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
@@ -232,7 +233,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Page number.'
-                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 1,
@@ -243,7 +244,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Number of results per page.'
-                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 10,
@@ -251,27 +252,27 @@ class GetFromResourceRequestAttributesTest extends TestCase
             $result['page[size]']
         );
 
-//        $this->assertEquals(
-//            [
-//                'description' => 'Maximum number of results to return.'
-//                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
-//                'required' => false,
-//                'type' => 'number',
-//                'example' => 10,
-//            ],
-//            $result['page[limit]']
-//        );
-//
-//        $this->assertEquals(
-//            [
-//                'description' => 'Number of results to skip.'
-//                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
-//                'required' => false,
-//                'type' => 'number',
-//                'example' => 0,
-//            ],
-//            $result['page[offset]']
-//        );
+        //        $this->assertEquals(
+        //            [
+        //                'description' => 'Maximum number of results to return.'
+        //                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+        //                'required' => false,
+        //                'type' => 'number',
+        //                'example' => 10,
+        //            ],
+        //            $result['page[limit]']
+        //        );
+        //
+        //        $this->assertEquals(
+        //            [
+        //                'description' => 'Number of results to skip.'
+        //                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+        //                'required' => false,
+        //                'type' => 'number',
+        //                'example' => 0,
+        //            ],
+        //            $result['page[offset]']
+        //        );
 
         // Assert filter parameter structure
 
@@ -280,8 +281,8 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Sort the results by attributes. Prefix with `-` for descending order.'
-                               . " ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
-                               . '**Available sort fields:** `name`',
+                               ." ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
+                               .'**Available sort fields:** `name`',
                 'required' => false,
                 'type' => 'string',
             ],
@@ -289,7 +290,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         );
     }
 
-    public function testReturnsEmptyArrayForNonAllowedMethods()
+    public function test_returns_empty_array_for_non_allowed_methods()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'DELETE',
@@ -313,7 +314,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function testReturnsQueryParametersForAllowedMethods()
+    public function test_returns_query_parameters_for_allowed_methods()
     {
         $routeInfo = [
             'as' => 'jsonapi.users.show',
@@ -368,7 +369,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEmpty($resultPost, "Expected empty result for custom action HTTP method: {$postMethod}");
     }
 
-    public function testIncludeParameterWithAvailableIncludes()
+    public function test_include_parameter_with_available_includes()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
@@ -402,7 +403,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals('status,roles', $includeParam['example']);
     }
 
-    public function testMetaParameterWithAvailableMetas()
+    public function test_meta_parameter_with_available_metas()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
@@ -433,7 +434,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertArrayHasKey('example', $meta);
     }
 
-    public function testFieldsParameterStructure()
+    public function test_fields_parameter_structure()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
@@ -466,7 +467,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals('string', $fields['type']);
     }
 
-    public function testFilterParameterForCollectionRoute()
+    public function test_filter_parameter_for_collection_route()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
@@ -492,7 +493,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertIsArray($result['filter']); // Simplified check
     }
 
-    public function testSortParameterForCollectionRoute()
+    public function test_sort_parameter_for_collection_route()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
@@ -518,8 +519,8 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Sort the results by attributes. Prefix with `-` for descending order.'
-                               . " ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
-                               . '**Available sort fields:** `name`, `email`',
+                               ." ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
+                               .'**Available sort fields:** `name`, `email`',
                 'required' => false,
                 'type' => 'string',
             ],
@@ -527,7 +528,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         );
     }
 
-    public function testPageParameterForCollectionRoute()
+    public function test_page_parameter_for_collection_route()
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
@@ -552,7 +553,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Page number.'
-                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 1,
@@ -564,7 +565,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Number of results per page.'
-                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 10,
@@ -573,26 +574,26 @@ class GetFromResourceRequestAttributesTest extends TestCase
         );
         $this->assertEquals(10, $result['page[size]']['example']);
 
-//        $this->assertEquals(
-//            [
-//                'description' => 'Maximum number of results to return.'
-//                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
-//                'required' => false,
-//                'type' => 'number',
-//                'example' => 10,
-//            ],
-//            $result['page[limit]']
-//        );
-//
-//        $this->assertEquals(
-//            [
-//                'description' => 'Number of results to skip.'
-//                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
-//                'required' => false,
-//                'type' => 'number',
-//                'example' => 0,
-//            ],
-//            $result['page[offset]']
-//        );
+        //        $this->assertEquals(
+        //            [
+        //                'description' => 'Maximum number of results to return.'
+        //                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+        //                'required' => false,
+        //                'type' => 'number',
+        //                'example' => 10,
+        //            ],
+        //            $result['page[limit]']
+        //        );
+        //
+        //        $this->assertEquals(
+        //            [
+        //                'description' => 'Number of results to skip.'
+        //                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+        //                'required' => false,
+        //                'type' => 'number',
+        //                'example' => 0,
+        //            ],
+        //            $result['page[offset]']
+        //        );
     }
 }

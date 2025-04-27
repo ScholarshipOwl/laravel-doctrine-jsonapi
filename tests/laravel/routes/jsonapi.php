@@ -1,11 +1,11 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Sowl\JsonApi\Default\Controller as DefaultController;
 use Tests\App\Http\Controller\PageComment\PageCommentController;
 use Tests\App\Http\Controller\Pages\PageController;
 use Tests\App\Http\Controller\Roles\RolesController;
 use Tests\App\Http\Controller\Users\UsersController;
-use Sowl\JsonApi\Default\Controller as DefaultController;
 
 Route::group(['as' => 'jsonapi.'], function () {
     /* ---------------------------------------------------------
@@ -26,7 +26,6 @@ Route::group(['as' => 'jsonapi.'], function () {
     Route::post('/users/{id}/relationships/roles', [UsersController::class, 'createUserRoles']);
     Route::delete('/users/{id}/relationships/roles', [UsersController::class, 'removeUserRoles']);
     Route::patch('/users/{id}/relationships/roles', [UsersController::class, 'updateUserRoles']);
-
 
     /* ---------------------------------------------------------
      * Default routes will be handled by the default controller.

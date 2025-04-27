@@ -4,14 +4,14 @@ namespace Tests;
 
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\Mapping\ClassMetadata;
+use Mockery as m;
 use Mockery\MockInterface;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceRepository;
-use Mockery as m;
 
 class ResourceRepositoryTest extends TestCase
 {
-    public function testFindByIdentifierInvalidEntity()
+    public function test_find_by_identifier_invalid_entity()
     {
         $this->expectException(\UnexpectedValueException::class);
         $this->expectExceptionCode(0);
@@ -23,7 +23,7 @@ class ResourceRepositoryTest extends TestCase
         $emMock = m::mock(EntityManager::class);
         $emMock->shouldReceive('find')
             ->withArgs([\stdClass::class, $id, null, null])
-            ->andReturn(new \stdClass());
+            ->andReturn(new \stdClass);
 
         /** @var ClassMetadata|MockInterface $classMetadata */
         $classMetadata = m::mock(ClassMetadata::class);

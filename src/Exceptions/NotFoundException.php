@@ -11,7 +11,7 @@ class NotFoundException extends JsonApiException
     public function __construct(
         string $message = 'Not found.',
         int $httpStatus = self::HTTP_NOT_FOUND,
-        \Throwable $previous = null
+        ?\Throwable $previous = null
     ) {
         parent::__construct($message, $httpStatus, $previous);
     }

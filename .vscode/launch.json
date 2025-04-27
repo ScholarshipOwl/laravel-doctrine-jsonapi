@@ -2,13 +2,19 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Listen for Xdebug in Docker",
+            "name": "Listen for Xdebug",
             "type": "php",
             "request": "launch",
-            "port": 9003,
-            "pathMappings": {
-                "/opt/project": "${workspaceFolder}"
-            }
-        }
+            "port": 9003
+        },
+        // {
+        //     "name": "Listen for Xdebug in Docker",
+        //     "type": "php",
+        //     "request": "launch",
+        //     "port": 9003,
+        //     "pathMappings": {
+        //         "/opt/project": "${workspaceFolder}"
+        //     }
+        // }
     ]
 }

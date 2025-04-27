@@ -4,12 +4,10 @@ namespace Sowl\JsonApi\Scribe\Strategies\Responses;
 
 use Knuckles\Camel\Extraction\ExtractedEndpointData;
 use Sowl\JsonApi\Fractal\FractalOptions;
-use Sowl\JsonApi\Relationships\ToManyRelationship;
-use Sowl\JsonApi\Relationships\ToOneRelationship;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelated;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelationships;
 use Sowl\JsonApi\Scribe\Strategies\AbstractStrategy;
-use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
 
@@ -56,20 +54,18 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
         $allAttributes = [
             ...$attributesOnController,
             ...$attributesOnFormRequest,
-            ...$attributesOnMethod
+            ...$attributesOnMethod,
         ];
 
         foreach ($allAttributes as $attributeInstance) {
             $response = match (true) {
                 $attributeInstance instanceof ResourceResponseRelated,
-                $attributeInstance instanceof ResourceResponseRelationships =>
-                    $this->getResourceRelationshipOrRelatedResponse($attributeInstance),
-                $attributeInstance instanceof ResourceResponse =>
-                    $this->getResourceResponse($attributeInstance),
+                $attributeInstance instanceof ResourceResponseRelationships => $this->getResourceRelationshipOrRelatedResponse($attributeInstance),
+                $attributeInstance instanceof ResourceResponse => $this->getResourceResponse($attributeInstance),
                 default => []
             };
 
-            if (!empty($response)) {
+            if (! empty($response)) {
                 $responses[] = $response;
             }
         }
@@ -97,7 +93,7 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
         return [
             'status' => $attributeInstance->status ?? 200,
             'description' => $attributeInstance->description ?? '',
-            'content' => $response
+            'content' => $response,
         ];
     }
 
@@ -114,34 +110,30 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
         $relationship = $this->rm()->relationshipsByClass($resourceClass)->get($relationshipName);
         $isRelationships = $attributeInstance instanceof ResourceResponseRelationships;
 
-        if (!$relationship) {
+        if (! $relationship) {
             throw new \InvalidArgumentException(
                 "Relationship $relationshipName on resource $resourceClass does not exist"
             );
         }
 
-        if ($relationship instanceof ToOneRelationship) {
-            $content = $this->fetchTransformedResponse(
+        $content = $relationship->isToOne()
+            ? $this->fetchTransformedResponse(
                 $relationship->resourceType(),
                 FractalOptions::fromArray($attributeInstance->fractalOptions),
                 isRelationship: $isRelationships
-            );
-        }
-
-        if ($relationship instanceof ToManyRelationship) {
-            $content = $this->fetchTransformedCollectionResponse(
+            )
+            : $this->fetchTransformedCollectionResponse(
                 $relationship->resourceType(),
                 FractalOptions::fromArray($attributeInstance->fractalOptions),
                 $attributeInstance->pageNumber,
                 $attributeInstance->pageSize,
                 isRelationship: $isRelationships
             );
-        }
 
         return [
             'status' => $attributeInstance->status ?? 200,
             'description' => $attributeInstance->description,
-            'content' => $content
+            'content' => $content,
         ];
     }
 }

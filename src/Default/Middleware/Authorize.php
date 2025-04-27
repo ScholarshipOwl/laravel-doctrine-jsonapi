@@ -26,8 +26,7 @@ class Authorize
     public function __construct(
         protected Gate $gate,
         protected ResourceManager $resourceManager,
-    ) {
-    }
+    ) {}
 
     protected static array $methodResourceAbilityMap = [
         HttpRequest::METHOD_GET => AbilitiesInterface::SHOW,
@@ -55,7 +54,7 @@ class Authorize
         $ability = $this->guessAbility();
         $arguments = $this->buildArguments($args);
 
-        if (!$this->gate->allows($ability, $arguments)) {
+        if (! $this->gate->allows($ability, $arguments)) {
             $resourceType = $this->request()->resourceType();
             $message = sprintf('No "%s" ability on "%s" resource.', $ability, $resourceType);
             throw (new ForbiddenException($message))->forbiddenError($message);
@@ -74,19 +73,19 @@ class Authorize
         $method = $request->method();
 
         if ($this->request()->getId()) {
-            if (!empty($this->request()->relationshipName())) {
-                if (!empty($ability = static::$methodRelationshipAbilityMap[$request->method()] ?? null)) {
+            if (! empty($this->request()->relationshipName())) {
+                if (! empty($ability = static::$methodRelationshipAbilityMap[$request->method()] ?? null)) {
                     $relationship = $this->request()->relationship();
 
                     if ($relationship instanceof ToManyRelationship && $ability === AbilitiesInterface::SHOW) {
                         $ability = AbilitiesInterface::LIST;
                     }
 
-                    return $ability . ucfirst($relationship->name());
+                    return $ability.ucfirst($relationship->name());
                 }
             }
 
-            if (!empty($ability = static::$methodResourceAbilityMap[$request->method()] ?? null)) {
+            if (! empty($ability = static::$methodResourceAbilityMap[$request->method()] ?? null)) {
                 return $ability;
             }
         } elseif ($request->method() === HttpRequest::METHOD_GET) {

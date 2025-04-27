@@ -6,6 +6,7 @@ use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationshipsAction;
 use Sowl\JsonApi\Default\Request\CreateToManyRelationshipsRequest;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Response;
+use Sowl\JsonApi\ResponseFactory;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestRelationships;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponseRelationships;
 
@@ -34,6 +35,6 @@ trait WithCreateRelationshipsTrait
                 ->dispatch($request);
         }
 
-        return response()->notFound();
+        return app(ResponseFactory::class)->notFound();
     }
 }

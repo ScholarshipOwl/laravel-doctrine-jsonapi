@@ -18,7 +18,9 @@ use Sowl\JsonApi\ResourceRepository;
 trait ResourceDataRulesTrait
 {
     abstract public function repository(): ResourceRepository;
+
     abstract public function rm(): ResourceManager;
+
     abstract public function resourceType(): string;
 
     /**
@@ -65,8 +67,8 @@ trait ResourceDataRulesTrait
     /**
      * Generate validation rules based on field type and constraints from Doctrine metadata.
      *
-     * @param array $fieldMapping The field mapping information from Doctrine metadata
-     * @return array List of Laravel validation rules for the field
+     * @param  FieldMapping  $fieldMapping  The field mapping information from Doctrine metadata
+     * @return array<string, mixed> List of Laravel validation rules for the field
      */
     private function getFieldTypeRules(FieldMapping $fieldMapping): array
     {
@@ -79,7 +81,7 @@ trait ResourceDataRulesTrait
                     $rules[] = 'string';
                     // Add max length rule if defined
                     if (isset($fieldMapping['length']) && $fieldMapping['length'] > 0) {
-                        $rules[] = 'max:' . $fieldMapping['length'];
+                        $rules[] = 'max:'.$fieldMapping['length'];
                     }
                     break;
 
@@ -102,7 +104,7 @@ trait ResourceDataRulesTrait
                     $rules[] = 'numeric';
                     // Add precision and scale rules if defined
                     if (isset($fieldMapping['precision']) && isset($fieldMapping['scale'])) {
-                        $rules[] = 'decimal:' . $fieldMapping['scale'];
+                        $rules[] = 'decimal:'.$fieldMapping['scale'];
                     }
                     break;
 
@@ -133,7 +135,7 @@ trait ResourceDataRulesTrait
                     $rules[] = 'uuid';
                     break;
 
-                // Add more type mappings as needed
+                    // Add more type mappings as needed
             }
         }
 

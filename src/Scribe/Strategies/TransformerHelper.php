@@ -15,7 +15,7 @@ trait TransformerHelper
 
     public function fetchTransformedResponse(
         string $resourceType,
-        FractalOptions $fractalOptions = null,
+        ?FractalOptions $fractalOptions = null,
         bool $isRelationship = false
     ): ?array {
         try {
@@ -28,13 +28,13 @@ trait TransformerHelper
 
             $resource = $this->instantiateExampleResource($resourceClass);
 
-            return (new Fractal($fractalOptions ?: new FractalOptions()))
+            return (new Fractal($fractalOptions ?: new FractalOptions))
                 ->createData(new Item($resource, $transformer, $resource->getResourceType()))
                 ->toArray();
         } catch (\Throwable $e) {
             c::warn(
                 "Failed to generate response example for resource type: [$resourceType] "
-                . "because of: {$e->getMessage()}"
+                ."because of: {$e->getMessage()}"
             );
 
             return null;
@@ -43,7 +43,7 @@ trait TransformerHelper
 
     public function fetchTransformedCollectionResponse(
         string $resourceType,
-        FractalOptions $fractalOptions = null,
+        ?FractalOptions $fractalOptions = null,
         int $pageNumber = 1,
         int $pageSize = 3,
         bool $isRelationship = false
@@ -66,13 +66,13 @@ trait TransformerHelper
                 perPage: $pageSize
             ));
 
-            return (new Fractal($fractalOptions ?: new FractalOptions()))
+            return (new Fractal($fractalOptions ?: new FractalOptions))
                 ->createData($collection)
                 ->toArray();
         } catch (\Throwable $e) {
             c::warn(
                 "Failed to generate response example for resource type: [$resourceType] "
-                . "because of: {$e->getMessage()}"
+                ."because of: {$e->getMessage()}"
             );
 
             return null;

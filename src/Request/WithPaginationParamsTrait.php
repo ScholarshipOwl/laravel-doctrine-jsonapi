@@ -17,12 +17,12 @@ trait WithPaginationParamsTrait
     public function paginationParamsRules(): array
     {
         return [
-            'sort'          => 'sometimes|required|string',
-            'page'          => 'sometimes|required|array',
-            'page.number'   => 'sometimes|required|numeric',
-            'page.size'     => 'sometimes|required|numeric',
-            'page.limit'    => 'sometimes|required|numeric',
-            'page.offset'   => 'sometimes|required|numeric',
+            'sort' => 'sometimes|required|string',
+            'page' => 'sometimes|required|array',
+            'page.number' => 'sometimes|required|numeric',
+            'page.size' => 'sometimes|required|numeric',
+            'page.limit' => 'sometimes|required|numeric',
+            'page.offset' => 'sometimes|required|numeric',
         ];
     }
 
@@ -54,7 +54,7 @@ trait WithPaginationParamsTrait
     /**
      * Retrieves the page part of a JSON:API request.
      */
-    public function getPage(): array|null
+    public function getPage(): ?array
     {
         $page = $this->get('page');
         if (is_array($page)) {
@@ -67,12 +67,12 @@ trait WithPaginationParamsTrait
     /**
      * Retrieves the first result index for pagination from a JSON:API request.
      */
-    public function getFirstResult(): int|null
+    public function getFirstResult(): ?int
     {
         $page = $this->getPage();
         $maxResults = $this->getMaxResults();
 
-        if (is_array($page) && !is_null($maxResults)) {
+        if (is_array($page) && ! is_null($maxResults)) {
             if (isset($page['number']) && is_numeric($page['number'])) {
                 return ((int) $page['number'] - 1) * $maxResults;
             }
@@ -90,7 +90,7 @@ trait WithPaginationParamsTrait
     /**
      * Retrieves the maximum number of results per page for pagination from a JSON:API request.
      */
-    public function getMaxResults(): int|null
+    public function getMaxResults(): ?int
     {
         $page = $this->getPage();
 

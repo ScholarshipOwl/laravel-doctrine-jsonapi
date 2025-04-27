@@ -66,7 +66,7 @@ class SearchFilterParser extends AbstractFilterParser
                 'required' => false,
                 'type' => 'string',
                 'description' => __('jsonapi::query_params.filter.search.description', [
-                    'property' => $this->property
+                    'property' => $this->property,
                 ]),
             ],
         ];

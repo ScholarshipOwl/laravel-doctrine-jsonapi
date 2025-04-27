@@ -9,13 +9,13 @@ use Illuminate\Support\Collection;
  * The class provides methods to add, get, and check for the existence of relationships in the collection.
  * It also provides methods to retrieve all relationships, To-One or To-Many relationships.
  */
-class RelationshipsCollection
+final class RelationshipsCollection
 {
     protected Collection $relationships;
 
     public function __construct($relationships = [])
     {
-        $this->relationships = new Collection();
+        $this->relationships = new Collection;
         array_map(fn ($rel) => $this->add($rel), $relationships);
     }
 
@@ -52,7 +52,7 @@ class RelationshipsCollection
     /**
      * Retrieves a relationship by name from the collection.
      */
-    public function get(string $name): RelationshipInterface|null
+    public function get(string $name): ?RelationshipInterface
     {
         return $this->relationships[$name] ?? null;
     }
@@ -75,10 +75,10 @@ class RelationshipsCollection
         return $this->relationships->all();
     }
 
-
     /**
      * Maps over the relationships in the collection.
-     * @param callable(RelationshipInterface): RelationshipInterface $callback
+     *
+     * @param  callable(RelationshipInterface): RelationshipInterface  $callback
      */
     public function map(callable $callback): Collection
     {
@@ -87,7 +87,6 @@ class RelationshipsCollection
 
     /**
      * Retrieves all To-One relationships.
-     * @return static<string, ToOneRelationship>
      */
     public function toOne(): static
     {
@@ -96,7 +95,6 @@ class RelationshipsCollection
 
     /**
      * Retrieves all To-Many relationships.
-     * @return static<string, ToManyRelationship>
      */
     public function toMany(): static
     {

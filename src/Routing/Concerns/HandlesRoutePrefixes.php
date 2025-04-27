@@ -13,7 +13,7 @@ trait HandlesRoutePrefixes
     /**
      * Remove any prefix from the URI.
      *
-     * @param Route $route The route to get the URI from
+     * @param  Route  $route  The route to get the URI from
      * @return string The URI without the prefix
      */
     protected function pathWithoutPrefix(Route $route): string
@@ -32,14 +32,14 @@ trait HandlesRoutePrefixes
     /**
      * Remove a specific prefix from a URI string
      *
-     * @param string $uri The URI to process
-     * @param string $prefix The prefix to remove
+     * @param  string  $uri  The URI to process
+     * @param  string  $prefix  The prefix to remove
      * @return string The URI without the prefix
      */
     private function removePrefix(string $uri, string $prefix): string
     {
         // Remove the prefix and trailing slash if present
-        return Str::startsWith($uri, $prefix . '/')
+        return Str::startsWith($uri, $prefix.'/')
             ? substr($uri, strlen($prefix) + 1)
             : $uri;
     }

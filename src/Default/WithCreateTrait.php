@@ -22,7 +22,7 @@ trait WithCreateTrait
     #[ResourceResponse(status: 201, description: 'Created resource.')]
     public function create(CreateResourceRequest $request): Response
     {
-        return (new CreateResourceAction())
+        return (new CreateResourceAction)
             ->dispatch($request);
     }
 }

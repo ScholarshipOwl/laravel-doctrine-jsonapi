@@ -21,7 +21,7 @@ class Fractal extends Manager
      */
     public function __construct(protected FractalOptions $options)
     {
-        parent::__construct(new ScopeFactory());
+        parent::__construct(new ScopeFactory);
 
         $serializer = new JsonApiSerializer($options->baseUrl);
         $this->setSerializer($serializer);
@@ -56,7 +56,7 @@ class Fractal extends Manager
                 $fields = explode(',', $fields);
             }
 
-            //Remove empty and repeated fields
+            // Remove empty and repeated fields
             $this->requestedMetasets[(string) $type] = array_unique(array_filter($fields));
         }
 

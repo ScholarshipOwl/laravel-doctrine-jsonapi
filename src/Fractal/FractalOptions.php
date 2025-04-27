@@ -6,7 +6,7 @@ namespace Sowl\JsonApi\Fractal;
 
 use Sowl\JsonApi\Request;
 
-class FractalOptions
+final class FractalOptions
 {
     public function __construct(
         public readonly ?array $includes = null,
@@ -14,13 +14,11 @@ class FractalOptions
         public readonly ?array $fields = null,
         public readonly ?array $meta = null,
         public readonly string $baseUrl = ''
-    ) {
-    }
-
+    ) {}
 
     public static function fromArray(array $data): self
     {
-        return new static(
+        return new self(
             includes: $data['includes'] ?? null,
             excludes: $data['excludes'] ?? null,
             fields: $data['fields'] ?? null,

@@ -30,6 +30,5 @@ class ResourceMetadata
         public ?string $title = null,
         public ?string $description = null,
         public bool $authenticated = false,
-    ) {
-    }
+    ) {}
 }

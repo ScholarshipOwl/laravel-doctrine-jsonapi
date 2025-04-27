@@ -11,7 +11,7 @@ namespace Sowl\JsonApi\Exceptions;
  */
 class ValidationException extends JsonApiException
 {
-    public function __construct(\Exception $exception = null)
+    public function __construct(?\Exception $exception = null)
     {
         parent::__construct('Validation error.', static::HTTP_UNPROCESSABLE_ENTITY, $exception);
     }

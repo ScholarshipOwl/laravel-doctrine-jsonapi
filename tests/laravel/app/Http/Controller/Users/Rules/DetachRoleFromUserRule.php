@@ -19,7 +19,7 @@ class DetachRoleFromUserRule extends ResourceIdentifierRule
 
     public function roleAssignedOnUser($attr, Role $role, $fail): void
     {
-        if (!$this->user()->hasRole($role)) {
+        if (! $this->user()->hasRole($role)) {
             $fail(sprintf('User don\'t have assigned role "%s"', $role->getName()));
         }
     }

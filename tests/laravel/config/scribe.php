@@ -34,7 +34,7 @@ return [
 
             // Exclude these routes even if they matched the rules above.
             'exclude' => [
-                'GET /up'
+                'GET /up',
                 // Exclude dynamic routes with {resourceType} parameter for now
             ],
         ],
@@ -76,7 +76,7 @@ return [
     ],
 
     'external' => [
-        'html_attributes' => []
+        'html_attributes' => [],
     ],
 
     'try_it_out' => [
@@ -124,7 +124,7 @@ return [
     ],
 
     // Text to place in the "Introduction" section, right after the `description`. Markdown and HTML are supported.
-    'intro_text' => <<<INTRO
+    'intro_text' => <<<'INTRO'
 This documentation aims to provide all the information you need to work with our API.
 
 <aside>As you scroll, you'll see code examples for working with the API in different programming languages in the dark area to the right (or as part of the content on mobile).
@@ -158,7 +158,6 @@ INTRO
         'overrides' => [
             // 'info.version' => '2.0.0',
         ],
-
 
         // Additional generators to use when generating the OpenAPI spec.
         // Should extend `Knuckles\Scribe\Writing\OpenApiSpecGenerators\OpenApiGenerator`.
@@ -219,7 +218,7 @@ INTRO
             Strategies\UrlParameters\GetFromLaravelAPI::class,
             Strategies\UrlParameters\GetFromUrlParamAttribute::class,
             Strategies\UrlParameters\GetFromUrlParamTag::class,
-            \Sowl\JsonApi\Scribe\Strategies\UrlParameters\GetFromResourceRequestAttributes::class
+            \Sowl\JsonApi\Scribe\Strategies\UrlParameters\GetFromResourceRequestAttributes::class,
         ],
         'queryParameters' => [
             Strategies\QueryParameters\GetFromFormRequest::class,
@@ -249,8 +248,8 @@ INTRO
             // Sowl\JsonApi\Scribe\Responses\UseJsonApiResourceResponseStrategy::class,
             [
                 Strategies\Responses\ResponseCalls::class,
-                ['only' => ['GET *']]
-            ]
+                ['only' => ['GET *']],
+            ],
         ],
         'responseFields' => [
             Strategies\ResponseFields\GetFromResponseFieldAttribute::class,

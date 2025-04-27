@@ -11,8 +11,9 @@ use Sowl\JsonApi\Scribe\DisplayHelper;
 /**
  * Validates if the `data` key contains an `id` of the entity with required `type`.
  * The target entity must implement JsonApiResource
+ *
+ * TODO: Use ValidationRule for the rule
  */
-// TODO: Use ValidationRule for the rule
 class ResourceIdentifierRule implements Rule
 {
     use DisplayHelper;
@@ -24,6 +25,7 @@ class ResourceIdentifierRule implements Rule
         mixed $rule = null,
         array $messages = []
     ): static {
+        /** @phpstan-ignore new.static */
         return new static($resourceClass, $rule, $messages);
     }
 
@@ -32,7 +34,7 @@ class ResourceIdentifierRule implements Rule
         protected mixed $rule = null,
         protected ?array $messages = [],
     ) {
-        if (!is_null($this->resourceClass)) {
+        if (! is_null($this->resourceClass)) {
             $this->rm()->verifyResourceInterface($this->resourceClass);
         }
     }
@@ -40,17 +42,19 @@ class ResourceIdentifierRule implements Rule
     public function withRule(mixed $rule): static
     {
         $this->rule = $rule;
+
         return $this;
     }
 
     public function withMessages(array $messages): static
     {
         $this->messages = $messages;
+
         return $this;
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function passes($attribute, $value): bool
     {
@@ -63,14 +67,16 @@ class ResourceIdentifierRule implements Rule
             }
         } catch (\InvalidArgumentException $e) {
             $this->message[] = $e->getMessage();
+
             return false;
         }
 
-        if ($valid && !is_null($this->rule)) {
+        if ($valid && ! is_null($this->rule)) {
             $validator = Validator::make(['data' => $resource], ['data' => $this->rule], $this->messages);
 
             if ($validator->fails()) {
                 $this->message = $validator->getMessageBag()->get('data');
+
                 return false;
             }
 
@@ -81,7 +87,7 @@ class ResourceIdentifierRule implements Rule
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function message(): array|string
     {

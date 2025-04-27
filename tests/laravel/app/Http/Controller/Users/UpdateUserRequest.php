@@ -27,7 +27,7 @@ class UpdateUserRequest extends Request
             'data.relationships.status.data' => ['sometimes', 'array', new ResourceIdentifierRule(UserStatus::class)],
 
             'data.relationships.roles.data' => 'sometimes|array',
-            'data.relationships.roles.data.*' => [new AttachRoleToUserRule($this)]
+            'data.relationships.roles.data.*' => [new AttachRoleToUserRule($this)],
         ];
     }
 
