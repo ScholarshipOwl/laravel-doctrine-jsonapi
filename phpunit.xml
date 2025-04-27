@@ -1,17 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="tests/bootstrap.php" colors="false" processIsolation="false" stopOnError="false" stopOnFailure="false" stopOnIncomplete="false" stopOnSkipped="false" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd" cacheDirectory=".phpunit.cache" backupStaticProperties="false" requireCoverageMetadata="false">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="vendor/autoload.php"
+         colors="false"
+         processIsolation="false"
+         stopOnError="false"
+         stopOnFailure="false"
+         stopOnIncomplete="false"
+         stopOnSkipped="false"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/11.5/phpunit.xsd"
+         cacheDirectory=".phpunit.cache"
+         backupStaticProperties="false"
+         requireCoverageMetadata="false"
+>
   <!--printerClass="PHPUnit_TextUI_ResultPrinter"-->
   <!--testSuiteLoaderClass="PHPUnit_Runner_StandardTestSuiteLoader"-->
   <php>
     <env name="APP_ENV" value="testing"/>
-    <env name="DB_CONNECTION" value="sqlite"/>
+    <env name="DB_CONNECTION" value="testing"/>
     <env name="CACHE_DRIVER" value="array"/>
     <env name="SESSION_DRIVER" value="array"/>
     <env name="QUEUE_DRIVER" value="sync"/>
   </php>
   <testsuites>
-    <testsuite name="Package Test Suit">
-      <directory suffix="Test.php">./tests/unit</directory>
+    <testsuite name="Package Test Suite">
+      <directory suffix="Test.php">./tests</directory>
     </testsuite>
   </testsuites>
   <source>

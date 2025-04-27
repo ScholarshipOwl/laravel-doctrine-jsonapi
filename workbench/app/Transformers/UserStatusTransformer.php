@@ -1,0 +1,17 @@
+<?php
+
+namespace App\Transformers;
+
+use Sowl\JsonApi\AbstractTransformer;
+use App\Entities\UserStatus;
+
+class UserStatusTransformer extends AbstractTransformer
+{
+    public function transform(UserStatus $userStatus): array
+    {
+        return [
+            'id' => $userStatus->getId(),
+            'name' => $userStatus->getName(),
+        ];
+    }
+}

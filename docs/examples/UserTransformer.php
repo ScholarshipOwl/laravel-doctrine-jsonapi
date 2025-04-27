@@ -6,10 +6,10 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Str;
 use League\Fractal\Resource\Collection;
 use Sowl\JsonApi\AbstractTransformer;
-use Tests\App\Entities\Role;
-use Tests\App\Entities\User;
-use Tests\App\Transformers\RoleTransformer;
-use Tests\App\Transformers\UserConfigTransformer;
+use App\Entities\Role;
+use App\Entities\User;
+use App\Transformers\RoleTransformer;
+use App\Transformers\UserConfigTransformer;
 
 class UserTransformer extends AbstractTransformer
 {

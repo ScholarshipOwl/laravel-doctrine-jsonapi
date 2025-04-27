@@ -15,7 +15,23 @@
         "test:scribe:generate": "docker compose run --rm -T -u $(id -u) php tests/artisan scribe:generate --no-upgrade-check --force",
         "dev:migration:diff": "docker compose run --rm -T -u $(id -u) php tests/artisan doctrine:migrations:diff --no-interaction",
         "dc:composer": "docker compose run --rm -T -u $(id -u) php composer",
-        "phpstan": "docker compose run --rm -T -u $(id -u) php vendor/bin/phpstan analyze src"
+        "phpstan": "docker compose run --rm -T -u $(id -u) php vendor/bin/phpstan analyze src",
+        "post-autoload-dump": [
+            "@clear",
+            "@prepare"
+        ],
+        "clear": "@php vendor/bin/testbench package:purge-skeleton --ansi",
+        "prepare": "@php vendor/bin/testbench package:discover --ansi",
+        "build": "@php vendor/bin/testbench workbench:build --ansi",
+        "serve": [
+            "Composer\\Config::disableProcessTimeout",
+            "@build",
+            "@php vendor/bin/testbench serve --ansi"
+        ],
+        "lint": [
+            "@php vendor/bin/pint --ansi",
+            "@php vendor/bin/phpstan analyse --verbose --ansi"
+        ]
     },
     "autoload": {
         "psr-4": {
@@ -24,10 +40,11 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\App\\": "tests/laravel/app",
-            "Tests\\": "tests/unit",
-            "Database\\Migrations\\": "tests/laravel/database/migrations",
-            "Database\\Seeders\\": "tests/laravel/database/seeders"
+            "Tests\\": "tests",
+            "App\\": "workbench/app/",
+            "Database\\Migrations\\": "workbench/database/migrations",
+            "Database\\Seeders\\": "workbench/database/seeders/",
+            "Database\\Factories\\": "workbench/database/factories/"
         }
     },
     "require-dev": {
@@ -39,7 +56,8 @@
         "phpunit/phpunit": "^11.4",
         "mockery/mockery": "^1.6",
         "laravel/pint": "^1.22",
-        "phpstan/phpstan": "^2.1"
+        "phpstan/phpstan": "^2.1",
+        "orchestra/testbench": "^10.2"
     },
     "require": {
         "php": ">=8.2",
