@@ -4,7 +4,7 @@
         {
             "label": "test",
             "type": "shell",
-            "command": "docker compose run --rm -T -u $(id -u) --remove-orphans php phpunit --stop-on-failure --stop-on-error",
+            "command": "docker compose run --rm -T -u $(id -u) --remove-orphans php composer test",
             "group": {
                 "kind": "test",
                 "isDefault": true
@@ -83,10 +83,24 @@
         {
             "label": "Generate JSON:API OpenAPI spec",
             "type": "shell",
-            "command": "php artisan scribe:generate",
+            "command": "php vendor/bin/testbench scribe:generate",
             "group": {
                 "kind": "build",
                 "isDefault": true
+            },
+            "presentation": {
+                "reveal": "always",
+                "clear": true
+            },
+            "problemMatcher": []
+        },
+        {
+            "label": "Debug Generate JSON:API OpenAPI spec",
+            "type": "shell",
+            "command": "XDEBUG_TRIGGER=yes php vendor/bin/testbench scribe:generate",
+            "group": {
+                "kind": "build",
+                "isDefault": false
             },
             "presentation": {
                 "reveal": "always",

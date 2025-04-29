@@ -85,6 +85,7 @@ docker compose run php sh
       - [X] Create ValidationResponseAttribute that goint to read rules from validation and generate example response.
   - [X] Add documentation about the `meta` param usage. ( meta[account]=mailbox&meta[profile]=completeness )
   - [ ] Make it possible to disable links generation. As it is not required by JSON:API spec and increases response size.
+  - [ ] Move default routes to the separate file and load them on boot. ( see how Scribe doing it )
   - [ ] Create a validation rule "resource", "resourceExists" for validating resource identifier. Example of usage:
         ```php
         $this->validate($request, [

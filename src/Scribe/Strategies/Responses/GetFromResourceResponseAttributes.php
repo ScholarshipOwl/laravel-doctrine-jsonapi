@@ -93,6 +93,7 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
         return [
             'status' => $attributeInstance->status ?? 200,
             'description' => $attributeInstance->description ?? '',
+            'headers' => ['Content-Type' => 'application/vnd.api+json'],
             'content' => $response,
         ];
     }
@@ -133,6 +134,7 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
         return [
             'status' => $attributeInstance->status ?? 200,
             'description' => $attributeInstance->description,
+            'headers' => ['Content-Type' => 'application/vnd.api+json'],
             'content' => $content,
         ];
     }

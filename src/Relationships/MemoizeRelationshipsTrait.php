@@ -26,7 +26,7 @@ trait MemoizeRelationshipsTrait
     public static function memoizeRelationships(?callable $cb = null): RelationshipsCollection
     {
         if (! isset(static::$memoizedRelationships)) {
-            static::$memoizedRelationships = new RelationshipsCollection($cb() ?? []);
+            static::$memoizedRelationships = new RelationshipsCollection($cb ? $cb() : []);
         }
 
         return static::$memoizedRelationships;

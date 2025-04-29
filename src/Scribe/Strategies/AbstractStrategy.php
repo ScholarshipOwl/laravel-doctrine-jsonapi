@@ -48,7 +48,7 @@ abstract class AbstractStrategy extends Strategy
         $this->resourceManager = $resourceManager ?? app(ResourceManager::class);
         $this->resourceTypeExtractor = new ResourceTypeExtractor;
         $this->relationshipNameExtractor = new RelationshipNameExtractor;
-        $this->rootMiddleware = config('jsonapi.routing.rootMiddleware');
+        $this->rootMiddleware = config('jsonapi.routing.rootMiddleware', '');
         $this->jsonapiPrefix = config('jsonapi.routing.rootNamePrefix', 'jsonapi.');
     }
 

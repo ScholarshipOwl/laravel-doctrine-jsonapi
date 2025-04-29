@@ -2,6 +2,7 @@
 
 namespace Sowl\JsonApi\Scribe;
 
+use Illuminate\Support\Arr;
 use Knuckles\Camel\Output\OutputEndpointData;
 use Knuckles\Scribe\Tools\ConsoleOutputUtils as c;
 use Knuckles\Scribe\Tools\DocumentationConfig;
@@ -11,6 +12,7 @@ use Sowl\JsonApi\Fractal\FractalOptions;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
+use stdClass;
 
 class JsonApiSpecGenerator extends OpenApiGenerator
 {
@@ -58,7 +60,9 @@ class JsonApiSpecGenerator extends OpenApiGenerator
     {
         // $pathItem = $this->appendDeepObjectStyle($pathItem);
         // $pathItem = $this->extendPageParamSchema($pathItem);
+        // $pathItem = $this->setExamplesForBodyParametersFromResponse($pathItem);
         $pathItem = $this->removeNulExamplesFromQueryParams($pathItem);
+        $pathItem = $this->removeEmptyExamplesFromBodyParams($pathItem);
 
         return $pathItem;
     }
@@ -326,5 +330,90 @@ class JsonApiSpecGenerator extends OpenApiGenerator
         }
 
         return $pathItem;
+    }
+
+    /**
+     * Removes empty or null examples from requestBody parameters in OpenAPI path items.
+     */
+    protected function removeEmptyExamplesFromBodyParams(array $pathItem): array
+    {
+        if (isset($pathItem['requestBody']['content']) && is_array($pathItem['requestBody']['content'])) {
+            foreach ($pathItem['requestBody']['content'] as $contentType => &$content) {
+                if (isset($content['schema']) && is_array($content['schema'])) {
+                    $this->removeRecursiveEmptyExamples($content['schema']);
+                }
+            }
+        }
+
+        return $pathItem;
+    }
+
+    /**
+     * Sets OpenAPI examples for request body parameters based on the response examples.
+     * This helps tools like Swagger UI to show the example payloads for requests.
+     */
+    protected function setExamplesForBodyParametersFromResponse(array $pathItem): array
+    {
+        if (! isset($pathItem['requestBody']) || ! isset($pathItem['responses']) || ! is_array($pathItem['responses'])) {
+            return $pathItem;
+        }
+
+        // Build a map of successful responses examples by content type
+        $responsesExamples = [];
+        foreach ([201, 200, 204] as $status) {
+            foreach ((array) ($pathItem['responses'][$status]['content'] ?? []) as $contentType => $response) {
+                /** @var stdClass $example */
+                $example = $response['schema']['example'] ?? null;
+
+                // If the example is not a JSON:API response, skip it
+                if (! isset($example->data->type) || ! isset($example->data->id)) {
+                    continue;
+                }
+
+                // Remove id, links and meta from the example as they are not part of the request body
+                unset($example->data->id);
+                unset($example->data->links);
+                unset($example->data->meta);
+
+                // BaseGenerator sets 'application/json' for all the responses
+                // We must convert it to JSON:API content type if this is a JSON:API endpoint.
+                $responsesExamples['application/vnd.api+json'] = $example->data;
+            }
+        }
+
+        // Set the example for the requestBody if the schema is present
+        foreach ((array) ($pathItem['requestBody']['content'] ?? []) as $contentType => $requestBody) {
+            $examplePath = 'schema.properties.data.example';
+            $currentExample = Arr::get($requestBody, $examplePath);
+
+            if (empty($currentExample) && isset($responsesExamples[$contentType])) {
+                Arr::set($requestBody, $examplePath, $responsesExamples[$contentType]);
+                $pathItem['requestBody']['content'][$contentType] = $requestBody;
+            }
+        }
+
+        return $pathItem;
+    }
+
+    /**
+     * Removes empty or null examples from requestBody parameters in OpenAPI path items.
+     *
+     * @param  array{ type?: string, properties?: array<array>, example?: mixed }  $propertySchema
+     */
+    protected function removeRecursiveEmptyExamples(array &$propertySchema): void
+    {
+        if (isset($propertySchema['type']) && $propertySchema['type'] === 'object') {
+            if (isset($propertySchema['example']) && empty($propertySchema['example'])) {
+                unset($propertySchema['example']);
+            }
+
+            if (isset($propertySchema['properties']) && is_array($propertySchema['properties'])) {
+                foreach ($propertySchema['properties'] as &$childPropSchema) {
+                    if (is_array($childPropSchema)) {
+                        $this->removeRecursiveEmptyExamples($childPropSchema);
+                    }
+                }
+            }
+        }
     }
 }

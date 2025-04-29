@@ -1,2 +1,8 @@
 .env
 .env.dusk
+
+bootstrap/cache
+storage/framework/views
+storage/logs
+database/database.sqlite
+vendor
