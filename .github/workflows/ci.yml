@@ -4,10 +4,12 @@ on:
   pull_request:
     branches:
       - "*.x"
+      - "try-laravel-10-11"
       - "main"
   push:
     branches:
       - "*.x"
+      - "try-laravel-10-11"
       - "main"
 
 jobs:
