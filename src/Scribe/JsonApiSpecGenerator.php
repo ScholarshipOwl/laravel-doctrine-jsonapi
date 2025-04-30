@@ -321,10 +321,10 @@ class JsonApiSpecGenerator extends OpenApiGenerator
     protected function removeNulExamplesFromQueryParams(array $pathItem)
     {
         foreach ($pathItem['parameters'] ?? [] as $i => $param) {
-            if (is_null($param['example'])) {
+            if (isset($param['example']) && $param['example'] === null) {
                 unset($pathItem['parameters'][$i]['example']);
             }
-            if (is_null($param['schema']['example'])) {
+            if (isset($param['schema']['example']) && $param['schema']['example'] === null) {
                 unset($pathItem['parameters'][$i]['schema']['example']);
             }
         }

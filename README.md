@@ -68,6 +68,8 @@ docker compose run php sh
 ### Roadmap
   - [ ] Provide QueryBuilder for the filter parsers, instead of criteria as it allows to apply any types of filters.
   - [ ] Remove the default request hydration from the package, as it may create security vulnerabilities. All the mutations should be handled by the application code, by the client.
+  - [ ] Scribe: Generated headers are not prperly defined, we got Accept: */* everywhere.
+  - [ ] Allow override or provide ability for custom request authentication.
   - [X] Integrate scribe into the package. Automatically generate Open API specs.
     - [ ] Add documentation for scribe integration
     - [X] Update metadata for each endpoint
@@ -85,6 +87,7 @@ docker compose run php sh
       - [X] Create ValidationResponseAttribute that goint to read rules from validation and generate example response.
   - [X] Add documentation about the `meta` param usage. ( meta[account]=mailbox&meta[profile]=completeness )
   - [ ] Make it possible to disable links generation. As it is not required by JSON:API spec and increases response size.
+  - [ ] Add generics to all the types using ResourceInterface
   - [ ] Move default routes to the separate file and load them on boot. ( see how Scribe doing it )
   - [ ] Create a validation rule "resource", "resourceExists" for validating resource identifier. Example of usage:
         ```php
