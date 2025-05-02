@@ -1,4 +1,6 @@
-# Documentation with Scribe
+<p align="center">
+  <img src="../images/openapi/hero.png" alt="Hello" style="width: 100%; border-top-left-radius: 2rem; border-top-right-radius: 2rem;" />
+</p>
 
 API documentation is an essential part of any API. It provides a clear understanding of the endpoints,
 their parameters, expected responses and errors. With this documentation, developers can easily consume
