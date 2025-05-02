@@ -67,6 +67,7 @@ docker compose run php sh
 
 ### Roadmap
   - [ ] Build documentation and testing for integration of Laravel Sanctum or Laravel Passport.
+  - [ ] Add Laravel Doctrine ACL package to testing
   - [ ] Provide QueryBuilder for the filter parsers, instead of criteria as it allows to apply any types of filters.
   - [ ] Remove the default request hydration from the package, as it may create security vulnerabilities. All the mutations should be handled by the application code, by the client.
   - [ ] Scribe: Generated headers are not prperly defined, we got Accept: */* everywhere.

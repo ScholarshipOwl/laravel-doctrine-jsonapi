@@ -66,6 +66,14 @@
         "laravel/framework": "^11.0|^12.0",
         "league/fractal": "^0.20.1"
     },
+    "suggest": {
+        "laravel-doctrine/orm": "Simplifies the setup process of Doctrine ORM",
+        "laravel-doctrine/migrations": "Allows you to manage your database schema",
+        "laravel-doctrine/extensions": "Provides additional features to Doctrine ORM",
+        "laravel-doctrine/acl": "Provides RBAC features to Doctrine ORM",
+        "gedmo/doctrine-extensions": "Provides additional features to Doctrine ORM",
+        "knuckleswtf/scribe": "Allows you to generate API documentation"
+    },
     "extra": {
         "laravel": {
             "providers": [
