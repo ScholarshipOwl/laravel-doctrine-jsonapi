@@ -8,8 +8,8 @@ hero:
   tagline: ""
   actions:
     - theme: brand
-      text: Why?
-      link: /why
+      text: Introduction
+      link: /introduction
     - theme: alt
       text: Quickstart
       link: /quickstart
