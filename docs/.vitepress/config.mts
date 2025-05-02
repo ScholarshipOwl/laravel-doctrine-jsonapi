@@ -31,12 +31,12 @@ export default defineConfig({
         ]
       },
       {
-        text: 'Scribe (OpenAPI)',
+        text: 'OpenAPI (Scribe)',
         items: [
-          { text: 'Generation', link: '/scribe/index' },
-          { text: 'Attributes', link: '/scribe/attributes' },
-          { text: 'Configuration', link: '/scribe/configurations' },
-          { text: 'Strategies', link: '/scribe/strategies' },
+          { text: 'Generation', link: '/openapi' },
+          { text: 'Attributes', link: '/openapi/attributes' },
+          { text: 'Configuration', link: '/openapi/configurations' },
+          { text: 'Strategies', link: '/openapi/strategies' },
         ]
       },
       {
@@ -56,9 +56,12 @@ export default defineConfig({
       {
         text: 'API Reference',
         items: [
-          { text: 'Endpoints', link: '/api/' },
-          { text: 'Configuration', link: '/api/configuration' },
-          { text: 'Entities', link: '/api/entities' }
+          { text: 'Resource Manager', link: '/api/ResourceManager' },
+          { text: 'Resource Interface', link: '/api/ResourceInterface' },
+          { text: 'Abstract Action', link: '/api/AbstractAction' },
+          { text: 'Abstract Transformer', link: '/api/AbstractTransformer' },
+          { text: 'Authorize Middleware', link: '/api/AuthorizeMiddleware' },
+          { text: 'Filter Parsers', link: '/api/FilterParsers' },
         ]
       },
       {
