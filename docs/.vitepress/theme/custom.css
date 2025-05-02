@@ -103,6 +103,10 @@ code, pre {
     color: #241d3a !important;
 }
 
+.VPSidebar .VPSidebarItem .VPLink .text {
+    padding-left: 0.7rem;
+}
+
 /* Remove orange background from features container */
 html.dark .VPHome .VPFeatures,
 html:not(.dark) .VPHome .VPFeatures {
