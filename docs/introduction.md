@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./images/introduction/hello.png" alt="Hello" />
+  <img src="./images/introduction/hello2.png" alt="Hello" style="width: 100%; border-top-left-radius: 2rem; border-top-right-radius: 2rem;" />
 </p>
 
 **Laravel Doctrine JSON:API** is your go-to package for building robust JSON:API endpoints in [Laravel](https://laravel.com/), using the power and flexibility of [Doctrine](https://www.doctrine-project.org/) for data persistence. This package is built first and foremost on top of Laravel, embracing its modern framework features and developer-friendly experience. Doctrine ORM is seamlessly integrated to handle your data layer, and we make use of the [Laravel Doctrine](https://github.com/laravel-doctrine/orm) package under the hood—though the real magic comes from combining Laravel's strengths with Doctrine's advanced ORM capabilities.
@@ -14,7 +14,9 @@ Choosing the right stack is a big deal! Let me walk you through why this combina
 
 ### Why Laravel?
 
-Laravel is a modern PHP framework that makes building web applications enjoyable and productive. Its codebase is clean, the documentation is top-notch, and the community is welcoming and always ready to help. While Laravel is primarily designed for web applications, it also offers a suite of features that make API server development straightforward.
+[Laravel](https://laravel.com/) is a modern PHP framework that makes building web applications enjoyable and productive. Its codebase is clean, the documentation is top-notch, and the community is welcoming and always ready to help. While Laravel is primarily designed for web applications, it also offers a suite of features that make API server development straightforward.
+
+Using a well-established framework to build your Application API is crucial for long-term success. Frameworks provide a strong foundation of tested, secure, and maintainable components—handling everything from routing and middleware to validation, authentication, and error handling. This not only accelerates development but also ensures your API follows industry best practices, is easier to maintain, and can scale as your project grows. By relying on a framework, you avoid reinventing the wheel and benefit from the collective expertise of the developer community.
 
 From validation and authentication to authorization and simple route handlers, Laravel empowers you to build secure and maintainable APIs. If you come from a more traditional PHP background, Laravel is the perfect opportunity to embrace a new way of thinking and modernize your development approach.
 
@@ -24,7 +26,9 @@ From validation and authentication to authorization and simple route handlers, L
 
 ### Why Doctrine ORM?
 
-Doctrine ORM is a mature and highly respected data mapper in the PHP ecosystem. It's been around for a long time and continues to receive strong community support. Doctrine's data mapper pattern is particularly well-suited for large-scale applications, offering a level of flexibility and separation that Active Record (as used in Laravel's Eloquent ORM) sometimes struggles to provide.
+Before diving into the specifics of Doctrine ORM, it's important to understand why databases and persistence matter in API development. Most application APIs are designed to manage, store, and retrieve data—whether that's user information, business records, or content. A robust database layer ensures that your application's data is reliable, consistent, and secure over time. The framework you choose to interact with your database directly impacts how maintainable, scalable, and safe your application will be. This is where Object-Relational Mappers (ORMs) come in: they bridge the gap between your application's code and the underlying database, allowing you to work with data as objects instead of raw SQL. A good ORM abstracts away the complexities of database interactions, reduces boilerplate, and helps enforce best practices for data integrity and security.
+
+[Doctrine ORM](https://www.doctrine-project.org/) is a mature and highly respected data mapper in the PHP ecosystem. It's been around for a long time and continues to receive strong community support. Doctrine's data mapper pattern is particularly well-suited for large-scale applications, offering a level of flexibility and separation that Active Record (as used in Laravel's Eloquent ORM) sometimes struggles to provide.
 
 Since many of Laravel's features are ORM-agnostic, integrating Doctrine into your Laravel app is both feasible and powerful, giving you the best of both worlds.
 
@@ -35,6 +39,8 @@ Since many of Laravel's features are ORM-agnostic, integrating Doctrine into you
 ### Why JSON:API?
 
 Building a RESTful API is a proven approach for creating application backends that are easy to integrate with any web technology. [JSON:API](https://jsonapi.org/) takes this further by standardizing how resources are represented, eliminating the need to invent your own conventions.
+
+Using established standards in API development is critical for long-term success. Standards foster interoperability, making it easier for different systems and teams to work together without confusion. They reduce ambiguity, lower the learning curve for new developers, and allow you to leverage a broad ecosystem of tools, libraries, and best practices. By following a widely adopted specification like JSON:API, you ensure your API is predictable, future-proof, and easy to integrate with other services and clients.
 
 This makes your API predictable and easier to consume, whether by your own frontend or by third-party tools. Plus, adhering to the JSON:API specification means you can take advantage of a wide range of open-source libraries and integrations, accelerating your development process.
 
