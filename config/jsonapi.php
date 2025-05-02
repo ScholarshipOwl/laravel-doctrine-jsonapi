@@ -41,13 +41,4 @@ return [
         'rootPathPrefix' => '',
     ],
 
-    /*
-    |--------------------------------------------------------------------------
-    | Scribe
-    |--------------------------------------------------------------------------
-    |
-    | Configuration of the Scribe package if you are using our strategies.
-    |
-    */
-    'scribe' => [],
 ];
