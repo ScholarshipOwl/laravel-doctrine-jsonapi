@@ -38,6 +38,27 @@ Building a RESTful API is a proven approach for creating application backends th
 
 This makes your API predictable and easier to consume, whether by your own frontend or by third-party tools. Plus, adhering to the JSON:API specification means you can take advantage of a wide range of open-source libraries and integrations, accelerating your development process.
 
+
+## What you get
+
+With Laravel Doctrine JSON:API, you unlock a set of powerful features designed to help you build modern, maintainable, and standards-compliant APIs with ease:
+
+- **JSON:API Compliance:** Effortlessly build APIs that adhere to the [JSON:API](https://jsonapi.org/) specification, ensuring consistency and interoperability across clients and services.
+
+- **Laravel:** Fully compatible with modern [Laravel](https://laravel.com/) versions, following best practices and leveraging the latest framework features.
+
+- **Doctrine ORM:** Leverage the power and flexibility of [Doctrine ORM](https://www.doctrine-project.org/) for advanced data mapping and database abstraction, while enjoying seamless integration with Laravel's ecosystem.
+
+- **Documentation:** Generate beautiful, up-to-date API documentation automatically with [Scribe](https://scribe.knuckles.wtf/laravel/), including support for JSON:API-specific features and relationships.
+
+- **Authorization:** Integrate with [Laravel's authorization system](https://laravel.com/docs/authorization) to enforce fine-grained access control for your API resources. [Policies](./guides/policies.md) are easy to set up and work out-of-the-box with Doctrine entities. RBAC is supported.
+
+- **Automatic Routing:** Default RESTful endpoints are defined for you out of the box—including [related](https://jsonapi.org/format/#fetching-relationships) and [relationships](https://jsonapi.org/format/#document-resource-object-relationships) endpoints as described in the JSON:API specification. You can further customize or extend these routes to fit your application's needs, but the essentials are ready without any manual route registration.
+
+- **First-Class Testing Utilities:** Use built-in traits to simplify testing with Doctrine ORM in Laravel, including database refresh, truncation, and assertion helpers compatible with [Laravel's testing tools](https://laravel.com/docs/testing).
+
+All of this is provided with a focus on developer experience, maintainability, and future-proofing your API projects. Whether you're building a greenfield application or migrating a legacy system, Laravel Doctrine JSON:API gives you the tools to move fast and build right.
+
 ## Is This For You?
 
 This package is ideal if you're looking to build an API server designed for longevity—think a lifespan of 10 years or more.
