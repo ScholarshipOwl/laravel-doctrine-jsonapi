@@ -1,0 +1,71 @@
+name: Deploy Documentation to GitHub Pages
+
+on:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["vitepress2"] # Or your primary branch name
+    paths:
+      - 'docs/**'
+      - '.github/workflows/docs.yml'
+      - 'package.json' # Trigger on dependency changes
+      - 'pnpm-lock.yaml' # Trigger on lock file changes
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # Build job
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ---------- Build Documentation ----------
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Or the version specified in your project
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 8 # Or your pnpm version
+      - name: Install dependencies
+        run: pnpm install
+      - name: Build documentation
+        env:
+          DOCS_BASE_URL: '/laravel-doctrine-jsonapi/'
+        run: pnpm run docs:build
+      # ---------- Build Documentation ----------
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload content from the VitePress build output directory
+          path: './docs/.vitepress/dist'
+
+  # Deployment job
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

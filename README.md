@@ -1,9 +1,22 @@
 # Laravel Doctrine JSON:API
+
+<!-- Badges -->
+[![Build Status](https://img.shields.io/github/actions/workflow/status/ScholarshipOwl/laravel-doctrine-jsonapi/ci.yml?branch=main)](https://github.com/ScholarshipOwl/laravel-doctrine-jsonapi/actions)
+[![Code Coverage](https://img.shields.io/codecov/c/github/ScholarshipOwl/laravel-doctrine-jsonapi)](https://codecov.io/gh/ScholarshipOwl/laravel-doctrine-jsonapi)
+[![Latest Stable Version](https://img.shields.io/packagist/v/sowl/laravel-doctrine-jsonapi)](https://packagist.org/packages/sowl/laravel-doctrine-jsonapi)
+[![Total Downloads](https://img.shields.io/packagist/dt/sowl/laravel-doctrine-jsonapi)](https://packagist.org/packages/sowl/laravel-doctrine-jsonapi)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 Implement feature-rich [JSON:API](https://jsonapi.org/) compliant APIs
 in your [Laravel](https://laravel.com/) applications using [Doctrine ORM](https://www.doctrine-project.org/).
 
 ## Overview
 This package provides a comprehensive implementation of the JSON:API specification for Laravel applications using Doctrine ORM instead of Eloquent. It reduces boilerplate code by offering default controllers and actions that handle standard API operations while ensuring full compliance with the JSON:API standard.
+
+## Documentation
+For detailed installation instructions, configuration guides and tutorials:
+
+[https://scholarshipowl.github.io/laravel-doctrine-jsonapi/](https://scholarshipowl.github.io/laravel-doctrine-jsonapi/)
 
 ## Features
 - **Complete JSON:API Implementation**: Full compliance with the JSON:API specification
@@ -24,46 +37,7 @@ This package provides a comprehensive implementation of the JSON:API specificati
   - Update relationships
   - Delete resources
 - **Authorization**: Policy-based access control
-
-## Quick Start
-
-### Installation
-```bash
-composer require sowl/laravel-doctrine-jsonapi
-```
-
-### Configuration
-```bash
-php artisan vendor:publish --provider="Sowl\JsonApi\JsonApiServiceProvider"
-```
-
-### Usage
-1. Implement `ResourceInterface` on your Doctrine entities
-2. Create transformers extending `AbstractTransformer`
-3. Define entity relationships using `RelationshipsCollection`
-4. Register resources in the `config/jsonapi.php` file
-5. Use the default controller or create custom ones
-
-## Documentation
-For detailed installation instructions, configuration guides and tutorials:
-
-[Read the Documentation](./docs/README.md)
-
-## Development
-Clone the project locally.
-
-Install the package dependencies and run the tests:
-```shell
-docker compose run php
-```
-
-To enter the docker container:
-```shell
-docker compose run php sh
-```
-
-### Testing
-[Testing Documentation](./tests)
+- **Auto-generated Documentation**: Endpoints are automatically documented using [Scribe](https://scribe.readthedocs.io/en/latest/)
 
 ### Roadmap
 - [ ] Build documentation and testing for integration of Laravel Sanctum or Laravel Passport.
@@ -110,3 +84,11 @@ docker compose run php sh
     - [ ] Generate the transformers depend on the entity name and configuration path: `app/Transformers/{Entity}Transformer.php`
     - [ ] Allow defining relationships with PHP Attributes on the entity class.
     - [ ] The id get be retrieved using internal Doctrine functionality or just depend on public $id property.
+
+## Support
+
+If you encounter any issues or have questions, please report them using the [GitHub Issues](https://github.com/ScholarshipOwl/laravel-doctrine-jsonapi/issues) tracker.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
