@@ -31,8 +31,7 @@ trait WithCreateRelationshipsTrait
         $relationship = $request->relationship();
 
         if ($relationship instanceof ToManyRelationship) {
-            return (new CreateRelationshipsAction($relationship))
-                ->dispatch();
+            return CreateRelationshipsAction::makeDispatch($relationship, $request);
         }
 
         return app(ResponseFactory::class)->notFound();

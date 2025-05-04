@@ -20,18 +20,42 @@ class UpdateRelationshipsTest extends TestCase
 
     public function test_authorization_permissions_for_no_logged_in()
     {
-        $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles')->assertStatus(403);
-        $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles')->assertStatus(403);
-        $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles')->assertStatus(403);
+        $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles', [
+            'data' => [
+                ['type' => 'roles', 'id' => Role::moderator()],
+            ],
+        ])->assertStatus(403);
+        $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles', [
+            'data' => [
+                ['type' => 'roles', 'id' => Role::moderator()],
+            ],
+        ])->assertStatus(403);
+        $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles', [
+            'data' => [
+                ['type' => 'roles', 'id' => Role::moderator()],
+            ],
+        ])->assertStatus(403);
     }
 
     public function test_authorization_permissions_for_user_role()
     {
         $this->actingAsUser();
 
-        $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles')->assertStatus(403);
-        $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles')->assertStatus(403);
-        $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles')->assertStatus(403);
+        $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles', [
+            'data' => [
+                ['type' => 'roles', 'id' => Role::moderator()],
+            ],
+        ])->assertStatus(403);
+        $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles', [
+            'data' => [
+                ['type' => 'roles', 'id' => Role::moderator()],
+            ],
+        ])->assertStatus(403);
+        $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles', [
+            'data' => [
+                ['type' => 'roles', 'id' => Role::moderator()],
+            ],
+        ])->assertStatus(403);
     }
 
     public function test_authorization_permissions_for_root_role()

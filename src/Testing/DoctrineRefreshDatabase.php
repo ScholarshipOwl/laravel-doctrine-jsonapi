@@ -27,6 +27,11 @@ trait DoctrineRefreshDatabase
         $this->afterRefreshingDoctrineDatabase();
     }
 
+    protected function doctrineRunMigrations(): bool
+    {
+        return true;
+    }
+
     /**
      * Refresh the Doctrine test database schema.
      */
@@ -34,13 +39,18 @@ trait DoctrineRefreshDatabase
     {
         $em = $this->app->make('em');
 
-        // Run Doctrine migrations using the built-in artisan() method
-        // Making sure we run migrations before starting transaction,
-        // so after rollback we keep migrations up to date and not running them again.
-        $this->artisan('doctrine:migrations:migrate', [
-            '--no-interaction' => true,
-            '--quiet' => true,
-        ]);
+        if ($this->doctrineRunMigrations()) {
+            // Run Doctrine migrations using the built-in artisan() method
+            // Making sure we run migrations before starting transaction,
+            // so after rollback we keep migrations up to date and not running them again.
+            $this->artisan('doctrine:migrations:migrate', [
+                '--no-interaction' => true,
+                '--quiet' => true,
+            ]);
+
+            // Run any hooks after migrations but before transaction start
+            $this->seedDatabase();
+        }
 
         // Start a Doctrine transaction before refreshing
         $em->beginTransaction();
@@ -67,5 +77,13 @@ trait DoctrineRefreshDatabase
     protected function afterRefreshingDoctrineDatabase(): void
     {
         // Place for custom logic after refresh (optional override)
+    }
+
+    /**
+     * Hook after migrations but before transaction start.
+     */
+    protected function seedDatabase(): void
+    {
+        // Place for custom logic after migrations but before transaction start (optional override)
     }
 }

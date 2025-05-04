@@ -3,6 +3,7 @@
 namespace Sowl\JsonApi\Action\Relationships\ToOne;
 
 use Sowl\JsonApi\AbstractAction;
+use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Exceptions\BadRequestException;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Request;
@@ -14,6 +15,16 @@ class ShowRelatedAction extends AbstractAction
         protected ToOneRelationship $relationship,
         protected Request $request,
     ) {}
+
+    public function authorize(): void
+    {
+        $this->gate()->authorize($this->authAbility(), [$this->request->resource()]);
+    }
+
+    public function authAbility(): string
+    {
+        return AbilitiesInterface::VIEW.ucfirst($this->relationship->name());
+    }
 
     /**
      * @throws BadRequestException

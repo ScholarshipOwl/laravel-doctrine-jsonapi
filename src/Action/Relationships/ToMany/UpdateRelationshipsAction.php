@@ -4,6 +4,7 @@ namespace Sowl\JsonApi\Action\Relationships\ToMany;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Sowl\JsonApi\AbstractAction;
+use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
@@ -14,6 +15,16 @@ class UpdateRelationshipsAction extends AbstractAction
         protected ToManyRelationship $relationship,
         protected Request $request,
     ) {}
+
+    public function authorize(): void
+    {
+        $this->gate()->authorize($this->authAbility(), [$this->request->resource()]);
+    }
+
+    public function authAbility(): string
+    {
+        return AbilitiesInterface::UPDATE.ucfirst($this->relationship->name());
+    }
 
     public function handle(): Response
     {

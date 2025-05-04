@@ -45,7 +45,7 @@ class TestCase extends TestbenchTestCase
         ConsoleOutputUtils::bootstrapOutput(new NullOutput);
     }
 
-    protected function afterRefreshingDoctrineDatabase(): void
+    protected function seedDatabase(): void
     {
         $this->seed(SetUpSeeder::class);
     }

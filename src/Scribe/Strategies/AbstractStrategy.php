@@ -32,7 +32,7 @@ abstract class AbstractStrategy extends Strategy
 
     private string $jsonapiPrefix;
 
-    private string $rootMiddleware;
+    private array|string|null $rootMiddleware;
 
     /**
      * Constructor
@@ -68,7 +68,7 @@ abstract class AbstractStrategy extends Strategy
      */
     public function isJsonApi(): bool
     {
-        if ($this->rootMiddleware) {
+        if ($this->rootMiddleware && is_string($this->rootMiddleware)) {
             // hack: We need to set container for getting the middleware.
             //       Cloning because don't want to change the real route container, as it may affect future behavior.
             $routeMiddleware = (clone $this->endpointData->route)
@@ -78,7 +78,7 @@ abstract class AbstractStrategy extends Strategy
             return in_array($this->rootMiddleware, $routeMiddleware);
         }
 
-        if ($this->jsonapiPrefix) {
+        if ($this->jsonapiPrefix && is_string($this->jsonapiPrefix)) {
             $routeName = $this->endpointData->route->getName();
 
             return Str::startsWith($routeName, $this->jsonapiPrefix);

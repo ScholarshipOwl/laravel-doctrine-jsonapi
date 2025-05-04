@@ -6,9 +6,10 @@ use Doctrine\ORM\QueryBuilder;
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Action\FiltersResourceTrait;
 use Sowl\JsonApi\Action\PaginatesResourceTrait;
+use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
-use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\Request;
+use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceRepository;
 use Sowl\JsonApi\Response;
 
@@ -33,6 +34,16 @@ class ListRelatedAction extends AbstractAction
     public function repository(): ResourceRepository
     {
         return $this->request->repository();
+    }
+
+    public function authorize(): void
+    {
+        $this->gate()->authorize($this->authAbility(), [$this->request->resource()]);
+    }
+
+    public function authAbility(): string
+    {
+        return AbilitiesInterface::LIST.ucfirst($this->relationship->name());
     }
 
     public function handle(): Response

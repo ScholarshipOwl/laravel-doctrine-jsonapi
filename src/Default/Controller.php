@@ -2,6 +2,7 @@
 
 namespace Sowl\JsonApi\Default;
 
+use Illuminate\Routing\Controller as BaseController;
 use Sowl\JsonApi\Scribe\Attributes\ResourceMetadata;
 
 /**
@@ -14,7 +15,7 @@ use Sowl\JsonApi\Scribe\Attributes\ResourceMetadata;
  * You can extend this class and override methods as needed to customize the behavior of your JSON:API controller.
  */
 #[ResourceMetadata]
-final class Controller extends \Sowl\JsonApi\Controller
+final class Controller extends BaseController
 {
     use WithCreateRelationshipsTrait;
     use WithCreateTrait;

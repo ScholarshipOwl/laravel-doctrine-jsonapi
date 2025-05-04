@@ -29,14 +29,14 @@ class Authorize
     ) {}
 
     protected static array $methodResourceAbilityMap = [
-        HttpRequest::METHOD_GET => AbilitiesInterface::SHOW,
+        HttpRequest::METHOD_GET => AbilitiesInterface::VIEW,
         HttpRequest::METHOD_POST => AbilitiesInterface::CREATE,
         HttpRequest::METHOD_PATCH => AbilitiesInterface::UPDATE,
-        HttpRequest::METHOD_DELETE => AbilitiesInterface::REMOVE,
+        HttpRequest::METHOD_DELETE => AbilitiesInterface::DELETE,
     ];
 
     protected static array $methodRelationshipAbilityMap = [
-        HttpRequest::METHOD_GET => AbilitiesInterface::SHOW,
+        HttpRequest::METHOD_GET => AbilitiesInterface::VIEW,
         HttpRequest::METHOD_POST => AbilitiesInterface::ATTACH,
         HttpRequest::METHOD_PATCH => AbilitiesInterface::UPDATE,
         HttpRequest::METHOD_DELETE => AbilitiesInterface::DETACH,
@@ -77,7 +77,7 @@ class Authorize
                 if (! empty($ability = static::$methodRelationshipAbilityMap[$request->method()] ?? null)) {
                     $relationship = $this->request()->relationship();
 
-                    if ($relationship instanceof ToManyRelationship && $ability === AbilitiesInterface::SHOW) {
+                    if ($relationship instanceof ToManyRelationship && $ability === AbilitiesInterface::VIEW) {
                         $ability = AbilitiesInterface::LIST;
                     }
 

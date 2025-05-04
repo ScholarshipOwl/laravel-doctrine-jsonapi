@@ -35,13 +35,11 @@ trait WithRelatedTrait
         $relationship = $request->relationship();
 
         if ($relationship instanceof ToOneRelationship) {
-            return (new ShowRelatedAction($relationship, $request))
-                ->dispatch();
+            return ShowRelatedAction::makeDispatch($relationship, $request);
         }
 
         if ($relationship instanceof ToManyRelationship) {
-            return (new ListRelatedAction($relationship, $request))
-                ->dispatch();
+            return ListRelatedAction::makeDispatch($relationship, $request);
         }
 
         return app(ResponseFactory::class)->notFound();

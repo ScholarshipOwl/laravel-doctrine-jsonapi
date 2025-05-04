@@ -6,11 +6,11 @@ use App\Entities\User;
 use App\Http\Controller\Users\Relationships\AttachRolesToUserRequest;
 use App\Http\Controller\Users\Relationships\DetachRolesFromUserRequest;
 use App\Http\Controller\Users\Relationships\UpdateUserRolesRequest;
+use Illuminate\Routing\Controller;
 use Sowl\JsonApi\Action\Relationships\ToMany\CreateRelationshipsAction;
 use Sowl\JsonApi\Action\Relationships\ToMany\RemoveRelationshipsAction;
 use Sowl\JsonApi\Action\Relationships\ToMany\UpdateRelationshipsAction;
 use Sowl\JsonApi\Action\Resource\UpdateResourceAction;
-use Sowl\JsonApi\Controller;
 use Sowl\JsonApi\Default\WithListTrait;
 use Sowl\JsonApi\Response;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
@@ -47,12 +47,5 @@ class UsersController extends Controller
     {
         return (new RemoveRelationshipsAction(User::relationships()->toMany()->get('roles'), $request))
             ->dispatch();
-    }
-
-    protected function noAuthMethods(): array
-    {
-        return [
-            'create',
-        ];
     }
 }

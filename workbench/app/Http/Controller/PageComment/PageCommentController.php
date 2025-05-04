@@ -2,25 +2,23 @@
 
 namespace App\Http\Controller\PageComment;
 
-use Sowl\JsonApi\Controller;
+use Illuminate\Routing\Controller;
+use Sowl\JsonApi\Action\Resource\ShowResourceAction;
 use Sowl\JsonApi\Default\WithRelatedTrait;
 use Sowl\JsonApi\Default\WithRelationshipTrait;
-use Sowl\JsonApi\Default\WithShowTrait;
+use Sowl\JsonApi\Response;
+use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
+use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
 
 class PageCommentController extends Controller
 {
     use WithRelatedTrait;
     use WithRelationshipTrait;
-    use WithShowTrait;
 
-    protected function noAuthMethods(): array
+    #[ResourceRequest]
+    #[ResourceResponse]
+    public function show(ShowResourceAction $action): Response
     {
-        return [
-            'show',
-
-            // This is added for test purposes to properly check not found functionality of the trait.
-            'showRelated',
-            'showRelationships',
-        ];
+        return $action->disableAuthorization()->dispatch();
     }
 }

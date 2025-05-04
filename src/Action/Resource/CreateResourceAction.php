@@ -3,14 +3,20 @@
 namespace Sowl\JsonApi\Action\Resource;
 
 use Sowl\JsonApi\AbstractAction;
-use Sowl\JsonApi\Response;
+use Sowl\JsonApi\Default\AbilitiesInterface;
 use Sowl\JsonApi\Request;
+use Sowl\JsonApi\Response;
 
 class CreateResourceAction extends AbstractAction
 {
     public function __construct(
         protected Request $request,
     ) {}
+
+    public function authorize(): void
+    {
+        $this->gate()->authorize(AbilitiesInterface::CREATE, $this->request->repository()->getClassName());
+    }
 
     public function handle(): Response
     {

@@ -3,9 +3,10 @@
 namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Resource\RemoveResourceAction;
+use Sowl\JsonApi\Request;
+use Sowl\JsonApi\Response;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
-use Sowl\JsonApi\Response;
 
 /**
  * Provides a remove method for handling the deletion of an existing resource.
@@ -19,8 +20,8 @@ trait WithRemoveTrait
 {
     #[ResourceRequest]
     #[ResourceResponse(status: 204)]
-    public function remove(RemoveResourceAction $action): Response
+    public function remove(Request $request): Response
     {
-        return $action->dispatch();
+        return RemoveResourceAction::makeDispatch($request);
     }
 }

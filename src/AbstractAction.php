@@ -3,9 +3,8 @@
 namespace Sowl\JsonApi;
 
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Auth\Access\Gate;
+use Illuminate\Contracts\Auth\Access\Gate;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 
@@ -23,6 +22,19 @@ use Sowl\JsonApi\Exceptions\JsonApiException;
  */
 abstract class AbstractAction
 {
+    protected bool $disableAuthorization = false;
+
+    public static function make(...$args): static
+    {
+        /** @phpstan-ignore new.static */
+        return new static(...$args);
+    }
+
+    public static function makeDispatch(...$args): Response
+    {
+        return static::make(...$args)->dispatch();
+    }
+
     /**
      * The dispatch method must be called with provided request.
      * Dispatch method will call the handle method injecting its dependencies and will return JsonApiResponse.
@@ -31,7 +43,7 @@ abstract class AbstractAction
     public function dispatch(): Response
     {
         try {
-            if (method_exists($this, 'authorize')) {
+            if (! $this->disableAuthorization && method_exists($this, 'authorize')) {
                 app()->call([$this, 'authorize']);
             }
 
@@ -43,6 +55,13 @@ abstract class AbstractAction
         } catch (JsonApiException $e) {
             return $this->response()->exception($e);
         }
+    }
+
+    public function disableAuthorization(): static
+    {
+        $this->disableAuthorization = true;
+
+        return $this;
     }
 
     /**

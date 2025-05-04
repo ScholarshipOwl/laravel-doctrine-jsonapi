@@ -5,9 +5,10 @@ namespace Sowl\JsonApi\Action\Resource;
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Action\FiltersResourceTrait;
 use Sowl\JsonApi\Action\PaginatesResourceTrait;
+use Sowl\JsonApi\Default\AbilitiesInterface;
+use Sowl\JsonApi\Request;
 use Sowl\JsonApi\ResourceRepository;
 use Sowl\JsonApi\Response;
-use Sowl\JsonApi\Request;
 
 /**
  * Action for providing collection (list or array) of data with API.
@@ -20,6 +21,11 @@ class ListResourcesAction extends AbstractAction
     public function __construct(
         protected Request $request,
     ) {}
+
+    public function authorize(): void
+    {
+        $this->gate()->authorize(AbilitiesInterface::LIST, $this->repository()->getClassName());
+    }
 
     protected function request(): Request
     {

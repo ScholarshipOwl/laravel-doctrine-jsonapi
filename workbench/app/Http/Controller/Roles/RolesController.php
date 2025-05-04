@@ -2,7 +2,7 @@
 
 namespace App\Http\Controller\Roles;
 
-use Sowl\JsonApi\Controller;
+use Illuminate\Routing\Controller;
 use Sowl\JsonApi\Default\WithListTrait;
 
 class RolesController extends Controller
