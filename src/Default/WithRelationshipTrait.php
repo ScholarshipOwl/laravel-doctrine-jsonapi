@@ -37,13 +37,13 @@ trait WithRelationshipTrait
         $relationship = $resource->relationships()->get($relationshipName);
 
         if ($relationship instanceof ToOneRelationship) {
-            return (new ShowRelationshipAction($relationship))
-                ->dispatch($request);
+            return (new ShowRelationshipAction($relationship, $request))
+                ->dispatch();
         }
 
         if ($relationship instanceof ToManyRelationship) {
-            return (new ListRelationshipsAction($relationship))
-                ->dispatch($request);
+            return (new ListRelationshipsAction($relationship, $request))
+                ->dispatch();
         }
 
         return app(ResponseFactory::class)->notFound();

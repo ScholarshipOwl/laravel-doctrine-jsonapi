@@ -31,8 +31,8 @@ trait WithRemoveRelationshipsTrait
         $relationship = $request->relationship();
 
         if ($relationship instanceof ToManyRelationship) {
-            return (new RemoveRelationshipsAction($relationship))
-                ->dispatch($request);
+            return (new RemoveRelationshipsAction($relationship, $request))
+                ->dispatch();
         }
 
         return app(ResponseFactory::class)->notFound();

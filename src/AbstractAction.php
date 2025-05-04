@@ -5,6 +5,7 @@ namespace Sowl\JsonApi;
 use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Auth\Access\Gate;
 use Sowl\JsonApi\Exceptions\ForbiddenException;
 use Sowl\JsonApi\Exceptions\JsonApiException;
 
@@ -22,32 +23,18 @@ use Sowl\JsonApi\Exceptions\JsonApiException;
  */
 abstract class AbstractAction
 {
-    protected Request $request;
-
-    /**
-     * Helper for new action object construction.
-     */
-    public static function create(...$args): static
-    {
-        /** @phpstan-ignore new.static */
-        return new static(...$args);
-    }
-
-    public static function createDispatch(Request $request, ...$args): Response
-    {
-        return static::create(...$args)->dispatch($request);
-    }
-
     /**
      * The dispatch method must be called with provided request.
      * Dispatch method will call the handle method injecting its dependencies and will return JsonApiResponse.
      * JsonApiException and Authentication exceptions handled and error response build from them.
      */
-    public function dispatch(Request $request): Response
+    public function dispatch(): Response
     {
-        $this->request = $request;
-
         try {
+            if (method_exists($this, 'authorize')) {
+                app()->call([$this, 'authorize']);
+            }
+
             return app()->call([$this, 'handle']);
         } catch (AuthorizationException $e) {
             return $this->response()->exception(new ForbiddenException(
@@ -59,27 +46,11 @@ abstract class AbstractAction
     }
 
     /**
-     * Returns the current JSON:API request.
-     */
-    protected function request(): Request
-    {
-        return $this->request;
-    }
-
-    /**
-     * Get the resource repository from the request.
-     */
-    protected function repository(): ResourceRepository
-    {
-        return $this->request->repository();
-    }
-
-    /**
      * Returns the entity manager for the current resource.
      */
-    protected function em(): EntityManagerInterface
+    protected function em(): EntityManager
     {
-        return $this->repository()->em();
+        return app(EntityManager::class);
     }
 
     /**
@@ -101,5 +72,10 @@ abstract class AbstractAction
     protected function response(): ResponseFactory
     {
         return app(ResponseFactory::class);
+    }
+
+    protected function gate(): Gate
+    {
+        return app(Gate::class);
     }
 }

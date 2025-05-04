@@ -5,17 +5,19 @@ namespace Sowl\JsonApi\Action\Relationships\ToMany;
 use Doctrine\Common\Collections\ArrayCollection;
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
+use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
 
 class UpdateRelationshipsAction extends AbstractAction
 {
     public function __construct(
         protected ToManyRelationship $relationship,
+        protected Request $request,
     ) {}
 
     public function handle(): Response
     {
-        $resource = $this->request()->resource();
+        $resource = $this->request->resource();
         $property = $this->relationship->property();
         $relationshipRepository = $this->relationship->repository();
 
@@ -24,8 +26,8 @@ class UpdateRelationshipsAction extends AbstractAction
                 return $relationshipRepository
                     ->findByObjectIdentifier($relatedPrimaryData, "/data/$index");
             },
-            $this->request()->getData(),
-            array_keys($this->request()->getData()),
+            $this->request->getData(),
+            array_keys($this->request->getData()),
         ));
 
         $this->manipulator()->replaceResourceCollection($resource, $property, $replaceRelationships);

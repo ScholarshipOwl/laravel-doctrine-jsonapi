@@ -4,9 +4,9 @@ namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Resource\UpdateResourceAction;
 use Sowl\JsonApi\Default\Request\UpdateResourceRequest;
-use Sowl\JsonApi\Response;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
+use Sowl\JsonApi\Response;
 
 /**
  * Provides an update method for handling the update of an existing resource.
@@ -22,7 +22,6 @@ trait WithUpdateTrait
     #[ResourceResponse(description: 'The updated resource.')]
     public function update(UpdateResourceRequest $request): Response
     {
-        return (new UpdateResourceAction)
-            ->dispatch($request);
+        return (new UpdateResourceAction($request))->dispatch();
     }
 }

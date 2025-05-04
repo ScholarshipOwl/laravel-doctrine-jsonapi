@@ -4,18 +4,22 @@ namespace Sowl\JsonApi\Action\Relationships\ToOne;
 
 use Sowl\JsonApi\AbstractAction;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
+use Sowl\JsonApi\Request;
 use Sowl\JsonApi\Response;
 
 class UpdateRelationshipAction extends AbstractAction
 {
-    public function __construct(protected ToOneRelationship $relationship) {}
+    public function __construct(
+        protected ToOneRelationship $relationship,
+        protected Request $request,
+    ) {}
 
     public function handle(): Response
     {
-        $resource = $this->request()->resource();
+        $resource = $this->request->resource();
         $property = $this->relationship->property();
 
-        if (null !== ($objectIdentifier = $this->request()->getData())) {
+        if (null !== ($objectIdentifier = $this->request->getData())) {
             $relationshipResource = $this->relationship->repository()->findByObjectIdentifier($objectIdentifier);
             $this->manipulator()->setProperty($resource, $property, $relationshipResource);
             $this->em()->flush();

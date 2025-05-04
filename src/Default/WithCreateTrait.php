@@ -4,9 +4,9 @@ namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Resource\CreateResourceAction;
 use Sowl\JsonApi\Default\Request\CreateResourceRequest;
-use Sowl\JsonApi\Response;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestCreate;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
+use Sowl\JsonApi\Response;
 
 /**
  * Provides a create method for handling the creation of a new resource.
@@ -22,7 +22,6 @@ trait WithCreateTrait
     #[ResourceResponse(status: 201, description: 'Created resource.')]
     public function create(CreateResourceRequest $request): Response
     {
-        return (new CreateResourceAction)
-            ->dispatch($request);
+        return (new CreateResourceAction($request))->dispatch();
     }
 }

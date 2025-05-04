@@ -32,18 +32,16 @@ trait WithRelatedTrait
     #[ResourceResponseRelated]
     public function showRelated(Request $request): Response
     {
-        $resource = $request->resource();
-        $relationshipName = $request->relationshipName();
-        $relationship = $resource->relationships()->get($relationshipName);
+        $relationship = $request->relationship();
 
         if ($relationship instanceof ToOneRelationship) {
-            return (new ShowRelatedAction($relationship))
-                ->dispatch($request);
+            return (new ShowRelatedAction($relationship, $request))
+                ->dispatch();
         }
 
         if ($relationship instanceof ToManyRelationship) {
-            return (new ListRelatedAction($relationship))
-                ->dispatch($request);
+            return (new ListRelatedAction($relationship, $request))
+                ->dispatch();
         }
 
         return app(ResponseFactory::class)->notFound();

@@ -8,6 +8,8 @@ use Sowl\JsonApi\Action\FiltersResourceTrait;
 use Sowl\JsonApi\Action\PaginatesResourceTrait;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\ResourceInterface;
+use Sowl\JsonApi\Request;
+use Sowl\JsonApi\ResourceRepository;
 use Sowl\JsonApi\Response;
 
 /**
@@ -20,11 +22,22 @@ class ListRelatedAction extends AbstractAction
 
     public function __construct(
         protected ToManyRelationship $relationship,
+        protected Request $request,
     ) {}
+
+    protected function request(): Request
+    {
+        return $this->request;
+    }
+
+    public function repository(): ResourceRepository
+    {
+        return $this->request->repository();
+    }
 
     public function handle(): Response
     {
-        $resource = $this->request()->resource();
+        $resource = $this->request->resource();
         $repository = $this->relationship->repository();
 
         $qb = $this->relatedQueryBuilder($resource);
@@ -68,7 +81,7 @@ class ListRelatedAction extends AbstractAction
      */
     private function isIdentityMustBeUsed(): bool
     {
-        $metadata = $this->repository()->metadata();
+        $metadata = $this->request->repository()->metadata();
         $identifiers = $metadata->getIdentifierFieldNames();
         $associationsMappings = $metadata->getAssociationMappings();
 

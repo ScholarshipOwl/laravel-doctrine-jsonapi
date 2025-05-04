@@ -3,10 +3,9 @@
 namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Resource\ShowResourceAction;
-use Sowl\JsonApi\Request;
-use Sowl\JsonApi\Response;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequest;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
+use Sowl\JsonApi\Response;
 
 /**
  * Provides a show method for handling the retrieval of a single resource.
@@ -20,9 +19,8 @@ trait WithShowTrait
 {
     #[ResourceRequest]
     #[ResourceResponse]
-    public function show(Request $request): Response
+    public function show(ShowResourceAction $action): Response
     {
-        return (new ShowResourceAction)
-            ->dispatch($request);
+        return $action->dispatch();
     }
 }

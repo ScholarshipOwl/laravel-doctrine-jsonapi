@@ -9,7 +9,9 @@ use Sowl\JsonApi\Action\FiltersResourceTrait;
 use Sowl\JsonApi\Action\PaginatesResourceTrait;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\ResourceInterface;
+use Sowl\JsonApi\ResourceRepository;
 use Sowl\JsonApi\Response;
+use Sowl\JsonApi\Request;
 
 class ListRelationshipsAction extends AbstractAction
 {
@@ -18,11 +20,22 @@ class ListRelationshipsAction extends AbstractAction
 
     public function __construct(
         protected ToManyRelationship $relationship,
+        protected Request $request,
     ) {}
+
+    protected function request(): Request
+    {
+        return $this->request;
+    }
+
+    public function repository(): ResourceRepository
+    {
+        return $this->request->repository();
+    }
 
     public function handle(): Response
     {
-        $resource = $this->request()->resource();
+        $resource = $this->request->resource();
         $relationshipRepository = $this->relationship->repository();
 
         $qb = $this->relatedQueryBuilder($resource);

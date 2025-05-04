@@ -13,8 +13,8 @@ class PageController extends Controller
 
     public function updateUserRelationship(UpdatePageUserRequest $request): Response
     {
-        return (new UpdateRelationshipAction($request->relationship()))
-            ->dispatch($request);
+        return (new UpdateRelationshipAction($request->relationship(), $request))
+            ->dispatch();
     }
 
     protected function noAuthMethods(): array

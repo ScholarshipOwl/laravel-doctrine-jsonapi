@@ -3,10 +3,9 @@
 namespace Sowl\JsonApi\Default;
 
 use Sowl\JsonApi\Action\Resource\ListResourcesAction;
-use Sowl\JsonApi\Request;
-use Sowl\JsonApi\Response;
 use Sowl\JsonApi\Scribe\Attributes\ResourceRequestList;
 use Sowl\JsonApi\Scribe\Attributes\ResourceResponse;
+use Sowl\JsonApi\Response;
 
 /**
  * Provides a list method for handling the retrieval of a list of resources.
@@ -20,9 +19,8 @@ trait WithListTrait
 {
     #[ResourceRequestList]
     #[ResourceResponse(collection: true)]
-    public function list(Request $request): Response
+    public function list(ListResourcesAction $action): Response
     {
-        return (new ListResourcesAction)
-            ->dispatch($request);
+        return $action->dispatch();
     }
 }

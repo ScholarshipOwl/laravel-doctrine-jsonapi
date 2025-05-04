@@ -20,35 +20,33 @@ class UsersController extends Controller
     use WithListTrait;
 
     #[ResourceResponse(status: 201)]
-    public function create(CreateUserRequest $request): Response
+    public function create(CreateUserAction $action): Response
     {
-        return CreateUserAction::create()
-            ->dispatch($request);
+        return $action->dispatch();
     }
 
     #[ResourceResponse(status: 200)]
     public function update(UpdateUserRequest $request): Response
     {
-        return UpdateResourceAction::create()
-            ->dispatch($request);
+        return (new UpdateResourceAction($request))->dispatch();
     }
 
     public function createUserRoles(AttachRolesToUserRequest $request): Response
     {
-        return (new CreateRelationshipsAction(User::relationships()->toMany()->get('roles')))
-            ->dispatch($request);
+        return (new CreateRelationshipsAction(User::relationships()->toMany()->get('roles'), $request))
+            ->dispatch();
     }
 
     public function updateUserRoles(UpdateUserRolesRequest $request): Response
     {
-        return (new UpdateRelationshipsAction(User::relationships()->toMany()->get('roles')))
-            ->dispatch($request);
+        return (new UpdateRelationshipsAction(User::relationships()->toMany()->get('roles'), $request))
+            ->dispatch();
     }
 
     public function removeUserRoles(DetachRolesFromUserRequest $request): Response
     {
-        return (new RemoveRelationshipsAction(User::relationships()->toMany()->get('roles')))
-            ->dispatch($request);
+        return (new RemoveRelationshipsAction(User::relationships()->toMany()->get('roles'), $request))
+            ->dispatch();
     }
 
     protected function noAuthMethods(): array

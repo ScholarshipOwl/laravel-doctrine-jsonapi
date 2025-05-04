@@ -35,13 +35,13 @@ trait WithUpdateRelationshipsTrait
         $relationship = $request->relationship();
 
         if ($relationship instanceof ToOneRelationship) {
-            return (new UpdateRelationshipAction($relationship))
-                ->dispatch($request);
+            return (new UpdateRelationshipAction($relationship, $request))
+                ->dispatch();
         }
 
         if ($relationship instanceof ToManyRelationship) {
-            return (new UpdateRelationshipsAction($relationship))
-                ->dispatch($request);
+            return (new UpdateRelationshipsAction($relationship, $request))
+                ->dispatch();
         }
 
         return app(ResponseFactory::class)->notFound();
