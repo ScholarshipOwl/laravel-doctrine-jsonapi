@@ -1,9 +1,23 @@
 import { defineConfig } from 'vitepress'
+import { resolve, relative } from 'path'
+import { cpSync } from 'fs'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
   title: "Laravel Doctrine JSON:API",
   description: "Implement feature-rich [JSON:API](https://jsonapi.org/) compliant APIs in your [Laravel](https://laravel.com/) applications using [Doctrine ORM](https://www.doctrine-project.org/).",
+  ignoreDeadLinks: true,
+  base: process.env.DOCS_BASE_URL || '', // For the github pages: '/laravel-doctrine-jsonapi/'
+  buildEnd: (config) => {
+    const src = resolve(config.srcDir, 'images')
+    const dest = resolve(config.outDir, 'images')
+
+    const srcRelative = relative(process.cwd(), src)
+    const outRelative = relative(process.cwd(), dest)
+    console.log(`✓ copying images: ${srcRelative} -> ${outRelative}`)
+
+    cpSync(src, dest, { recursive: true });
+  },
   themeConfig: {
     nav: [
       { text: 'Quickstart', link: '/quickstart' },
@@ -70,5 +84,5 @@ export default defineConfig({
     socialLinks: [
       { icon: 'github', link: 'https://github.com/ScholarshipOwl/laravel-doctrine-jsonapi' }
     ]
-  }
+  },
 })

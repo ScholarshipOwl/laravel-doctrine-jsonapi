@@ -1,30 +1,10 @@
-/* .VPHome .VPFeature .icon img,
-.VPHome .VPFeature .icon svg {
-    background: none !important;
-    box-shadow: none !important;
-    border-radius: 0 !important;
-    padding: 0 !important;
-}
-
-.VPHome .VPFeature .icon {
-    background: none !important;
-    box-shadow: none !important;
-    border: none !important;
-} */
-
-/* Homepage first JSON:API icon sizes */
-/* .VPHome .VPFeatures .items .item:first-child .icon {
-    height: 38px !important;
-    width: 120px !important;
-    margin-bottom: 30px; */
-/* } */
-
 /* Dark theme colors */
 html.dark {
     --vp-c-bg: #181225;
     --vp-c-bg-soft: #231a38;
     --vp-c-brand-1: #ff5c2a;
     --vp-c-brand-2: #ffb65c;
+    --vp-c-brand-3: #ff5c2a;
     --vp-c-accent-1: #7a4fcf;
     --vp-c-accent-2: #ffe7c7;
     --vp-c-error: #ff2d20;
@@ -37,6 +17,7 @@ html:not(.dark), [data-theme="light"], :root {
     --vp-c-bg-soft: #f7f3ef;
     --vp-c-brand-1: #ff5c2a;
     --vp-c-brand-2: #ffb65c;
+    --vp-c-brand-3: #ff5c2a;
     --vp-c-accent-1: #5a3d7a;
     --vp-c-accent-2: #241d3a;
     --vp-c-error: #ff2d20;
@@ -55,121 +36,6 @@ h1, h2, h3, h4, h5, h6, .VPHome .title, .VPHome .description {
     color: var(--vp-c-accent-2) !important;
 }
 
-/* Links */
-a {
-    color: var(--vp-c-brand-1) !important;
-}
-a:hover {
-    color: var(--vp-c-brand-2) !important;
-}
-
-/* Code blocks and inline code */
-code, pre {
-    background: var(--vp-c-bg-soft) !important;
-    color: var(--vp-c-accent-2) !important;
-    border-radius: 6px;
-}
-
-/* Feature icons and accents */
-.VPHome .VPFeature .icon svg,
-.VPHome .VPFeature .icon img {
-    color: var(--vp-c-brand-1) !important;
-    fill: var(--vp-c-brand-1) !important;
-}
-
-/* Make the main home image bigger */
-.VPHome .main-image img,
-.VPHome .image img,
-.VPHome .VPImage img {
-    max-width: 480px !important;
-    width: 80vw !important;
-    height: auto !important;
-    margin-bottom: 32px;
-}
-
-/* Buttons - style for both themes */
-.VPButton {
-    background: var(--vp-c-brand-1) !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 6px !important;
-    box-shadow: 0 2px 8px 0 rgba(0,0,0,0.07);
-    padding: 0.6em 1.4em;
-    font-weight: 600;
-    transition: background 0.2s, color 0.2s;
-}
-.VPButton:hover {
-    background: var(--vp-c-brand-2) !important;
-    color: #241d3a !important;
-}
-
-.VPSidebar .VPSidebarItem .VPLink .text {
-    padding-left: 0.7rem;
-}
-
-/* Remove orange background from features container */
-html.dark .VPHome .VPFeatures,
-html:not(.dark) .VPHome .VPFeatures {
-    background: none !important;
-    box-shadow: none !important;
-    padding: initial;
-    border-radius: 0;
-}
-
-/* Orange background for each feature item - super light and less padding */
-html.dark .VPHome .VPFeatures .VPFeature {
-    background: linear-gradient(120deg, rgba(255,92,42,0.05) 0%, rgba(255,92,42,0.03) 100%);
-    border-radius: 14px;
-    box-shadow: 0 2px 8px 0 rgba(36,29,58,0.09);
-    padding: 0.6rem 0.7rem;
-    margin-bottom: 1.2rem;
-}
-html:not(.dark) .VPHome .VPFeatures .VPFeature {
-    background: linear-gradient(120deg, rgba(255,92,42,0.07) 0%, rgba(255,182,92,0.04) 100%);
-    border-radius: 14px;
-    box-shadow: 0 2px 8px 0 rgba(255,92,42,0.09);
-    padding: 0.6rem 0.7rem;
-    margin-bottom: 1.2rem;
-}
-
-/* Sidebar styles for both themes */
-html.dark .VPSidebar {
-    background: #231a38 !important;
-    color: #ffe7c7 !important;
-    border-right: 1px solid #31244c;
-}
-html.dark .VPSidebarItem {
-    color: #ffe7c7 !important;
-}
-html.dark .VPSidebarItem.is-active,
-html.dark .VPSidebarItem.active {
-    background: #2e2547 !important;
-    color: #ffb65c !important;
-}
-
-html:not(.dark) .VPSidebar {
-    background: #f7f3ef !important;
-    color: #241d3a !important;
-    border-right: 1px solid #e8e0d9;
-}
-html:not(.dark) .VPSidebarItem {
-    color: #241d3a !important;
-}
-html:not(.dark) .VPSidebarItem.is-active,
-html:not(.dark) .VPSidebarItem.active {
-    background: #ffe0b2 !important;
-    color: #ff5c2a !important;
-}
-
-/* Remove left space from sidebar menu items */
-.VPSidebarItem {
-    padding-left: 0 !important;
-    margin-left: 0 !important;
-}
-.VPSidebarGroup .VPSidebarItem {
-    padding-left: 1.1em !important; /* keep some indent for nested */
-}
-
 .VPHero > .container > .image {
     margin-top: 64px !important;
 }
@@ -177,4 +43,11 @@ html:not(.dark) .VPSidebarItem.active {
 .VPHero > .container > .image img {
     max-width: 420px !important;
     border-radius: 24px !important;
+}
+
+/* Code blocks and inline code */
+code, pre {
+    background: var(--vp-c-bg-soft) !important;
+    color: var(--vp-c-accent-2) !important;
+    border-radius: 6px;
 }
