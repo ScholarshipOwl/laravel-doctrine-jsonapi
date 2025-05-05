@@ -34,6 +34,7 @@ return [
 
             // Exclude these routes even if they matched the rules above.
             'exclude' => [
+                'GET /_workbench*',
                 'GET /up',
                 // Exclude dynamic routes with {resourceType} parameter for now
             ],
