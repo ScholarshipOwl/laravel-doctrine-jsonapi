@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 servers:
   -
-    url: 'http://localhost'
+    url: 'http://localhost:8000'
 tags:
   -
     name: 'Page comments'
@@ -187,7 +187,7 @@ components:
               properties:
                 random:
                   type: string
-                  example: 'testing user1oMBtqqYx'
+                  example: 'testing user190UdLakE'
             relationships:
               type: object
               properties:
@@ -3912,7 +3912,7 @@ paths:
                         notificationsEnabled:
                           type: boolean
                           description: ''
-                          example: true
+                          example: false
                           nullable: false
                         language:
                           type: string
@@ -4451,7 +4451,40 @@ paths:
       summary: 'Create User'
       operationId: createUser
       description: 'Create a new User.'
-      parameters: []
+      parameters:
+        -
+          in: query
+          name: 'fields[users]'
+          description: "Sparse fieldsets - specify which fields to include in the response for each resource type. ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n**Available fields:** `name`, `email`"
+          example: null
+          required: false
+          schema:
+            type: string
+            description: "Sparse fieldsets - specify which fields to include in the response for each resource type. ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n**Available fields:** `name`, `email`"
+            example: null
+            nullable: false
+        -
+          in: query
+          name: 'meta[users]'
+          description: "Additional metadata to be included with the response by resource type.\n\n**Available meta fields:** `random`"
+          example: random
+          required: false
+          schema:
+            type: string
+            description: "Additional metadata to be included with the response by resource type.\n\n**Available meta fields:** `random`"
+            example: random
+            nullable: false
+        -
+          in: query
+          name: include
+          description: "Include related resources. ([Spec](https://jsonapi.org/format/#fetching-includes))\n\n**Available includes:** `status`, `roles`"
+          example: 'status,roles'
+          required: false
+          schema:
+            type: string
+            description: "Include related resources. ([Spec](https://jsonapi.org/format/#fetching-includes))\n\n**Available includes:** `status`, `roles`"
+            example: 'status,roles'
+            nullable: false
       responses:
         201:
           description: ''
@@ -4495,6 +4528,42 @@ paths:
                             example: /users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b
       tags:
         - Users
+      requestBody:
+        required: false
+        content:
+          application/vnd.api+json:
+            schema:
+              type: object
+              properties:
+                data:
+                  type: object
+                  description: ''
+                  nullable: false
+                  properties:
+                    attributes:
+                      type: object
+                      description: ''
+                      nullable: false
+                      properties:
+                        name:
+                          type: string
+                          description: ''
+                          example: architecto
+                          nullable: false
+                        password:
+                          type: string
+                          description: ''
+                          example: architecto
+                          nullable: false
+                        email:
+                          type: string
+                          description: 'Must be a valid email address.'
+                          example: zbailey@example.net
+                          nullable: false
+                      required:
+                        - name
+                        - password
+                        - email
       security: []
     get:
       summary: 'List Users'
@@ -4752,7 +4821,40 @@ paths:
       summary: 'Update User'
       operationId: updateUser
       description: 'Update a specific User by ID.'
-      parameters: []
+      parameters:
+        -
+          in: query
+          name: 'fields[users]'
+          description: "Sparse fieldsets - specify which fields to include in the response for each resource type. ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n**Available fields:** `name`, `email`"
+          example: null
+          required: false
+          schema:
+            type: string
+            description: "Sparse fieldsets - specify which fields to include in the response for each resource type. ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n**Available fields:** `name`, `email`"
+            example: null
+            nullable: false
+        -
+          in: query
+          name: 'meta[users]'
+          description: "Additional metadata to be included with the response by resource type.\n\n**Available meta fields:** `random`"
+          example: random
+          required: false
+          schema:
+            type: string
+            description: "Additional metadata to be included with the response by resource type.\n\n**Available meta fields:** `random`"
+            example: random
+            nullable: false
+        -
+          in: query
+          name: include
+          description: "Include related resources. ([Spec](https://jsonapi.org/format/#fetching-includes))\n\n**Available includes:** `status`, `roles`"
+          example: 'status,roles'
+          required: false
+          schema:
+            type: string
+            description: "Include related resources. ([Spec](https://jsonapi.org/format/#fetching-includes))\n\n**Available includes:** `status`, `roles`"
+            example: 'status,roles'
+            nullable: false
       responses:
         200:
           description: ''
@@ -4963,8 +5065,8 @@ paths:
       -
         in: path
         name: id
-        description: 'The ID of the user.'
-        example: architecto
+        description: "The unique identifier of the 'users' resource"
+        example: 12345678-1234-1234-1234-123456789012
         required: true
         schema:
           type: string
@@ -4973,14 +5075,257 @@ paths:
       summary: 'Add to Roles relationships'
       operationId: addToRolesRelationships
       description: 'Add identifiers to the Roles relationship of a specific User.'
-      parameters: []
-      responses: {  }
+      parameters:
+        -
+          in: query
+          name: 'fields[users]'
+          description: "Sparse fieldsets - specify which fields to include in the response for each resource type. ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n**Available fields:** `name`, `email`"
+          example: null
+          required: false
+          schema:
+            type: string
+            description: "Sparse fieldsets - specify which fields to include in the response for each resource type. ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n**Available fields:** `name`, `email`"
+            example: null
+            nullable: false
+        -
+          in: query
+          name: 'meta[users]'
+          description: "Additional metadata to be included with the response by resource type.\n\n**Available meta fields:** `random`"
+          example: random
+          required: false
+          schema:
+            type: string
+            description: "Additional metadata to be included with the response by resource type.\n\n**Available meta fields:** `random`"
+            example: random
+            nullable: false
+        -
+          in: query
+          name: include
+          description: "Include related resources. ([Spec](https://jsonapi.org/format/#fetching-includes))\n\n**Available includes:** `status`, `roles`"
+          example: 'status,roles'
+          required: false
+          schema:
+            type: string
+            description: "Include related resources. ([Spec](https://jsonapi.org/format/#fetching-includes))\n\n**Available includes:** `status`, `roles`"
+            example: 'status,roles'
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      data:
+                        -
+                          type: roles
+                          id: '1'
+                          links:
+                            self: /roles/1
+                        -
+                          type: roles
+                          id: '2'
+                          links:
+                            self: /roles/2
+                        -
+                          type: roles
+                          id: '3'
+                          links:
+                            self: /roles/3
+                      meta:
+                        pagination:
+                          total: 100
+                          count: 20
+                          per_page: 3
+                          current_page: 1
+                          total_pages: 5
+                      links:
+                        self: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        first: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        next: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        last: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                    properties:
+                      data:
+                        type: array
+                        example:
+                          -
+                            type: roles
+                            id: '1'
+                            links:
+                              self: /roles/1
+                          -
+                            type: roles
+                            id: '2'
+                            links:
+                              self: /roles/2
+                          -
+                            type: roles
+                            id: '3'
+                            links:
+                              self: /roles/3
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: roles
+                            id:
+                              type: string
+                              example: '1'
+                            links:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  example: /roles/1
+                      meta:
+                        type: object
+                        properties:
+                          pagination:
+                            type: object
+                            properties:
+                              total:
+                                type: integer
+                                example: 100
+                              count:
+                                type: integer
+                                example: 20
+                              per_page:
+                                type: integer
+                                example: 3
+                              current_page:
+                                type: integer
+                                example: 1
+                              total_pages:
+                                type: integer
+                                example: 5
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          first:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          next:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          last:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      data:
+                        -
+                          type: roles
+                          id: '1'
+                          links:
+                            self: /roles/1
+                        -
+                          type: roles
+                          id: '2'
+                          links:
+                            self: /roles/2
+                        -
+                          type: roles
+                          id: '3'
+                          links:
+                            self: /roles/3
+                      meta:
+                        pagination:
+                          total: 100
+                          count: 20
+                          per_page: 3
+                          current_page: 1
+                          total_pages: 5
+                      links:
+                        self: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        first: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        next: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        last: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                    properties:
+                      data:
+                        type: array
+                        example:
+                          -
+                            type: roles
+                            id: '1'
+                            links:
+                              self: /roles/1
+                          -
+                            type: roles
+                            id: '2'
+                            links:
+                              self: /roles/2
+                          -
+                            type: roles
+                            id: '3'
+                            links:
+                              self: /roles/3
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: roles
+                            id:
+                              type: string
+                              example: '1'
+                            links:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  example: /roles/1
+                      meta:
+                        type: object
+                        properties:
+                          pagination:
+                            type: object
+                            properties:
+                              total:
+                                type: integer
+                                example: 100
+                              count:
+                                type: integer
+                                example: 20
+                              per_page:
+                                type: integer
+                                example: 3
+                              current_page:
+                                type: integer
+                                example: 1
+                              total_pages:
+                                type: integer
+                                example: 5
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          first:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          next:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          last:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
       tags:
         - Users
       requestBody:
         required: true
         content:
-          application/json:
+          application/vnd.api+json:
             schema:
               type: object
               properties:
@@ -5001,13 +5346,223 @@ paths:
       operationId: removeFromRolesRelationships
       description: 'Remove identifiers from the Roles relationship of a specific User.'
       parameters: []
-      responses: {  }
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      data:
+                        -
+                          type: roles
+                          id: '1'
+                          links:
+                            self: /roles/1
+                        -
+                          type: roles
+                          id: '2'
+                          links:
+                            self: /roles/2
+                        -
+                          type: roles
+                          id: '3'
+                          links:
+                            self: /roles/3
+                      meta:
+                        pagination:
+                          total: 100
+                          count: 20
+                          per_page: 3
+                          current_page: 1
+                          total_pages: 5
+                      links:
+                        self: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        first: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        next: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        last: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                    properties:
+                      data:
+                        type: array
+                        example:
+                          -
+                            type: roles
+                            id: '1'
+                            links:
+                              self: /roles/1
+                          -
+                            type: roles
+                            id: '2'
+                            links:
+                              self: /roles/2
+                          -
+                            type: roles
+                            id: '3'
+                            links:
+                              self: /roles/3
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: roles
+                            id:
+                              type: string
+                              example: '1'
+                            links:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  example: /roles/1
+                      meta:
+                        type: object
+                        properties:
+                          pagination:
+                            type: object
+                            properties:
+                              total:
+                                type: integer
+                                example: 100
+                              count:
+                                type: integer
+                                example: 20
+                              per_page:
+                                type: integer
+                                example: 3
+                              current_page:
+                                type: integer
+                                example: 1
+                              total_pages:
+                                type: integer
+                                example: 5
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          first:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          next:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          last:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      data:
+                        -
+                          type: roles
+                          id: '1'
+                          links:
+                            self: /roles/1
+                        -
+                          type: roles
+                          id: '2'
+                          links:
+                            self: /roles/2
+                        -
+                          type: roles
+                          id: '3'
+                          links:
+                            self: /roles/3
+                      meta:
+                        pagination:
+                          total: 100
+                          count: 20
+                          per_page: 3
+                          current_page: 1
+                          total_pages: 5
+                      links:
+                        self: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        first: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        next: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        last: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                    properties:
+                      data:
+                        type: array
+                        example:
+                          -
+                            type: roles
+                            id: '1'
+                            links:
+                              self: /roles/1
+                          -
+                            type: roles
+                            id: '2'
+                            links:
+                              self: /roles/2
+                          -
+                            type: roles
+                            id: '3'
+                            links:
+                              self: /roles/3
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: roles
+                            id:
+                              type: string
+                              example: '1'
+                            links:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  example: /roles/1
+                      meta:
+                        type: object
+                        properties:
+                          pagination:
+                            type: object
+                            properties:
+                              total:
+                                type: integer
+                                example: 100
+                              count:
+                                type: integer
+                                example: 20
+                              per_page:
+                                type: integer
+                                example: 3
+                              current_page:
+                                type: integer
+                                example: 1
+                              total_pages:
+                                type: integer
+                                example: 5
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          first:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          next:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          last:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
       tags:
         - Users
       requestBody:
         required: true
         content:
-          application/json:
+          application/vnd.api+json:
             schema:
               type: object
               properties:
@@ -5027,14 +5582,257 @@ paths:
       summary: 'Update Roles relationships'
       operationId: updateRolesRelationships
       description: 'Replace all identifiers in the Roles relationship of a specific User.'
-      parameters: []
-      responses: {  }
+      parameters:
+        -
+          in: query
+          name: 'fields[users]'
+          description: "Sparse fieldsets - specify which fields to include in the response for each resource type. ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n**Available fields:** `name`, `email`"
+          example: null
+          required: false
+          schema:
+            type: string
+            description: "Sparse fieldsets - specify which fields to include in the response for each resource type. ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n**Available fields:** `name`, `email`"
+            example: null
+            nullable: false
+        -
+          in: query
+          name: 'meta[users]'
+          description: "Additional metadata to be included with the response by resource type.\n\n**Available meta fields:** `random`"
+          example: random
+          required: false
+          schema:
+            type: string
+            description: "Additional metadata to be included with the response by resource type.\n\n**Available meta fields:** `random`"
+            example: random
+            nullable: false
+        -
+          in: query
+          name: include
+          description: "Include related resources. ([Spec](https://jsonapi.org/format/#fetching-includes))\n\n**Available includes:** `status`, `roles`"
+          example: 'status,roles'
+          required: false
+          schema:
+            type: string
+            description: "Include related resources. ([Spec](https://jsonapi.org/format/#fetching-includes))\n\n**Available includes:** `status`, `roles`"
+            example: 'status,roles'
+            nullable: false
+      responses:
+        200:
+          description: ''
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      data:
+                        -
+                          type: roles
+                          id: '1'
+                          links:
+                            self: /roles/1
+                        -
+                          type: roles
+                          id: '2'
+                          links:
+                            self: /roles/2
+                        -
+                          type: roles
+                          id: '3'
+                          links:
+                            self: /roles/3
+                      meta:
+                        pagination:
+                          total: 100
+                          count: 20
+                          per_page: 3
+                          current_page: 1
+                          total_pages: 5
+                      links:
+                        self: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        first: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        next: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        last: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                    properties:
+                      data:
+                        type: array
+                        example:
+                          -
+                            type: roles
+                            id: '1'
+                            links:
+                              self: /roles/1
+                          -
+                            type: roles
+                            id: '2'
+                            links:
+                              self: /roles/2
+                          -
+                            type: roles
+                            id: '3'
+                            links:
+                              self: /roles/3
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: roles
+                            id:
+                              type: string
+                              example: '1'
+                            links:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  example: /roles/1
+                      meta:
+                        type: object
+                        properties:
+                          pagination:
+                            type: object
+                            properties:
+                              total:
+                                type: integer
+                                example: 100
+                              count:
+                                type: integer
+                                example: 20
+                              per_page:
+                                type: integer
+                                example: 3
+                              current_page:
+                                type: integer
+                                example: 1
+                              total_pages:
+                                type: integer
+                                example: 5
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          first:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          next:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          last:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                  -
+                    description: ''
+                    type: object
+                    example:
+                      data:
+                        -
+                          type: roles
+                          id: '1'
+                          links:
+                            self: /roles/1
+                        -
+                          type: roles
+                          id: '2'
+                          links:
+                            self: /roles/2
+                        -
+                          type: roles
+                          id: '3'
+                          links:
+                            self: /roles/3
+                      meta:
+                        pagination:
+                          total: 100
+                          count: 20
+                          per_page: 3
+                          current_page: 1
+                          total_pages: 5
+                      links:
+                        self: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        first: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        next: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                        last: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                    properties:
+                      data:
+                        type: array
+                        example:
+                          -
+                            type: roles
+                            id: '1'
+                            links:
+                              self: /roles/1
+                          -
+                            type: roles
+                            id: '2'
+                            links:
+                              self: /roles/2
+                          -
+                            type: roles
+                            id: '3'
+                            links:
+                              self: /roles/3
+                        items:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: roles
+                            id:
+                              type: string
+                              example: '1'
+                            links:
+                              type: object
+                              properties:
+                                self:
+                                  type: string
+                                  example: /roles/1
+                      meta:
+                        type: object
+                        properties:
+                          pagination:
+                            type: object
+                            properties:
+                              total:
+                                type: integer
+                                example: 100
+                              count:
+                                type: integer
+                                example: 20
+                              per_page:
+                                type: integer
+                                example: 3
+                              current_page:
+                                type: integer
+                                example: 1
+                              total_pages:
+                                type: integer
+                                example: 5
+                      links:
+                        type: object
+                        properties:
+                          self:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          first:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          next:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
+                          last:
+                            type: string
+                            example: 'roles?page%5Bnumber%5D=1&page%5Bsize%5D=3'
       tags:
         - Users
       requestBody:
         required: true
         content:
-          application/json:
+          application/vnd.api+json:
             schema:
               type: object
               properties:
@@ -5273,8 +6071,8 @@ paths:
       -
         in: path
         name: id
-        description: 'The ID of the user.'
-        example: architecto
+        description: "The unique identifier of the 'users' resource"
+        example: 12345678-1234-1234-1234-123456789012
         required: true
         schema:
           type: string
