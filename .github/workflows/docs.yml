@@ -3,7 +3,7 @@ name: Deploy Documentation to GitHub Pages
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["vitepress2"] # Or your primary branch name
+    branches: ["main"] # Or your primary branch name
     paths:
       - 'docs/**'
       - '.github/workflows/docs.yml'
