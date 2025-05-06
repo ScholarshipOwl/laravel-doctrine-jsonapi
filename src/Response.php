@@ -9,7 +9,7 @@ use Illuminate\Http\JsonResponse;
  */
 class Response extends JsonResponse
 {
-    const JSONAPI_CONTENT_TYPE = 'application/vnd.api+json';
+    public const JSONAPI_CONTENT_TYPE = 'application/vnd.api+json';
 
     public function __construct(?array $body, int $status, array $headers = [])
     {

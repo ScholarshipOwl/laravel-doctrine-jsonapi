@@ -39,7 +39,7 @@ class UserTransformer extends AbstractTransformer
     {
         Gate::authorize('listRoles', $user);
 
-        return $this->collection($user->getRoles(), new RoleTransformer, Role::getResourceType());
+        return $this->collection($user->getRoles(), new RoleTransformer(), Role::getResourceType());
     }
 
     public function metaRandom(User $user): string
@@ -50,6 +50,6 @@ class UserTransformer extends AbstractTransformer
     public function includeConfig(User $user)
     {
         // Assuming User has getUserConfig method
-        return $this->item($user->getUserConfig(), new UserConfigTransformer, 'user-configs');
+        return $this->item($user->getUserConfig(), new UserConfigTransformer(), 'user-configs');
     }
 }

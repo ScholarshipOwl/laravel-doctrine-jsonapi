@@ -22,7 +22,7 @@ class GetFromResourceAttributesTest extends TestCase
     {
         parent::setUp();
 
-        $this->strategy = new GetFromResourceAttributes(new DocumentationConfig);
+        $this->strategy = new GetFromResourceAttributes(new DocumentationConfig());
     }
 
     protected function tearDown(): void
@@ -31,15 +31,14 @@ class GetFromResourceAttributesTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_returns_json_api_headers_for_json_api_routes()
+    public function testReturnsJsonApiHeadersForJsonApiRoutes(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users',
             [
                 'as' => 'jsonapi.users.list',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequest]
                     #[ResourceResponse]
                     public function __invoke()
@@ -58,15 +57,14 @@ class GetFromResourceAttributesTest extends TestCase
         ], $result);
     }
 
-    public function test_returns_empty_array_for_non_json_api_routes()
+    public function testReturnsEmptyArrayForNonJsonApiRoutes(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users',
             [
                 'as' => 'api.users.list',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     public function __invoke()
                     {
                         return null;
@@ -81,7 +79,7 @@ class GetFromResourceAttributesTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function test_handles_various_json_api_route_names()
+    public function testHandlesVariousJsonApiRouteNames(): void
     {
         $jsonApiRouteNames = [
             'jsonapi.users.list',
@@ -102,8 +100,7 @@ class GetFromResourceAttributesTest extends TestCase
                 'users',
                 [
                     'as' => $routeName,
-                    'uses' => new class
-                    {
+                    'uses' => new class () {
                         #[ResourceRequest]
                         #[ResourceResponse]
                         public function __invoke()
@@ -123,7 +120,7 @@ class GetFromResourceAttributesTest extends TestCase
         }
     }
 
-    public function test_handles_settings_parameter()
+    public function testHandlesSettingsParameter(): void
     {
         $customSettings = ['custom' => 'setting'];
 
@@ -132,8 +129,7 @@ class GetFromResourceAttributesTest extends TestCase
             'users',
             [
                 'as' => 'jsonapi.users.list',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequest]
                     #[ResourceResponse]
                     public function __invoke()

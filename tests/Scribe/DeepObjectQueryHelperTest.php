@@ -9,20 +9,20 @@ use Sowl\JsonApi\Scribe\DeepObjectQueryHelper;
 
 class DeepObjectQueryHelperTest extends TestCase
 {
-    public function test_no_deep_objects(): void
+    public function testNoDeepObjects(): void
     {
         $query = ['foo' => 'bar'];
         $this->assertEquals(['foo' => 'bar'], DeepObjectQueryHelper::convert($query));
     }
 
-    public function test_single_deep_object(): void
+    public function testSingleDeepObject(): void
     {
         $query = ['fields[pageComments]' => 'content'];
         $expected = ['fields' => ['pageComments' => 'content']];
         $this->assertEquals($expected, DeepObjectQueryHelper::convert($query));
     }
 
-    public function test_multiple_deep_objects(): void
+    public function testMultipleDeepObjects(): void
     {
         $query = [
             'fields[pageComments]' => 'content',
@@ -39,7 +39,7 @@ class DeepObjectQueryHelperTest extends TestCase
         $this->assertEquals($expected, DeepObjectQueryHelper::convert($query));
     }
 
-    public function test_mixed_keys(): void
+    public function testMixedKeys(): void
     {
         $query = [
             'fields[pageComments]' => 'content',
@@ -58,7 +58,7 @@ class DeepObjectQueryHelperTest extends TestCase
         $this->assertEquals($expected, DeepObjectQueryHelper::convert($query));
     }
 
-    public function test_malformed_key_ignored(): void
+    public function testMalformedKeyIgnored(): void
     {
         $query = ['fields[' => 'broken', 'foo' => 'bar'];
         $expected = ['fields[' => 'broken', 'foo' => 'bar'];

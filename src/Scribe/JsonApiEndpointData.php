@@ -123,8 +123,8 @@ class JsonApiEndpointData
         $route = $this->endpointData->route;
 
         // Create extractors
-        $resourceTypeExtractor = new ResourceTypeExtractor;
-        $relationshipExtractor = new RelationshipNameExtractor;
+        $resourceTypeExtractor = new ResourceTypeExtractor();
+        $relationshipExtractor = new RelationshipNameExtractor();
 
         // Extract JSON:API specific data
         if (empty($resourceType = $resourceTypeExtractor->extract($route))) {
@@ -142,13 +142,19 @@ class JsonApiEndpointData
             );
         }
 
-        $this->resourceType = $resourceType;
-        $this->relationshipName = $relationshipExtractor->extract($route);
-        $this->relationship = $this->relationshipName
+        $relationshipName = $relationshipExtractor->extract($route);
+        $relationship = $relationshipName
             ? $this->rm
-                ->relationshipsByResourceType($this->resourceType)
-                ->get($this->relationshipName)
+                ->relationshipsByResourceType($resourceType)
+                ->get($relationshipName)
             : null;
+
+        $this->resourceType = $resourceType;
+
+        if ($relationship) {
+            $this->relationshipName = $relationshipName;
+            $this->relationship = $relationship;
+        }
 
         // Make sure to set isRelationships only if real relationship is registered.
         $this->isRelationships = $relationshipExtractor->isRelationships($route) && $this->relationship !== null;
@@ -197,7 +203,7 @@ class JsonApiEndpointData
      */
     private function isRootResourceUri(string $uri): bool
     {
-        return preg_match('/^'.$this->resourceType.'\/?$/', $uri);
+        return preg_match('/^' . $this->resourceType . '\/?$/', $uri);
     }
 
     /**
@@ -206,7 +212,7 @@ class JsonApiEndpointData
     private function isResourceInstanceUri(string $uri): bool
     {
         // Matches patterns like: 'users/{user_id}', 'pages/{id}', 'comments/{comment}'
-        return preg_match('/^'.$this->resourceType.'\/\{[^\/}]+\}$/', $uri);
+        return preg_match('/^' . $this->resourceType . '\/\{[^\/}]+\}$/', $uri);
     }
 
     private function determineRelationshipAction(string $httpMethod): string

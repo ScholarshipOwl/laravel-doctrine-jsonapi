@@ -47,7 +47,7 @@ class User implements AuthenticatableContract, AuthorizableContract, CanResetPas
 
     public static function transformer(): AbstractTransformer
     {
-        return new UserTransformer;
+        return new UserTransformer();
     }
 
     public static function relationships(): RelationshipsCollection
@@ -117,7 +117,7 @@ class User implements AuthenticatableContract, AuthorizableContract, CanResetPas
      */
     public function __construct()
     {
-        $this->roles = new ArrayCollection;
+        $this->roles = new ArrayCollection();
     }
 
     public function __toString(): string

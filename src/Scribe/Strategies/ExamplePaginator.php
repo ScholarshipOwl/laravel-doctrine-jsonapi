@@ -16,7 +16,7 @@ class ExamplePaginator implements PaginatorInterface
         protected int $count = 20,
         protected int $perPage = 20,
     ) {
-        $this->urlPattern = $path.'?'.http_build_query([
+        $this->urlPattern = $path . '?' . http_build_query([
             'page' => [
                 'number' => $currentPage,
                 'size' => $perPage,

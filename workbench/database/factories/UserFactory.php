@@ -19,7 +19,7 @@ $factory->define(User::class, function (Faker\Generator $faker) {
 });
 
 $factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
-    $config = new UserConfig;
+    $config = new UserConfig();
     $config->setUser($user);
     $config->setTheme('light');
     $config->setNotificationsEnabled(true);
@@ -41,7 +41,7 @@ $factory->defineAs(User::class, 'user', function (Faker\Generator $faker) {
 });
 
 $factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
-    $config = new UserConfig;
+    $config = new UserConfig();
     $config->setUser($user);
     $config->setTheme('light');
     $config->setNotificationsEnabled(true);
@@ -64,7 +64,7 @@ $factory->defineAs(User::class, 'root', function () {
 });
 
 $factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
-    $config = new UserConfig;
+    $config = new UserConfig();
     $config->setUser($user);
     $config->setTheme('light');
     $config->setNotificationsEnabled(true);
@@ -87,7 +87,7 @@ $factory->defineAs(User::class, 'moderator', function () {
 });
 
 $factory->afterCreating(User::class, function (User $user, \Faker\Generator $faker) {
-    $config = new UserConfig;
+    $config = new UserConfig();
     $config->setUser($user);
     $config->setTheme('light');
     $config->setNotificationsEnabled(true);

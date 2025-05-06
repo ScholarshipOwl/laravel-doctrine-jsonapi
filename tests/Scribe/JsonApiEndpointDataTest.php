@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class JsonApiEndpointDataTest extends TestCase
 {
-    public function test_determines_action_type_correctly()
+    public function testDeterminesActionTypeCorrectly(): void
     {
         // Standard resource endpoints
         // List action
@@ -247,7 +247,7 @@ class JsonApiEndpointDataTest extends TestCase
         );
     }
 
-    public function test_empty_uri_throws_exception()
+    public function testEmptyUriThrowsException(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('No resource type found, are you sure this is a JSON:API endpoint?');
@@ -269,7 +269,7 @@ class JsonApiEndpointDataTest extends TestCase
         JsonApiEndpointData::fromEndpointData($endpointData);
     }
 
-    public function test_non_json_api_route_throws_exception()
+    public function testNonJsonApiRouteThrowsException(): void
     {
         $this->expectException(\RuntimeException::class);
         $this->expectExceptionMessage('Resource type "non-jsonapi-route" is not registered in the ResourceManager.');

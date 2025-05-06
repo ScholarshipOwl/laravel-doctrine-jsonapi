@@ -10,19 +10,19 @@ $factory->define(UserStatus::class, fn () => [
 ]);
 
 $factory->defineAs(UserStatus::class, 'active', function () {
-    return (new UserStatus)
+    return (new UserStatus())
         ->setId(UserStatus::ACTIVE)
         ->setName('Active');
 });
 
 $factory->defineAs(UserStatus::class, 'inactive', function () {
-    return (new UserStatus)
+    return (new UserStatus())
         ->setId(UserStatus::INACTIVE)
         ->setName('Inactive');
 });
 
 $factory->defineAs(UserStatus::class, 'deleted', function () {
-    return (new UserStatus)
+    return (new UserStatus())
         ->setId(UserStatus::DELETED)
         ->setName('Deleted');
 });

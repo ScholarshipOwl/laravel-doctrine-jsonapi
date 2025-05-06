@@ -354,7 +354,10 @@ class JsonApiSpecGenerator extends OpenApiGenerator
      */
     protected function setExamplesForBodyParametersFromResponse(array $pathItem): array
     {
-        if (! isset($pathItem['requestBody']) || ! isset($pathItem['responses']) || ! is_array($pathItem['responses'])) {
+        if (
+            !isset($pathItem['requestBody']) || !isset($pathItem['responses']) ||
+            !is_array($pathItem['responses'])
+        ) {
             return $pathItem;
         }
 

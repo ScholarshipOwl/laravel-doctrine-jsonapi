@@ -11,7 +11,8 @@ class UpdateResourceAction extends AbstractAction
 {
     public function __construct(
         protected Request $request,
-    ) {}
+    ) {
+    }
 
     public function authorize(): void
     {

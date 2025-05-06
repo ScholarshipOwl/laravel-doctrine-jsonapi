@@ -21,7 +21,7 @@ class Fractal extends Manager
      */
     public function __construct(protected FractalOptions $options)
     {
-        parent::__construct(new ScopeFactory);
+        parent::__construct(new ScopeFactory());
 
         $serializer = new JsonApiSerializer($options->baseUrl);
         $this->setSerializer($serializer);

@@ -14,110 +14,48 @@ class ResourceTypeExtractorTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->extractor = new ResourceTypeExtractor;
+        $this->extractor = new ResourceTypeExtractor();
     }
 
-    #[DataProvider('provideRouteData')]
-    public function test_extract_resource_type(string $uri, ?string $expectedResourceType, array $options = []): void
+    public function testExtractsResourceTypes(): void
     {
-        // Arrange
-        $route = new Route('GET', $uri, $options);
-
-        // Act
-        $actualResourceType = $this->extractor->extract($route);
-
-        // Assert
-        $this->assertEquals($expectedResourceType, $actualResourceType);
+        // Basic resource types
+        $this->assertExtractsResourceType('users/specialCustomEndpoint', 'users');
+        $this->assertExtractsResourceType('users', 'users');
+        $this->assertExtractsResourceType('users/{id}', 'users');
+        
+        // Nested and relationship resources
+        $this->assertExtractsResourceType('users/{id}/posts', 'users');
+        $this->assertExtractsResourceType('users/{id}/relationships/posts', 'users');
+        $this->assertExtractsResourceType('users/{userId}/posts/{postId}', 'users');
+        
+        // Special cases
+        $this->assertExtractsResourceType('{resourceType}/{id}', null);
+        $this->assertExtractsResourceType('/{dictionaryType}', null);
+        $this->assertExtractsResourceType('', null);
+        
+        // Different naming conventions
+        $this->assertExtractsResourceType('blog-posts', 'blog-posts');
+        $this->assertExtractsResourceType('user_profiles', 'user_profiles');
+        
+        // Complex cases
+        $this->assertExtractsResourceType(
+            'organizations/{orgId}/departments/{deptId}/employees/{empId}/tasks',
+            'organizations'
+        );
+        
+        // Routes with parameters
+        $this->assertExtractsResourceType('search/{query?}', 'search');
+        $this->assertExtractsResourceType('articles/{id:[0-9]+}', 'articles');
+        
+        // Dot notation
+        $this->assertExtractsResourceType('api.v1.users', 'api.v1.users');
     }
 
-    /**
-     * Provides test cases for resource type extraction
-     *
-     * @return array<string, array{string, string|null, array}>
-     */
-    public static function provideRouteData(): array
+    private function assertExtractsResourceType(string $uri, ?string $expectedType): void
     {
-        return [
-            'special route case' => [
-                'users/specialCustomEndpoint',
-                'users',
-                [],
-            ],
-            'simple resource' => [
-                'users',
-                'users',
-                [],
-            ],
-            'resource with id' => [
-                'users/{id}',
-                'users',
-                [],
-            ],
-            'prefixed resource' => [
-                'users',
-                'users',
-            ],
-            'nested resource' => [
-                'users/{id}/posts',
-                'users',
-                [],
-            ],
-            'relationship' => [
-                'users/{id}/relationships/posts',
-                'users',
-                [],
-            ],
-            'multiple parameters' => [
-                'users/{userId}/posts/{postId}',
-                'users',
-                [],
-            ],
-            'resource type parameter' => [
-                '{resourceType}/{id}',
-                null,
-                [],
-            ],
-            'dictionary type parameter only' => [
-                '/{dictionaryType}',
-                null,
-                [],
-            ],
-            // Additional creative test cases
-            'kebab-case resource' => [
-                'blog-posts',
-                'blog-posts',
-                [],
-            ],
-            'snake_case resource' => [
-                'user_profiles',
-                'user_profiles',
-                [],
-            ],
-            'complex nested resources' => [
-                'organizations/{orgId}/departments/{deptId}/employees/{empId}/tasks',
-                'organizations',
-                [],
-            ],
-            'resource with query parameter in route definition' => [
-                'search/{query?}',
-                'search',
-                [],
-            ],
-            'resource with regex constraint' => [
-                'articles/{id:[0-9]+}',
-                'articles',
-                [],
-            ],
-            'resource with dot notation' => [
-                'api.v1.users',
-                'api.v1.users',
-                [],
-            ],
-            'empty URI' => [
-                '',
-                null,
-                [],
-            ],
-        ];
+        $route = new Route('GET', $uri, []);
+        $actualType = $this->extractor->extract($route);
+        $this->assertEquals($expectedType, $actualType);
     }
 }

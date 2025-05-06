@@ -32,15 +32,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         parent::tearDown();
     }
 
-    public function test_returns_common_query_parameters_for_json_api_routes()
+    public function testReturnsCommonQueryParametersForJsonApiRoutes(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users/{user}',
             [
                 'as' => 'jsonapi.users.show',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequest(resourceType: 'users')]
                     public function __invoke()
                     {
@@ -68,9 +67,10 @@ class GetFromResourceRequestAttributesTest extends TestCase
             [
                 'type' => 'string',
                 'required' => false,
-                'description' => 'Sparse fieldsets - specify which fields to include in the response for each resource type.'
-                    ." ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n"
-                    .'**Available fields:** `name`, `email`',
+                'description' =>
+                    'Sparse fieldsets - specify which fields to include in the response for each resource type.'
+                    . " ([Spec](https://jsonapi.org/format/#fetching-sparse-fieldsets))\n\n"
+                    . '**Available fields:** `name`, `email`',
             ],
             $result['fields[users]']
         );
@@ -83,15 +83,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertFalse($result['include']['required']);
     }
 
-    public function test_returns_empty_array_for_non_json_api_routes()
+    public function testReturnsEmptyArrayForNonJsonApiRoutes(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users',
             [
                 'as' => 'users.list',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     public function __invoke()
                     {
                         return [];
@@ -107,15 +106,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function test_adds_list_parameters_for_list_routes()
+    public function testAddsListParametersForListRoutes(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users',
             [
                 'as' => 'jsonapi.users.list',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequestList(resourceType: 'users')]
                     public function __invoke()
                     {
@@ -143,7 +141,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Page number.'
-                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 1,
@@ -154,7 +152,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Number of results per page.'
-                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 10,
@@ -193,8 +191,8 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Sort the results by attributes. Prefix with `-` for descending order.'
-                               ." ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
-                               .'**Available sort fields:** `name`, `email`',
+                               . " ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
+                               . '**Available sort fields:** `name`, `email`',
                 'required' => false,
                 'type' => 'string',
             ],
@@ -202,15 +200,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         );
     }
 
-    public function test_adds_list_parameters_for_to_many_relationship_routes()
+    public function testAddsListParametersForToManyRelationshipRoutes(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users/{user}/relationships/roles',
             [
                 'as' => 'jsonapi.users.relationships.roles.list',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequestList(resourceType: 'roles')]
                     public function __invoke()
                     {
@@ -234,7 +231,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Page number.'
-                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 1,
@@ -245,7 +242,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Number of results per page.'
-                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 10,
@@ -282,8 +279,8 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Sort the results by attributes. Prefix with `-` for descending order.'
-                               ." ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
-                               .'**Available sort fields:** `name`',
+                               . " ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
+                               . '**Available sort fields:** `name`',
                 'required' => false,
                 'type' => 'string',
             ],
@@ -291,15 +288,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         );
     }
 
-    public function test_returns_empty_array_for_non_allowed_methods()
+    public function testReturnsEmptyArrayForNonAllowedMethods(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'DELETE',
             'users',
             [
                 'as' => 'jsonapi.users.list',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     public function __invoke()
                     {
                         return [];
@@ -315,12 +311,11 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals([], $result);
     }
 
-    public function test_returns_query_parameters_for_allowed_methods()
+    public function testReturnsQueryParametersForAllowedMethods(): void
     {
         $routeInfo = [
             'as' => 'jsonapi.users.show',
-            'uses' => new class
-            {
+            'uses' => new class () {
                 #[ResourceRequest(resourceType: 'users')]
                 public function __invoke()
                 {
@@ -357,8 +352,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
             $routePath,
             [
                 'as' => 'jsonapi.users.show',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     public function __invoke()
                     {
                         return [];
@@ -370,15 +364,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEmpty($resultPost, "Expected empty result for custom action HTTP method: {$postMethod}");
     }
 
-    public function test_include_parameter_with_available_includes()
+    public function testIncludeParameterWithAvailableIncludes(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users/{user}',
             [
                 'as' => 'jsonapi.users.show',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequest(resourceType: 'users')]
                     public function __invoke()
                     {
@@ -396,7 +389,8 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $includeParam = $result['include'];
         $this->assertStringContainsString('Include related resources.', $includeParam['description']);
         $this->assertStringContainsString(
-            '([Spec](https://jsonapi.org/format/#fetching-includes))', $includeParam['description']
+            '([Spec](https://jsonapi.org/format/#fetching-includes))',
+            $includeParam['description']
         );
         $this->assertStringContainsString('Available includes:', $includeParam['description']);
         $this->assertStringContainsString('`status`, `roles`', $includeParam['description']);
@@ -404,15 +398,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals('status,roles', $includeParam['example']);
     }
 
-    public function test_meta_parameter_with_available_metas()
+    public function testMetaParameterWithAvailableMetas(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users/{user}',
             [
                 'as' => 'jsonapi.users.show',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequest(resourceType: 'users')]
                     public function __invoke()
                     {
@@ -435,15 +428,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertArrayHasKey('example', $meta);
     }
 
-    public function test_fields_parameter_structure()
+    public function testFieldsParameterStructure(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users/{user}',
             [
                 'as' => 'jsonapi.users.show',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequest(resourceType: 'users')]
                     public function __invoke()
                     {
@@ -462,21 +454,21 @@ class GetFromResourceRequestAttributesTest extends TestCase
 
         $this->assertStringContainsString('Sparse fieldsets', $fields['description']);
         $this->assertStringContainsString(
-            'https://jsonapi.org/format/#fetching-sparse-fieldsets', $fields['description']
+            'https://jsonapi.org/format/#fetching-sparse-fieldsets',
+            $fields['description']
         );
         $this->assertFalse($fields['required']);
         $this->assertEquals('string', $fields['type']);
     }
 
-    public function test_filter_parameter_for_collection_route()
+    public function testFilterParameterForCollectionRoute(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users',
             [
                 'as' => 'jsonapi.users.index',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequestList(resourceType: 'users')]
                     public function __invoke()
                     {
@@ -494,15 +486,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertIsArray($result['filter']); // Simplified check
     }
 
-    public function test_sort_parameter_for_collection_route()
+    public function testSortParameterForCollectionRoute(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users',
             [
                 'as' => 'jsonapi.users.index',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequestList(resourceType: 'users')]
                     public function __invoke()
                     {
@@ -520,8 +511,8 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Sort the results by attributes. Prefix with `-` for descending order.'
-                               ." ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
-                               .'**Available sort fields:** `name`, `email`',
+                               . " ([Spec](https://jsonapi.org/format/#fetching-sorting))\n\n"
+                               . '**Available sort fields:** `name`, `email`',
                 'required' => false,
                 'type' => 'string',
             ],
@@ -529,15 +520,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         );
     }
 
-    public function test_page_parameter_for_collection_route()
+    public function testPageParameterForCollectionRoute(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users',
             [
                 'as' => 'jsonapi.users.index',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequestList(resourceType: 'users')]
                     public function __invoke()
                     {
@@ -554,7 +544,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Page number.'
-                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 1,
@@ -566,7 +556,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals(
             [
                 'description' => 'Number of results per page.'
-                               .' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
+                               . ' ([Spec](https://jsonapi.org/format/#fetching-pagination))',
                 'required' => false,
                 'type' => 'number',
                 'example' => 10,

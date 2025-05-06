@@ -10,9 +10,9 @@ use stdClass;
 
 class ChainTest extends TestCase
 {
-    public function test_chain_process()
+    public function testChainProcess(): void
     {
-        $object = new stdClass;
+        $object = new stdClass();
 
         $member1 = m::mock(MemberInterface::class)
             ->shouldReceive('__invoke')->with($object)->andReturn($object)

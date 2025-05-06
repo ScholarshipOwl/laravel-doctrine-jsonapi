@@ -25,11 +25,11 @@ class PageCommentTransformer extends AbstractTransformer
 
     public function includePages(PageComment $comment): Item
     {
-        return $this->item($comment->getPage(), new PagesTransformer, Page::getResourceType());
+        return $this->item($comment->getPage(), new PagesTransformer(), Page::getResourceType());
     }
 
     public function includeUser(PageComment $comment): Item
     {
-        return $this->item($comment->getUser(), new UserTransformer, User::getResourceType());
+        return $this->item($comment->getUser(), new UserTransformer(), User::getResourceType());
     }
 }

@@ -9,10 +9,10 @@ use Sowl\JsonApi\ResourceManipulator;
 
 class ResourceManipulatorTest extends TestCase
 {
-    public function test_hydrate_attributes_and_relationships()
+    public function testHydrateAttributesAndRelationships(): void
     {
         /** @var User $user */
-        $user = $this->manipulator()->hydrateResource(new User, [
+        $user = $this->manipulator()->hydrateResource(new User(), [
             'attributes' => [
                 'name' => 'TestName',
                 'email' => 'test@test.com',
@@ -32,10 +32,10 @@ class ResourceManipulatorTest extends TestCase
         $this->assertTrue($user->hasRoleByName(Role::USER_NAME));
     }
 
-    public function test_hydrate_exceptions()
+    public function testHydrateExceptions(): void
     {
         try {
-            $this->manipulator()->hydrateResource(new User, ['attributes' => ['not_exists' => 1]]);
+            $this->manipulator()->hydrateResource(new User(), ['attributes' => ['not_exists' => 1]]);
             $this->fail('Exception should be thrown.');
         } catch (JsonApiException $e) {
             $this->assertEquals([
@@ -53,7 +53,7 @@ class ResourceManipulatorTest extends TestCase
         }
 
         try {
-            $this->manipulator()->hydrateResource(new User, ['relationships' => ['not_exists' => 1]]);
+            $this->manipulator()->hydrateResource(new User(), ['relationships' => ['not_exists' => 1]]);
             $this->fail('Exception should be thrown.');
         } catch (JsonApiException $e) {
             $this->assertEquals([
@@ -66,7 +66,7 @@ class ResourceManipulatorTest extends TestCase
         }
 
         try {
-            $this->manipulator()->hydrateResource(new User, ['relationships' => ['roles' => 1]]);
+            $this->manipulator()->hydrateResource(new User(), ['relationships' => ['roles' => 1]]);
             $this->fail('Exception should be thrown.');
         } catch (JsonApiException $e) {
             $this->assertEquals([
@@ -79,14 +79,14 @@ class ResourceManipulatorTest extends TestCase
         }
 
         try {
-            $this->manipulator()->setProperty(new User, 'not_exists', 'test');
+            $this->manipulator()->setProperty(new User(), 'not_exists', 'test');
             $this->fail('Exception should be thrown.');
         } catch (JsonApiException $e) {
             $this->assertEquals([
                 [
                     'code' => '400',
                     'source' => [
-                        'setter' => User::class.'::setNot_exists',
+                        'setter' => User::class . '::setNot_exists',
                     ],
                     'detail' => 'Missing property setter.',
                 ],
@@ -94,7 +94,7 @@ class ResourceManipulatorTest extends TestCase
         }
     }
 
-    public function test_create_resource(): void
+    public function testCreateResource(): void
     {
         $user = $this->manipulator()->createResource('users');
 

@@ -143,14 +143,22 @@ class GetFromResourceMetadataAttribute extends AbstractStrategy
             JsonApiEndpointData::ACTION_CREATE => __('jsonapi::metadata.create', $this->transParams),
             JsonApiEndpointData::ACTION_UPDATE => __('jsonapi::metadata.update', $this->transParams),
             JsonApiEndpointData::ACTION_DELETE => __('jsonapi::metadata.delete', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_ONE => __('jsonapi::metadata.show_related_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_MANY => __('jsonapi::metadata.show_related_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_ONE => __('jsonapi::metadata.show_relationship_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_ONE => __('jsonapi::metadata.update_relationship_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.show_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_ADD_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.add_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.update_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_REMOVE_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.remove_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_ONE =>
+                __('jsonapi::metadata.show_related_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_MANY =>
+                __('jsonapi::metadata.show_related_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_ONE =>
+                __('jsonapi::metadata.show_relationship_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_ONE =>
+                __('jsonapi::metadata.update_relationship_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_MANY =>
+                __('jsonapi::metadata.show_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_ADD_RELATIONSHIP_TO_MANY =>
+                __('jsonapi::metadata.add_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_MANY =>
+                __('jsonapi::metadata.update_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_REMOVE_RELATIONSHIP_TO_MANY =>
+                __('jsonapi::metadata.remove_relationship_to_many', $this->transParams),
             default => __('jsonapi::metadata.default_title', $this->transParams)
         };
     }
@@ -166,14 +174,22 @@ class GetFromResourceMetadataAttribute extends AbstractStrategy
             JsonApiEndpointData::ACTION_CREATE => __('jsonapi::metadata.description.create', $this->transParams),
             JsonApiEndpointData::ACTION_UPDATE => __('jsonapi::metadata.description.update', $this->transParams),
             JsonApiEndpointData::ACTION_DELETE => __('jsonapi::metadata.description.delete', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_ONE => __('jsonapi::metadata.description.show_related_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_MANY => __('jsonapi::metadata.description.show_related_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_ONE => __('jsonapi::metadata.description.show_relationship_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_ONE => __('jsonapi::metadata.description.update_relationship_to_one', $this->transParams),
-            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.description.show_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_ADD_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.description.add_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.description.update_relationship_to_many', $this->transParams),
-            JsonApiEndpointData::ACTION_REMOVE_RELATIONSHIP_TO_MANY => __('jsonapi::metadata.description.remove_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_ONE =>
+                __('jsonapi::metadata.description.show_related_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATED_TO_MANY =>
+                __('jsonapi::metadata.description.show_related_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_ONE =>
+                __('jsonapi::metadata.description.show_relationship_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_ONE =>
+                __('jsonapi::metadata.description.update_relationship_to_one', $this->transParams),
+            JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_MANY =>
+                __('jsonapi::metadata.description.show_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_ADD_RELATIONSHIP_TO_MANY =>
+                __('jsonapi::metadata.description.add_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_MANY =>
+                __('jsonapi::metadata.description.update_relationship_to_many', $this->transParams),
+            JsonApiEndpointData::ACTION_REMOVE_RELATIONSHIP_TO_MANY =>
+                __('jsonapi::metadata.description.remove_relationship_to_many', $this->transParams),
             default => __('jsonapi::metadata.description.default_description', $this->transParams),
         };
     }

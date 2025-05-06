@@ -97,7 +97,7 @@ class UserConfig implements ResourceInterface
 
     public static function transformer(): AbstractTransformer
     {
-        return new UserConfigTransformer;
+        return new UserConfigTransformer();
     }
 
     public function getId(): null|string|int

@@ -23,15 +23,14 @@ final class GetFromResourceMetadataAttributeTest extends TestCase
         $this->strategy = new GetFromResourceMetadataAttribute(new DocumentationConfig([]));
     }
 
-    public function test_generates_metadata_for_list_action(): void
+    public function testGeneratesMetadataForListAction(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users',
             [
                 'as' => 'jsonapi.users.list',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceMetadata]
                     public function __invoke()
                     {

@@ -187,7 +187,7 @@ components:
               properties:
                 random:
                   type: string
-                  example: 'testing user1xOX43pmd'
+                  example: 'testing user1oMBtqqYx'
             relationships:
               type: object
               properties:
@@ -327,7 +327,7 @@ components:
                           enum:
                             - users
 paths:
-  '/pageComments/{id}':
+  '/api/pageComments/{id}':
     get:
       summary: 'Show Page comment'
       operationId: showPageComment
@@ -541,7 +541,7 @@ paths:
         required: true
         schema:
           type: string
-  '/pageComments/{id}/user':
+  '/api/pageComments/{id}/user':
     get:
       summary: 'Show related User'
       operationId: showRelatedUser
@@ -662,7 +662,7 @@ paths:
         required: true
         schema:
           type: string
-  '/pageComments/{id}/page':
+  '/api/pageComments/{id}/page':
     get:
       summary: 'Show related Page'
       operationId: showRelatedPage
@@ -783,7 +783,7 @@ paths:
         required: true
         schema:
           type: string
-  '/pageComments/{id}/relationships/user':
+  '/api/pageComments/{id}/relationships/user':
     get:
       summary: 'Show User relationship'
       operationId: showUserRelationship
@@ -941,7 +941,7 @@ paths:
         required: true
         schema:
           type: string
-  '/pageComments/{id}/relationships/page':
+  '/api/pageComments/{id}/relationships/page':
     get:
       summary: 'Show Page relationship'
       operationId: showPageRelationship
@@ -1099,7 +1099,7 @@ paths:
         required: true
         schema:
           type: string
-  /pageComments:
+  /api/pageComments:
     get:
       summary: 'List Page comments'
       operationId: listPageComments
@@ -1413,7 +1413,7 @@ paths:
               required:
                 - data
       security: []
-  '/pages/{id}':
+  '/api/pages/{id}':
     get:
       summary: 'Show Page'
       operationId: showPage
@@ -1640,7 +1640,7 @@ paths:
         required: true
         schema:
           type: number
-  '/pages/{id}/relationships/user':
+  '/api/pages/{id}/relationships/user':
     patch:
       summary: 'Update User relationship'
       operationId: updateUserRelationship
@@ -1741,7 +1741,7 @@ paths:
         required: true
         schema:
           type: string
-  /pages:
+  /api/pages:
     get:
       summary: 'List Pages'
       operationId: listPages
@@ -2041,7 +2041,7 @@ paths:
               required:
                 - data
       security: []
-  '/pages/{id}/user':
+  '/api/pages/{id}/user':
     get:
       summary: 'Show related User'
       operationId: showRelatedUser
@@ -2162,7 +2162,7 @@ paths:
         required: true
         schema:
           type: number
-  '/pages/{id}/pageComments':
+  '/api/pages/{id}/pageComments':
     get:
       summary: 'List related Page comments'
       operationId: listRelatedPageComments
@@ -2449,7 +2449,7 @@ paths:
         required: true
         schema:
           type: number
-  '/pages/{id}/relationships/pageComments':
+  '/api/pages/{id}/relationships/pageComments':
     get:
       summary: 'Show Page comments relationships'
       operationId: showPageCommentsRelationships
@@ -3181,7 +3181,7 @@ paths:
         required: true
         schema:
           type: number
-  /roles:
+  /api/roles:
     get:
       summary: 'List Roles'
       operationId: listRoles
@@ -3444,7 +3444,7 @@ paths:
               required:
                 - data
       security: []
-  '/roles/{id}':
+  '/api/roles/{id}':
     get:
       summary: 'Show Role'
       operationId: showRole
@@ -3607,7 +3607,7 @@ paths:
         required: true
         schema:
           type: number
-  /userConfigs:
+  /api/userConfigs:
     get:
       summary: 'List User configs'
       operationId: listUserConfigs
@@ -3912,7 +3912,7 @@ paths:
                         notificationsEnabled:
                           type: boolean
                           description: ''
-                          example: false
+                          example: true
                           nullable: false
                         language:
                           type: string
@@ -3942,7 +3942,7 @@ paths:
               required:
                 - data
       security: []
-  '/userConfigs/{id}':
+  '/api/userConfigs/{id}':
     get:
       summary: 'Show User config'
       operationId: showUserConfig
@@ -4167,7 +4167,7 @@ paths:
         required: true
         schema:
           type: string
-  '/userConfigs/{id}/user':
+  '/api/userConfigs/{id}/user':
     get:
       summary: 'Show related User'
       operationId: showRelatedUser
@@ -4288,7 +4288,7 @@ paths:
         required: true
         schema:
           type: string
-  '/userConfigs/{id}/relationships/user':
+  '/api/userConfigs/{id}/relationships/user':
     get:
       summary: 'Show User relationship'
       operationId: showUserRelationship
@@ -4446,7 +4446,7 @@ paths:
         required: true
         schema:
           type: string
-  /users:
+  /api/users:
     post:
       summary: 'Create User'
       operationId: createUser
@@ -4747,7 +4747,7 @@ paths:
       tags:
         - Users
       security: []
-  '/users/{id}':
+  '/api/users/{id}':
     patch:
       summary: 'Update User'
       operationId: updateUser
@@ -4968,7 +4968,7 @@ paths:
         required: true
         schema:
           type: string
-  '/users/{id}/relationships/roles':
+  '/api/users/{id}/relationships/roles':
     post:
       summary: 'Add to Roles relationships'
       operationId: addToRolesRelationships
@@ -5278,7 +5278,7 @@ paths:
         required: true
         schema:
           type: string
-  '/users/{id}/status':
+  '/api/users/{id}/status':
     get:
       summary: 'Show related Status'
       operationId: showRelatedStatus
@@ -5402,7 +5402,7 @@ paths:
         required: true
         schema:
           type: string
-  '/users/{id}/roles':
+  '/api/users/{id}/roles':
     get:
       summary: 'List related Roles'
       operationId: listRelatedRoles
@@ -5700,7 +5700,7 @@ paths:
         required: true
         schema:
           type: string
-  '/users/{id}/relationships/status':
+  '/api/users/{id}/relationships/status':
     get:
       summary: 'Show Status relationship'
       operationId: showStatusRelationship
@@ -5858,7 +5858,7 @@ paths:
         required: true
         schema:
           type: string
-  /userStatuses:
+  /api/userStatuses:
     get:
       summary: 'List User statuses'
       operationId: listUserStatuses
@@ -6115,7 +6115,7 @@ paths:
               required:
                 - data
       security: []
-  '/userStatuses/{id}':
+  '/api/userStatuses/{id}':
     get:
       summary: 'Show User status'
       operationId: showUserStatus

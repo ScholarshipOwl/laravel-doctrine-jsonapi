@@ -14,9 +14,9 @@ use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
 /**
  * Scribe strategy to extract response examples and schemas for JSON:API endpoints from resource response attributes.
  *
- * Scans for ResourceResponse, ResourceResponseRelated, and ResourceResponseRelationships attributes on controllers/methods
- * to generate response documentation, including example data and schemas for JSON:API endpoints.
+ * Scans for ResourceResponse, ResourceResponseRelated, and ResourceResponseRelationships attributes on
  *
+ * controllers/methods to generate response documentation, including example data and schemas for JSON:API endpoints.
  * Used by Scribe to provide detailed response documentation for each endpoint in the generated API docs.
  *
  * @see docs/Scribe.md for attribute usage and integration details
@@ -60,8 +60,10 @@ class GetFromResourceResponseAttributes extends AbstractStrategy
         foreach ($allAttributes as $attributeInstance) {
             $response = match (true) {
                 $attributeInstance instanceof ResourceResponseRelated,
-                $attributeInstance instanceof ResourceResponseRelationships => $this->getResourceRelationshipOrRelatedResponse($attributeInstance),
-                $attributeInstance instanceof ResourceResponse => $this->getResourceResponse($attributeInstance),
+                $attributeInstance instanceof ResourceResponseRelationships =>
+                    $this->getResourceRelationshipOrRelatedResponse($attributeInstance),
+                $attributeInstance instanceof ResourceResponse =>
+                    $this->getResourceResponse($attributeInstance),
                 default => []
             };
 

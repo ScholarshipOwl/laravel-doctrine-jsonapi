@@ -33,7 +33,8 @@ trait FiltersResourceTrait
     {
         $resourceClass = $this->repository()->getClassName();
 
-        if (in_array(FilterableInterface::class, class_implements($resourceClass)) && method_exists($resourceClass, 'filterParsers')) {
+        $classImplements = class_implements($resourceClass);
+        if (in_array(FilterableInterface::class, $classImplements) && method_exists($resourceClass, 'filterParsers')) {
             return $resourceClass::filterParsers($this->request());
         }
 

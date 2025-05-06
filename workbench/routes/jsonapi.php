@@ -7,7 +7,7 @@ use App\Http\Controller\Users\UsersController;
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Default\Controller as DefaultController;
 
-Route::group(['as' => 'jsonapi.'], function () {
+Route::group(['as' => config('jsonapi.routing.name', 'jsonapi.')], function () {
     /* ---------------------------------------------------------
      * Add any new custom routes here.
      * --------------------------------------------------------- */
@@ -44,4 +44,5 @@ Route::group(['as' => 'jsonapi.'], function () {
         Route::patch('/{resourceType}/{id}/relationships/{relationship}', [DefaultController::class, 'updateRelationships'])->name('updateRelationships')->fallback();
         Route::delete('/{resourceType}/{id}/relationships/{relationship}', [DefaultController::class, 'removeRelationships'])->name('removeRelationships')->fallback();
     });
+
 });

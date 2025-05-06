@@ -81,7 +81,7 @@ trait ResourceDataRulesTrait
                     $rules[] = 'string';
                     // Add max length rule if defined
                     if (isset($fieldMapping['length']) && $fieldMapping['length'] > 0) {
-                        $rules[] = 'max:'.$fieldMapping['length'];
+                        $rules[] = 'max:' . $fieldMapping['length'];
                     }
                     break;
 
@@ -104,7 +104,7 @@ trait ResourceDataRulesTrait
                     $rules[] = 'numeric';
                     // Add precision and scale rules if defined
                     if (isset($fieldMapping['precision']) && isset($fieldMapping['scale'])) {
-                        $rules[] = 'decimal:'.$fieldMapping['scale'];
+                        $rules[] = 'decimal:' . $fieldMapping['scale'];
                     }
                     break;
 

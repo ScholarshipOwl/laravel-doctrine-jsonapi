@@ -13,52 +13,52 @@ class UpdateRelationshipsTest extends TestCase
         parent::setUp();
 
         Route::patch(
-            '/{resourceType}/{id}/relationships/{relationship}',
+            '/api/{resourceType}/{id}/relationships/{relationship}',
             [Controller::class, 'updateRelationships']
         );
     }
 
-    public function test_authorization_permissions_for_no_logged_in()
+    public function testAuthorizationPermissionsForNoLoggedIn(): void
     {
-        $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles', [
+        $this->patch('/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles', [
             'data' => [
                 ['type' => 'roles', 'id' => Role::moderator()],
             ],
         ])->assertStatus(403);
-        $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles', [
+        $this->patch('/api/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles', [
             'data' => [
                 ['type' => 'roles', 'id' => Role::moderator()],
             ],
         ])->assertStatus(403);
-        $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles', [
+        $this->patch('/api/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles', [
             'data' => [
                 ['type' => 'roles', 'id' => Role::moderator()],
             ],
         ])->assertStatus(403);
     }
 
-    public function test_authorization_permissions_for_user_role()
+    public function testAuthorizationPermissionsForUserRole(): void
     {
         $this->actingAsUser();
 
-        $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles', [
+        $this->patch('/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles', [
             'data' => [
                 ['type' => 'roles', 'id' => Role::moderator()],
             ],
         ])->assertStatus(403);
-        $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles', [
+        $this->patch('/api/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles', [
             'data' => [
                 ['type' => 'roles', 'id' => Role::moderator()],
             ],
         ])->assertStatus(403);
-        $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles', [
+        $this->patch('/api/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles', [
             'data' => [
                 ['type' => 'roles', 'id' => Role::moderator()],
             ],
         ])->assertStatus(403);
     }
 
-    public function test_authorization_permissions_for_root_role()
+    public function testAuthorizationPermissionsForRootRole(): void
     {
         $this->actingAsRoot();
 
@@ -68,18 +68,18 @@ class UpdateRelationshipsTest extends TestCase
             ],
         ];
 
-        $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles', $data)->assertStatus(200);
-        $this->patch('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles', $data)->assertStatus(200);
+        $this->patch('/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles', $data)->assertStatus(200);
+        $this->patch('/api/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8/relationships/roles', $data)->assertStatus(200);
 
         // Do last as it's replaces root role
-        $this->patch('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles', $data)->assertStatus(200);
+        $this->patch('/api/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d/relationships/roles', $data)->assertStatus(200);
     }
 
-    public function test_assign_a_new_role_to_user()
+    public function testAssignANewRoleToUser(): void
     {
         $this->actingAsRoot();
 
-        $response = $this->patch('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles', [
+        $response = $this->patch('/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles', [
             'data' => [
                 ['type' => 'roles', 'id' => Role::moderator()],
             ],
@@ -91,14 +91,14 @@ class UpdateRelationshipsTest extends TestCase
                     'id' => '2',
                     'type' => 'roles',
                     'links' => [
-                        'self' => '/roles/2',
+                        'self' => '/api/roles/2',
                     ],
                 ],
                 [
                     'id' => '3',
                     'type' => 'roles',
                     'links' => [
-                        'self' => '/roles/3',
+                        'self' => '/api/roles/3',
                     ],
                 ],
             ],

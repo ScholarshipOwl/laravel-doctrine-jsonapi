@@ -24,6 +24,6 @@ class PagesTransformer extends AbstractTransformer
 
     public function includeUser(Page $page): Item
     {
-        return $this->item($page->getUser(), new UserTransformer, User::getResourceType());
+        return $this->item($page->getUser(), new UserTransformer(), User::getResourceType());
     }
 }

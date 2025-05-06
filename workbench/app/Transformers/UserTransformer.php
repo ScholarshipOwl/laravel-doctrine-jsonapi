@@ -35,7 +35,7 @@ class UserTransformer extends AbstractTransformer
     {
         Gate::authorize('viewAnyRoles', $user);
 
-        return $this->collection($user->getRoles(), new RoleTransformer, Role::getResourceType());
+        return $this->collection($user->getRoles(), new RoleTransformer(), Role::getResourceType());
     }
 
     public function metaRandom(User $user): string
@@ -45,6 +45,6 @@ class UserTransformer extends AbstractTransformer
 
     public function includeStatus(User $user): ResourceInterface
     {
-        return $this->item($user->getStatus(), new UserStatusTransformer, UserStatus::getResourceType());
+        return $this->item($user->getStatus(), new UserStatusTransformer(), UserStatus::getResourceType());
     }
 }

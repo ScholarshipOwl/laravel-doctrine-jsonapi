@@ -14,11 +14,11 @@ use Sowl\JsonApi\ResourceInterface;
 #[ORM\Table]
 class PageComment implements ResourceInterface
 {
-    const FIRST = '00000000-0000-0000-0000-000000000001';
+    public const FIRST = '00000000-0000-0000-0000-000000000001';
 
-    const SECOND = '00000000-0000-0000-0000-000000000002';
+    public const SECOND = '00000000-0000-0000-0000-000000000002';
 
-    const THIRD = '00000000-0000-0000-0000-000000000003';
+    public const THIRD = '00000000-0000-0000-0000-000000000003';
 
     #[ORM\Id, ORM\Column(type: 'guid')]
     protected ?string $id;
@@ -39,7 +39,7 @@ class PageComment implements ResourceInterface
 
     public static function transformer(): AbstractTransformer
     {
-        return new PageCommentTransformer;
+        return new PageCommentTransformer();
     }
 
     public static function relationships(): RelationshipsCollection

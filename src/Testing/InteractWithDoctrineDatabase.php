@@ -26,7 +26,7 @@ trait InteractWithDoctrineDatabase
 
         /** @var EntityManagerInterface $manager */
         foreach ($registry->getManagers() as $managerName => $manager) {
-            $connectionName = config('doctrine.managers.'.$managerName.'.connection');
+            $connectionName = config('doctrine.managers.' . $managerName . '.connection');
             $connection = $this->app['db']->connection($connectionName);
             // dd('connection', $connectionName);
             $emConnection = $manager->getConnection()->getNativeConnection();

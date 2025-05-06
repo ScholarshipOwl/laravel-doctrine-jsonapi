@@ -15,7 +15,7 @@ final class RelationshipsCollection
 
     public function __construct($relationships = [])
     {
-        $this->relationships = new Collection;
+        $this->relationships = new Collection();
         array_map(fn ($rel) => $this->add($rel), $relationships);
     }
 

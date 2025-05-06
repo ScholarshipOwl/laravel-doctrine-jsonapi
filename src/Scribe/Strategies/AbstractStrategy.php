@@ -30,10 +30,6 @@ abstract class AbstractStrategy extends Strategy
 
     protected ?JsonApiEndpointData $jsonApiEndpointData = null;
 
-    private string $jsonapiPrefix;
-
-    private array|string|null $rootMiddleware;
-
     /**
      * Constructor
      *
@@ -46,10 +42,8 @@ abstract class AbstractStrategy extends Strategy
     ) {
         parent::__construct($config);
         $this->resourceManager = $resourceManager ?? app(ResourceManager::class);
-        $this->resourceTypeExtractor = new ResourceTypeExtractor;
-        $this->relationshipNameExtractor = new RelationshipNameExtractor;
-        $this->rootMiddleware = config('jsonapi.routing.rootMiddleware', '');
-        $this->jsonapiPrefix = config('jsonapi.routing.rootNamePrefix', 'jsonapi.');
+        $this->resourceTypeExtractor = new ResourceTypeExtractor();
+        $this->relationshipNameExtractor = new RelationshipNameExtractor();
     }
 
     public function initJsonApiEndpointData(ExtractedEndpointData $endpointData): bool
@@ -68,20 +62,20 @@ abstract class AbstractStrategy extends Strategy
      */
     public function isJsonApi(): bool
     {
-        if ($this->rootMiddleware && is_string($this->rootMiddleware)) {
+        if (config('jsonapi.scribe.middleware')) {
             // hack: We need to set container for getting the middleware.
             //       Cloning because don't want to change the real route container, as it may affect future behavior.
             $routeMiddleware = (clone $this->endpointData->route)
-                ->setContainer(new Container)
+                ->setContainer(new Container())
                 ->gatherMiddleware();
 
-            return in_array($this->rootMiddleware, $routeMiddleware);
+            return in_array(config('jsonapi.scribe.middleware'), $routeMiddleware);
         }
 
-        if ($this->jsonapiPrefix && is_string($this->jsonapiPrefix)) {
+        if (config('jsonapi.routing.prefix')) {
             $routeName = $this->endpointData->route->getName();
 
-            return Str::startsWith($routeName, $this->jsonapiPrefix);
+            return Str::startsWith($routeName, config('jsonapi.routing.prefix'));
         }
 
         return false;

@@ -34,7 +34,7 @@ class Page implements ResourceInterface
 
     public function __construct()
     {
-        $this->comments = new ArrayCollection;
+        $this->comments = new ArrayCollection();
     }
 
     public static function getResourceType(): string
@@ -44,7 +44,7 @@ class Page implements ResourceInterface
 
     public static function transformer(): AbstractTransformer
     {
-        return new PagesTransformer;
+        return new PagesTransformer();
     }
 
     public static function relationships(): RelationshipsCollection

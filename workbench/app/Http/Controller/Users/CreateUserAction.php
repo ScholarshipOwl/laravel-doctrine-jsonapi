@@ -14,12 +14,13 @@ class CreateUserAction extends AbstractAction
 {
     public function __construct(
         protected CreateUserRequest $request,
-    ) {}
+    ) {
+    }
 
     public function handle(): Response
     {
         /** @var User $user */
-        $user = $this->manipulator()->hydrateResource(new User, $this->request->getData());
+        $user = $this->manipulator()->hydrateResource(new User(), $this->request->getData());
         $user->setId(Uuid::uuid4()->toString());
         $user->addRole(Role::user());
         $user->setStatus($this->em()->getReference(UserStatus::class, UserStatus::ACTIVE));
@@ -27,7 +28,7 @@ class CreateUserAction extends AbstractAction
         $this->em()->persist($user);
 
         // Create default UserConfig for the new user
-        $userConfig = new UserConfig;
+        $userConfig = new UserConfig();
         $userConfig->setUser($user);
         $userConfig->setTheme('light');
         $userConfig->setNotificationsEnabled(true);

@@ -57,11 +57,14 @@ abstract class AbstractTransformer extends TransformerAbstract
             return null;
         }
 
-        $filteredMeta = array_filter($this->getAvailableMetas(), fn (string $meta) => in_array($meta, $requestedMetaset));
+        $filteredMeta = array_filter(
+            $this->getAvailableMetas(),
+            fn (string $meta) => in_array($meta, $requestedMetaset)
+        );
 
         $meta = [];
         foreach ($filteredMeta as $metaField) {
-            $methodName = 'meta'.str_replace(
+            $methodName = 'meta' . str_replace(
                 ' ',
                 '',
                 ucwords(str_replace(

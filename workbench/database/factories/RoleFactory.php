@@ -16,5 +16,5 @@ $roles = [
 ];
 
 foreach ($roles as $id => $name) {
-    $factory->defineAs(Role::class, $name, fn () => (new Role)->setId($id)->setName($name));
+    $factory->defineAs(Role::class, $name, fn () => (new Role())->setId($id)->setName($name));
 }

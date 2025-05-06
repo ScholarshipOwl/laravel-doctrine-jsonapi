@@ -22,7 +22,7 @@ use Sowl\JsonApi\Request;
  */
 class SearchFilterParser extends AbstractFilterParser
 {
-    const SEARCH_KEY = 'search';
+    public const SEARCH_KEY = 'search';
 
     /**
      * The constructor accepts a Request object, a nullable property name to apply the search filter on, and an

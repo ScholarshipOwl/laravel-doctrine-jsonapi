@@ -5,7 +5,8 @@ namespace Sowl\JsonApi\Scribe\Attributes;
 use Attribute;
 
 /**
- * Attribute to mark a controller method as handling relationship requests for a resource (e.g., /users/{id}/relationships/{relation}) in JSON:API.
+ * Attribute to mark a controller method as handling relationship requests for a resource
+ * (e.g., /users/{id}/relationships/{relation}) in JSON:API.
  *
  * Usage:
  *   - Place on methods that manage relationships endpoints.
@@ -26,5 +27,6 @@ class ResourceRequestRelationships extends ResourceRequest
         public $idExample = null,
         public string $idParam = 'id',
         public array $acceptHeaders = ['application/vnd.api+json']
-    ) {}
+    ) {
+    }
 }

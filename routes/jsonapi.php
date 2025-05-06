@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Sowl\JsonApi\Default\Controller as DefaultController;
 
-Route::group(['as' => config('jsonapi.routing.rootNamePrefix', 'jsonapi.')], function () {
+Route::group(['as' => config('jsonapi.routing.name', 'jsonapi.')], function () {
     /* ---------------------------------------------------------
      * Add any new custom routes here.
      * --------------------------------------------------------- */

@@ -30,7 +30,7 @@ class AppServiceProvider extends ServiceProvider
             $this->app['Illuminate\Contracts\Console\Kernel']->call('doctrine:migrations:migrate -n');
 
             // Run seeder before scribe docs generation.
-            $seeder = new SetUpSeeder;
+            $seeder = new SetUpSeeder();
             $seeder->run($this->app['em']);
         });
     }

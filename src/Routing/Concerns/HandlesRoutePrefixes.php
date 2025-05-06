@@ -21,7 +21,7 @@ trait HandlesRoutePrefixes
         $uri = $route->uri();
 
         // Then check for global JSON:API prefix from config
-        $configPrefix = config('jsonapi.routing.rootPathPrefix', '');
+        $configPrefix = config('jsonapi.routing.prefix', 'api');
         if ($configPrefix) {
             $uri = $this->removePrefix($uri, $configPrefix);
         }
@@ -39,7 +39,7 @@ trait HandlesRoutePrefixes
     private function removePrefix(string $uri, string $prefix): string
     {
         // Remove the prefix and trailing slash if present
-        return Str::startsWith($uri, $prefix.'/')
+        return Str::startsWith($uri, $prefix . '/')
             ? substr($uri, strlen($prefix) + 1)
             : $uri;
     }

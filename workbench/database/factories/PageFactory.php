@@ -9,7 +9,7 @@ $factory->define(Page::class, function (Faker\Generator $faker, array $attribute
     /** @var User $author */
     $author = $attributes['user'] ?? $factory->of(User::class)->create();
 
-    return (new Page)
+    return (new Page())
         ->setTitle($attributes['title'] ?? $faker->sentence())
         ->setContent($attributes['content'] ?? implode("\n", $faker->paragraphs()))
         ->setUser($author);

@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ArrayParserTest extends TestCase
 {
-    public function test_filterable_query_parser_operator_filter_exception()
+    public function testFilterableQueryParserOperatorFilterException(): void
     {
         try {
             $request = new Request(['filter' => [
@@ -38,7 +38,7 @@ class ArrayParserTest extends TestCase
         }
     }
 
-    public function test_filterable_query_parser_operator_filter()
+    public function testFilterableQueryParserOperatorFilter(): void
     {
         $request = new Request(['filter' => [
             'field1' => ['operator' => 'neq', 'value' => false],
@@ -64,7 +64,7 @@ class ArrayParserTest extends TestCase
         $this->assertEquals('test2', $expressions[1]->getValue()->getValue());
     }
 
-    public function test_filterable_query_parser_between_filter()
+    public function testFilterableQueryParserBetweenFilter(): void
     {
         $request = new Request(['filter' => ['field1' => ['start' => 1, 'end' => 10]]]);
         $parser = new ArrayFilterParser($request, ['field1', 'field2']);
@@ -87,7 +87,7 @@ class ArrayParserTest extends TestCase
         $this->assertEquals(10, $expressions[1]->getValue()->getValue());
     }
 
-    public function test_filterable_query_parser_equal_filter()
+    public function testFilterableQueryParserEqualFilter(): void
     {
         $request = new Request(['filter' => ['field1' => 'test1', 'field2' => 'test2', 'field3' => 'test3']]);
         $parser = new ArrayFilterParser($request, ['field1', 'field2']);

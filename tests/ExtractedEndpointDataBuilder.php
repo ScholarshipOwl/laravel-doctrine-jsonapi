@@ -16,7 +16,10 @@ trait ExtractedEndpointDataBuilder
         bool $isJsonApiRoute = true
     ): ExtractedEndpointData {
         if ($isJsonApiRoute) {
-            $routeAction['middleware'] = array_merge($routeAction['middleware'] ?? [], ['jsonapi']);
+            $routeAction['middleware'] = array_merge(
+                $routeAction['middleware'] ?? [],
+                [config('jsonapi.scribe.middleware')]
+            );
         }
 
         $route = new Route([$method], $uri, $routeAction);

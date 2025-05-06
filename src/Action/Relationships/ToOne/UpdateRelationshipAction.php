@@ -13,7 +13,8 @@ class UpdateRelationshipAction extends AbstractAction
     public function __construct(
         protected ToOneRelationship $relationship,
         protected Request $request,
-    ) {}
+    ) {
+    }
 
     public function authorize(): void
     {
@@ -22,7 +23,7 @@ class UpdateRelationshipAction extends AbstractAction
 
     public function authAbility(): string
     {
-        return AbilitiesInterface::UPDATE.ucfirst($this->relationship->name());
+        return AbilitiesInterface::UPDATE . ucfirst($this->relationship->name());
     }
 
     public function handle(): Response

@@ -8,26 +8,27 @@ use Tests\TestCase;
 
 class ShowRelatedTest extends TestCase
 {
-    public function test_authorization_permissions_any_one_can_access()
+    public function testAuthorizationPermissionsAnyOneCanAccess(): void
     {
         $this->actingAsUser();
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000001/user')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000001/page')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000002/user')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000002/page')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000003/user')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000003/page')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000001/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000001/page')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000002/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000002/page')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000003/user')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000003/page')->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_not_found_relationship(): void
+    public function testNotFoundRelationship(): void
     {
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000001/notexists')->assertStatus(Response::HTTP_NOT_FOUND);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000001/notexists')
+            ->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_show_page_comments_related_user_response()
+    public function testShowPageCommentsRelatedUserResponse(): void
     {
         $this->actingAsUser();
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000001/user')
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000001/user')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -38,12 +39,12 @@ class ShowRelatedTest extends TestCase
                         'name' => 'testing user1',
                     ],
                     'links' => [
-                        'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                        'self' => '/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
                     ],
                 ],
             ]);
 
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000002/user')
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000002/user')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -54,12 +55,12 @@ class ShowRelatedTest extends TestCase
                         'name' => 'testing user2',
                     ],
                     'links' => [
-                        'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d',
+                        'self' => '/api/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d',
                     ],
                 ],
             ]);
 
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000003/user')
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000003/user')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -70,13 +71,13 @@ class ShowRelatedTest extends TestCase
                         'name' => 'testing user3',
                     ],
                     'links' => [
-                        'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8',
+                        'self' => '/api/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8',
                     ],
                 ],
             ]);
     }
 
-    public function test_show_page_comments_related_page()
+    public function testShowPageCommentsRelatedPage(): void
     {
         $this->actingAsUser();
         $page1response = [
@@ -88,20 +89,20 @@ class ShowRelatedTest extends TestCase
                     'content' => '<strong>JSON:API</strong>',
                 ],
                 'links' => [
-                    'self' => '/pages/1',
+                    'self' => '/api/pages/1',
                 ],
             ],
         ];
 
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000001/page')
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000001/page')
             ->assertStatus(200)
             ->assertExactJson($page1response);
 
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000002/page')
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000002/page')
             ->assertStatus(200)
             ->assertExactJson($page1response);
 
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000003/page')
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000003/page')
             ->assertStatus(200)
             ->assertExactJson($page1response);
     }

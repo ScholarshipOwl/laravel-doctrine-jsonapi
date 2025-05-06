@@ -34,7 +34,7 @@ class TestCase extends TestbenchTestCase
         parent::tearDown();
 
         // Reset Scribe debug output
-        ConsoleOutputUtils::bootstrapOutput(new ConsoleOutput);
+        ConsoleOutputUtils::bootstrapOutput(new ConsoleOutput());
     }
 
     /**
@@ -42,7 +42,7 @@ class TestCase extends TestbenchTestCase
      */
     protected function noScribeDebugOutput(): void
     {
-        ConsoleOutputUtils::bootstrapOutput(new NullOutput);
+        ConsoleOutputUtils::bootstrapOutput(new NullOutput());
     }
 
     protected function seedDatabase(): void

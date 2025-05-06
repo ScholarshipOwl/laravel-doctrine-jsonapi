@@ -10,9 +10,9 @@ use Tests\TestCase;
 
 class CreateResourceTest extends TestCase
 {
-    public function test_create_new_user()
+    public function testCreateNewUser(): void
     {
-        $response = $this->post('/users', [
+        $response = $this->post('/api/users', [
             'data' => [
                 'id' => Uuid::uuid4()->toString(),
                 'type' => 'users',
@@ -32,9 +32,9 @@ class CreateResourceTest extends TestCase
         $this->assertTrue($newUser->hasRole(Role::user()));
     }
 
-    public function test_cant_create_user_with_root_role()
+    public function testCantCreateUserWithRootRole(): void
     {
-        $response = $this->post('/users', [
+        $response = $this->post('/api/users', [
             'data' => [
                 'attributes' => [
                     'name' => 'New user',
@@ -60,9 +60,9 @@ class CreateResourceTest extends TestCase
         $this->assertFalse($newUser->hasRole(Role::root()));
     }
 
-    public function test_user_create_validation(): void
+    public function testUserCreateValidation(): void
     {
-        $response = $this->post('/users');
+        $response = $this->post('/api/users');
         $response->assertExactJson([
             'errors' => [
                 [
@@ -89,7 +89,7 @@ class CreateResourceTest extends TestCase
             ],
         ]);
 
-        $response = $this->post('/users', [
+        $response = $this->post('/api/users', [
             'data' => [
                 'attributes' => [
                     'name' => 'New user',
@@ -112,11 +112,11 @@ class CreateResourceTest extends TestCase
         ]);
     }
 
-    public function test_create_page_comment_with_user_provided_id()
+    public function testCreatePageCommentWithUserProvidedId(): void
     {
         $user = $this->actingAsUser();
 
-        $response = $this->post('/pageComments', [
+        $response = $this->post('/api/pageComments', [
             'data' => [
                 'id' => Uuid::uuid4()->toString(),
                 'type' => 'pageComments',
@@ -150,11 +150,11 @@ class CreateResourceTest extends TestCase
         $this->assertEquals($user->getId(), $newComment->getUser()->getId());
     }
 
-    public function test_create_page_comment()
+    public function testCreatePageComment(): void
     {
         $user = $this->actingAsUser();
 
-        $response = $this->post('/pageComments', [
+        $response = $this->post('/api/pageComments', [
             'data' => [
                 'type' => 'pageComments',
                 'attributes' => [

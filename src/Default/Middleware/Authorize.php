@@ -26,7 +26,8 @@ class Authorize
     public function __construct(
         protected Gate $gate,
         protected ResourceManager $resourceManager,
-    ) {}
+    ) {
+    }
 
     protected static array $methodResourceAbilityMap = [
         HttpRequest::METHOD_GET => AbilitiesInterface::VIEW,
@@ -81,7 +82,7 @@ class Authorize
                         $ability = AbilitiesInterface::LIST;
                     }
 
-                    return $ability.ucfirst($relationship->name());
+                    return $ability . ucfirst($relationship->name());
                 }
             }
 

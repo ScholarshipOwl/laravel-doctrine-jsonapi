@@ -16,7 +16,7 @@ class RouteMatcher extends ScribeRouteMatcher
 
     public function __construct(protected ResourceManager $rm)
     {
-        $this->resourceTypeExtractor = new ResourceTypeExtractor;
+        $this->resourceTypeExtractor = new ResourceTypeExtractor();
     }
 
     public function getRoutes(array $routeRules = []): array
@@ -50,14 +50,11 @@ class RouteMatcher extends ScribeRouteMatcher
 
         if (Str::contains($uri, '{resourceType}')) {
             foreach ($this->rm->resources() as $resourceType => $resourceClass) {
-                $resourceRoute = new MatchedRoute(
-                    new Route(
-                        $route->getRoute()->methods(),
-                        Str::replace('{resourceType}', $resourceType, $uri),
-                        $route->getRoute()->getAction()
-                    ),
-                    $route->getRules(),
-                );
+                // clone avoids messing with prefix
+                $newRoute = clone $route->getRoute();
+                $newRoute->setUri(Str::replace('{resourceType}', $resourceType, $uri));
+
+                $resourceRoute = new MatchedRoute($newRoute, $route->getRules());
 
                 if (Str::contains($uri, '{relationship}')) {
                     $relationshipsRoutes = $this->buildRelationshipsRoutes($resourceType, $resourceRoute);
@@ -102,14 +99,11 @@ class RouteMatcher extends ScribeRouteMatcher
                     }
                 }
 
-                return new MatchedRoute(
-                    new Route(
-                        $route->getRoute()->methods(),
-                        Str::replace('{relationship}', $relationship->name(), $uri),
-                        $route->getRoute()->getAction()
-                    ),
-                    $route->getRules(),
-                );
+                // clone route to avoid messing with prefix
+                $newRoute = clone $route->getRoute();
+                $newRoute->setUri(Str::replace('{relationship}', $relationship->name(), $uri));
+
+                return new MatchedRoute($newRoute, $route->getRules());
             })
             ->filter()
             ->toArray();

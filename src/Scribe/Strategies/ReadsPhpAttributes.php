@@ -20,7 +20,10 @@ trait ReadsPhpAttributes
         // If there's a FormRequest, we check there.
         if ($formRequestClass = $this->getFormRequestReflectionClass($method)) {
             $attributesOnFormRequest = collect(static::readAttributes())
-                ->flatMap(fn (string $name) => $formRequestClass->getAttributes($name, ReflectionAttribute::IS_INSTANCEOF))
+                ->flatMap(fn (string $name) => $formRequestClass->getAttributes(
+                    $name,
+                    ReflectionAttribute::IS_INSTANCEOF
+                ))
                 ->map(fn (ReflectionAttribute $a) => $a->newInstance())->all();
         }
 

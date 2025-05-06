@@ -15,17 +15,17 @@ use Sowl\JsonApi\ResourceInterface;
 #[ORM\Table(name: 'role')]
 class Role implements ResourceInterface
 {
-    const ROOT = '1';
+    public const ROOT = '1';
 
-    const ROOT_NAME = 'Root';
+    public const ROOT_NAME = 'Root';
 
-    const USER = '2';
+    public const USER = '2';
 
-    const USER_NAME = 'User';
+    public const USER_NAME = 'User';
 
-    const MODERATOR = '3';
+    public const MODERATOR = '3';
 
-    const MODERATOR_NAME = 'Moderator';
+    public const MODERATOR_NAME = 'Moderator';
 
     #[ORM\Id, ORM\Column(name: 'id', type: 'integer'), ORM\GeneratedValue(strategy: 'AUTO')]
     protected ?int $id;
@@ -46,12 +46,12 @@ class Role implements ResourceInterface
 
     public static function transformer(): AbstractTransformer
     {
-        return new RoleTransformer;
+        return new RoleTransformer();
     }
 
     public static function relationships(): RelationshipsCollection
     {
-        return new RelationshipsCollection;
+        return new RelationshipsCollection();
     }
 
     public static function root(): static

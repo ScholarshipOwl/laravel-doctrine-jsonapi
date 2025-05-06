@@ -10,17 +10,17 @@ namespace Sowl\JsonApi\Default;
  */
 interface AbilitiesInterface
 {
-    const VIEW = 'view';
+    public const VIEW = 'view';
 
-    const CREATE = 'create';
+    public const CREATE = 'create';
 
-    const UPDATE = 'update';
+    public const UPDATE = 'update';
 
-    const DELETE = 'delete';
+    public const DELETE = 'delete';
 
-    const LIST = 'viewAny';
+    public const LIST = 'viewAny';
 
-    const ATTACH = 'attach';
+    public const ATTACH = 'attach';
 
-    const DETACH = 'detach';
+    public const DETACH = 'detach';
 }

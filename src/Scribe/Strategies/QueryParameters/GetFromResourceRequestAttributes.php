@@ -126,7 +126,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
         );
 
         if (! empty($fields)) {
-            $description .= "\n\n".__(
+            $description .= "\n\n" . __(
                 'jsonapi::query_params.fields.available',
                 [
                     'resourceType' => $resourceType,
@@ -170,7 +170,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
         }
 
         $description = __('jsonapi::query_params.meta.description');
-        $description .= "\n\n".__(
+        $description .= "\n\n" . __(
             'jsonapi::query_params.meta.available',
             [
                 'resourceType' => $resourceType,
@@ -210,7 +210,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
         $includeDescription = __(
             'jsonapi::query_params.include.description',
             ['specUrl' => self::SPEC_URL_INCLUDES]
-        )."\n\n";
+        ) . "\n\n";
 
         $availableIncludesText = implode(', ', array_map(fn ($include) => "`$include`", $includes));
         $includeDescription .= __(
@@ -220,7 +220,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
 
         if ($default) {
             $defaultIncludesText = implode(', ', array_map(fn ($include) => "`$include`", $default));
-            $includeDescription .= "\n\n".__(
+            $includeDescription .= "\n\n" . __(
                 'jsonapi::query_params.include.defaults_title',
                 ['defaults' => $defaultIncludesText]
             );
@@ -326,7 +326,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
         );
 
         if (! empty($fields)) {
-            $description .= "\n\n".__(
+            $description .= "\n\n" . __(
                 'jsonapi::query_params.sort.available',
                 [
                     'resourceType' => $resourceType,
@@ -354,7 +354,7 @@ class GetFromResourceRequestAttributes extends AbstractStrategy
         /** @var class-string<FilterableInterface> $resourceClass */
         $resourceClass = $this->rm()->classByResourceType($resourceType);
         $filterParsers = in_array(FilterableInterface::class, class_implements($resourceClass))
-            ? $resourceClass::filterParsers(new Request)
+            ? $resourceClass::filterParsers(new Request())
             : [];
 
         $params = [];

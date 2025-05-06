@@ -19,18 +19,17 @@ class GetFromResourceRequestAttributesTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->strategy = new GetFromResourceRequestAttributes(new DocumentationConfig);
+        $this->strategy = new GetFromResourceRequestAttributes(new DocumentationConfig());
     }
 
-    public function test_returns_id_param_with_metadata_defaults(): void
+    public function testReturnsIdParamWithMetadataDefaults(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users/{id}',
             [
                 'as' => 'jsonapi.users.show',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequest]
                     public function __invoke(): array
                     {
@@ -51,15 +50,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals($expected, $params);
     }
 
-    public function test_returns_custom_id_param(): void
+    public function testReturnsCustomIdParam(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users/{user}',
             [
                 'as' => 'jsonapi.users.show',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequest(idParam: 'user')]
                     public function __invoke(): array
                     {
@@ -80,15 +78,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals($expected, $params);
     }
 
-    public function test_returns_id_type_override(): void
+    public function testReturnsIdTypeOverride(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users/{id}',
             [
                 'as' => 'jsonapi.users.show',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequest(idType: 'number', idExample: 123)]
                     public function __invoke(): array
                     {
@@ -109,15 +106,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals($expected, $params);
     }
 
-    public function test_returns_id_example_override(): void
+    public function testReturnsIdExampleOverride(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users/{id}',
             [
                 'as' => 'jsonapi.users.show',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequest(idExample: 'abc-123')]
                     public function __invoke(): array
                     {
@@ -138,7 +134,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals($expected, $params);
     }
 
-    public function test_returns_empty_when_no_id_param(): void
+    public function testReturnsEmptyWhenNoIdParam(): void
     {
         $this->noScribeDebugOutput();
 
@@ -147,8 +143,7 @@ class GetFromResourceRequestAttributesTest extends TestCase
             'users',
             [
                 'as' => 'jsonapi.users.index',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     #[ResourceRequest]
                     public function __invoke(): array
                     {
@@ -161,15 +156,14 @@ class GetFromResourceRequestAttributesTest extends TestCase
         $this->assertEquals([], $params);
     }
 
-    public function test_returns_empty_when_no_attribute(): void
+    public function testReturnsEmptyWhenNoAttribute(): void
     {
         $endpointData = $this->buildExtractedEndpointData(
             'GET',
             'users/{id}',
             [
                 'as' => 'jsonapi.users.show',
-                'uses' => new class
-                {
+                'uses' => new class () {
                     public function __invoke(): array
                     {
                         return [];

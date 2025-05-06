@@ -30,6 +30,7 @@
         ],
         "lint": [
             "@php vendor/bin/pint --ansi",
+            "@php vendor/bin/phpcs",
             "@php vendor/bin/phpstan analyse --verbose --ansi"
         ]
     },
@@ -57,7 +58,8 @@
         "mockery/mockery": "^1.6",
         "laravel/pint": "^1.22",
         "phpstan/phpstan": "^2.1",
-        "orchestra/testbench": "^10.2"
+        "orchestra/testbench": "^10.2",
+        "squizlabs/php_codesniffer": "^3.12"
     },
     "require": {
         "php": ">=8.2",

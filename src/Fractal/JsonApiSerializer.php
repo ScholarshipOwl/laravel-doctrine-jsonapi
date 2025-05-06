@@ -65,11 +65,14 @@ class JsonApiSerializer extends \League\Fractal\Serializer\JsonApiSerializer
     private function addRelationshipLinks(array $resource, string $relationshipKey): array
     {
         if (isset($resource['relationships'][$relationshipKey]['data'])) {
+            $type = $resource['type'];
+            $id = $resource['id'];
+
             $resource['relationships'][$relationshipKey] = array_merge(
                 [
                     'links' => [
-                        'self' => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/relationships/{$relationshipKey}",
-                        'related' => "{$this->baseUrl}/{$resource['type']}/{$resource['id']}/{$relationshipKey}",
+                        'self' => "{$this->baseUrl}/{$type}/{$id}/relationships/{$relationshipKey}",
+                        'related' => "{$this->baseUrl}/{$type}/{$id}/{$relationshipKey}",
                     ],
                 ],
                 $resource['relationships'][$relationshipKey]

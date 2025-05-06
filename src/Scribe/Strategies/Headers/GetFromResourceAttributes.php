@@ -16,8 +16,8 @@ use Sowl\JsonApi\Scribe\Strategies\ReadsPhpAttributes;
 /**
  * Scribe strategy to extract HTTP headers for JSON:API endpoints from resource attributes.
  *
- * Scans controller methods and classes for request/response attribute annotations (e.g., ResourceRequest, ResourceResponse)
- * and generates the appropriate HTTP headers (such as Accept and Content-Type) for documentation.
+ * Scans controller methods and classes for request/response attribute annotations (e.g., ResourceRequest,
+ * ResourceResponse) and generates the appropriate HTTP headers (such as Accept and Content-Type) for documentation.
  *
  * Used by Scribe during endpoint extraction to ensure JSON:API endpoints have accurate header documentation.
  *

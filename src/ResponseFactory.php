@@ -150,7 +150,7 @@ class ResponseFactory extends \Illuminate\Routing\ResponseFactory
 
             $collection->setPaginator(new DoctrinePaginatorAdapter(
                 $data,
-                fn (int $page) => $basePath.'?'.http_build_query(['page' => ['number' => $page, 'size' => $size]]),
+                fn (int $page) => $basePath . '?' . http_build_query(['page' => ['number' => $page, 'size' => $size]]),
             ));
         }
 

@@ -9,65 +9,65 @@ use Tests\TestCase;
 
 class ShowResourceTest extends TestCase
 {
-    public function test_authorization_permissions_for_no_logged_in()
+    public function testAuthorizationPermissionsForNoLoggedIn(): void
     {
-        $this->get('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')->assertStatus(Response::HTTP_FORBIDDEN);
-        $this->get('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')->assertStatus(Response::HTTP_FORBIDDEN);
-        $this->get('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/api/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/api/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8')->assertStatus(Response::HTTP_FORBIDDEN);
 
-        $this->get('/roles/1')->assertStatus(Response::HTTP_FORBIDDEN);
-        $this->get('/roles/2')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/api/roles/1')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/api/roles/2')->assertStatus(Response::HTTP_FORBIDDEN);
 
-        $this->get('/pages/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pages/1')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000001')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000002')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000003')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000001')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000002')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000003')->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_authorization_permissions_for_user_role()
+    public function testAuthorizationPermissionsForUserRole(): void
     {
         $this->actingAsUser();
 
-        $this->get('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')->assertStatus(Response::HTTP_OK);
-        $this->get('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')->assertStatus(Response::HTTP_OK);
-        $this->get('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/roles/1')->assertStatus(Response::HTTP_FORBIDDEN);
-        $this->get('/roles/2')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/roles/1')->assertStatus(Response::HTTP_FORBIDDEN);
+        $this->get('/api/roles/2')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pages/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pages/1')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000001')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000002')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000003')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000001')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000002')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000003')->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_authorization_permissions_for_root_role()
+    public function testAuthorizationPermissionsForRootRole(): void
     {
         $this->actingAsRoot();
 
-        $this->get('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')->assertStatus(Response::HTTP_OK);
-        $this->get('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')->assertStatus(Response::HTTP_OK);
-        $this->get('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/roles/1')->assertStatus(Response::HTTP_OK);
-        $this->get('/roles/2')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/roles/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/roles/2')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pages/1')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pages/1')->assertStatus(Response::HTTP_OK);
 
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000001')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000002')->assertStatus(Response::HTTP_OK);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000003')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000001')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000002')->assertStatus(Response::HTTP_OK);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000003')->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_show_user_response()
+    public function testShowUserResponse(): void
     {
         $this->actingAsRoot();
 
-        $this->get('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d232')->assertStatus(404);
+        $this->get('/api/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d232')->assertStatus(404);
 
-        $this->get('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')
+        $this->get('/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -78,12 +78,12 @@ class ShowResourceTest extends TestCase
                         'name' => 'testing user1',
                     ],
                     'links' => [
-                        'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                        'self' => '/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
                     ],
                 ],
             ]);
 
-        $this->get('/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')
+        $this->get('/api/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -94,12 +94,12 @@ class ShowResourceTest extends TestCase
                         'name' => 'testing user2',
                     ],
                     'links' => [
-                        'self' => '/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d',
+                        'self' => '/api/users/f1d2f365-e9aa-4844-8eb7-36e0df7a396d',
                     ],
                 ],
             ]);
 
-        $this->get('/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8')
+        $this->get('/api/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -110,32 +110,32 @@ class ShowResourceTest extends TestCase
                         'name' => 'testing user3',
                     ],
                     'links' => [
-                        'self' => '/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8',
+                        'self' => '/api/users/ccf660b9-3cf7-4f58-a5f7-22e53ad836f8',
                     ],
                 ],
             ]);
     }
 
-    public function test_show_user_self()
+    public function testShowUserSelf(): void
     {
         $user = $this->actingAsUser();
 
-        $this->get('/users/'.$user->getId())
+        $this->get('/api/users/' . $user->getId())
             ->assertJson([
                 'data' => [
-                    'id' => ''.$user->getId(),
+                    'id' => '' . $user->getId(),
                     'type' => 'users',
                 ],
             ]);
     }
 
-    public function test_show_role_response()
+    public function testShowRoleResponse(): void
     {
         $this->actingAsRoot();
 
-        $this->get('/roles/2232')->assertStatus(404);
+        $this->get('/api/roles/2232')->assertStatus(404);
 
-        $this->get('/roles/1')
+        $this->get('/api/roles/1')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -145,13 +145,13 @@ class ShowResourceTest extends TestCase
                         'name' => 'Root',
                     ],
                     'links' => [
-                        'self' => '/roles/1',
+                        'self' => '/api/roles/1',
                     ],
                 ],
             ]);
 
         $this->actingAsUser();
-        $this->get('/roles/2')
+        $this->get('/api/roles/2')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -161,13 +161,13 @@ class ShowResourceTest extends TestCase
                         'name' => 'User',
                     ],
                     'links' => [
-                        'self' => '/roles/2',
+                        'self' => '/api/roles/2',
                     ],
                 ],
             ]);
 
         $this->actingAsModerator();
-        $this->get('/roles/3')
+        $this->get('/api/roles/3')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -177,17 +177,17 @@ class ShowResourceTest extends TestCase
                         'name' => 'Moderator',
                     ],
                     'links' => [
-                        'self' => '/roles/3',
+                        'self' => '/api/roles/3',
                     ],
                 ],
             ]);
     }
 
-    public function test_show_page_response()
+    public function testShowPageResponse(): void
     {
-        $this->get('/pages/2232')->assertStatus(404);
+        $this->get('/api/pages/2232')->assertStatus(404);
 
-        $this->get('/pages/1')
+        $this->get('/api/pages/1')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -198,17 +198,17 @@ class ShowResourceTest extends TestCase
                         'content' => '<strong>JSON:API</strong>',
                     ],
                     'links' => [
-                        'self' => '/pages/1',
+                        'self' => '/api/pages/1',
                     ],
                 ],
             ]);
     }
 
-    public function test_show_page_comments_response()
+    public function testShowPageCommentsResponse(): void
     {
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000002232')->assertStatus(404);
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000002232')->assertStatus(404);
 
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000001')
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000001')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -218,11 +218,11 @@ class ShowResourceTest extends TestCase
                         'content' => '<span>It is mine comment</span>',
                     ],
                     'links' => [
-                        'self' => '/pageComments/00000000-0000-0000-0000-000000000001',
+                        'self' => '/api/pageComments/00000000-0000-0000-0000-000000000001',
                     ],
                 ],
             ]);
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000002')
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000002')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -232,12 +232,12 @@ class ShowResourceTest extends TestCase
                         'content' => '<span>I know better</span>',
                     ],
                     'links' => [
-                        'self' => '/pageComments/00000000-0000-0000-0000-000000000002',
+                        'self' => '/api/pageComments/00000000-0000-0000-0000-000000000002',
                     ],
                 ],
             ]);
 
-        $this->get('/pageComments/00000000-0000-0000-0000-000000000003')
+        $this->get('/api/pageComments/00000000-0000-0000-0000-000000000003')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -247,19 +247,19 @@ class ShowResourceTest extends TestCase
                         'content' => '<span>I think he is right</span>',
                     ],
                     'links' => [
-                        'self' => '/pageComments/00000000-0000-0000-0000-000000000003',
+                        'self' => '/api/pageComments/00000000-0000-0000-0000-000000000003',
                     ],
                 ],
             ]);
     }
 
-    public function test_include_user_roles()
+    public function testIncludeUserRoles(): void
     {
         $user = $this->actingAsUser();
         $user->addRole(Role::moderator());
         $this->em()->flush();
 
-        $this->get('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b?include=roles')
+        $this->get('/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b?include=roles')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -282,13 +282,13 @@ class ShowResourceTest extends TestCase
                                 ],
                             ],
                             'links' => [
-                                'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
-                                'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles',
+                                'related' => '/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
+                                'self' => '/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles',
                             ],
                         ],
                     ],
                     'links' => [
-                        'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                        'self' => '/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
                     ],
                 ],
                 'included' => [
@@ -299,7 +299,7 @@ class ShowResourceTest extends TestCase
                             'name' => 'User',
                         ],
                         'links' => [
-                            'self' => '/roles/2',
+                            'self' => '/api/roles/2',
                         ],
                     ],
                     [
@@ -309,24 +309,24 @@ class ShowResourceTest extends TestCase
                             'name' => 'Moderator',
                         ],
                         'links' => [
-                            'self' => '/roles/3',
+                            'self' => '/api/roles/3',
                         ],
                     ],
                 ],
             ]);
     }
 
-    public function test_include_page_user_and_user_roles()
+    public function testIncludePageUserAndUserRoles(): void
     {
         $this->actingAsModerator();
-        $this->get('/pages/1?include=user,user.roles')
+        $this->get('/api/pages/1?include=user,user.roles')
             ->assertStatus(403)
             ->assertExactJson([
                 'errors' => [],
             ]);
 
         $this->actingAsUser();
-        $this->get('/pages/1?include=user,user.roles')
+        $this->get('/api/pages/1?include=user,user.roles')
             ->assertStatus(200)
             ->assertExactJson([
                 'data' => [
@@ -343,13 +343,13 @@ class ShowResourceTest extends TestCase
                                 'type' => 'users',
                             ],
                             'links' => [
-                                'related' => '/pages/1/user',
-                                'self' => '/pages/1/relationships/user',
+                                'related' => '/api/pages/1/user',
+                                'self' => '/api/pages/1/relationships/user',
                             ],
                         ],
                     ],
                     'links' => [
-                        'self' => '/pages/1',
+                        'self' => '/api/pages/1',
                     ],
                 ],
                 'included' => [
@@ -360,7 +360,7 @@ class ShowResourceTest extends TestCase
                             'name' => 'User',
                         ],
                         'links' => [
-                            'self' => '/roles/2',
+                            'self' => '/api/roles/2',
                         ],
                     ],
                     [
@@ -379,24 +379,24 @@ class ShowResourceTest extends TestCase
                                     ],
                                 ],
                                 'links' => [
-                                    'related' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
-                                    'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles',
+                                    'related' => '/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/roles',
+                                    'self' => '/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b/relationships/roles',
                                 ],
                             ],
                         ],
                         'links' => [
-                            'self' => '/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
+                            'self' => '/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b',
                         ],
                     ],
                 ],
             ]);
     }
 
-    public function test_metafield_include(): void
+    public function testMetafieldInclude(): void
     {
         $this->actingAsUser();
 
-        $this->get('/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b?meta[users]=random')
+        $this->get('/api/users/8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b?meta[users]=random')
             ->assertJsonStructure([
                 'data' => [
                     'meta' => [

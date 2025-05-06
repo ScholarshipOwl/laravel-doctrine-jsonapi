@@ -24,21 +24,18 @@ return [
     */
 
     'routing' => [
-
-        /**
-         * Middleware to apply to all JSON:API routes.
-         */
-        'rootMiddleware' => 'jsonapi',
-
         /**
          * Prefix for all the JSON:API route names.
          */
-        'rootNamePrefix' => 'jsonapi.',
+        'name' => 'jsonapi.',
 
         /**
          * Prefix for the route path.
+         *
+         * We must set and use prefix from config as it is used not only in routing
+         * but also in docs generation, links generation and in resource type extractors.
          */
-        'rootPathPrefix' => '',
+        'prefix' => 'api',
     ],
 
     /*
@@ -49,5 +46,13 @@ return [
     | Configuration of the Scribe package if you are using our strategies.
     |
     */
-    'scribe' => [],
+    'scribe' => [
+        /**
+         * Middleware that assigned to all jsona:api routes.
+         * It's used to identify does the route is jsona:api route.
+         *
+         * If you change the value of `apiPrefix` in the `bootstrap/app.php` make sure update the value of `middleware` here.
+         */
+        'middleware' => 'api',
+    ],
 ];

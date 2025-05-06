@@ -7,7 +7,7 @@ use Tests\TestCase;
 
 class UserConfigTest extends TestCase
 {
-    public function test_user_config_properties_can_be_set_and_retrieved(): void
+    public function testUserConfigPropertiesCanBeSetAndRetrieved(): void
     {
         $user = entity(User::class)->create();
         $config = $user->getConfig();
@@ -17,7 +17,7 @@ class UserConfigTest extends TestCase
         $this->assertEquals('en', $config->getLanguage());
     }
 
-    public function test_user_config_resource_type_and_id(): void
+    public function testUserConfigResourceTypeAndId(): void
     {
         $user = entity(User::class)->create(['id' => 'abc-123']);
         $config = $user->getConfig();

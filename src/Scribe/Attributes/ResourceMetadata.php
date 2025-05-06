@@ -8,7 +8,8 @@ use Attribute;
  * Attribute to provide grouping and descriptive metadata for JSON:API endpoints or resource classes.
  *
  * Usage:
- *   - Place on controller classes or methods to customize group names, descriptions, titles, and authentication requirements in Scribe docs.
+ *   - Place on controller classes or methods to customize group names, descriptions, titles, and authentication
+ *     requirements in Scribe docs.
  *
  * Properties:
  *   - groupName: string|null - The group name for the endpoint or resource.
@@ -30,5 +31,6 @@ class ResourceMetadata
         public ?string $title = null,
         public ?string $description = null,
         public bool $authenticated = false,
-    ) {}
+    ) {
+    }
 }

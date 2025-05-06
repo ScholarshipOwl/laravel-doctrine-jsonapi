@@ -24,7 +24,8 @@ class ListRelatedAction extends AbstractAction
     public function __construct(
         protected ToManyRelationship $relationship,
         protected Request $request,
-    ) {}
+    ) {
+    }
 
     protected function request(): Request
     {
@@ -43,7 +44,7 @@ class ListRelatedAction extends AbstractAction
 
     public function authAbility(): string
     {
-        return AbilitiesInterface::LIST.ucfirst($this->relationship->name());
+        return AbilitiesInterface::LIST . ucfirst($this->relationship->name());
     }
 
     public function handle(): Response
@@ -68,9 +69,9 @@ class ListRelatedAction extends AbstractAction
     {
         $mappedBy = $this->relationship->mappedBy();
         $relatedRepo = $this->relationship->repository();
-        $mappedByAlias = $mappedBy.'relation';
+        $mappedByAlias = $mappedBy . 'relation';
 
-        $relationshipField = $this->isIdentityMustBeUsed() ? 'identity('.$mappedByAlias.')' : $mappedByAlias;
+        $relationshipField = $this->isIdentityMustBeUsed() ? 'identity(' . $mappedByAlias . ')' : $mappedByAlias;
 
         return $relatedRepo->resourceQueryBuilder()
             ->innerJoin(sprintf('%s.%s', $relatedRepo->alias(), $mappedBy), $mappedByAlias)

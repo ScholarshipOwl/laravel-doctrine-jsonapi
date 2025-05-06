@@ -42,7 +42,7 @@ class ResourceRepository extends EntityRepository
     public static function create(string $class): static
     {
         if (! $em = app(ManagerRegistry::class)->getManagerForClass($class)) {
-            throw new \LogicException('No EntityManager found for class '.$class);
+            throw new \LogicException('No EntityManager found for class ' . $class);
         }
 
         /** @phpstan-ignore return.type */

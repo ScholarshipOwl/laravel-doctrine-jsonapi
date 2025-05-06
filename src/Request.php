@@ -43,14 +43,14 @@ class Request extends FormRequest
 
     protected ?ResourceRepository $repository;
 
-    const JSONAPI_CONTENT_TYPE = 'application/vnd.api+json';
+    public const JSONAPI_CONTENT_TYPE = 'application/vnd.api+json';
 
     /**
      * Return the base URL for the request.
      */
     public function getBaseUrl(): string
     {
-        return parent::getBaseUrl();
+        return sprintf('%s/%s', parent::getBaseUrl(), config('jsonapi.routing.prefix', 'api'));
     }
 
     /**
@@ -119,7 +119,7 @@ class Request extends FormRequest
 
             // If not found in route parameter, use ResourceTypeExtractor
             if (is_null($resourceType)) {
-                $extractor = new ResourceTypeExtractor;
+                $extractor = new ResourceTypeExtractor();
                 $resourceType = $extractor->extract($this->route());
             }
 
@@ -135,7 +135,8 @@ class Request extends FormRequest
 
     /**
      * Gets the relationship name URI part from the request.
-     * First we try to get relationship name from "relationship" route param value, if no route param we use RelationshipNameExtractor.
+     * First we try to get relationship name from "relationship" route param value, if no route param we
+     * use RelationshipNameExtractor.
      * Will be null if request is not relationship request.
      * URI Part relationshipName: "/prefix/../resourceType/(relationships)?/[relationshipName]..."
      */
@@ -147,7 +148,7 @@ class Request extends FormRequest
 
             // If not found in route parameter, use RelationshipNameExtractor
             if (is_null($relationshipName)) {
-                $extractor = new RelationshipNameExtractor;
+                $extractor = new RelationshipNameExtractor();
                 $relationshipName = $extractor->extract($this->route());
             }
 
@@ -167,7 +168,7 @@ class Request extends FormRequest
             $relationshipName = $this->relationshipName();
 
             if (is_null($relationshipName)) {
-                throw new NotFoundException;
+                throw new NotFoundException();
             }
 
             $relationship = $this->rm()
@@ -175,7 +176,7 @@ class Request extends FormRequest
                 ->get($relationshipName);
 
             if (is_null($relationship)) {
-                throw new NotFoundException;
+                throw new NotFoundException();
             }
 
             $this->relationship = $relationship;
@@ -225,9 +226,9 @@ class Request extends FormRequest
      */
     protected function failedValidation(Validator $validator): void
     {
-        $exception = new Exceptions\ValidationException;
+        $exception = new Exceptions\ValidationException();
         foreach ($validator->errors()->getMessages() as $attribute => $messages) {
-            $pointer = '/'.str_replace('.', '/', $attribute);
+            $pointer = '/' . str_replace('.', '/', $attribute);
             array_map(fn ($message) => $exception->detail($message, $pointer), $messages);
         }
 

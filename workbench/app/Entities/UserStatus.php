@@ -12,11 +12,11 @@ use Sowl\JsonApi\ResourceInterface;
 #[ORM\Entity]
 class UserStatus implements ResourceInterface
 {
-    const ACTIVE = '1';
+    public const ACTIVE = '1';
 
-    const INACTIVE = '2';
+    public const INACTIVE = '2';
 
-    const DELETED = '3';
+    public const DELETED = '3';
 
     public static function active(): self
     {
@@ -40,12 +40,12 @@ class UserStatus implements ResourceInterface
 
     public static function transformer(): AbstractTransformer
     {
-        return new UserStatusTransformer;
+        return new UserStatusTransformer();
     }
 
     public static function relationships(): RelationshipsCollection
     {
-        return new RelationshipsCollection;
+        return new RelationshipsCollection();
     }
 
     #[ORM\Id, ORM\Column(type: 'string', length: 2)]

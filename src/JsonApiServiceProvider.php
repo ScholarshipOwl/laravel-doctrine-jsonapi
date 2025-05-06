@@ -50,30 +50,46 @@ class JsonApiServiceProvider extends ServiceProvider
 
             $classDirnameSegments = explode('\\', $classDirname);
 
-            return Arr::wrap(Collection::times(count($classDirnameSegments), function ($index) use ($class, $classDirnameSegments) {
-                $classDirname = implode('\\', array_slice($classDirnameSegments, 0, $index));
+            return Arr::wrap(
+                Collection::times(
+                    count($classDirnameSegments),
+                    function ($index) use ($class, $classDirnameSegments) {
+                        $classDirname = implode('\\', array_slice($classDirnameSegments, 0, $index));
 
-                return $classDirname.'\\Policies\\'.class_basename($class).'Policy';
-            })->when(str_contains($classDirname, '\\Models\\'), function ($collection) use ($class, $classDirname) {
-                return $collection->concat([str_replace('\\Models\\', '\\Policies\\', $classDirname).'\\'.class_basename($class).'Policy'])
-                    ->concat([str_replace('\\Models\\', '\\Models\\Policies\\', $classDirname).'\\'.class_basename($class).'Policy']);
-            })->reverse()->values()->first(function ($class) {
-                return class_exists($class);
-            }) ?: [$classDirname.'\\Policies\\'.class_basename($class).'Policy']);
+                        return $classDirname . '\\Policies\\' . class_basename($class) . 'Policy';
+                    }
+                )->when(
+                    str_contains($classDirname, '\\Models\\'),
+                    function ($collection) use ($class, $classDirname) {
+                        $modelsPoliciesDirname = str_replace('\\Models\\', '\\Policies\\', $classDirname);
+                        $modelsPolicy = $modelsPoliciesDirname . '\\' . class_basename($class) . 'Policy';
+
+                        $modelsModelsPoliciesDirname = str_replace('\\Models\\', '\\Models\\Policies\\', $classDirname);
+                        $modelsModelsPolicy = $modelsModelsPoliciesDirname . '\\' . class_basename($class) . 'Policy';
+
+                        return $collection->concat([
+                            $modelsPolicy,
+                            $modelsModelsPolicy,
+                        ]);
+                    }
+                )->reverse()->values()->first(function ($class) {
+                    return class_exists($class);
+                }) ?: [$classDirname . '\\Policies\\' . class_basename($class) . 'Policy']
+            );
         });
     }
 
     protected function registerConfig(): void
     {
         $this->publishes([
-            __DIR__.'/../config/jsonapi.php' => config_path('jsonapi.php'),
+            __DIR__ . '/../config/jsonapi.php' => config_path('jsonapi.php'),
         ], 'jsonapi-config');
     }
 
     protected function registerRoutes(): void
     {
         $this->publishes([
-            __DIR__.'/../routes/jsonapi.php' => base_path('routes/jsonapi.php'),
+            __DIR__ . '/../routes/jsonapi.php' => base_path('routes/jsonapi.php'),
         ], 'jsonapi-routes');
     }
 
@@ -82,17 +98,17 @@ class JsonApiServiceProvider extends ServiceProvider
         // Register Scribe strategies translations
         if ($this->isScribeInstalled()) {
             $this->publishes([
-                __DIR__.'/../lang' => $this->app->langPath('jsonapi'),
+                __DIR__ . '/../lang' => $this->app->langPath('jsonapi'),
             ], 'jsonapi-scribe-translations');
 
             $this->loadTranslationsFrom($this->app->langPath('jsonapi'), 'jsonapi');
-            $this->loadTranslationsFrom(realpath(__DIR__.'/../lang'), 'jsonapi');
+            $this->loadTranslationsFrom(realpath(__DIR__ . '/../lang'), 'jsonapi');
         }
     }
 
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__.'/../config/jsonapi.php', 'jsonapi');
+        $this->mergeConfigFrom(__DIR__ . '/../config/jsonapi.php', 'jsonapi');
 
         $this->registerRequest();
         $this->registerResponseFactory();
