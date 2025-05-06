@@ -81,28 +81,34 @@ class JsonApiServiceProvider extends ServiceProvider
 
     protected function registerConfig(): void
     {
-        $this->publishes([
-            __DIR__ . '/../config/jsonapi.php' => config_path('jsonapi.php'),
-        ], 'jsonapi-config');
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../config/jsonapi.php' => config_path('jsonapi.php'),
+            ], 'jsonapi-config');
+        }
     }
 
     protected function registerRoutes(): void
     {
-        $this->publishes([
-            __DIR__ . '/../routes/jsonapi.php' => base_path('routes/jsonapi.php'),
-        ], 'jsonapi-routes');
+        if ($this->app->runningInConsole()) {
+            $this->publishes([
+                __DIR__ . '/../routes/jsonapi.php' => base_path('routes/jsonapi.php'),
+            ], 'jsonapi-routes');
+        }
     }
 
     protected function configureTranslations(): void
     {
-        // Register Scribe strategies translations
-        if ($this->isScribeInstalled()) {
-            $this->publishes([
-                __DIR__ . '/../lang' => $this->app->langPath('jsonapi'),
-            ], 'jsonapi-scribe-translations');
+        if ($this->app->runningInConsole()) {
+            // Register Scribe strategies translations
+            if ($this->isScribeInstalled()) {
+                $this->publishes([
+                    __DIR__ . '/../lang' => $this->app->langPath('jsonapi'),
+                ], 'jsonapi-scribe-translations');
 
-            $this->loadTranslationsFrom($this->app->langPath('jsonapi'), 'jsonapi');
-            $this->loadTranslationsFrom(realpath(__DIR__ . '/../lang'), 'jsonapi');
+                $this->loadTranslationsFrom($this->app->langPath('jsonapi'), 'jsonapi');
+                $this->loadTranslationsFrom(realpath(__DIR__ . '/../lang'), 'jsonapi');
+            }
         }
     }
 

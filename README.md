@@ -40,6 +40,7 @@ For detailed installation instructions, configuration guides and tutorials:
 - **Auto-generated Documentation**: Endpoints are automatically documented using [Scribe](https://scribe.readthedocs.io/en/latest/)
 
 ### Roadmap
+- [ ] Docs: Quickstart add how to install PHP section ( @see: php.new )
 - [ ] Build documentation and testing for integration of Laravel Sanctum or Laravel Passport.
 - [ ] Add Laravel Doctrine ACL package to testing
 - [ ] Provide QueryBuilder for the filter parsers, instead of criteria as it allows to apply any types of filters.
