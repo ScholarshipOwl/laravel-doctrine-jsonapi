@@ -16,7 +16,7 @@ use LaravelDoctrine\ORM\Auth\Authenticatable;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\Concerns\HasTimestamps;
 use Sowl\JsonApi\Default\Resource\WithFilterParsersTrait;
-use Sowl\JsonApi\Relationships\MemoizeRelationshipsTrait;
+use Sowl\JsonApi\Relationships\WithRelationships;
 use Sowl\JsonApi\Relationships\RelationshipsCollection;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
@@ -31,7 +31,7 @@ class User implements AuthenticatableContract, AuthorizableContract, CanResetPas
     use Authorizable;
     use CanResetPassword;
     use HasTimestamps;
-    use MemoizeRelationshipsTrait;
+    use WithRelationships;
     use WithFilterParsersTrait;
 
     public const USER_ID = '8a41dde6-b1f5-4c40-a12d-d96c6d9ef90b';
@@ -52,7 +52,7 @@ class User implements AuthenticatableContract, AuthorizableContract, CanResetPas
 
     public static function relationships(): RelationshipsCollection
     {
-        return static::memoizeRelationships(fn () => [
+        return static::resolveRelationships(fn () => [
             ToOneRelationship::create('status', UserStatus::class, 'status'),
             ToManyRelationship::create('roles', Role::class, 'users'),
         ]);

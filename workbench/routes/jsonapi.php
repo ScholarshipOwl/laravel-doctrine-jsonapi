@@ -21,11 +21,13 @@ Route::group(['as' => config('jsonapi.routing.name', 'jsonapi.')], function () {
 
     Route::get('/roles', [RolesController::class, 'list']);
 
-    Route::post('/users', [UsersController::class, 'create']);
-    Route::patch('/users/{id}', [UsersController::class, 'update']);
-    Route::post('/users/{id}/relationships/roles', [UsersController::class, 'createUserRoles']);
-    Route::delete('/users/{id}/relationships/roles', [UsersController::class, 'removeUserRoles']);
-    Route::patch('/users/{id}/relationships/roles', [UsersController::class, 'updateUserRoles']);
+    Route::group(['prefix' => '/users', 'as' => 'users.'], function () {
+        Route::post('/', [UsersController::class, 'create'])->name('create');
+        Route::patch('/{id}', [UsersController::class, 'update'])->name('update');
+        Route::post('/{id}/relationships/roles', [UsersController::class, 'createUserRoles'])->name('createUserRoles');
+        Route::delete('/{id}/relationships/roles', [UsersController::class, 'removeUserRoles'])->name('removeUserRoles');
+        Route::patch('/{id}/relationships/roles', [UsersController::class, 'updateUserRoles'])->name('updateUserRoles');
+    });
 
     /* ---------------------------------------------------------
      * Default routes will be handled by the default controller.

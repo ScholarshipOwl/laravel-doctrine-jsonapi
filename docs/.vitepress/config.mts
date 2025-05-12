@@ -38,11 +38,11 @@ export default defineConfig({
         text: 'Concepts',
         items: [
           { text: 'Resources', link: '/concepts/resources' },
-          { text: 'Transformers', link: '/concepts/transformers' },
           { text: 'Relationships', link: '/concepts/relationships' },
+          { text: 'Transformers', link: '/concepts/transformers' },
           { text: 'Action', link: '/concepts/action' },
           { text: 'Request', link: '/concepts/request' },
-          { text: 'Response', link: '/concepts/response' }
+          { text: 'Response', link: '/concepts/responses' },
         ]
       },
       {

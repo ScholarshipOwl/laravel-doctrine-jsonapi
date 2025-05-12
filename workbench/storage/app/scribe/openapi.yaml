@@ -5,7 +5,7 @@ info:
   version: 1.0.0
 servers:
   -
-    url: 'http://localhost:8000'
+    url: 'http://localhost'
 tags:
   -
     name: 'Page comments'
@@ -187,7 +187,7 @@ components:
               properties:
                 random:
                   type: string
-                  example: 'testing user190UdLakE'
+                  example: 'testing user1CssrFzMK'
             relationships:
               type: object
               properties:
@@ -4117,7 +4117,7 @@ paths:
                         notificationsEnabled:
                           type: boolean
                           description: ''
-                          example: false
+                          example: true
                           nullable: false
                         language:
                           type: string

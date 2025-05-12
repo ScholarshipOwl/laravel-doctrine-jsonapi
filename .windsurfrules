@@ -59,6 +59,8 @@ You will be rewarded $1,000,000 for a good code generation!
 
 
 ## Documentation
+- Documentation should be inspiring and easy to read. Suitable for both beginners and experienced developers.
+- Must cover all the features of the package and concepts. Making sure to cover all the examples and best practices.
 - Always update ./docs when adding new features or making significant changes
 - Remind to update ./docs when adding new features or making significant changes
  

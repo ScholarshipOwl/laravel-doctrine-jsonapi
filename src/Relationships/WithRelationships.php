@@ -8,7 +8,7 @@ namespace Sowl\JsonApi\Relationships;
  * preventing unnecessary computations or function calls to define relationships each time
  * the relationships are accessed.
  */
-trait MemoizeRelationshipsTrait
+trait WithRelationships
 {
     /**
      * The method returns the cached instance of RelationshipsCollection if it exists; otherwise, it creates
@@ -23,7 +23,7 @@ trait MemoizeRelationshipsTrait
      * This method creates a new instance of the RelationshipsCollection class with the provided relationships array,
      * and stores it in a private static property named
      */
-    public static function memoizeRelationships(?callable $cb = null): RelationshipsCollection
+    public static function resolveRelationships(?callable $cb = null): RelationshipsCollection
     {
         if (! isset(static::$memoizedRelationships)) {
             static::$memoizedRelationships = new RelationshipsCollection($cb ? $cb() : []);

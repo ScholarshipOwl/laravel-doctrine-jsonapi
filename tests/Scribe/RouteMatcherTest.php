@@ -43,15 +43,6 @@ class RouteMatcherTest extends TestCase
             }
         }
     }
-
-    /**
-     * Helper method to assert that a route exists and supports a specific HTTP method
-     */
-    protected function assertRouteExists(string $method, string $uri): void
-    {
-        $this->assertTrue(isset($this->routesByMethodUri[$method][$uri]), "Route not found: $method $uri");
-    }
-
     /**
      * Test that routes with {resourceType} placeholders are properly expanded
      * into concrete resource types.
@@ -70,6 +61,12 @@ class RouteMatcherTest extends TestCase
                 '{resourceType}',
                 $uri,
                 "Route contains unexpanded {resourceType}: $uri"
+            );
+
+            $this->assertStringNotContainsString(
+                '{relationship}',
+                $uri,
+                "Route contains unexpanded {relationship}: $uri"
             );
         }
     }
@@ -200,5 +197,13 @@ class RouteMatcherTest extends TestCase
             $totalRouteCount,
             "Expected $uniqueRouteCount unique routes, but found $totalRouteCount total routes"
         );
+    }
+
+    /**
+     * Helper method to assert that a route exists and supports a specific HTTP method
+     */
+    protected function assertRouteExists(string $method, string $uri): void
+    {
+        $this->assertTrue(isset($this->routesByMethodUri[$method][$uri]), "Route not found: $method $uri");
     }
 }

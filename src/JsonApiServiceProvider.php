@@ -114,13 +114,15 @@ class JsonApiServiceProvider extends ServiceProvider
 
     public function register(): void
     {
-        $this->mergeConfigFrom(__DIR__ . '/../config/jsonapi.php', 'jsonapi');
-
         $this->registerRequest();
         $this->registerResponseFactory();
         $this->registerResourceManager();
         $this->registerResourceManipulator();
         $this->registerDocumentation();
+
+        if (! app()->configurationIsCached()) {
+            $this->mergeConfigFrom(__DIR__ . '/../config/jsonapi.php', 'jsonapi');
+        }
     }
 
     public function registerRequest(): void
