@@ -77,6 +77,7 @@ For detailed installation instructions, configuration guides and tutorials:
       How to handle missing route\endpoint 404 and internal 500 errors.
 - [ ] Create console command for resource policy generation: "jsonapi:make:policy".
 - [ ] Checkout option for adding include params like "include=roles:sort"  (TransformerAbstract.php:173)
+- [ ] Integrate UUID support by default https://github.com/ramsey/uuid-doctrine
 - [ ] Next version
   - [ ] Use PHP Attributes instead of `ResourceInterface` for the resource declaration.
     - [ ] Metadata managment system similar to Doctrine one, that knows the resource schemas and relationships, etc. On boot register all the resources and cache them.
@@ -85,6 +86,7 @@ For detailed installation instructions, configuration guides and tutorials:
     - [ ] Generate the transformers depend on the entity name and configuration path: `app/Transformers/{Entity}Transformer.php`
     - [ ] Allow defining relationships with PHP Attributes on the entity class.
     - [ ] The id get be retrieved using internal Doctrine functionality or just depend on public $id property.
+  - [ ] Migrate all the default users and roles to be UUID
 
 ## Support
 

@@ -47,7 +47,7 @@ trait ResponseGenerationHelper
     {
         return $this->wrapInTransaction(function () use ($resourceType) {
             $resourceClass = $this->rm()->classByResourceType($resourceType);
-            $entity = $this->createSingleResource($resourceClass);
+            $entity = ResponseGenerator::instance()->createSingleResource($resourceClass);
             $response = $this->response()->item($entity);
 
             return $response->original;
@@ -63,8 +63,8 @@ trait ResponseGenerationHelper
             $resourceClass = $this->rm()->classByResourceType($resourceType);
             $transformer = $this->rm()->transformerByResourceType($resourceType);
             $resources = [
-                $this->createSingleResource($resourceClass),
-                $this->createSingleResource($resourceClass),
+                ResponseGenerator::instance()->createSingleResource($resourceClass),
+                ResponseGenerator::instance()->createSingleResource($resourceClass),
             ];
 
             $response = $this->response()->collection($resources, $resourceType, $transformer);
@@ -83,7 +83,7 @@ trait ResponseGenerationHelper
             $relationshipName = $this->jsonApiEndpointData->relationshipName;
             $isRelationships = $this->jsonApiEndpointData->isRelationships;
 
-            $resource = $this->factory()->of($resourceClass)->create();
+            $resource = ResponseGenerator::instance()->createSingleResource($resourceClass);
             $relationship = $this->rm()->relationshipsByClass($resourceClass)->get($relationshipName);
 
             if (! $relationship) {
@@ -115,41 +115,6 @@ trait ResponseGenerationHelper
 
             return ['data' => null];
         });
-    }
-
-    /**
-     * Generate a single resource instance for the given resource class
-     *
-     * @template T of object
-     *
-     * @param  class-string<T>  $resourceClass
-     * @return T
-     */
-    protected function createSingleResource(
-        string $resourceClass,
-        string $name = 'default'
-    ): ?ResourceInterface {
-        return $this->factory()->of($resourceClass, $name)->create();
-    }
-
-    /**
-     * Check if the given action type is a relationship action
-     */
-    private function isRelationshipAction(string $actionType): bool
-    {
-        return in_array(
-            $actionType,
-            [
-                JsonApiEndpointData::ACTION_SHOW_RELATED_TO_ONE,
-                JsonApiEndpointData::ACTION_SHOW_RELATED_TO_MANY,
-                JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_ONE,
-                JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_ONE,
-                JsonApiEndpointData::ACTION_SHOW_RELATIONSHIP_TO_MANY,
-                JsonApiEndpointData::ACTION_ADD_RELATIONSHIP_TO_MANY,
-                JsonApiEndpointData::ACTION_UPDATE_RELATIONSHIP_TO_MANY,
-                JsonApiEndpointData::ACTION_REMOVE_RELATIONSHIP_TO_MANY,
-            ]
-        );
     }
 
     /**
