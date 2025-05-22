@@ -9,7 +9,6 @@ use LaravelDoctrine\ORM\Testing\Factory;
 use Sowl\JsonApi\Relationships\ToManyRelationship;
 use Sowl\JsonApi\Relationships\ToOneRelationship;
 use Sowl\JsonApi\Request;
-use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceManipulator;
 use Sowl\JsonApi\ResponseFactory;
 

@@ -27,7 +27,7 @@ class ResponseGenerator
     /**
      * Generate a single resource instance for the given resource class
      *
-     * @template T of object
+     * @template T of ResourceInterface
      *
      * @param  class-string<T>  $resourceClass
      * @return T
@@ -45,4 +45,3 @@ class ResponseGenerator
         return $this->cache[$resourceClass][$name];
     }
 }
-    
