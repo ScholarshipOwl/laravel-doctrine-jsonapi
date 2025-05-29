@@ -29,7 +29,7 @@ class ShowRelationshipAction extends AbstractAction
     public function handle(): Response
     {
         $resource = $this->request->resource();
-        $field = $this->relationship->name();
+        $field = $this->relationship->property();
 
         if ($relation = $this->manipulator()->getProperty($resource, $field)) {
             return $this->response()->item($relation, relationship: true);
