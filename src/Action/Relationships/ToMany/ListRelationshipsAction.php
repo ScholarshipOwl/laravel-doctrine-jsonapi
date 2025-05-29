@@ -37,12 +37,13 @@ class ListRelationshipsAction extends AbstractAction
 
     public function authorize(): void
     {
-        $this->gate()->authorize($this->authAbility(), [$this->request->resource()]);
+        $ability = $this->authAbility();
+        $this->gate()->authorize($ability, [$this->request->resource()]);
     }
 
     public function authAbility(): string
     {
-        return AbilitiesInterface::LIST . ucfirst($this->relationship->name());
+        return AbilitiesInterface::LIST . $this->relationship->pascalCaseName();
     }
 
     public function handle(): Response

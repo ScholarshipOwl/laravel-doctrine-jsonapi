@@ -19,12 +19,13 @@ class ShowRelatedAction extends AbstractAction
 
     public function authorize(): void
     {
-        $this->gate()->authorize($this->authAbility(), [$this->request->resource()]);
+        $ability = $this->authAbility();
+        $this->gate()->authorize($ability, [$this->request->resource()]);
     }
 
     public function authAbility(): string
     {
-        return AbilitiesInterface::VIEW . ucfirst($this->relationship->name());
+        return AbilitiesInterface::VIEW . $this->relationship->pascalCaseName();
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace Sowl\JsonApi\Relationships;
 
+use Illuminate\Support\Str;
 use Sowl\JsonApi\ResourceManager;
 
 /**
@@ -18,7 +19,7 @@ final class ToManyRelationship implements RelationshipInterface
         ?string $property = null,
     ) {
         ResourceManager::verifyResourceInterface($this->class);
-        $this->property = $property ?: $this->name;
+        $this->property = $property ?: Str::camel($this->name);
     }
 
     /**

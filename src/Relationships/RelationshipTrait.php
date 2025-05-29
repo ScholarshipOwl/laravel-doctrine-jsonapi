@@ -2,6 +2,7 @@
 
 namespace Sowl\JsonApi\Relationships;
 
+use Illuminate\Support\Str;
 use Sowl\JsonApi\AbstractTransformer;
 use Sowl\JsonApi\ResourceManager;
 use Sowl\JsonApi\ResourceRepository;
@@ -18,6 +19,11 @@ trait RelationshipTrait
     public function name(): string
     {
         return $this->name;
+    }
+
+    public function pascalCaseName(): string
+    {
+        return Str::pascal($this->name());
     }
 
     public function class(): string
