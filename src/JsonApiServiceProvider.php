@@ -127,6 +127,7 @@ class JsonApiServiceProvider extends ServiceProvider
 
     public function registerRequest(): void
     {
+        // TODO: Verify if this is needed, as it's already done in FormRequestServiceProvider
         $this->app->resolving(Request::class, function (Request $request, Application $app) {
             $request = Request::createFrom($app['request'], $request);
             $request->setContainer($app);

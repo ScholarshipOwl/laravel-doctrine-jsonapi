@@ -29,6 +29,13 @@ class ArrayFilterParser extends AbstractFilterParser
         'contains',
         'startsWith',
         'endsWith',
+        'isNull',
+        'isNotNull',
+    ];
+
+    public const OPERATORS_WITHOUT_VALUE = [
+        'isNull',
+        'isNotNull',
     ];
 
     /**
@@ -140,9 +147,8 @@ class ArrayFilterParser extends AbstractFilterParser
      */
     protected function processOperatorFilter(Criteria $criteria, string $field, mixed $value): static
     {
-        if (is_array($value) && array_key_exists('value', $value) && is_string($value['operator'] ?? false)) {
+        if (is_array($value) && is_string($value['operator'] ?? false)) {
             $operator = $value['operator'];
-            $val = $value['value'];
 
             if (! in_array($operator, static::OPERATORS)) {
                 throw (new BadRequestException('Unknown array filter operator.'))
@@ -154,9 +160,15 @@ class ArrayFilterParser extends AbstractFilterParser
                     ]);
             }
 
-            $criteria->andWhere(
-                $criteria->expr()->$operator($field, $val)
-            );
+            if (in_array($operator, static::OPERATORS_WITHOUT_VALUE)) {
+                $criteria->andWhere(
+                    $criteria->expr()->$operator($field)
+                );
+            } else {
+                $criteria->andWhere(
+                    $criteria->expr()->$operator($field, $value['value'] ?? null)
+                );
+            }
         }
 
         return $this;
