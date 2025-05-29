@@ -62,6 +62,16 @@ class ListRelationshipsAction extends AbstractAction
     }
 
     /**
+     * Returns relationship class name, as in case of relationship we want to filter related resources.
+     *
+     * @return class-string<ResourceInterface>
+     */
+    protected function filterableClass(): ?string
+    {
+        return $this->relationship->repository()->getClassName();
+    }
+
+    /**
      * Creates query builder from related repository and applies condition "related.mappedBy = resource.id".
      */
     protected function relatedQueryBuilder(ResourceInterface $resource): QueryBuilder
