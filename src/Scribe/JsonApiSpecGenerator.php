@@ -280,19 +280,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
         $relationshipsProperties = [];
 
         foreach ($this->rm->relationshipsByClass($resourceClass)->all() as $relationship) {
-            $relationshipClass = $relationship->class();
-            $relationshipType = ResourceManager::resourceType($relationshipClass);
-
-            $relationshipsProperties[$relationship->name()] = [
-                'type' => 'object',
-                'properties' => [
-                    'data' => [
-                        'type' => 'object',
-                        'required' => ['id', 'type'],
-                        'properties' => $this->specObjectIdentifier($relationshipType),
-                    ],
-                ],
-            ];
+            $relationshipsProperties[$relationship->name()] = $relationship->spec();
         }
 
         return empty($relationshipsProperties) ? [] : [

@@ -60,4 +60,33 @@ trait RelationshipTrait
     {
         return new ResourceIdentifierRule($this->class());
     }
+
+    public function spec(): array
+    {
+        $dataSpec = [
+            'type' => 'object',
+            'required' => ['id', 'type'],
+            'properties' => [
+                'id' => [
+                    'type' => 'string',
+                    'example' => '123e4567-e89b-12d3-a456-426614174000',
+                ],
+                'type' => [
+                    'type' => 'string',
+                    'example' => $this->resourceType(),
+                    'enum' => [$this->resourceType()],
+                ],
+            ],
+        ];
+
+        return [
+            'type' => 'object',
+            'properties' => [
+                'data' => $this->isToOne() ? $dataSpec : [
+                    'type' => 'array',
+                    'items' => $dataSpec,
+                ],
+            ],
+        ];
+    }
 }

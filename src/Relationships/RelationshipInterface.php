@@ -28,4 +28,6 @@ interface RelationshipInterface
     public function transformer(): AbstractTransformer;
 
     public function objectIdentifierRule(): ResourceIdentifierRule;
+
+    public function spec(): array;
 }
