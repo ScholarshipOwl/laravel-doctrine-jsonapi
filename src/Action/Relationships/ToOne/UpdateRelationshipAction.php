@@ -33,7 +33,7 @@ class UpdateRelationshipAction extends AbstractAction
         $property = $this->relationship->property();
 
         if (null !== ($objectIdentifier = $this->request->getData())) {
-            $relationshipResource = $this->relationship->repository()->findByObjectIdentifier($objectIdentifier);
+            $relationshipResource = $this->rm()->objectIdentifierToResource($objectIdentifier);
             $this->manipulator()->setProperty($resource, $property, $relationshipResource);
             $this->em()->flush();
 
