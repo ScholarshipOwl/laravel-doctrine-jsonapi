@@ -97,7 +97,7 @@
         {
             "label": "Debug Generate JSON:API OpenAPI spec",
             "type": "shell",
-            "command": "XDEBUG_TRIGGER=yes php vendor/bin/testbench scribe:generate",
+            "command": "XDEBUG_MODE=debug XDEBUG_TRIGGER=yes php vendor/bin/testbench scribe:generate",
             "group": {
                 "kind": "build",
                 "isDefault": false

@@ -48,13 +48,20 @@ components:
                 - pages
             attributes:
               type: object
+              description: ''
+              example: []
+              nullable: false
               properties:
                 title:
                   type: string
+                  description: 'Must not be greater than 255 characters.'
                   example: 'JSON:API standard'
+                  nullable: false
                 content:
                   type: string
+                  description: ''
                   example: '<strong>JSON:API</strong>'
+                  nullable: true
             relationships:
               type: object
               properties:
@@ -69,7 +76,7 @@ components:
                       properties:
                         id:
                           type: string
-                          example: '1'
+                          example: 123e4567-e89b-12d3-a456-426614174000
                         type:
                           type: string
                           example: users
@@ -79,19 +86,21 @@ components:
                   type: object
                   properties:
                     data:
-                      type: object
-                      required:
-                        - id
-                        - type
-                      properties:
-                        id:
-                          type: string
-                          example: '1'
-                        type:
-                          type: string
-                          example: pageComments
-                          enum:
-                            - pageComments
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - id
+                          - type
+                        properties:
+                          id:
+                            type: string
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                          type:
+                            type: string
+                            example: pageComments
+                            enum:
+                              - pageComments
     pageComments:
       type: object
       required:
@@ -113,10 +122,15 @@ components:
                 - pageComments
             attributes:
               type: object
+              description: ''
+              example: []
+              nullable: false
               properties:
                 content:
                   type: string
+                  description: 'Must not be greater than 1023 characters.'
                   example: '<span>It is mine comment</span>'
+                  nullable: false
             relationships:
               type: object
               properties:
@@ -131,7 +145,7 @@ components:
                       properties:
                         id:
                           type: string
-                          example: '1'
+                          example: 123e4567-e89b-12d3-a456-426614174000
                         type:
                           type: string
                           example: users
@@ -148,7 +162,7 @@ components:
                       properties:
                         id:
                           type: string
-                          example: '1'
+                          example: 123e4567-e89b-12d3-a456-426614174000
                         type:
                           type: string
                           example: pages
@@ -175,19 +189,35 @@ components:
                 - users
             attributes:
               type: object
+              description: ''
+              example: []
+              nullable: false
               properties:
                 name:
                   type: string
+                  description: ''
                   example: 'testing user1'
+                  nullable: false
+                password:
+                  type: string
+                  description: ''
+                  example: architecto
+                  nullable: false
                 email:
                   type: string
+                  description: 'Must be a valid email address.'
                   example: test1email@test.com
+                  nullable: false
+              required:
+                - name
+                - password
+                - email
             meta:
               type: object
               properties:
                 random:
                   type: string
-                  example: 'testing user1CssrFzMK'
+                  example: 'testing user1EtBo2ff1'
             relationships:
               type: object
               properties:
@@ -202,7 +232,7 @@ components:
                       properties:
                         id:
                           type: string
-                          example: '1'
+                          example: 123e4567-e89b-12d3-a456-426614174000
                         type:
                           type: string
                           example: userStatuses
@@ -212,19 +242,21 @@ components:
                   type: object
                   properties:
                     data:
-                      type: object
-                      required:
-                        - id
-                        - type
-                      properties:
-                        id:
-                          type: string
-                          example: '1'
-                        type:
-                          type: string
-                          example: roles
-                          enum:
-                            - roles
+                      type: array
+                      items:
+                        type: object
+                        required:
+                          - id
+                          - type
+                        properties:
+                          id:
+                            type: string
+                            example: 123e4567-e89b-12d3-a456-426614174000
+                          type:
+                            type: string
+                            example: roles
+                            enum:
+                              - roles
     userStatuses:
       type: object
       required:
@@ -246,10 +278,15 @@ components:
                 - userStatuses
             attributes:
               type: object
+              description: ''
+              example: []
+              nullable: false
               properties:
                 name:
                   type: string
+                  description: 'Must not be greater than 16 characters.'
                   example: Active
+                  nullable: false
     roles:
       type: object
       required:
@@ -271,10 +308,21 @@ components:
                 - roles
             attributes:
               type: object
+              description: ''
+              example: []
+              nullable: false
               properties:
                 name:
                   type: string
+                  description: 'Must not be greater than 255 characters.'
                   example: Root
+                  nullable: false
+                permissions:
+                  type: object
+                  description: ''
+                  example: null
+                  nullable: false
+                  properties: {  }
     userConfigs:
       type: object
       required:
@@ -296,16 +344,25 @@ components:
                 - userConfigs
             attributes:
               type: object
+              description: ''
+              example: []
+              nullable: false
               properties:
                 theme:
                   type: string
+                  description: 'Must not be greater than 50 characters.'
                   example: light
+                  nullable: true
                 notificationsEnabled:
                   type: boolean
+                  description: ''
                   example: true
+                  nullable: false
                 language:
                   type: string
+                  description: 'Must not be greater than 10 characters.'
                   example: en
+                  nullable: true
             relationships:
               type: object
               properties:
@@ -320,7 +377,7 @@ components:
                       properties:
                         id:
                           type: string
-                          example: '1'
+                          example: 123e4567-e89b-12d3-a456-426614174000
                         type:
                           type: string
                           example: users
@@ -4117,7 +4174,7 @@ paths:
                         notificationsEnabled:
                           type: boolean
                           description: ''
-                          example: true
+                          example: false
                           nullable: false
                         language:
                           type: string
@@ -4650,34 +4707,34 @@ paths:
         -
           in: query
           name: 'filter[id]'
-          description: "Filter by `id` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[id]=example`\n- Between: `filter[id][start]=10&filter[id][end]=20`\n- Operator: `filter[id][operator]=gt&filter[id][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`\n\n</details>"
+          description: "Filter by `id` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[id]=example`\n- Between: `filter[id][start]=10&filter[id][end]=20`\n- Operator: `filter[id][operator]=gt&filter[id][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`, `isNull`, `isNotNull`\n\n</details>"
           example: null
           required: false
           schema:
             type: string
-            description: "Filter by `id` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[id]=example`\n- Between: `filter[id][start]=10&filter[id][end]=20`\n- Operator: `filter[id][operator]=gt&filter[id][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`\n\n</details>"
+            description: "Filter by `id` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[id]=example`\n- Between: `filter[id][start]=10&filter[id][end]=20`\n- Operator: `filter[id][operator]=gt&filter[id][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`, `isNull`, `isNotNull`\n\n</details>"
             example: null
             nullable: false
         -
           in: query
           name: 'filter[email]'
-          description: "Filter by `email` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[email]=example`\n- Between: `filter[email][start]=10&filter[email][end]=20`\n- Operator: `filter[email][operator]=gt&filter[email][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`\n\n</details>"
+          description: "Filter by `email` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[email]=example`\n- Between: `filter[email][start]=10&filter[email][end]=20`\n- Operator: `filter[email][operator]=gt&filter[email][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`, `isNull`, `isNotNull`\n\n</details>"
           example: null
           required: false
           schema:
             type: string
-            description: "Filter by `email` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[email]=example`\n- Between: `filter[email][start]=10&filter[email][end]=20`\n- Operator: `filter[email][operator]=gt&filter[email][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`\n\n</details>"
+            description: "Filter by `email` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[email]=example`\n- Between: `filter[email][start]=10&filter[email][end]=20`\n- Operator: `filter[email][operator]=gt&filter[email][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`, `isNull`, `isNotNull`\n\n</details>"
             example: null
             nullable: false
         -
           in: query
           name: 'filter[name]'
-          description: "Filter by `name` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[name]=example`\n- Between: `filter[name][start]=10&filter[name][end]=20`\n- Operator: `filter[name][operator]=gt&filter[name][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`\n\n</details>"
+          description: "Filter by `name` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[name]=example`\n- Between: `filter[name][start]=10&filter[name][end]=20`\n- Operator: `filter[name][operator]=gt&filter[name][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`, `isNull`, `isNotNull`\n\n</details>"
           example: null
           required: false
           schema:
             type: string
-            description: "Filter by `name` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[name]=example`\n- Between: `filter[name][start]=10&filter[name][end]=20`\n- Operator: `filter[name][operator]=gt&filter[name][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`\n\n</details>"
+            description: "Filter by `name` attribute.\n\n<details>\n<summary>Full details</summary>\n\n- Equal: `filter[name]=example`\n- Between: `filter[name][start]=10&filter[name][end]=20`\n- Operator: `filter[name][operator]=gt&filter[name][value]=100`\n\n**Operators:** `eq`, `gt`, `gte`, `lt`, `lte`, `neq`, `in`, `notIn`, `contains`, `startsWith`, `endsWith`, `isNull`, `isNotNull`\n\n</details>"
             example: null
             nullable: false
       responses:

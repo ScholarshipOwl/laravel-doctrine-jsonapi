@@ -4,14 +4,18 @@ namespace Sowl\JsonApi\Scribe;
 
 use Illuminate\Support\Arr;
 use Knuckles\Camel\Output\OutputEndpointData;
+use Knuckles\Camel\Output\Parameter;
 use Knuckles\Scribe\Tools\ConsoleOutputUtils as c;
 use Knuckles\Scribe\Tools\DocumentationConfig;
 use Knuckles\Scribe\Tools\ErrorHandlingUtils as e;
+use Knuckles\Scribe\Tools\Utils;
 use Knuckles\Scribe\Writing\OpenApiSpecGenerators\OpenApiGenerator;
 use Sowl\JsonApi\Fractal\FractalOptions;
 use Sowl\JsonApi\ResourceInterface;
 use Sowl\JsonApi\ResourceManager;
+use Sowl\JsonApi\Specable;
 use Sowl\JsonApi\Scribe\Strategies\TransformerHelper;
+use Illuminate\Support\Str;
 use stdClass;
 
 class JsonApiSpecGenerator extends OpenApiGenerator
@@ -24,6 +28,14 @@ class JsonApiSpecGenerator extends OpenApiGenerator
         'filter',
         'page',
     ];
+
+    protected array $root;
+    protected array $groupedEndpoints;
+
+    /**
+     * @var array<string, array>
+     */
+    protected array $mappedResourceTypeBodyParams = [];
 
     public function __construct(
         protected DocumentationConfig $config,
@@ -47,7 +59,12 @@ class JsonApiSpecGenerator extends OpenApiGenerator
 
     public function root(array $root, array $groupedEndpoints): array
     {
-        $resourcesSchemas = $this->generateResourcesSchemas($root, $groupedEndpoints);
+        $this->root = $root;
+        $this->groupedEndpoints = $groupedEndpoints;
+
+        $this->mapResourceTypeBodyParams();
+
+        $resourcesSchemas = $this->generateResourcesSchemas();
 
         $root['components'] = [
             'schemas' => array_merge($root['components']['schemas'] ?? [], $resourcesSchemas),
@@ -146,11 +163,19 @@ class JsonApiSpecGenerator extends OpenApiGenerator
         return $pathItem;
     }
 
-    protected function generateResourcesSchemas(array $root, array $groupedEndpoints): array
+    protected function generateResourcesSchemas(): array
     {
         $schemas = [];
 
         foreach ($this->rm->resources() as $resourceType => $resourceClass) {
+            $transformer = $this->rm->transformerByResourceType($resourceType);
+
+            $properties = $transformer instanceof Specable ? $transformer->spec() : array_merge_recursive(
+                $this->specObjectIdentifier($resourceType),
+                $this->specAttributes($resourceType),
+                $this->specRelationships($resourceClass),
+            );
+
             $schemas[$resourceType] = [
                 'type' => 'object',
                 'required' => ['data'],
@@ -158,11 +183,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                     'data' => [
                         'type' => 'object',
                         'required' => ['id', 'type'],
-                        'properties' => array_merge_recursive(
-                            $this->specObjectIdentifier($resourceType),
-                            $this->specAttributes($resourceType),
-                            $this->specRelationships($resourceClass),
-                        ),
+                        'properties' => $properties,
                     ],
                 ],
             ];
@@ -173,7 +194,27 @@ class JsonApiSpecGenerator extends OpenApiGenerator
 
     protected function specAttributes(string $resourceType): array
     {
-        $spec = [];
+        $requestsSpec = [];
+        $transformerSpec = [];
+
+        try {
+            if (isset($this->mappedResourceTypeBodyParams[$resourceType])) {
+                $bodyParams = $this->mappedResourceTypeBodyParams[$resourceType];
+
+                if (isset($bodyParams['data']['__fields']['attributes'])) {
+                    $requestsSpec['attributes'] =
+                        $this->generateFieldData($bodyParams['data']['__fields']['attributes']);
+                }
+
+                if (isset($bodyParams['data']['__fields']['meta'])) {
+                    $requestsSpec['meta'] =
+                        $this->generateFieldData($bodyParams['data']['__fields']['meta']);
+                }
+            }
+        } catch (\Throwable $e) {
+            c::warn("Couldn't generate attributes for '{$resourceType}'.");
+            e::dumpExceptionIfVerbose($e);
+        }
 
         try {
             $transformer = $this->rm()->transformerByResourceType($resourceType);
@@ -182,14 +223,14 @@ class JsonApiSpecGenerator extends OpenApiGenerator
             ]));
 
             if (! empty($attributes = $response['data']['attributes'] ?? [])) {
-                $spec['attributes'] = [
+                $transformerSpec['attributes'] = [
                     'type' => 'object',
                     'properties' => $this->convertToOpenApiSchema($attributes),
                 ];
             }
 
             if (! empty($meta = (array) ($response['data']['meta'] ?? []))) {
-                $spec['meta'] = [
+                $transformerSpec['meta'] = [
                     'type' => 'object',
                     'properties' => $this->convertToOpenApiSchema($meta),
                 ];
@@ -199,7 +240,7 @@ class JsonApiSpecGenerator extends OpenApiGenerator
             e::dumpExceptionIfVerbose($e);
         }
 
-        return $spec;
+        return array_replace_recursive($requestsSpec, $transformerSpec);
     }
 
     /**
@@ -406,5 +447,161 @@ class JsonApiSpecGenerator extends OpenApiGenerator
                 }
             }
         }
+    }
+
+    protected function mapResourceTypeBodyParams(): void
+    {
+        $resources = array_keys($this->rm->resources());
+        $endpointsByMethod = collect($this->groupedEndpoints)
+            ->map(fn ($group) => $group['endpoints'])
+            ->flatten(1)
+            ->groupBy('httpMethods.0');
+
+        /** @var array<string, OutputEndpointData> $createEndpoints */
+        $createEndpoints = [];
+        /** @var array<string, OutputEndpointData> $updateEndpoints */
+        $updateEndpoints = [];
+
+        foreach ($resources as $resourceType) {
+            foreach ($endpointsByMethod['POST'] as $endpoint) {
+                if (Str::endsWith($endpoint['uri'], $resourceType)) {
+                    $createEndpoints[$resourceType] = $endpoint;
+                    break;
+                }
+            }
+        }
+
+        foreach ($resources as $resourceType) {
+            foreach ($endpointsByMethod['PATCH'] as $endpoint) {
+                if (Str::endsWith($endpoint['uri'], $resourceType)) {
+                    $updateEndpoints[$resourceType] = $endpoint;
+                    break;
+                }
+            }
+        }
+
+        foreach ($resources as $resourceType) {
+            if (isset($createEndpoints[$resourceType])) {
+                $this->mappedResourceTypeBodyParams[$resourceType] =
+                    $createEndpoints[$resourceType]->nestedBodyParameters;
+            }
+
+            if (isset($updateEndpoints[$resourceType])) {
+                $this->mappedResourceTypeBodyParams[$resourceType] = collect(
+                    $this->mappedResourceTypeBodyParams[$resourceType] ?? []
+                )
+                    ->mergeRecursive($updateEndpoints[$resourceType]->nestedBodyParameters)
+                    ->toArray();
+            }
+        }
+    }
+
+    /**
+     * @param Parameter|array $field
+     *
+     * @return array
+     */
+    protected function generateFieldData($field): array
+    {
+        if (is_array($field)) {
+            $field = new Parameter($field);
+        }
+
+        if ($field->type === 'file') {
+            // See https://swagger.io/docs/specification/describing-request-body/file-upload/
+            return [
+                'type' => 'string',
+                'format' => 'binary',
+                'description' => $field->description ?: '',
+                'nullable' => $field->nullable,
+            ];
+        } elseif (Utils::isArrayType($field->type)) {
+            $baseType = Utils::getBaseTypeFromArrayType($field->type);
+            $baseItem = ($baseType === 'file') ? [
+                'type' => 'string',
+                'format' => 'binary',
+            ] : ['type' => $baseType];
+
+            if (!empty($field->enumValues)) {
+                $baseItem['enum'] = $field->enumValues;
+            }
+
+            if ($field->nullable) {
+                $baseItem['nullable'] = true;
+            }
+
+            $fieldData = [
+                'type' => 'array',
+                'description' => $field->description ?: '',
+                'example' => $field->example,
+                'items' => Utils::isArrayType($baseType)
+                    ? $this->generateFieldData([
+                        'name' => '',
+                        'type' => $baseType,
+                        'example' => ($field->example ?: [null])[0],
+                        'nullable' => $field->nullable,
+                    ])
+                    : $baseItem,
+            ];
+            if (str_replace('[]', "", $field->type) === 'file') {
+                // Don't include example for file params in OAS; it's hard to translate it correctly
+                unset($fieldData['example']);
+            }
+
+            if ($baseType === 'object' && !empty($field->__fields)) {
+                if ($fieldData['items']['type'] === 'object') {
+                    $fieldData['items']['properties'] = [];
+                }
+                foreach ($field->__fields as $fieldSimpleName => $subfield) {
+                    $fieldData['items']['properties'][$fieldSimpleName] = $this->generateFieldData($subfield);
+                    if ($subfield['required']) {
+                        $fieldData['items']['required'][] = $fieldSimpleName;
+                    }
+                }
+            }
+
+            return $fieldData;
+        } elseif ($field->type === 'object') {
+            $data = [
+                'type' => 'object',
+                'description' => $field->description ?: '',
+                'example' => $field->example,
+                'nullable' => $field->nullable,
+                'properties' => $this->objectIfEmpty(
+                    collect($field->__fields)
+                        ->mapWithKeys(
+                            fn ($subfield, $subfieldName) => [$subfieldName => $this->generateFieldData($subfield)]
+                        )
+                        ->all()
+                ),
+                'required' => collect($field->__fields)->filter(fn ($f) => $f['required'])->keys()->toArray(),
+            ];
+            // The spec doesn't allow for an empty `required` array. Must have something there.
+            if (empty($data['required'])) {
+                unset($data['required']);
+            }
+            return $data;
+        } else {
+            $schema = [
+                'type' => static::normalizeTypeName($field->type),
+                'description' => $field->description ?: '',
+                'example' => $field->example,
+                'nullable' => $field->nullable,
+            ];
+            if (!empty($field->enumValues)) {
+                $schema['enum'] = $field->enumValues;
+            }
+
+            return $schema;
+        }
+    }
+
+    /**
+     * Given an array, return an object if the array is empty. To be used with fields that are
+     * required by OpenAPI spec to be objects, since empty arrays get serialised as [].
+     */
+    protected function objectIfEmpty(array $field): array|stdClass
+    {
+        return count($field) > 0 ? $field : new stdClass();
     }
 }
