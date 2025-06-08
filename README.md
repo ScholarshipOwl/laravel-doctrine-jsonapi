@@ -39,6 +39,11 @@ For detailed installation instructions, configuration guides and tutorials:
 - **Authorization**: Policy-based access control
 - **Auto-generated Documentation**: Endpoints are automatically documented using [Scribe](https://scribe.readthedocs.io/en/latest/)
 
+
+### Bugs:
+- [ ] In the `WithUpdateRelationshipsTrait` the we use `UpdateToManyRelationshipsRequest` for updating to-one relationships.
+- [ ] Relationships with multipe resource type are not supported. Example is when we use inheritance type single table and we have different type for same table / relationship.
+
 ### Roadmap
 - [ ] Docs: Quickstart add how to install PHP section ( @see: php.new )
 - [ ] Build documentation and testing for integration of Laravel Sanctum or Laravel Passport.
@@ -47,7 +52,7 @@ For detailed installation instructions, configuration guides and tutorials:
 - [ ] Remove the default request hydration from the package, as it may create security vulnerabilities. All the mutations should be handled by the application code, by the client.
 - [ ] Improve security by adding ability checks on the transformer level when we try to include relationships.
 - [ ] Scribe: Generated headers are not prperly defined, we got Accept: */* everywhere.
-- [ ] Allow override or provide ability for custom request authentication.
+- [X] Allow override or provide ability for custom request authentication.
 - [X] Integrate scribe into the package. Automatically generate Open API specs.
   - [ ] Add documentation for scribe integration
   - [X] Update metadata for each endpoint
@@ -75,18 +80,19 @@ For detailed installation instructions, configuration guides and tutorials:
       ```
 - [ ] Create default global error handler or write down documentation how to create such one.
       How to handle missing route\endpoint 404 and internal 500 errors.
-- [ ] Create console command for resource policy generation: "jsonapi:make:policy".
 - [ ] Checkout option for adding include params like "include=roles:sort"  (TransformerAbstract.php:173)
 - [ ] Integrate UUID support by default https://github.com/ramsey/uuid-doctrine
-- [ ] Next version
-  - [ ] Use PHP Attributes instead of `ResourceInterface` for the resource declaration.
-    - [ ] Metadata managment system similar to Doctrine one, that knows the resource schemas and relationships, etc. On boot register all the resources and cache them.
-    - [ ] Resource type, transformers, relationships discovery, moved to the metadata system / `ResourceManager`.
-    - [ ] Generate the resourceType depend on the entity name
-    - [ ] Generate the transformers depend on the entity name and configuration path: `app/Transformers/{Entity}Transformer.php`
-    - [ ] Allow defining relationships with PHP Attributes on the entity class.
-    - [ ] The id get be retrieved using internal Doctrine functionality or just depend on public $id property.
-  - [ ] Migrate all the default users and roles to be UUID
+
+#### Next version
+- [ ] Use PHP Attributes instead of `ResourceInterface` for the resource declaration.
+- [ ] Metadata managment system similar to Doctrine one, that knows the resource schemas and relationships, etc. On boot register all the resources and cache them.
+  - [ ] Resource type, transformers, relationships discovery, moved to the metadata system / `ResourceManager`.
+  - [ ] Generate the resourceType depend on the entity name
+  - [ ] Generate the transformers depend on the entity name and configuration path: `app/Transformers/{Entity}Transformer.php`
+  - [ ] Allow defining relationships with PHP Attributes on the entity class.
+  - [ ] The id get be retrieved using internal Doctrine functionality or just depend on public $id property.
+- [ ] Migrate all the default users and roles to be UUID
+- [ ] Improve transformer, make it handle relationships depend on resource. Use better name like "ResourceTransformer".
 
 ## Support
 
