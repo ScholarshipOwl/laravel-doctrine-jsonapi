@@ -109,12 +109,9 @@ trait ResourceDataRulesTrait
                     break;
 
                 case 'date':
-                    $rules[] = 'date';
-                    break;
-
                 case 'datetime':
                 case 'datetimetz':
-                    $rules[] = 'date_format:Y-m-d\TH:i:s.u\Z';
+                    $rules[] = 'date';
                     break;
 
                 case 'time':
